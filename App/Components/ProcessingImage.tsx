@@ -1,7 +1,13 @@
 import React, { Fragment } from 'react'
-import { View, Image, Button, ViewStyle, ImageStyle, Text, TextStyle } from 'react-native'
-
-import ProgressBar from './ProgressBar'
+import {
+  View,
+  Image,
+  Button,
+  ViewStyle,
+  ImageStyle,
+  Text,
+  TextStyle
+} from 'react-native'
 
 const CONTAINER: ViewStyle = {
   flexDirection: 'row',
@@ -50,17 +56,16 @@ const ERROR: TextStyle = {
 }
 
 export interface IProcessingImageProps {
-  id: string,
-  imageUri: string,
-  progress: number,
-  message?: string,
-  errorMessage?: string,
-  retry?: () => void,
+  id: string
+  imageUri: string
+  message?: string
+  errorMessage?: string
+  retry?: () => void
   cancel?: () => void
 }
 
 const ProcessingImage = (props: IProcessingImageProps) => {
-  const { imageUri, progress, message, errorMessage, retry, cancel } = props
+  const { imageUri, message, errorMessage, retry, cancel } = props
 
   let content: JSX.Element
   if (errorMessage) {
@@ -76,7 +81,6 @@ const ProcessingImage = (props: IProcessingImageProps) => {
       <Fragment>
         <View style={STACK}>
           <Text style={STATUS} />
-          <ProgressBar progress={progress} />
           <Text style={STATUS}>{message}</Text>
         </View>
         {cancel && <Button title={'Cancel'} onPress={cancel} />}

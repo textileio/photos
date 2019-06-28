@@ -26,7 +26,8 @@ export default (state: RenameGroupState = {}, action: RenameGroupAction) => {
     }
     case getType(actions.renameGroup.failure): {
       const { threadId, error } = action.payload
-      const errorMessage = error.message as string || error as string || 'unknown'
+      const errorMessage =
+        (error.message as string) || (error as string) || 'unknown'
       return {
         ...state,
         [threadId]: {

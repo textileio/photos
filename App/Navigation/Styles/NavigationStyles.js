@@ -4,7 +4,6 @@ import { Colors } from '../../Themes/'
 export const headerTintColor = Colors.charcoal
 
 export default StyleSheet.create({
-
   header: {
     // Styles the screen header in Textile Photos feed view
     // backgroundColor: Colors.brandBlue

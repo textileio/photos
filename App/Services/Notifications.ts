@@ -1,13 +1,16 @@
-import Textile, { Notification as SdkNotification, INotification } from '@textile/react-native-sdk'
+import Textile, {
+  Notification as SdkNotification,
+  INotification
+} from '@textile/react-native-sdk'
 import { Notification } from '../Models/Notifications'
 import RNPushNotification from 'react-native-push-notification'
 import { Alert } from 'react-native'
 
 export interface INotificationsPayload {
-  title: string,
-  message: string,
+  title: string
+  message: string
   feed: string
-  typeString: string,
+  typeString: string
 }
 
 export async function enable(): Promise<void> {
@@ -21,8 +24,18 @@ export async function enable(): Promise<void> {
   })
 }
 
-export function toTypedNotification(notificationData: INotification): Notification {
-  const { subjectDesc, subject, target, type, date, user, ...baseNotification } = notificationData
+export function toTypedNotification(
+  notificationData: INotification
+): Notification {
+  const {
+    subjectDesc,
+    subject,
+    target,
+    type,
+    date,
+    user,
+    ...baseNotification
+  } = notificationData
   const d = Textile.util.timestampToDate(date)
   switch (type) {
     case SdkNotification.Type.INVITE_RECEIVED:
@@ -35,6 +48,14 @@ export function toTypedNotification(notificationData: INotification): Notificati
         threadName: subjectDesc
       }
     case SdkNotification.Type.ACCOUNT_PEER_JOINED:
+      return {
+        ...baseNotification,
+        date: d,
+        username: user.name,
+        avatar: user.avatar,
+        type
+      }
+    case SdkNotification.Type.ACCOUNT_PEER_LEFT:
       return {
         ...baseNotification,
         date: d,
@@ -125,6 +146,8 @@ export function notificationTypeToString(type: SdkNotification.Type): string {
   switch (type) {
     case SdkNotification.Type.ACCOUNT_PEER_JOINED:
       return 'ACCOUNT_PEER_JOINED'
+    case SdkNotification.Type.ACCOUNT_PEER_LEFT:
+      return 'ACCOUNT_PEER_LEFT'
     case SdkNotification.Type.COMMENT_ADDED:
       return 'COMMENT_ADDED'
     case SdkNotification.Type.FILES_ADDED:
@@ -146,51 +169,72 @@ export function toPayload(notification: Notification): INotificationsPayload {
   const typeString = notificationTypeToString(notification.type)
   const actor = notification.username || 'A contact' // TODO: We want username here, need to look it up?
   switch (notification.type) {
-    case(SdkNotification.Type.INVITE_RECEIVED): {
+    case SdkNotification.Type.INVITE_RECEIVED: {
       const title = 'New Invite'
-      const message =  [actor, notification.body].join(' ')
-      const feed = [actor, notification.body, 'to', notification.threadName].join(' ')
+      const message = [actor, notification.body].join(' ')
+      const feed = [
+        actor,
+        notification.body,
+        'to',
+        notification.threadName
+      ].join(' ')
       return { title, message, feed, typeString }
     }
-    case(SdkNotification.Type.ACCOUNT_PEER_JOINED): {
-      const title = 'New Contact'
+    case SdkNotification.Type.ACCOUNT_PEER_JOINED: {
+      const title = 'New Account Peer'
       const message = 'You connected to a new account contact'
       const feed = message
       return { title, message, feed, typeString }
     }
-    case(SdkNotification.Type.PEER_JOINED): {
-      const title = notification.threadName
-      const message =  [actor, notification.body].join(' ')
-      const feed = [actor, notification.body, 'group', notification.threadName].join(' ')
-      return { title, message, feed, typeString }
-    }
-    case(SdkNotification.Type.PEER_LEFT): {
-      const title = notification.threadName
-      const message =  [actor, notification.body].join(' ')
-      const feed = [actor, notification.body, 'group', notification.threadName].join(' ')
-      return { title, message, feed, typeString }
-    }
-    case(SdkNotification.Type.MESSAGE_ADDED): {
-      const title = notification.threadName
-      const message =  [actor, 'wrote', notification.body].join(' ')
+    case SdkNotification.Type.ACCOUNT_PEER_LEFT: {
+      const title = 'Account Peer Left'
+      const message = 'One of your account peers left'
       const feed = message
       return { title, message, feed, typeString }
     }
-    case(SdkNotification.Type.FILES_ADDED): {
+    case SdkNotification.Type.PEER_JOINED: {
+      const title = notification.threadName
+      const message = [actor, notification.body].join(' ')
+      const feed = [
+        actor,
+        notification.body,
+        'group',
+        notification.threadName
+      ].join(' ')
+      return { title, message, feed, typeString }
+    }
+    case SdkNotification.Type.PEER_LEFT: {
+      const title = notification.threadName
+      const message = [actor, notification.body].join(' ')
+      const feed = [
+        actor,
+        notification.body,
+        'group',
+        notification.threadName
+      ].join(' ')
+      return { title, message, feed, typeString }
+    }
+    case SdkNotification.Type.MESSAGE_ADDED: {
+      const title = notification.threadName
+      const message = [actor, 'wrote', notification.body].join(' ')
+      const feed = message
+      return { title, message, feed, typeString }
+    }
+    case SdkNotification.Type.FILES_ADDED: {
       const title = notification.threadName
       const body = 'added a photo'
-      const message =  [actor, body].join(' ')
+      const message = [actor, body].join(' ')
       const feed = [actor, body, 'to', notification.threadName].join(' ')
       return { title, message, feed, typeString }
     }
-    case(SdkNotification.Type.COMMENT_ADDED): {
-      const title =  notification.threadName
+    case SdkNotification.Type.COMMENT_ADDED: {
+      const title = notification.threadName
       const message = [actor, notification.body].join(' ')
       const body = 'commented on a photo' // todo: fix "a" vs "your"
       const feed = [actor, body, 'in', notification.threadName].join(' ')
       return { title, message, feed, typeString }
     }
-    case(SdkNotification.Type.LIKE_ADDED): {
+    case SdkNotification.Type.LIKE_ADDED: {
       const title = notification.threadName
       const body = 'liked a photo' // todo: fix "a" vs "your"
       const message = [actor, body].join(' ')

@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import { View, TouchableOpacity } from 'react-native'
 
 import PhotoBoxEmpty from '../PhotoBoxEmpty'
@@ -10,7 +10,7 @@ interface ScreenProps {
   onSelect: () => void
 }
 
-class   ThreadSelectCard extends Component<ScreenProps> {
+class ThreadSelectCard extends Component<ScreenProps> {
   render() {
     return (
       <TouchableOpacity

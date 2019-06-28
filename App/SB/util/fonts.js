@@ -1,6 +1,6 @@
 import { Platform } from 'react-native'
 
-export const BentonSansBold = () => {
+export const bentonSansBold = () => {
   return {
     fontFamily: 'Biotif-Bold'
   }

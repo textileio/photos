@@ -32,7 +32,6 @@
 		93C00482216B12C8007786A5 /* TSBackgroundFetch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C00470216B1066007786A5 /* TSBackgroundFetch.framework */; };
 		93C00487216B132E007786A5 /* RNBackgroundFetch+AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C00485216B132E007786A5 /* RNBackgroundFetch+AppDelegate.m */; };
 		93C00491216B1F18007786A5 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C0048E216B1EFF007786A5 /* libRCTPushNotification.a */; };
-		93C00498216B23AA007786A5 /* libVydiaRNFileUploader.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C00497216B2392007786A5 /* libVydiaRNFileUploader.a */; };
 		93C004A2216B2680007786A5 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C0049F216B2666007786A5 /* libRNFS.a */; };
 		93C004A9216BAD16007786A5 /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C004A8216BAD0D007786A5 /* libRNImagePicker.a */; };
 		93C00531216BB281007786A5 /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C0052B216BB273007786A5 /* libReactNativeConfig.a */; };
@@ -365,13 +364,6 @@
 			remoteGlobalIDString = 3D05745F1DE6004600184BB4;
 			remoteInfo = "RCTPushNotification-tvOS";
 		};
-		93C00496216B2392007786A5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 93C00492216B2391007786A5 /* VydiaRNFileUploader.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 014A3B5C1C6CF33500B6D375;
-			remoteInfo = VydiaRNFileUploader;
-		};
 		93C0049E216B2666007786A5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 93C00499216B2666007786A5 /* RNFS.xcodeproj */;
@@ -505,7 +497,6 @@
 		93C0047B216B1276007786A5 /* RNBackgroundFetch.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundFetch.xcodeproj; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch.xcodeproj"; sourceTree = "<group>"; };
 		93C00485216B132E007786A5 /* RNBackgroundFetch+AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RNBackgroundFetch+AppDelegate.m"; sourceTree = "<group>"; };
 		93C00488216B1EFF007786A5 /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
-		93C00492216B2391007786A5 /* VydiaRNFileUploader.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = VydiaRNFileUploader.xcodeproj; path = "../node_modules/react-native-background-upload/ios/VydiaRNFileUploader.xcodeproj"; sourceTree = "<group>"; };
 		93C00499216B2666007786A5 /* RNFS.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNFS.xcodeproj; path = "../node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; };
 		93C004A3216BAD0C007786A5 /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNImagePicker.xcodeproj; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; };
 		93C004FF216BB273007786A5 /* ReactNativeConfig.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeConfig.xcodeproj; path = "../node_modules/react-native-config/ios/ReactNativeConfig.xcodeproj"; sourceTree = "<group>"; };
@@ -565,7 +556,6 @@
 				93C00531216BB281007786A5 /* libReactNativeConfig.a in Frameworks */,
 				93C004A9216BAD16007786A5 /* libRNImagePicker.a in Frameworks */,
 				93C004A2216B2680007786A5 /* libRNFS.a in Frameworks */,
-				93C00498216B23AA007786A5 /* libVydiaRNFileUploader.a in Frameworks */,
 				93C00491216B1F18007786A5 /* libRCTPushNotification.a in Frameworks */,
 				93C00482216B12C8007786A5 /* TSBackgroundFetch.framework in Frameworks */,
 				93C00534216BB8F2007786A5 /* Crashlytics.framework in Frameworks */,
@@ -750,7 +740,6 @@
 				93C004FF216BB273007786A5 /* ReactNativeConfig.xcodeproj */,
 				93C004A3216BAD0C007786A5 /* RNImagePicker.xcodeproj */,
 				93C00499216B2666007786A5 /* RNFS.xcodeproj */,
-				93C00492216B2391007786A5 /* VydiaRNFileUploader.xcodeproj */,
 				93C00488216B1EFF007786A5 /* RCTPushNotification.xcodeproj */,
 				93C0047B216B1276007786A5 /* RNBackgroundFetch.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
@@ -836,14 +825,6 @@
 			children = (
 				93C0048E216B1EFF007786A5 /* libRCTPushNotification.a */,
 				93C00490216B1EFF007786A5 /* libRCTPushNotification-tvOS.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		93C00493216B2391007786A5 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				93C00497216B2392007786A5 /* libVydiaRNFileUploader.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1163,10 +1144,6 @@
 					ProductGroup = 93C00538216BD99A007786A5 /* Products */;
 					ProjectRef = 93C00537216BD99A007786A5 /* SMXCrashlytics.xcodeproj */;
 				},
-				{
-					ProductGroup = 93C00493216B2391007786A5 /* Products */;
-					ProjectRef = 93C00492216B2391007786A5 /* VydiaRNFileUploader.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -1471,13 +1448,6 @@
 			remoteRef = 93C0048F216B1EFF007786A5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		93C00497216B2392007786A5 /* libVydiaRNFileUploader.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libVydiaRNFileUploader.a;
-			remoteRef = 93C00496216B2392007786A5 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		93C0049F216B2666007786A5 /* libRNFS.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1760,6 +1730,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Textile/Textile.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;

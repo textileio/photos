@@ -3,7 +3,9 @@ import { call, put, takeEvery, all } from 'redux-saga/effects'
 import Textile from '@textile/react-native-sdk'
 import { addMessage } from './actions'
 
-export function * handleAddMessageRequest(action: ActionType<typeof addMessage.request>) {
+export function* handleAddMessageRequest(
+  action: ActionType<typeof addMessage.request>
+) {
   const { id, groupId, body } = action.payload
   try {
     yield call(Textile.messages.add, groupId, body)
@@ -13,8 +15,6 @@ export function * handleAddMessageRequest(action: ActionType<typeof addMessage.r
   }
 }
 
-export default function *() {
-  yield all([
-    takeEvery(getType(addMessage.request), handleAddMessageRequest)
-  ])
+export default function*() {
+  yield all([takeEvery(getType(addMessage.request), handleAddMessageRequest)])
 }

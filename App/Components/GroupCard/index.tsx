@@ -6,7 +6,11 @@ import { IContact, IFiles } from '@textile/react-native-sdk'
 
 import Members from './Members'
 
-import styles, { cardImageStyle, ICON_WIDTH, ROW_COLUMN } from './statics/styles'
+import styles, {
+  cardImageStyle,
+  ICON_WIDTH,
+  ROW_COLUMN
+} from './statics/styles'
 import { color } from '../../styles'
 
 interface ScreenProps {
@@ -30,11 +34,11 @@ const GroupCard = (props: ScreenProps) => {
         <View style={styles.imageContainer}>
           <View style={styles.imageStretch}>
             <TextileImage
-              target={thumb.target}
+              target={thumb.data}
               index={0}
               forMinWidth={ICON_WIDTH}
               resizeMode={'cover'}
-              style={{height: ROW_COLUMN}}
+              style={{ height: ROW_COLUMN }}
             />
           </View>
         </View>
@@ -56,11 +60,11 @@ const GroupCard = (props: ScreenProps) => {
       // ts-ignore
       onPress={getCallback()}
     >
-      <View style={styles.groupLeftColumn}>
-          {getThumb()}
-      </View>
+      <View style={styles.groupLeftColumn}>{getThumb()}</View>
       <View style={styles.groupMiddleColumn}>
-        <Text numberOfLines={1} style={styles.groupName}>{name}</Text>
+        <Text numberOfLines={1} style={styles.groupName}>
+          {name}
+        </Text>
       </View>
       <View style={styles.groupRightColumn}>
         <Members members={members} />

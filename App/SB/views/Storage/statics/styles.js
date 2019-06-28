@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { BentonSansBold } from '../../../util/fonts'
+import { bentonSansBold } from '../../../util/fonts'
 
 export default StyleSheet.create({
   container: {
@@ -38,7 +38,7 @@ export default StyleSheet.create({
     marginLeft: 10
   },
   itemTitle: {
-    ...BentonSansBold(),
+    ...bentonSansBold(),
     fontFamily: 'Biotif-Regular',
     fontSize: 16,
     lineHeight: 27

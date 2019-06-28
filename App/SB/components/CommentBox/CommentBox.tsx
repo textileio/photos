@@ -21,13 +21,13 @@ const CommentBox = (props: Props) => {
     <View style={styles.commentFooter}>
       <TextInput
         style={styles.textInput}
-        placeholder='Write a comment...'
-        placeholderTextColor='#4a4a4a'
+        placeholder="Write a comment..."
+        placeholderTextColor="#4a4a4a"
         onChangeText={onUpdate}
         value={value}
       />
-      <TouchableOpacity onPress={onSubmit} >
-        <Icon name='circle-plus' color={iconColor} size={24} />
+      <TouchableOpacity onPress={onSubmit}>
+        <Icon name="circle-plus" color={iconColor} size={24} />
       </TouchableOpacity>
     </View>
   )

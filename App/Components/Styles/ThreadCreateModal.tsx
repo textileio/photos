@@ -2,7 +2,7 @@ import { StyleSheet, ViewStyle, TextStyle, Dimensions } from 'react-native'
 
 import Colors from '../../Themes/Colors'
 
-const {height, width} = Dimensions.get('window')
+const { height, width } = Dimensions.get('window')
 
 export default StyleSheet.create({
   modal: {

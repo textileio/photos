@@ -1,10 +1,9 @@
 import { LocalPhotoResult } from '@textile/react-native-camera-roll'
-import { IMobilePreparedFiles, IFiles } from '@textile/react-native-sdk'
+import { IFiles } from '@textile/react-native-sdk'
 
 export interface ProcessingPhoto {
   readonly photo: LocalPhotoResult
-  readonly state: 'pending' | 'preparing' | 'adding' | 'complete'
-  readonly preparedFiles?: IMobilePreparedFiles
+  readonly state: 'pending' | 'adding' | 'complete'
   readonly error?: string
 }
 

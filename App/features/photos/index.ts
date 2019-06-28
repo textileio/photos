@@ -3,4 +3,11 @@ import photosReducer, { PhotosState, PhotosAction } from './reducer'
 import * as photosSelectors from './selectors'
 import photosSaga from './sagas'
 
-export { photosActions, photosReducer, photosSelectors, PhotosState, PhotosAction, photosSaga }
+export {
+  photosActions,
+  photosReducer,
+  photosSelectors,
+  PhotosState,
+  PhotosAction,
+  photosSaga
+}

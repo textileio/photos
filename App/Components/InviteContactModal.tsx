@@ -1,15 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux/index'
-import {
-  View,
-  Text
-} from 'react-native'
+import { View, Text } from 'react-native'
 import Modal from 'react-native-modal'
 import { Thread } from '@textile/react-native-sdk'
 
 import ModalButtons from './ModalButtons'
-import { CreateThreadComponent } from './CreateThreadModal'
+import CreateThreadComponent from './CreateThreadModal'
 
 import { RootAction, RootState } from '../Redux/Types'
 import PhotoViewingActions, { ThreadData } from '../Redux/PhotoViewingRedux'
@@ -37,15 +34,14 @@ interface ScreenProps {
 interface State {
   submitted: boolean
   showCreateGroupModal: boolean
-  threadId?: string,
-  threadName?: string,
+  threadId?: string
+  threadName?: string
   threadSelected: boolean
 }
 
 type Props = DispatchProps & StateProps & ScreenProps
 
 class InviteContactModal extends React.Component<Props, State> {
-
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -59,27 +55,31 @@ class InviteContactModal extends React.Component<Props, State> {
 
   openThreadModal() {
     return () => {
-      this.setState({showCreateGroupModal: true, threadId: undefined, threadName: undefined})
+      this.setState({
+        showCreateGroupModal: true,
+        threadId: undefined,
+        threadName: undefined
+      })
     }
   }
 
   cancelCreateThread() {
     return () => {
-      this.setState({showCreateGroupModal: false})
+      this.setState({ showCreateGroupModal: false })
     }
   }
 
   completeCreateThread() {
     return () => {
-      this.setState({showCreateGroupModal: false})
+      this.setState({ showCreateGroupModal: false })
     }
   }
 
   selectThread() {
     return (threadId: string) => {
-      const thread = this.props.threads.find((t) => t.id === threadId)
+      const thread = this.props.threads.find(t => t.id === threadId)
       const threadName = thread ? thread.name : 'thread'
-      this.setState({threadId, threadName})
+      this.setState({ threadId, threadName })
     }
   }
 
@@ -91,7 +91,7 @@ class InviteContactModal extends React.Component<Props, State> {
 
   continue() {
     return () => {
-      this.setState({threadSelected: true})
+      this.setState({ threadSelected: true })
     }
   }
 
@@ -111,7 +111,9 @@ class InviteContactModal extends React.Component<Props, State> {
       <View style={styles.content}>
         <View style={styles.title}>
           <Text style={styles.titleText}>Invite others</Text>
-          <Text style={styles.subTitleText}>Select an existing group or create a new one.</Text>
+          <Text style={styles.subTitleText}>
+            Select an existing group or create a new one.
+          </Text>
         </View>
         <View style={styles.body}>
           <ThreadSelectComponent
@@ -148,6 +150,7 @@ class InviteContactModal extends React.Component<Props, State> {
         fullScreen={true}
         selectToShare={true}
         navigateTo={false}
+        isVisible={this.state.showCreateGroupModal}
         cancel={this.cancelCreateThread()}
         complete={this.completeCreateThread()}
       />
@@ -157,7 +160,11 @@ class InviteContactModal extends React.Component<Props, State> {
   renderBody() {
     if (this.state.showCreateGroupModal) {
       return this.renderCreateThread()
-    } else if (this.state.threadSelected && this.state.threadId && this.state.threadName) {
+    } else if (
+      this.state.threadSelected &&
+      this.state.threadId &&
+      this.state.threadName
+    ) {
       return this.renderPeerSelect(this.state.threadId, this.state.threadName)
     }
     return this.renderThreadSelect()
@@ -183,7 +190,7 @@ interface StateProps {
   threads: ReadonlyArray<ThreadData>
 }
 
-const mapStateToProps = (state: RootState): StateProps  => {
+const mapStateToProps = (state: RootState): StateProps => {
   return {
     threads: getThreads(state, 'name')
   }
@@ -196,9 +203,23 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
     whitelist: []
   }
   return {
-    completeScreen: () => { dispatch(PreferencesActions.completeTourSuccess('threadsManager' as TourScreens)) },
-    submit: (name, navigate, selectToShare) => { dispatch(PhotoViewingActions.addThreadRequest({ ...threadConfig, name }, { navigate, selectToShare })) }
+    completeScreen: () => {
+      dispatch(
+        PreferencesActions.completeTourSuccess('threadsManager' as TourScreens)
+      )
+    },
+    submit: (name, navigate, selectToShare) => {
+      dispatch(
+        PhotoViewingActions.addThreadRequest(
+          { ...threadConfig, name },
+          { navigate, selectToShare }
+        )
+      )
+    }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(InviteContactModal)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(InviteContactModal)

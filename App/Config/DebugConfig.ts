@@ -1,10 +1,10 @@
 export interface IDebugConfig {
-  showDevScreens: boolean,
-  useFixtures: boolean,
-  ezLogin: boolean,
-  yellowBox: boolean,
-  reduxLogging: boolean,
-  includeExamples: boolean,
+  showDevScreens: boolean
+  useFixtures: boolean
+  ezLogin: boolean
+  yellowBox: boolean
+  reduxLogging: boolean
+  includeExamples: boolean
   useReactotron: boolean
 }
 

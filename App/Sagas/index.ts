@@ -1,6 +1,13 @@
-import { takeLatest, takeEvery, all, call } from 'redux-saga/effects'
+import {
+  take,
+  takeLatest,
+  takeEvery,
+  all,
+  call,
+  select
+} from 'redux-saga/effects'
+import { PersistedState } from 'redux-persist'
 import { getType } from 'typesafe-actions'
-import { Dispatch } from 'redux'
 
 /* ------------- Types ------------- */
 
@@ -11,7 +18,6 @@ import UIActions from '../Redux/UIRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import AuthActions from '../Redux/AuthRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
-import TriggersActions from '../Redux/TriggersRedux'
 
 /* ------------- Sagas ------------- */
 
@@ -19,6 +25,7 @@ import { accountSaga } from '../features/account'
 import { contactsSaga } from '../features/contacts'
 import { groupSaga, groupActions } from '../features/group'
 import { photosSaga } from '../features/photos'
+import { cafesSaga } from '../features/cafes'
 
 import { startup } from './StartupSagas'
 
@@ -30,18 +37,12 @@ import {
 
 import {
   handleSharePhotoRequest,
-  handleImageUploadComplete,
   retryImageShare,
   cancelImageShare,
-  retryWithTokenRefresh,
-  handleImageProcessingError,
-  startMonitoringExistingUploads
+  handleImageProcessingError
 } from './ImageSharingTriggers'
 
-import {
-  inviteAfterOnboard,
-  routeDeepLink
-} from './DeepLinkSagas'
+import { inviteAfterOnboard, routeDeepLink } from './DeepLinkSagas'
 
 import {
   handleNewNotification,
@@ -77,29 +78,43 @@ import {
   navigateToComments,
   navigateToLikes,
   addPhotoLike,
-  cameraPermissionsTrigger,
+  triggerCameraRollPermission,
   presentPublicLinkInterface,
-  updateServices
+  updateServices,
+  handleToggleVerboseUi
 } from './TextileSagas'
 
-import {
-  startSagas
-} from './TextileEventsSagas'
+import { startSagas } from './TextileEventsSagas'
 
 /* ------------- Connect Types To Sagas ------------- */
 
-export default function * root(dispatch: Dispatch) {
+function* waitForRehydrate() {
+  const rehydrated = (state: PersistedState) => {
+    return state._persist ? state._persist.rehydrated : false
+  }
+  if (yield select(rehydrated)) {
+    return
+  }
+  while (true) {
+    yield take('*')
+    if (yield select(rehydrated)) {
+      return
+    }
+  }
+}
+
+export default function*() {
+  yield call(waitForRehydrate)
   yield all([
     call(accountSaga),
     call(contactsSaga),
     call(groupSaga),
     call(photosSaga),
+    call(cafesSaga),
 
     call(startSagas),
 
     call(monitorNewThreadActions),
-
-    call(startMonitoringExistingUploads),
 
     // some sagas only receive an action
     takeLatest(getType(StartupActions.startup), startup),
@@ -108,18 +123,36 @@ export default function * root(dispatch: Dispatch) {
     takeEvery(getType(groupActions.addPhoto.error), handleImageProcessingError),
 
     // permissions request events
-    takeLatest(getType(AuthActions.requestCameraPermissions), cameraPermissionsTrigger),
-    takeLatest(getType(PreferencesActions.toggleServicesRequest), updateServices),
+    takeLatest(
+      getType(AuthActions.requestCameraPermissions),
+      triggerCameraRollPermission
+    ),
+    takeLatest(
+      getType(PreferencesActions.toggleServicesRequest),
+      updateServices
+    ),
+
+    // verbose ui
+    takeEvery(
+      getType(PreferencesActions.toggleVerboseUi),
+      handleToggleVerboseUi
+    ),
 
     takeEvery(getType(UIActions.navigateToThreadRequest), navigateToThread),
     takeEvery(getType(UIActions.navigateToCommentsRequest), navigateToComments),
     takeEvery(getType(UIActions.navigateToLikesRequest), navigateToLikes),
-    takeEvery(getType(UIActions.addLikeRequest), addPhotoLike),
+    takeEvery(getType(UIActions.addLike.request), addPhotoLike),
 
     takeEvery(getType(PhotoViewingActions.addThreadRequest), addThread),
-    takeEvery(getType(PhotoViewingActions.threadAddedNotification), monitorThreadAddedNotifications),
+    takeEvery(
+      getType(PhotoViewingActions.threadAddedNotification),
+      monitorThreadAddedNotifications
+    ),
     takeEvery(getType(PhotoViewingActions.removeThreadRequest), removeThread),
-    takeEvery(getType(PhotoViewingActions.refreshThreadsRequest), refreshThreads),
+    takeEvery(
+      getType(PhotoViewingActions.refreshThreadsRequest),
+      refreshThreads
+    ),
     takeEvery(getType(PhotoViewingActions.refreshThreadRequest), refreshThread),
     takeEvery(getType(PhotoViewingActions.addCommentRequest), addPhotoComment),
 
@@ -132,10 +165,22 @@ export default function * root(dispatch: Dispatch) {
     /* ------------- End SDK ------------- */
 
     takeEvery(getType(ThreadsActions.threadQRCodeRequest), displayThreadQRCode),
-    takeEvery(getType(ThreadsActions.addExternalInviteRequest), addExternalInvite),
-    takeEvery(getType(ThreadsActions.addExternalInviteSuccess), presentShareInterface),
-    takeEvery(getType(ThreadsActions.acceptExternalInviteRequest), acceptExternalInvite),
-    takeEvery(getType(ThreadsActions.addInternalInvitesRequest), addInternalInvites),
+    takeEvery(
+      getType(ThreadsActions.addExternalInviteRequest),
+      addExternalInvite
+    ),
+    takeEvery(
+      getType(ThreadsActions.addExternalInviteSuccess),
+      presentShareInterface
+    ),
+    takeEvery(
+      getType(ThreadsActions.acceptExternalInviteRequest),
+      acceptExternalInvite
+    ),
+    takeEvery(
+      getType(ThreadsActions.addInternalInvitesRequest),
+      addInternalInvites
+    ),
 
     takeEvery(getType(ThreadsActions.acceptInviteRequest), acceptInvite),
 
@@ -146,18 +191,34 @@ export default function * root(dispatch: Dispatch) {
     takeEvery(getType(UIActions.walletPickerSuccess), walletPickerSuccess),
 
     takeEvery(getType(UIActions.sharePhotoRequest), handleSharePhotoRequest),
-    takeEvery(getType(groupActions.addPhoto.imageUploadComplete), handleImageUploadComplete),
     takeEvery(getType(groupActions.addPhoto.retry), retryImageShare),
     takeEvery(getType(groupActions.addPhoto.cancelRequest), cancelImageShare),
-    takeEvery(getType(groupActions.addPhoto.error), retryWithTokenRefresh),
 
     // Notifications
-    takeEvery(getType(NotificationsActions.newNotificationRequest), handleNewNotification),
-    takeEvery(getType(NotificationsActions.notificationEngagement), handleEngagement),
-    takeEvery(getType(NotificationsActions.notificationSuccess), notificationView),
-    takeEvery(getType(NotificationsActions.refreshNotificationsRequest), refreshNotifications),
-    takeEvery(getType(NotificationsActions.reviewNotificationThreadInvite), reviewThreadInvite),
-    takeEvery(getType(NotificationsActions.readAllNotificationsRequest), readAllNotifications),
+    takeEvery(
+      getType(NotificationsActions.newNotificationRequest),
+      handleNewNotification
+    ),
+    takeEvery(
+      getType(NotificationsActions.notificationEngagement),
+      handleEngagement
+    ),
+    takeEvery(
+      getType(NotificationsActions.notificationSuccess),
+      notificationView
+    ),
+    takeEvery(
+      getType(NotificationsActions.refreshNotificationsRequest),
+      refreshNotifications
+    ),
+    takeEvery(
+      getType(NotificationsActions.reviewNotificationThreadInvite),
+      reviewThreadInvite
+    ),
+    takeEvery(
+      getType(NotificationsActions.readAllNotificationsRequest),
+      readAllNotifications
+    ),
 
     // DeepLinks
     takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),

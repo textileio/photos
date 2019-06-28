@@ -12,8 +12,8 @@ export const numColumns = isSmallDevice ? 3 : 4
 
 export const PRODUCT_ITEM_OFFSET = 0.5
 export const PRODUCT_ITEM_MARGIN = PRODUCT_ITEM_OFFSET
-const ITEM_WIDTH = (SCREEN_WIDTH - PRODUCT_ITEM_MARGIN) / numColumns -
-  PRODUCT_ITEM_MARGIN
+const ITEM_WIDTH =
+  (SCREEN_WIDTH - PRODUCT_ITEM_MARGIN) / numColumns - PRODUCT_ITEM_MARGIN
 export const PRODUCT_ITEM_HEIGHT = ITEM_WIDTH
 
 export default StyleSheet.create({
@@ -105,8 +105,7 @@ export default StyleSheet.create({
     top: -18,
     height: 10
   },
-  photoCell: {
-  },
+  photoCell: {},
   photoStatus: {
     flex: 1,
     flexDirection: 'row',

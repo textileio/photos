@@ -29,12 +29,18 @@ interface ErrorSearchEvent {
 
 export type SearchEvent = ContactSearchEvent | ErrorSearchEvent
 
+export interface ContactSearchResult {
+  readonly key: string
+  readonly type: 'contact'
+  readonly data: IContact
+}
+
 export interface TextileSearchResult {
   readonly key: string
   readonly type: 'textile'
   readonly data: {
-    contact: IContact,
-    isContact: boolean,
+    contact: IContact
+    isContact: boolean
     adding: boolean
   }
 }
@@ -61,7 +67,13 @@ export interface EmptySearchResult {
   readonly type: 'empty'
 }
 
-export type SearchResult = TextileSearchResult | AddressBookSearchResult | ErrorSearchResult | LoadingSearchResult | EmptySearchResult
+export type SearchResult =
+  | TextileSearchResult
+  | AddressBookSearchResult
+  | ErrorSearchResult
+  | LoadingSearchResult
+  | EmptySearchResult
+  | ContactSearchResult
 
 export interface SearchResultsSection {
   readonly key: string

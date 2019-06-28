@@ -1,13 +1,19 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { View, Text, ScrollView, Platform } from 'react-native'
-import PreferencesActions, { PreferencesSelectors, StorageType } from '../../../Redux/PreferencesRedux'
+import PreferencesActions, {
+  PreferencesSelectors,
+  StorageType
+} from '../../../Redux/PreferencesRedux'
 import PermissionsInfo from '../../components/PermissionsInfo'
 import HeaderButtons from 'react-navigation-header-buttons'
 import SettingsRow from '../../components/SettingsRow'
-import GetServiceInfo, { StorageDescription } from './GetServiceInfo'
+import getServiceInfo, { StorageDescription } from './GetServiceInfo'
 
-import { TextileHeaderButtons, Item as TextileItem } from '../../../Components/HeaderButtons'
+import {
+  TextileHeaderButtons,
+  Item as TextileItem
+} from '../../../Components/HeaderButtons'
 
 import styles from './statics/styles'
 import Avatar from '../../../Components/Avatar'
@@ -27,18 +33,20 @@ interface PropState {
 }
 class Storage extends React.PureComponent<Props> {
   static navigationOptions = ({ navigation }: NavigationScreenProps<{}>) => {
-    const goBack = () => { navigation.dispatch(NavigationActions.back()) }
+    const goBack = () => {
+      navigation.dispatch(NavigationActions.back())
+    }
     return {
       headerTitle: 'Storage',
       headerLeft: (
         <TextileHeaderButtons left={true}>
-          <TextileItem title='Back' iconName='arrow-left' onPress={goBack} />
+          <TextileItem title="Back" iconName="arrow-left" onPress={goBack} />
         </TextileHeaderButtons>
       ),
       headerRight: (
         <HeaderButtons>
           <HeaderButtons.Item
-            title='Avatar'
+            title="Avatar"
             buttonWrapperStyle={{ marginLeft: 11, marginRight: 11 }}
             ButtonElement={<Avatar style={{ width: 32, height: 32 }} />}
           />
@@ -62,7 +70,7 @@ class Storage extends React.PureComponent<Props> {
   }
 
   showInfo = (service: string) => {
-    const info = GetServiceInfo(service)
+    const info = getServiceInfo(service)
     this.setState({ infoVisible: true, info })
   }
 
@@ -74,49 +82,57 @@ class Storage extends React.PureComponent<Props> {
         </View>
         <ScrollView style={styles.contentContainer}>
           <View style={styles.listContainer}>
-            {Object.keys(this.props.mainOptions)
-              .map((option, i) => {
-                const value = !!this.props.mainOptions[option].status
-                const info = this.props.mainOptions[option].info || {title: 'unknown', subtitle: 'unknown'}
-                return (
-                  <View key={i} >
-                    <SettingsRow
-                      service={option}
-                      info={info}
-                      value={value}
-                      infoPress={this.showInfo}
-                      onChange={this.toggleOption}
-                    />
-                  </View>
-                )
-              })
-            }
+            {Object.keys(this.props.mainOptions).map((option, i) => {
+              const value = Boolean(this.props.mainOptions[option].status)
+              const info = this.props.mainOptions[option].info || {
+                title: 'unknown',
+                subtitle: 'unknown'
+              }
+              return (
+                <View key={i}>
+                  <SettingsRow
+                    service={option}
+                    info={info}
+                    value={value}
+                    infoPress={this.showInfo}
+                    onChange={this.toggleOption}
+                  />
+                </View>
+              )
+            })}
           </View>
         </ScrollView>
-        {this.state.infoVisible && this.state.info && <PermissionsInfo info={this.state.info} close={this.hideInfo} />}
+        {this.state.infoVisible && this.state.info && (
+          <PermissionsInfo info={this.state.info} close={this.hideInfo} />
+        )}
       </View>
     )
   }
 }
 
-interface StorageOption {status: boolean, info?: StorageDescription}
+interface StorageOption {
+  status: boolean
+  info?: StorageDescription
+}
 interface StateProps {
-  allOptions: {[key: string]: StorageOption}
-  mainOptions: {[key: string]: StorageOption}
+  allOptions: { [key: string]: StorageOption }
+  mainOptions: { [key: string]: StorageOption }
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
   // get all top level options
-  const input: {[key: string]: StorageOption} = {}
-  const allOptions: {[key: string]: StorageOption} = Object.keys(state.preferences.storage)
-    .reduce((previous, current) => {
-      const basic: StorageOption = {
-        status: PreferencesSelectors.storage(state, current as StorageType).status,
-        info: GetServiceInfo(current)
-      }
-      previous[current] = basic
-      return previous
-    }, input)
+  const input: { [key: string]: StorageOption } = {}
+  const allOptions: { [key: string]: StorageOption } = Object.keys(
+    state.preferences.storage
+  ).reduce((previous, current) => {
+    const basic: StorageOption = {
+      status: PreferencesSelectors.storage(state, current as StorageType)
+        .status,
+      info: getServiceInfo(current)
+    }
+    previous[current] = basic
+    return previous
+  }, input)
 
   const mainOptions = allOptions
 
@@ -134,8 +150,13 @@ interface DispatchProps {
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
-    toggleStorageRequest: (name) => { dispatch(PreferencesActions.toggleStorageRequest(name)) }
+    toggleStorageRequest: name => {
+      dispatch(PreferencesActions.toggleStorageRequest(name))
+    }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Storage)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Storage)

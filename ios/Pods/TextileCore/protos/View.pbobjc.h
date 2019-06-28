@@ -91,28 +91,28 @@ GPBEnumDescriptor *FeedRequest_Mode_EnumDescriptor(void);
  **/
 BOOL FeedRequest_Mode_IsValidValue(int32_t value);
 
-#pragma mark - Enum WalletUpdate_Type
+#pragma mark - Enum AccountUpdate_Type
 
-typedef GPB_ENUM(WalletUpdate_Type) {
+typedef GPB_ENUM(AccountUpdate_Type) {
   /**
    * Value used if any message's field encounters a value that is not defined
    * by this enum. The message will also have C functions to get/set the rawValue
    * of the field.
    **/
-  WalletUpdate_Type_GPBUnrecognizedEnumeratorValue = kGPBUnrecognizedEnumeratorValue,
-  WalletUpdate_Type_ThreadAdded = 0,
-  WalletUpdate_Type_ThreadRemoved = 1,
-  WalletUpdate_Type_AccountPeerAdded = 2,
-  WalletUpdate_Type_AccountPeerRemoved = 3,
+  AccountUpdate_Type_GPBUnrecognizedEnumeratorValue = kGPBUnrecognizedEnumeratorValue,
+  AccountUpdate_Type_ThreadAdded = 0,
+  AccountUpdate_Type_ThreadRemoved = 1,
+  AccountUpdate_Type_AccountPeerAdded = 2,
+  AccountUpdate_Type_AccountPeerRemoved = 3,
 };
 
-GPBEnumDescriptor *WalletUpdate_Type_EnumDescriptor(void);
+GPBEnumDescriptor *AccountUpdate_Type_EnumDescriptor(void);
 
 /**
  * Checks to see if the given value is defined by the enum or was not known at
  * the time this source was generated.
  **/
-BOOL WalletUpdate_Type_IsValidValue(int32_t value);
+BOOL AccountUpdate_Type_IsValidValue(int32_t value);
 
 #pragma mark - Enum LogLevel_Level
 
@@ -459,6 +459,7 @@ typedef GPB_ENUM(Merge_FieldNumber) {
   Merge_FieldNumber_TargetsArray = 4,
 };
 
+GPB_DEPRECATED_MSG("Merge is deprecated (see view.proto).")
 @interface Merge : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *block;
@@ -690,6 +691,7 @@ typedef GPB_ENUM(Files_FieldNumber) {
   Files_FieldNumber_CommentsArray = 7,
   Files_FieldNumber_LikesArray = 8,
   Files_FieldNumber_ThreadsArray = 9,
+  Files_FieldNumber_Data_p = 10,
 };
 
 @interface Files : GPBMessage
@@ -697,6 +699,8 @@ typedef GPB_ENUM(Files_FieldNumber) {
 @property(nonatomic, readwrite, copy, null_resettable) NSString *block;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *target;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *data_p;
 
 @property(nonatomic, readwrite, strong, null_resettable) GPBTimestamp *date;
 /** Test to see if @c date has been set. */
@@ -750,6 +754,7 @@ typedef GPB_ENUM(Comment_FieldNumber) {
   Comment_FieldNumber_Target = 5,
 };
 
+GPB_DEPRECATED_MSG("Comment is deprecated (see view.proto).")
 @interface Comment : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *id_p;
@@ -776,6 +781,7 @@ typedef GPB_ENUM(CommentList_FieldNumber) {
   CommentList_FieldNumber_ItemsArray = 1,
 };
 
+GPB_DEPRECATED_MSG("CommentList is deprecated (see view.proto).")
 @interface CommentList : GPBMessage
 
 @property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<Comment*> *itemsArray;
@@ -825,35 +831,35 @@ typedef GPB_ENUM(LikeList_FieldNumber) {
 
 @end
 
-#pragma mark - WalletUpdate
+#pragma mark - AccountUpdate
 
-typedef GPB_ENUM(WalletUpdate_FieldNumber) {
-  WalletUpdate_FieldNumber_Id_p = 1,
-  WalletUpdate_FieldNumber_Key = 2,
-  WalletUpdate_FieldNumber_Type = 3,
+typedef GPB_ENUM(AccountUpdate_FieldNumber) {
+  AccountUpdate_FieldNumber_Id_p = 1,
+  AccountUpdate_FieldNumber_Key = 2,
+  AccountUpdate_FieldNumber_Type = 3,
 };
 
-@interface WalletUpdate : GPBMessage
+@interface AccountUpdate : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *id_p;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSString *key;
+@property(nonatomic, readwrite, copy, null_resettable) NSString *key GPB_DEPRECATED_MSG("AccountUpdate.key is deprecated (see view.proto).");
 
-@property(nonatomic, readwrite) WalletUpdate_Type type;
+@property(nonatomic, readwrite) AccountUpdate_Type type;
 
 @end
 
 /**
- * Fetches the raw value of a @c WalletUpdate's @c type property, even
+ * Fetches the raw value of a @c AccountUpdate's @c type property, even
  * if the value was not defined by the enum at the time the code was generated.
  **/
-int32_t WalletUpdate_Type_RawValue(WalletUpdate *message);
+int32_t AccountUpdate_Type_RawValue(AccountUpdate *message);
 /**
- * Sets the raw value of an @c WalletUpdate's @c type property, allowing
+ * Sets the raw value of an @c AccountUpdate's @c type property, allowing
  * it to be set to a value that was not defined by the enum at the time the code
  * was generated.
  **/
-void SetWalletUpdate_Type_RawValue(WalletUpdate *message, int32_t value);
+void SetAccountUpdate_Type_RawValue(AccountUpdate *message, int32_t value);
 
 #pragma mark - Summary
 
@@ -894,6 +900,20 @@ typedef GPB_ENUM(LogLevel_FieldNumber) {
 @property(nonatomic, readwrite, strong, null_resettable) GPBStringEnumDictionary *systems;
 /** The number of items in @c systems without causing the array to be created. */
 @property(nonatomic, readonly) NSUInteger systems_Count;
+
+@end
+
+#pragma mark - Strings
+
+typedef GPB_ENUM(Strings_FieldNumber) {
+  Strings_FieldNumber_ValuesArray = 1,
+};
+
+@interface Strings : GPBMessage
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *valuesArray;
+/** The number of items in @c valuesArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger valuesArray_Count;
 
 @end
 

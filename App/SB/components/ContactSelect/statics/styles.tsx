@@ -1,5 +1,5 @@
 import { StyleSheet, ImageStyle, ViewStyle, TextStyle } from 'react-native'
-import { BentonSansBold } from '../../../util/fonts'
+import { bentonSansBold } from '../../../util/fonts'
 
 interface Styles {
   contentContainer: ViewStyle
@@ -40,7 +40,7 @@ export default StyleSheet.create<Styles>({
     paddingTop: 25
   },
   link: {
-    ...BentonSansBold(),
+    ...bentonSansBold(),
     fontSize: 16,
     color: '#2625ff'
   },

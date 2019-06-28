@@ -1,5 +1,5 @@
 import { StyleSheet, ImageStyle, ViewStyle, TextStyle } from 'react-native'
-import { BentonSansBold } from '../../../util/fonts'
+import { bentonSansBold } from '../../../util/fonts'
 
 import { color } from '../../../../styles'
 
@@ -70,7 +70,7 @@ export default StyleSheet.create<Styles>({
     marginTop: 36
   },
   strong: {
-    ...BentonSansBold()
+    ...bentonSansBold()
   },
   title: {
     fontFamily: 'Biotif-Regular',

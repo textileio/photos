@@ -1,5 +1,15 @@
 import React from 'react'
-import { KeyboardAvoidingView, Image, Text, ViewStyle, ImageStyle, TextStyle, View, TouchableOpacity, Insets } from 'react-native'
+import {
+  KeyboardAvoidingView,
+  Image,
+  Text,
+  ViewStyle,
+  ImageStyle,
+  TextStyle,
+  View,
+  TouchableOpacity,
+  Insets
+} from 'react-native'
 import Toast from 'react-native-easy-toast'
 import Config from 'react-native-config'
 import { Buffer } from 'buffer'
@@ -7,6 +17,7 @@ import { Buffer } from 'buffer'
 import Input from '../SB/components/Input'
 import Button from '../Components/LargeButton'
 import { color, spacing, textStyle, fontFamily } from '../styles'
+import { emailValid } from '../Services/email'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
@@ -70,8 +81,10 @@ interface State {
   buttonText: string
 }
 
-export default class WaitListSignupScreen extends React.Component<Props, State> {
-
+export default class WaitListSignupScreen extends React.Component<
+  Props,
+  State
+> {
   toast?: Toast
 
   constructor(props: Props) {
@@ -90,57 +103,52 @@ export default class WaitListSignupScreen extends React.Component<Props, State> 
   updateText = (text: string) => {
     this.setState({
       emailAddress: text,
-      valid: this.emailValid(text)
+      valid: emailValid(text)
     })
-  }
-
-  emailValid = (email?: string) => {
-    if (!email) {
-      return false
-    }
-    const regexp = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
-    const results = email.match(regexp)
-    if (results && results.length > 0) {
-      return true
-    } else {
-      return false
-    }
   }
 
   render() {
     return (
       <KeyboardAvoidingView style={CONTAINER} behavior={'padding'}>
-          <View>
-            <Image style={IMAGE} source={require('../Containers/OnboardingScreen/statics/share.png')} />
-            <Text style={TITLE}>Thanks for your interest!</Text>
-            <Text style={SUBTITLE}>Enter your email address below, and we'll send you a referral code as soon as possible.</Text>
-            <Input
-              label={'Email Address'}
-              keyboardType='email-address'
-              autoCapitalize='none'
-              autoCorrect={false}
-              style={{ height: 40 }}
-              inputStyle={TEXT}
-              labelStyle={LABEL}
-              value={this.state.emailAddress}
-              onChangeText={this.updateText}
-              wrapperStyle={ITEM}
-            />
-            <Button
-              text={this.state.buttonText}
-              disabled={!this.state.valid}
-              processing={this.state.processing}
-              onPress={this.submit}
-              style={BUTTON}
-            />
-            <TouchableOpacity onPress={this.props.onSuccess} hitSlop={HIT_SLOP}>
-              <Text style={LINK}>Cancel</Text>
-            </TouchableOpacity>
-            <Toast
-              ref={(toast) => { this.toast = toast ? toast : undefined }}
-              position='center'
-            />
-          </View>
+        <View>
+          <Image
+            style={IMAGE}
+            source={require('../Containers/OnboardingScreen/statics/share.png')}
+          />
+          <Text style={TITLE}>Thanks for your interest!</Text>
+          <Text style={SUBTITLE}>
+            Enter your email address below, and we&apos;ll send you a referral
+            code as soon as possible.
+          </Text>
+          <Input
+            label={'Email Address'}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoCorrect={false}
+            style={{ height: 40 }}
+            inputStyle={TEXT}
+            labelStyle={LABEL}
+            value={this.state.emailAddress}
+            onChangeText={this.updateText}
+            wrapperStyle={ITEM}
+          />
+          <Button
+            text={this.state.buttonText}
+            disabled={!this.state.valid}
+            processing={this.state.processing}
+            onPress={this.submit}
+            style={BUTTON}
+          />
+          <TouchableOpacity onPress={this.props.onSuccess} hitSlop={HIT_SLOP}>
+            <Text style={LINK}>Cancel</Text>
+          </TouchableOpacity>
+          <Toast
+            ref={toast => {
+              this.toast = toast ? toast : undefined
+            }}
+            position="center"
+          />
+        </View>
       </KeyboardAvoidingView>
     )
   }
@@ -154,7 +162,10 @@ export default class WaitListSignupScreen extends React.Component<Props, State> 
         token: Config.RN_EMAIL_API_TOKEN
       }
       try {
-        const response = await fetch(url, { method: 'POST', body: JSON.stringify(body) })
+        const response = await fetch(url, {
+          method: 'POST',
+          body: JSON.stringify(body)
+        })
         const responseText = await response.text()
         this.setState({ processing: false })
         const validStatus = response.status >= 200 && response.status < 300
@@ -165,15 +176,21 @@ export default class WaitListSignupScreen extends React.Component<Props, State> 
             setTimeout(this.props.onSuccess, 1000)
           }
         } else {
-          const error = responseText.length > 0 ? responseText : `${response.status}`
+          const error =
+            responseText.length > 0 ? responseText : `${response.status}`
           this.setState({ error, buttonText: 'Retry', processing: false })
           if (this.toast) {
             this.toast.show(`Error: ${error}`, 2000)
           }
         }
       } catch (error) {
-        const message = error.message as string || error as string || 'unknown error'
-        this.setState({ error: message, buttonText: 'Retry', processing: false })
+        const message =
+          (error.message as string) || (error as string) || 'unknown error'
+        this.setState({
+          error: message,
+          buttonText: 'Retry',
+          processing: false
+        })
         if (this.toast) {
           this.toast.show(`Error: ${message}`, 2000)
         }

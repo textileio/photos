@@ -4,13 +4,6 @@ import { Crashlytics } from 'react-native-fabric'
 
 const originalHandler = ErrorUtils.getGlobalHandler()
 
-export function initErrorHandler() {
-  if (__DEV__) {
-    return
-  }
-  ErrorUtils.setGlobalHandler(errorHandler)
-}
-
 export function errorHandler(error: any, isFatal?: boolean) {
   if (__DEV__) {
     return
@@ -30,13 +23,14 @@ export function errorHandler(error: any, isFatal?: boolean) {
     e.name = 'unknown'
     e.message = 'unknown'
   }
-  StackTrace.fromError(e, { offline: true }).then((frames) => {
+  StackTrace.fromError(e, { offline: true }).then(frames => {
     // Crashlytics.recordCustomExceptionName(e.message, e.message, frames)
-    const updatedFrames = frames.map((row) =>  ({
+    const updatedFrames = frames.map(row => ({
       lineNumber: row.lineNumber,
       columnNumber: row.columnNumber,
       functionName: row.functionName,
-      fileName: `${row.fileName}:${row.lineNumber || 0}:${row.columnNumber || 0}`
+      fileName: `${row.fileName}:${row.lineNumber || 0}:${row.columnNumber ||
+        0}`
     }))
     Crashlytics.recordCustomExceptionName(e.message, e.message, updatedFrames)
   })
@@ -49,7 +43,16 @@ export function errorHandler(error: any, isFatal?: boolean) {
       // Add a delay to give it time to log the custom JS exception before crashing the app.
       // The user facing effect of this delay is that separate JS errors will appear as separate
       // issues in the Crashlytics dashboard.
-      setTimeout(() => { originalHandler(error, isFatal) }, 500)
+      setTimeout(() => {
+        originalHandler(error, isFatal)
+      }, 500)
     }
   }
+}
+
+export function initErrorHandler() {
+  if (__DEV__) {
+    return
+  }
+  ErrorUtils.setGlobalHandler(errorHandler)
 }

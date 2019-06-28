@@ -1,10 +1,10 @@
 import React from 'react'
-import {Dispatch} from 'redux'
+import { Dispatch } from 'redux'
 import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
 import { FlatList, View, Text, TouchableOpacity } from 'react-native'
 
-import {RootAction, RootState} from '../Redux/Types'
+import { RootAction, RootState } from '../Redux/Types'
 
 import { getThreads } from '../Redux/PhotoViewingSelectors'
 import { contactsSelectors } from '../features/contacts'
@@ -21,8 +21,9 @@ interface ScreenProps {
   createNewThread: () => void
 }
 
-class ThreadSelector extends React.Component<ScreenProps & StateProps & DispatchProps & NavigationScreenProps<{}>> {
-
+class ThreadSelector extends React.Component<
+  ScreenProps & StateProps & DispatchProps & NavigationScreenProps<{}>
+> {
   _onPressItem = (threadCardProps: any) => {
     const { id, name } = threadCardProps
     this.props.navigateToThread(id, name)
@@ -30,9 +31,7 @@ class ThreadSelector extends React.Component<ScreenProps & StateProps & Dispatch
 
   _renderItem = (rowData: any) => {
     const item: GroupAuthors = rowData.item
-    return (
-      <GroupCard id={item.id} {...item} onPress={this._onPressItem} />
-    )
+    return <GroupCard id={item.id} {...item} onPress={this._onPressItem} />
   }
 
   _renderFooter = () => {
@@ -55,7 +54,7 @@ class ThreadSelector extends React.Component<ScreenProps & StateProps & Dispatch
 
   render() {
     return (
-      <View style={styles.contentContainer} >
+      <View style={styles.contentContainer}>
         <FlatList
           data={this.props.threads}
           keyExtractor={this._keyExtractor}
@@ -85,10 +84,11 @@ interface StateProps {
 const mapStateToProps = (state: RootState): StateProps => {
   const ownAddress = accountSelectors.getAddress(state.account)
   const profile = state.account.profile.value
-  const threads = getThreads(state, 'date')
-  .map((thread) => {
+  const threads = getThreads(state, 'date').map(thread => {
     const selector = contactsSelectors.makeByThreadId(thread.id)
-    const members = selector(state.contacts).filter((contact) => contact.address !== ownAddress)
+    const members = selector(state.contacts).filter(
+      contact => contact.address !== ownAddress
+    )
     if (profile && members.length < 8) {
       members.unshift(profile)
     }
@@ -123,4 +123,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ThreadSelector)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ThreadSelector)

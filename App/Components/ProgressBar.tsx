@@ -23,11 +23,13 @@ export interface IProgressBarProps {
 }
 
 const ProgressBar = (props: IProgressBarProps) => {
-  const { style, progress, lineColor} = props
-  const progressPercentage =  `${Math.max(progress, 0.02) * 100}%`
-  const progressStyle = lineColor ? {...PROGRESS, backgroundColor: lineColor} : PROGRESS
+  const { style, progress, lineColor } = props
+  const progressPercentage = `${Math.max(progress, 0.02) * 100}%`
+  const progressStyle = lineColor
+    ? { ...PROGRESS, backgroundColor: lineColor }
+    : PROGRESS
   return (
-    <View style={{ ...TRACK, ...style }} >
+    <View style={{ ...TRACK, ...style }}>
       <View style={{ ...progressStyle, width: progressPercentage }} />
     </View>
   )

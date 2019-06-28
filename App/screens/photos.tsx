@@ -11,11 +11,15 @@ import {
   TouchableOpacity
 } from 'react-native'
 import Toast from 'react-native-easy-toast'
+import ActionSheet from 'react-native-actionsheet'
 import { NavigationScreenProps } from 'react-navigation'
 
 import Avatar from '../Components/Avatar'
 import TextileImage from '../Components/TextileImage'
-import { Item as HeaderItem, TextileHeaderButtons } from '../Components/HeaderButtons'
+import {
+  Item as HeaderItem,
+  TextileHeaderButtons
+} from '../Components/HeaderButtons'
 import { RootAction, RootState } from '../Redux/Types'
 import { photosActions, photosSelectors } from '../features/photos'
 import { Item } from '../features/photos/models'
@@ -37,24 +41,30 @@ interface StateProps {
 interface DispatchProps {
   queryPhotos: () => void
   refreshPhotos: () => void
+  clearProcessingPhotos: () => void
 }
 
 interface NavProps {
   openDrawer: () => void
+  showActionSheet: () => void
 }
 
 type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 
 class Photos extends Component<Props> {
-
-  static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
+  static navigationOptions = ({
+    navigation
+  }: NavigationScreenProps<NavProps>) => {
     const openDrawer = navigation.getParam('openDrawer')
+    const showActionSheet = navigation.getParam('showActionSheet')
     const headerLeft = (
       <TextileHeaderButtons left={true}>
         <HeaderItem
-          title='Account'
+          title="Account"
           onPress={openDrawer}
-          ButtonElement={<Avatar style={{ width: 24, height: 24 }} self={true} />}
+          ButtonElement={
+            <Avatar style={{ width: 24, height: 24 }} self={true} />
+          }
           buttonWrapperStyle={{ margin: 11 }}
         />
       </TextileHeaderButtons>
@@ -62,7 +72,11 @@ class Photos extends Component<Props> {
 
     const headerRight = (
       <TextileHeaderButtons>
-        <HeaderItem title='Add Group' iconName='plus' />
+        <HeaderItem
+          title="More"
+          iconName="more-vertical"
+          onPress={showActionSheet}
+        />
       </TextileHeaderButtons>
     )
     return {
@@ -74,10 +88,13 @@ class Photos extends Component<Props> {
 
   toast?: Toast
 
+  actionSheet: any
+
   componentDidMount() {
     this.props.refreshPhotos()
     this.props.navigation.setParams({
-      openDrawer: this.openDrawer
+      openDrawer: this.openDrawer,
+      showActionSheet: this.showActionSheet
     })
   }
 
@@ -92,23 +109,38 @@ class Photos extends Component<Props> {
           refreshing={this.props.refreshing}
           numColumns={3}
         />
-        <Toast position={'center'} ref={(ref) => this.toast = ref ? ref : undefined} />
+        <Toast
+          position={'center'}
+          ref={ref => (this.toast = ref ? ref : undefined)}
+        />
+        <ActionSheet
+          ref={(o: any) => {
+            this.actionSheet = o
+          }}
+          title={'Options'}
+          options={['Clear processing items', 'Cancel']}
+          cancelButtonIndex={1}
+          onPress={this.handleActionSheetResponse}
+        />
       </View>
     )
   }
 
-  keyExtractor = (item: Item) => item.type === 'files' ? item.files.target : item.processingPhoto.photo.assetId
+  keyExtractor = (item: Item) =>
+    item.type === 'files'
+      ? item.files.target
+      : item.processingPhoto.photo.assetId
 
   renderRow = (row: ListRenderItemInfo<Item>) => {
     if (row.item.type === 'files') {
-      const { files, target } = row.item.files
+      const { files, data } = row.item.files
       const fileIndex = files.length > 0 && files[0].index ? files[0].index : 0
       return (
         <TextileImage
-          target={target}
+          target={data}
           index={fileIndex}
           forMinWidth={itemSize}
-          resizeMode='cover'
+          resizeMode="cover"
           style={{ width: itemSize, height: itemSize }}
         />
       )
@@ -123,18 +155,44 @@ class Photos extends Component<Props> {
             style={{ width: itemSize, height: itemSize }}
             source={{ uri }}
           />
-          {error &&
-            <TouchableOpacity onPress={this.showToast(error)} hitSlop={{ top: 20, left: 20, bottom: 20, right: 20 }}>
-              <View style={{ width: 12, height: 12, backgroundColor: 'red', borderColor: 'black', borderWidth: 1, borderRadius: 6, position: 'absolute', right: 5, bottom: 5 }} />
+          {error && (
+            <TouchableOpacity
+              onPress={this.showToast(error)}
+              hitSlop={{ top: 20, left: 20, bottom: 20, right: 20 }}
+            >
+              <View
+                style={{
+                  width: 12,
+                  height: 12,
+                  backgroundColor: 'red',
+                  borderColor: 'black',
+                  borderWidth: 1,
+                  borderRadius: 6,
+                  position: 'absolute',
+                  right: 5,
+                  bottom: 5
+                }}
+              />
             </TouchableOpacity>
-          }
-          {!error &&
-            <View style={{ width: 12, height: 12, backgroundColor: color, borderColor: 'black', borderWidth: 1, borderRadius: 6, position: 'absolute', right: 5, bottom: 5 }} />
-          }
+          )}
+          {!error && (
+            <View
+              style={{
+                width: 12,
+                height: 12,
+                backgroundColor: color,
+                borderColor: 'black',
+                borderWidth: 1,
+                borderRadius: 6,
+                position: 'absolute',
+                right: 5,
+                bottom: 5
+              }}
+            />
+          )}
         </View>
       )
     }
-
   }
 
   showToast = (message: string) => {
@@ -149,6 +207,15 @@ class Photos extends Component<Props> {
     this.props.navigation.openDrawer()
   }
 
+  showActionSheet = () => {
+    this.actionSheet.show()
+  }
+
+  handleActionSheetResponse = (index: number) => {
+    if (index === 0) {
+      this.props.clearProcessingPhotos()
+    }
+  }
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
@@ -160,7 +227,11 @@ const mapStateToProps = (state: RootState): StateProps => {
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
   queryPhotos: () => dispatch(photosActions.queryCameraRoll.request()),
-  refreshPhotos: () => dispatch(photosActions.refreshPhotos.request(undefined))
+  refreshPhotos: () => dispatch(photosActions.refreshPhotos.request(undefined)),
+  clearProcessingPhotos: () => dispatch(photosActions.clearProcessingPhotos())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Photos)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Photos)

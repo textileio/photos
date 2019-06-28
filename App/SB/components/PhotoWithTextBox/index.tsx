@@ -17,26 +17,33 @@ const PhotoWithTextBox = (props: PhotoWithTextBoxProps) => {
 
   return (
     <View style={[styles.itemContainer, style]}>
-      {photo &&
-      <View style={styles.item}>
-        <View style={styles.itemBackgroundContainer}>
-          {photo && <TextileImage
-            target={photo.target}
-            index={photo.files[0].index}
-            forMinWidth={70}
-            style={{width: 70, height: 50}}
-            resizeMode={'cover'}
-            capInsets={'true'}
-          />}
+      {photo && (
+        <View style={styles.item}>
+          <View style={styles.itemBackgroundContainer}>
+            {photo && (
+              <TextileImage
+                target={photo.data}
+                index={photo.files[0].index}
+                forMinWidth={70}
+                style={{ width: 70, height: 50 }}
+                resizeMode={'cover'}
+                capInsets={'true'}
+              />
+            )}
+          </View>
         </View>
-      </View>
-      }
-      {(!photo) &&
+      )}
+      {!photo && (
         <View style={styles.itemBox}>
-          <Image style={styles.itemBoxPlus} source={require('../PhotoBoxEmpty/statics/icon-big-plus.png')} />
+          <Image
+            style={styles.itemBoxPlus}
+            source={require('../PhotoBoxEmpty/statics/icon-big-plus.png')}
+          />
         </View>
-      }
-      <Text numberOfLines={1} style={styles.itemText}>{text}</Text>
+      )}
+      <Text numberOfLines={1} style={styles.itemText}>
+        {text}
+      </Text>
     </View>
   )
 }

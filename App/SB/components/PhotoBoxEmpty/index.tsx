@@ -12,10 +12,8 @@ const PhotoWithTextBox = (props: PhotoWithTextBoxProps) => {
   const { style, title } = props
   const viewStyle = StyleSheet.flatten([styles.itemContainer, style])
   return (
-    <View style={viewStyle} >
-      <View
-        style={styles.itemBox}
-      >
+    <View style={viewStyle}>
+      <View style={styles.itemBox}>
         <Image
           style={styles.itemBoxPlus}
           source={require('./statics/icon-big-plus.png')}

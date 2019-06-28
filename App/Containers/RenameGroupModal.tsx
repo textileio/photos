@@ -23,7 +23,10 @@ import {
 import Modal from 'react-native-modal'
 import { color, spacing, size, fontSize, fontFamily } from '../styles'
 
-import { TextileHeaderButtons, Item as TextileHeaderButtonsItem } from '../Components/HeaderButtons'
+import {
+  TextileHeaderButtons,
+  Item as TextileHeaderButtonsItem
+} from '../Components/HeaderButtons'
 import Button from '../Components/LargeButton'
 import Input from '../SB/components/Input'
 
@@ -98,14 +101,13 @@ interface ModalProps {
 }
 
 interface State {
-  newName: string,
+  newName: string
   startedRename: boolean
 }
 
 type Props = StateProps & DispatchProps & ModalProps
 
 class RenameGroupModal extends React.Component<Props, State> {
-
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -125,7 +127,8 @@ class RenameGroupModal extends React.Component<Props, State> {
 
   render() {
     const groupName = this.props.groupName
-    const disabled = this.state.newName === '' || (this.props.renaming && !this.props.error)
+    const disabled =
+      this.state.newName === '' || (this.props.renaming && !this.props.error)
     return (
       <Modal
         isVisible={this.props.isVisible}
@@ -133,7 +136,7 @@ class RenameGroupModal extends React.Component<Props, State> {
         animationOut={'fadeOutDown'}
         avoidKeyboard={true}
         backdropOpacity={0}
-        style={{margin: 0, padding: 0}}
+        style={{ margin: 0, padding: 0 }}
       >
         <View style={container}>
           <Input
@@ -143,10 +146,7 @@ class RenameGroupModal extends React.Component<Props, State> {
             onChangeText={this.handleNewText}
           />
           <View style={buttons}>
-            <TouchableOpacity
-              style={buttonContainer}
-              onPress={this.cancel}
-            >
+            <TouchableOpacity style={buttonContainer} onPress={this.cancel}>
               <Text style={cancelButtonText}>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -184,7 +184,10 @@ class RenameGroupModal extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: RootState, ownProps: ModalProps): StateProps => {
+const mapStateToProps = (
+  state: RootState,
+  ownProps: ModalProps
+): StateProps => {
   const threadId = ownProps.threadId
   const renaming = Object.keys(state.group.renameGroup).indexOf(threadId) > -1
   const error = renaming ? state.group.renameGroup[threadId].error : undefined
@@ -194,12 +197,27 @@ const mapStateToProps = (state: RootState, ownProps: ModalProps): StateProps => 
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: ModalProps): DispatchProps => {
+const mapDispatchToProps = (
+  dispatch: Dispatch<RootAction>,
+  ownProps: ModalProps
+): DispatchProps => {
   const threadId = ownProps.threadId
   return {
-    rename: (newName: string) => { dispatch(groupActions.renameGroup.renameGroup.request({ threadId, name: newName })) },
-    cancelRenameGroup: () => { dispatch(groupActions.renameGroup.cancelRenameGroup(threadId))}
+    rename: (newName: string) => {
+      dispatch(
+        groupActions.renameGroup.renameGroup.request({
+          threadId,
+          name: newName
+        })
+      )
+    },
+    cancelRenameGroup: () => {
+      dispatch(groupActions.renameGroup.cancelRenameGroup(threadId))
+    }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(RenameGroupModal)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(RenameGroupModal)

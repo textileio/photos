@@ -48,7 +48,7 @@ export default combineReducers<ContactsState, ContactsAction>({
       case getType(actions.searchResultTextile): {
         return {
           ...state,
-          results: [...state.results || [], action.payload.result]
+          results: [...(state.results || []), action.payload.result]
         }
       }
       case getType(actions.textileSearchComplete): {
@@ -59,16 +59,18 @@ export default combineReducers<ContactsState, ContactsAction>({
       }
       case getType(actions.searchErrorTextile): {
         const { error } = action.payload
-        const message = error.message as string || error as string || 'unknown'
+        const message =
+          (error.message as string) || (error as string) || 'unknown'
         return {
+          ...state,
           processing: false,
           error: message
         }
       }
       case getType(actions.clearSearch): {
         return {
-            processing: false
-          }
+          processing: false
+        }
       }
       default:
         return state
@@ -88,13 +90,15 @@ export default combineReducers<ContactsState, ContactsAction>({
       }
       case getType(actions.searchResultsAddressBook): {
         return {
+          ...state,
           processing: false,
           results: action.payload.results
         }
       }
       case getType(actions.searchErrorAddressBook): {
         const { error } = action.payload
-        const message = error.message as string || error as string || 'unknown'
+        const message =
+          (error.message as string) || (error as string) || 'unknown'
         return {
           processing: false,
           error: message
@@ -102,8 +106,8 @@ export default combineReducers<ContactsState, ContactsAction>({
       }
       case getType(actions.clearSearch): {
         return {
-            processing: false
-          }
+          processing: false
+        }
       }
       default:
         return state
@@ -119,12 +123,16 @@ export default combineReducers<ContactsState, ContactsAction>({
       }
       case getType(actions.addContactSuccess):
       case getType(actions.clearAddContact): {
-        const { [action.payload.contact.address]: removed, ...addingContacts } = state
+        const {
+          [action.payload.contact.address]: removed,
+          ...addingContacts
+        } = state
         return addingContacts
       }
       case getType(actions.addContactError): {
         const { contact, error } = action.payload
-        const message = error.message as string || error as string || 'unknown'
+        const message =
+          (error.message as string) || (error as string) || 'unknown'
         return {
           ...state,
           [contact.address]: {
@@ -150,7 +158,8 @@ export default combineReducers<ContactsState, ContactsAction>({
       }
       case getType(actions.removeContact.failure): {
         const { address, error } = action.payload
-        const errorMessage = error.message as string || error as string || 'unknown'
+        const errorMessage =
+          (error.message as string) || (error as string) || 'unknown'
         return {
           ...state,
           [address]: {

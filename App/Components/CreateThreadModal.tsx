@@ -24,19 +24,19 @@ interface DispatchProps {
   submit: (name: string, navigate: boolean, selectToShare: boolean) => void
 }
 
-interface ModalProps {
-  isVisible: boolean
-}
-
 interface ScreenProps {
+  isVisible: boolean
   selectToShare?: boolean
   navigateTo?: boolean
   fullScreen?: boolean
+  invites?: ReadonlyArray<string>
   cancel: () => void
   complete: () => void
 }
 
-class Component extends React.Component<DispatchProps & ScreenProps> {
+class CreateThreadComponent extends React.Component<
+  DispatchProps & ScreenProps
+> {
   state = {
     value: '',
     submitted: false
@@ -51,12 +51,12 @@ class Component extends React.Component<DispatchProps & ScreenProps> {
       if (this.state.submitted) {
         return
       }
-      this.setState({submitted: true})
+      this.setState({ submitted: true })
       this.props.completeScreen(this.state.value)
       this.props.submit(
         this.state.value,
-        !!this.props.navigateTo,
-        !!this.props.selectToShare
+        Boolean(this.props.navigateTo),
+        Boolean(this.props.selectToShare)
       )
       this.props.complete()
     }
@@ -65,15 +65,27 @@ class Component extends React.Component<DispatchProps & ScreenProps> {
   render() {
     const submitDisabled = !(this.state.value.length > 0)
     return (
-      <KeyboardAvoidingView behavior={'height'} style={styles.modal}>
+      <Modal
+        isVisible={this.props.isVisible}
+        animationIn={'fadeInUp'}
+        animationOut={'fadeOutDown'}
+        avoidKeyboard={true}
+        backdropOpacity={0.5}
+        style={{ margin: 0, padding: 0 }}
+      >
+        <KeyboardAvoidingView behavior={'height'} style={styles.modal}>
           <View style={styles.container}>
             <View style={styles.content}>
-              {this.props.fullScreen && <View style={styles.title}>
-                <Text style={styles.titleText}>New Group</Text>
-              </View>}
-              {!this.props.fullScreen && <View style={styles.header}>
-                <Text style={styles.headerText}>New Group</Text>
-              </View>}
+              {this.props.fullScreen && (
+                <View style={styles.title}>
+                  <Text style={styles.titleText}>New Group</Text>
+                </View>
+              )}
+              {!this.props.fullScreen && (
+                <View style={styles.header}>
+                  <Text style={styles.headerText}>New Group</Text>
+                </View>
+              )}
               <View style={styles.topRow}>
                 <Input
                   style={styles.inputStyle}
@@ -82,53 +94,68 @@ class Component extends React.Component<DispatchProps & ScreenProps> {
                   onChangeText={this.handleNewText}
                 />
               </View>
-              <View style={[styles.bottomRow, !this.props.fullScreen && styles.bottomRowMargin]}>
-                <TouchableOpacity
-                  onPress={this.props.cancel}
-                >
+              <View
+                style={[
+                  styles.bottomRow,
+                  !this.props.fullScreen && styles.bottomRowMargin
+                ]}
+              >
+                <TouchableOpacity onPress={this.props.cancel}>
                   <Text style={styles.buttonText}>Cancel</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   disabled={submitDisabled}
                   onPress={this.create()}
                 >
-                  <Text style={[styles.buttonText, submitDisabled && styles.disabled]}>Submit</Text>
+                  <Text
+                    style={[
+                      styles.buttonText,
+                      submitDisabled && styles.disabled
+                    ]}
+                  >
+                    Submit
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
           </View>
         </KeyboardAvoidingView>
+      </Modal>
     )
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
+const mapDispatchToProps = (
+  dispatch: Dispatch<RootAction>,
+  ownProps: ScreenProps
+): DispatchProps => {
   const threadConfig = {
     type: Thread.Type.OPEN,
     sharing: Thread.Sharing.SHARED,
     whitelist: []
   }
   return {
-    completeScreen: () => { dispatch(PreferencesActions.completeTourSuccess('threadsManager' as TourScreens)) },
-    submit: (name, navigate, selectToShare) => { dispatch(PhotoViewingActions.addThreadRequest({ ...threadConfig, name }, { navigate, selectToShare })) }
+    completeScreen: () => {
+      dispatch(
+        PreferencesActions.completeTourSuccess('threadsManager' as TourScreens)
+      )
+    },
+    submit: (name, navigate, selectToShare) => {
+      dispatch(
+        PhotoViewingActions.addThreadRequest(
+          { ...threadConfig, name },
+          {
+            navigate,
+            selectToShare,
+            invites: ownProps.invites
+          }
+        )
+      )
+    }
   }
 }
 
-export const CreateThreadComponent = connect(undefined, mapDispatchToProps)(Component)
-
-export default class CreateThreadModal extends React.Component<ScreenProps & ModalProps> {
-  render() {
-    return (
-      <Modal
-        isVisible={this.props.isVisible}
-        animationIn={'fadeInUp'}
-        animationOut={'fadeOutDown'}
-        avoidKeyboard={true}
-        backdropOpacity={0.5}
-        style={{margin: 0, padding: 0}}
-      >
-        <CreateThreadComponent {...this.props} />
-      </Modal>
-    )
-  }
-}
+export default connect(
+  undefined,
+  mapDispatchToProps
+)(CreateThreadComponent)

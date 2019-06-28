@@ -3,4 +3,11 @@ import accountReducer, { AccountState, AccountAction } from './reducer'
 import * as accountSelectors from './selectors'
 import accountSaga from './sagas'
 
-export { accountActions, accountReducer, accountSelectors, AccountState, AccountAction, accountSaga }
+export {
+  accountActions,
+  accountReducer,
+  accountSelectors,
+  AccountState,
+  AccountAction,
+  accountSaga
+}

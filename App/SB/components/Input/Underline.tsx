@@ -29,22 +29,32 @@ class Underline extends Component<UnderlineProps> {
     }).start()
   }
 
-  onLayout = (e: LayoutChangeEvent) => { this.state.wrapperWidth = e.nativeEvent.layout.width }
+  onLayout = (e: LayoutChangeEvent) => {
+    this.setState({
+      wrapperWidth: e.nativeEvent.layout.width
+    })
+  }
+
   render() {
     const { borderColor, highlightColor } = this.props
     return (
       <View
         onLayout={this.onLayout}
-        style={[styles.underlineWrapper, {
-          backgroundColor: borderColor
-        }]}
+        style={[
+          styles.underlineWrapper,
+          {
+            backgroundColor: borderColor
+          }
+        ]}
       >
         <Animated.View
-          style={[{
-            width: this.state.lineLength,
-            height: 1,
-            backgroundColor: highlightColor
-          }]}
+          style={[
+            {
+              width: this.state.lineLength,
+              height: 1,
+              backgroundColor: highlightColor
+            }
+          ]}
         />
       </View>
     )

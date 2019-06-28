@@ -1,7 +1,6 @@
-import { Join, Leave, Files, Text } from '@textile/react-native-sdk'
+import { FeedItemData } from '@textile/react-native-sdk'
 
 import { FeedState } from './reducer'
-import { FeedItem } from './models'
 
 export function feedOffsetForGroup(state: FeedState, groupId: string) {
   const feed = state.groups[groupId]
@@ -12,7 +11,10 @@ export function feedOffsetForGroup(state: FeedState, groupId: string) {
   return last.block
 }
 
-export const feedItems = (state: FeedState, groupId: string): ReadonlyArray<FeedItem> => {
+export function feedItems(
+  state: FeedState,
+  groupId: string
+): ReadonlyArray<FeedItemData> {
   const feed = state.groups[groupId]
   if (!feed) {
     return []

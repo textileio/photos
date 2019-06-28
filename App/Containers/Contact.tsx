@@ -6,13 +6,11 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  ViewStyle
+  ViewStyle,
+  TextStyle
 } from 'react-native'
 import { NavigationScreenProps } from 'react-navigation'
-import {
-  IContact,
-  Thread
-} from '@textile/react-native-sdk'
+import { IContact, Thread } from '@textile/react-native-sdk'
 
 // Components
 import Avatar from '../Components/Avatar'
@@ -22,13 +20,20 @@ import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 
 // Styles
 import styles from '../Components/Styles/ContactModal'
-import { color, spacing } from '../styles'
+import { color, spacing, fontFamily, fontSize } from '../styles'
 
 // Redux
 import { RootState, RootAction } from '../Redux/Types'
-import PhotoViewingActions, { ThreadThumbs, ThreadData } from '../Redux/PhotoViewingRedux'
-import { getThreadThumbs, getDirectMessageThread } from '../Redux/PhotoViewingSelectors'
+import PhotoViewingActions, {
+  ThreadThumbs,
+  ThreadData
+} from '../Redux/PhotoViewingRedux'
+import {
+  getThreadThumbs,
+  getDirectMessageThread
+} from '../Redux/PhotoViewingSelectors'
 import { contactsActions } from '../features/contacts'
+import { cafes } from '../features/contacts/selectors'
 
 const buttons: ViewStyle = {
   flexDirection: 'row',
@@ -38,6 +43,25 @@ const buttons: ViewStyle = {
 
 const addOrRemoveButton: ViewStyle = {
   marginRight: spacing._012
+}
+
+const cafesList: ViewStyle = {
+  width: '100%',
+  flex: 0,
+  paddingHorizontal: spacing._016,
+  paddingTop: spacing._024
+}
+
+const cafesHeader: TextStyle = {
+  fontFamily: fontFamily.bold,
+  fontSize: fontSize._16,
+  marginBottom: spacing._012
+}
+
+const cafesTitle: TextStyle = {
+  fontFamily: fontFamily.regular,
+  fontSize: fontSize._14,
+  marginBottom: spacing._012
 }
 
 interface NavProps {
@@ -62,12 +86,13 @@ interface DispatchProps {
 type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 
 class ContactModal extends React.Component<Props> {
-
-  static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
+  static navigationOptions = ({
+    navigation
+  }: NavigationScreenProps<NavProps>) => {
     const back = () => navigation.goBack()
     const headerLeft = (
       <TextileHeaderButtons left={true}>
-        <Item title='Back' iconName='arrow-left' onPress={back} />
+        <Item title="Back" iconName="arrow-left" onPress={back} />
       </TextileHeaderButtons>
     )
     return {
@@ -83,7 +108,8 @@ class ContactModal extends React.Component<Props> {
   }
 
   render() {
-    const avatar = this.props.navigation.getParam('contact').avatar
+    const contact = this.props.navigation.getParam('contact')
+    const avatar = contact.avatar
     const removingText = this.props.removing ? 'Removing' : 'Remove'
     const addingText = this.props.adding ? 'Adding' : 'Add'
     const buttonText = this.props.isContact ? removingText : addingText
@@ -91,20 +117,19 @@ class ContactModal extends React.Component<Props> {
     return (
       <View style={styles.container}>
         <View style={styles.profile}>
-          <Avatar style={{ width: 72, height: 72, backgroundColor: color.grey_5 }} target={avatar} />
-          <Text
-            adjustsFontSizeToFit={true}
-            numberOfLines={1}
-            style={styles.username}
-          >
-            {this.props.displayName}
-          </Text>
+          <Avatar
+            style={{ width: 72, height: 72, backgroundColor: color.grey_5 }}
+            target={avatar}
+          />
+          <Text style={styles.username}>{this.props.displayName}</Text>
           <View style={buttons}>
             <Button
               text={buttonText}
               style={{
                 ...addOrRemoveButton,
-                backgroundColor: this.props.isContact ? color.severe_3 : color.action_3
+                backgroundColor: this.props.isContact
+                  ? color.severe_3
+                  : color.action_3
               }}
               disabled={buttonDisabled}
               onPress={this.props.isContact ? this.onRemove : this.onAdd}
@@ -117,12 +142,29 @@ class ContactModal extends React.Component<Props> {
         </View>
         <ScrollView style={styles.threadsList}>
           <Text style={styles.threadsTitle}>
-            {this.props.threadThumbs.length > 0 ? 'Sharing in Groups:' : 'Not part of any shared groups'}
+            {this.props.threadThumbs.length > 0
+              ? 'Sharing in Groups:'
+              : 'Not part of any shared groups'}
           </Text>
           {this.props.threadThumbs.map((thread, i) => (
-            <TouchableOpacity key={i} onPress={this.navigateToThread(thread.id)}>
-            <PhotoWithTextBox key={i} text={thread.name} photo={thread.thumb} />
+            <TouchableOpacity
+              key={i}
+              onPress={this.navigateToThread(thread.id)}
+            >
+              <PhotoWithTextBox
+                key={i}
+                text={thread.name}
+                photo={thread.thumb}
+              />
             </TouchableOpacity>
+          ))}
+        </ScrollView>
+        <ScrollView style={cafesList}>
+          <Text style={cafesHeader}>Registered With the Following Cafes:</Text>
+          {cafes(contact).map((cafe, i) => (
+            <Text key={i} style={cafesTitle}>
+              {cafe.address}
+            </Text>
           ))}
         </ScrollView>
       </View>
@@ -141,23 +183,31 @@ class ContactModal extends React.Component<Props> {
     if (this.props.directMessageThread) {
       // Navigate to direct message thread
       const { id, name } = this.props.directMessageThread
-      this.props.navigation.navigate('ViewThread', { threadId: id, groupName: name })
+      this.props.navigation.navigate('ViewThread', {
+        threadId: id,
+        groupName: name
+      })
     } else {
       this.props.createDirectMessageThread()
     }
   }
 }
 
-const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavProps>): StateProps => {
+const mapStateToProps = (
+  state: RootState,
+  ownProps: NavigationScreenProps<NavProps>
+): StateProps => {
   const contact = ownProps.navigation.getParam('contact')
   const username = contact.name
   const address = contact.address
   // Check if this contact is already added
-  const isContact = state.contacts.contacts.some((c) => c.address === address)
+  const isContact = state.contacts.contacts.some(c => c.address === address)
   // Check if this contact is currently being removed
-  const removing = Object.keys(state.contacts.removingContacts).indexOf(address) > -1
+  const removing =
+    Object.keys(state.contacts.removingContacts).indexOf(address) > -1
   // Check if this contact is currently being added
-  const adding = Object.keys(state.contacts.addingContacts).indexOf(address) > -1
+  const adding =
+    Object.keys(state.contacts.addingContacts).indexOf(address) > -1
   const directMessageThread = getDirectMessageThread(state, address)
   return {
     displayName: username ? username : address.substring(0, 12),
@@ -169,7 +219,10 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: NavigationScreenProps<NavProps>): DispatchProps => {
+const mapDispatchToProps = (
+  dispatch: Dispatch<RootAction>,
+  ownProps: NavigationScreenProps<NavProps>
+): DispatchProps => {
   const contact = ownProps.navigation.getParam('contact')
   const { address, name } = contact
   const threadConfig = {
@@ -179,10 +232,17 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: Navigation
     sharing: Thread.Sharing.NOT_SHARED
   }
   return {
-    removeContact: () => dispatch(contactsActions.removeContact.request(address)),
+    removeContact: () =>
+      dispatch(contactsActions.removeContact.request(address)),
     addContact: () => dispatch(contactsActions.addContactRequest(contact)),
-    createDirectMessageThread: () => dispatch(PhotoViewingActions.addThreadRequest(threadConfig, { navigate: true }))
+    createDirectMessageThread: () =>
+      dispatch(
+        PhotoViewingActions.addThreadRequest(threadConfig, { navigate: true })
+      )
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ContactModal)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ContactModal)

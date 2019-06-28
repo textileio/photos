@@ -6,6 +6,7 @@ const initialState = reducer(undefined, {} as any)
 const threadId = 'threadId'
 const threadKey = 'threadKey'
 const threadName = 'threadName'
+const threadInitiator = 'username'
 const threadType = 2
 const threadSharing = 0
 const threadWhitelist: ReadonlyArray<string> = []
@@ -14,24 +15,28 @@ const thread = {
   key: threadKey,
   name: threadName,
   type: threadType,
+  initiator: threadInitiator,
   sharing: threadSharing,
   whitelist: threadWhitelist
 }
-const photos: IFiles[] = [{
-  user: {
-    name: 'username',
-    address: 'address',
-    avatar: 'avatar'
-  },
-  caption: '',
-  block: 'block_id',
-  target: 'target',
-  date: { seconds: 10, nanos: 20 },
-  files: [],
-  comments: [],
-  likes: [],
-  threads: []
-}]
+const photos: IFiles[] = [
+  {
+    user: {
+      name: 'username',
+      address: 'address',
+      avatar: 'avatar'
+    },
+    caption: '',
+    block: 'block_id',
+    target: 'target',
+    data: 'data',
+    date: { seconds: 10, nanos: 20 },
+    files: [],
+    comments: [],
+    likes: [],
+    threads: []
+  }
+]
 
 describe('photo viewing stories', () => {
   describe('initial state', () => {
@@ -47,7 +52,10 @@ describe('photo viewing stories', () => {
       expect(state1.threads[threadId]).toBeDefined()
       expect(state1.threads[threadId]!.querying).toBeTruthy()
       expect(state1.threads[threadId]!.photos.length).toEqual(0)
-      const state2 = reducer(state1, actions.refreshThreadSuccess(threadId, photos))
+      const state2 = reducer(
+        state1,
+        actions.refreshThreadSuccess(threadId, photos)
+      )
       expect(state2.threads[threadId]!.photos.length).toEqual(1)
     })
   })

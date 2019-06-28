@@ -1,5 +1,11 @@
 import React, { Component } from 'react'
-import { View, ViewProps, LayoutChangeEvent, ViewStyle, StyleProp } from 'react-native'
+import {
+  View,
+  ViewProps,
+  LayoutChangeEvent,
+  ViewStyle,
+  StyleProp
+} from 'react-native'
 
 interface State {
   borderRadius: number
@@ -10,7 +16,6 @@ interface Props extends ViewProps {
 }
 
 class RoundedCornersView extends Component<Props, State> {
-
   static defaultProps: Props = {
     radiusToHeightRatio: 0.2
   }
@@ -31,7 +36,11 @@ class RoundedCornersView extends Component<Props, State> {
 
   render() {
     return (
-      <View {...this.props} onLayout={this.onLayout} style={[this.props.style, { borderRadius: this.state.borderRadius }]}>
+      <View
+        {...this.props}
+        onLayout={this.onLayout}
+        style={[this.props.style, { borderRadius: this.state.borderRadius }]}
+      >
         {this.props.children}
       </View>
     )

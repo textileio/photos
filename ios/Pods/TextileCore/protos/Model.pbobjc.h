@@ -143,7 +143,7 @@ typedef GPB_ENUM(Block_BlockType) {
    **/
   Block_BlockType_GPBUnrecognizedEnumeratorValue = kGPBUnrecognizedEnumeratorValue,
   /** block is stored in plaintext, no payload */
-  Block_BlockType_Merge = 0,
+  Block_BlockType_Merge GPB_DEPRECATED_MSG("Block.MERGE is deprecated (see model.proto).") = 0,
   Block_BlockType_Ignore = 1,
   Block_BlockType_Flag = 2,
   Block_BlockType_Join = 3,
@@ -153,7 +153,7 @@ typedef GPB_ENUM(Block_BlockType) {
   Block_BlockType_Leave = 5,
   Block_BlockType_Text = 6,
   Block_BlockType_Files = 7,
-  Block_BlockType_Comment = 8,
+  Block_BlockType_Comment GPB_DEPRECATED_MSG("Block.COMMENT is deprecated (see model.proto).") = 8,
   Block_BlockType_Like = 9,
   Block_BlockType_Add = 50,
 };
@@ -166,6 +166,33 @@ GPBEnumDescriptor *Block_BlockType_EnumDescriptor(void);
  **/
 BOOL Block_BlockType_IsValidValue(int32_t value);
 
+#pragma mark - Enum Block_BlockStatus
+
+typedef GPB_ENUM(Block_BlockStatus) {
+  /**
+   * Value used if any message's field encounters a value that is not defined
+   * by this enum. The message will also have C functions to get/set the rawValue
+   * of the field.
+   **/
+  Block_BlockStatus_GPBUnrecognizedEnumeratorValue = kGPBUnrecognizedEnumeratorValue,
+  /** downloaded, also synced if outbound */
+  Block_BlockStatus_Ready = 0,
+
+  /** waiting on sync */
+  Block_BlockStatus_Queued = 1,
+
+  /** waiting on download */
+  Block_BlockStatus_Pending = 2,
+};
+
+GPBEnumDescriptor *Block_BlockStatus_EnumDescriptor(void);
+
+/**
+ * Checks to see if the given value is defined by the enum or was not known at
+ * the time this source was generated.
+ **/
+BOOL Block_BlockStatus_IsValidValue(int32_t value);
+
 #pragma mark - Enum Notification_Type
 
 typedef GPB_ENUM(Notification_Type) {
@@ -177,6 +204,7 @@ typedef GPB_ENUM(Notification_Type) {
   Notification_Type_GPBUnrecognizedEnumeratorValue = kGPBUnrecognizedEnumeratorValue,
   Notification_Type_InviteReceived = 0,
   Notification_Type_AccountPeerJoined = 1,
+  Notification_Type_AccountPeerLeft = 8,
   Notification_Type_PeerJoined = 2,
   Notification_Type_PeerLeft = 3,
   Notification_Type_MessageAdded = 4,
@@ -400,7 +428,7 @@ typedef GPB_ENUM(Thread_FieldNumber) {
   Thread_FieldNumber_WhitelistArray = 9,
   Thread_FieldNumber_State = 10,
   Thread_FieldNumber_Head = 11,
-  Thread_FieldNumber_HeadBlock = 101,
+  Thread_FieldNumber_HeadBlocksArray = 101,
   Thread_FieldNumber_SchemaNode = 102,
   Thread_FieldNumber_BlockCount = 103,
   Thread_FieldNumber_PeerCount = 104,
@@ -428,14 +456,14 @@ typedef GPB_ENUM(Thread_FieldNumber) {
 /** The number of items in @c whitelistArray without causing the array to be created. */
 @property(nonatomic, readonly) NSUInteger whitelistArray_Count;
 
-@property(nonatomic, readwrite) Thread_State state;
+@property(nonatomic, readwrite) Thread_State state GPB_DEPRECATED_MSG("Thread.state is deprecated (see model.proto).");
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *head;
 
 /** view info */
-@property(nonatomic, readwrite, strong, null_resettable) Block *headBlock;
-/** Test to see if @c headBlock has been set. */
-@property(nonatomic, readwrite) BOOL hasHeadBlock;
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<Block*> *headBlocksArray;
+/** The number of items in @c headBlocksArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger headBlocksArray_Count;
 
 @property(nonatomic, readwrite, strong, null_resettable) Node *schemaNode;
 /** Test to see if @c schemaNode has been set. */
@@ -526,6 +554,9 @@ typedef GPB_ENUM(Block_FieldNumber) {
   Block_FieldNumber_ParentsArray = 6,
   Block_FieldNumber_Target = 7,
   Block_FieldNumber_Body = 8,
+  Block_FieldNumber_Data_p = 9,
+  Block_FieldNumber_Status = 10,
+  Block_FieldNumber_Attempts = 11,
   Block_FieldNumber_User = 101,
 };
 
@@ -549,7 +580,13 @@ typedef GPB_ENUM(Block_FieldNumber) {
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *target;
 
+@property(nonatomic, readwrite, copy, null_resettable) NSString *data_p;
+
 @property(nonatomic, readwrite, copy, null_resettable) NSString *body;
+
+@property(nonatomic, readwrite) Block_BlockStatus status;
+
+@property(nonatomic, readwrite) int32_t attempts;
 
 /** view info */
 @property(nonatomic, readwrite, strong, null_resettable) User *user;
@@ -569,6 +606,18 @@ int32_t Block_Type_RawValue(Block *message);
  * was generated.
  **/
 void SetBlock_Type_RawValue(Block *message, int32_t value);
+
+/**
+ * Fetches the raw value of a @c Block's @c status property, even
+ * if the value was not defined by the enum at the time the code was generated.
+ **/
+int32_t Block_Status_RawValue(Block *message);
+/**
+ * Sets the raw value of an @c Block's @c status property, allowing
+ * it to be set to a value that was not defined by the enum at the time the code
+ * was generated.
+ **/
+void SetBlock_Status_RawValue(Block *message, int32_t value);
 
 #pragma mark - BlockList
 
@@ -617,6 +666,7 @@ typedef GPB_ENUM(Invite_FieldNumber) {
   Invite_FieldNumber_Name = 3,
   Invite_FieldNumber_Inviter = 4,
   Invite_FieldNumber_Date = 5,
+  Invite_FieldNumber_ParentsArray = 6,
 };
 
 @interface Invite : GPBMessage
@@ -634,6 +684,10 @@ typedef GPB_ENUM(Invite_FieldNumber) {
 @property(nonatomic, readwrite, strong, null_resettable) GPBTimestamp *date;
 /** Test to see if @c date has been set. */
 @property(nonatomic, readwrite) BOOL hasDate;
+
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *parentsArray;
+/** The number of items in @c parentsArray without causing the array to be created. */
+@property(nonatomic, readonly) NSUInteger parentsArray_Count;
 
 @end
 
@@ -934,6 +988,10 @@ typedef GPB_ENUM(CafeRequest_FieldNumber) {
   CafeRequest_FieldNumber_Size = 7,
   CafeRequest_FieldNumber_Group = 8,
   CafeRequest_FieldNumber_Status = 9,
+  CafeRequest_FieldNumber_SyncGroup = 10,
+  CafeRequest_FieldNumber_Attempts = 11,
+  CafeRequest_FieldNumber_GroupSize = 12,
+  CafeRequest_FieldNumber_GroupTransferred = 13,
 };
 
 @interface CafeRequest : GPBMessage
@@ -948,17 +1006,25 @@ typedef GPB_ENUM(CafeRequest_FieldNumber) {
 /** Test to see if @c cafe has been set. */
 @property(nonatomic, readwrite) BOOL hasCafe;
 
-@property(nonatomic, readwrite) CafeRequest_Type type;
-
-@property(nonatomic, readwrite) int64_t size;
-
 @property(nonatomic, readwrite, copy, null_resettable) NSString *group;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *syncGroup;
+
+@property(nonatomic, readwrite) CafeRequest_Type type;
 
 @property(nonatomic, readwrite, strong, null_resettable) GPBTimestamp *date;
 /** Test to see if @c date has been set. */
 @property(nonatomic, readwrite) BOOL hasDate;
 
+@property(nonatomic, readwrite) int64_t size;
+
 @property(nonatomic, readwrite) CafeRequest_Status status;
+
+@property(nonatomic, readwrite) int32_t attempts;
+
+@property(nonatomic, readwrite) int64_t groupSize;
+
+@property(nonatomic, readwrite) int64_t groupTransferred;
 
 @end
 
@@ -1000,18 +1066,26 @@ typedef GPB_ENUM(CafeRequestList_FieldNumber) {
 
 @end
 
-#pragma mark - CafeRequestGroupStatus
+#pragma mark - CafeSyncGroupStatus
 
-typedef GPB_ENUM(CafeRequestGroupStatus_FieldNumber) {
-  CafeRequestGroupStatus_FieldNumber_NumTotal = 1,
-  CafeRequestGroupStatus_FieldNumber_NumPending = 2,
-  CafeRequestGroupStatus_FieldNumber_NumComplete = 3,
-  CafeRequestGroupStatus_FieldNumber_SizeTotal = 4,
-  CafeRequestGroupStatus_FieldNumber_SizePending = 5,
-  CafeRequestGroupStatus_FieldNumber_SizeComplete = 6,
+typedef GPB_ENUM(CafeSyncGroupStatus_FieldNumber) {
+  CafeSyncGroupStatus_FieldNumber_Id_p = 1,
+  CafeSyncGroupStatus_FieldNumber_NumTotal = 2,
+  CafeSyncGroupStatus_FieldNumber_NumPending = 3,
+  CafeSyncGroupStatus_FieldNumber_NumComplete = 4,
+  CafeSyncGroupStatus_FieldNumber_SizeTotal = 5,
+  CafeSyncGroupStatus_FieldNumber_SizePending = 6,
+  CafeSyncGroupStatus_FieldNumber_SizeComplete = 7,
+  CafeSyncGroupStatus_FieldNumber_GroupsSizeTotal = 8,
+  CafeSyncGroupStatus_FieldNumber_GroupsSizeComplete = 9,
+  CafeSyncGroupStatus_FieldNumber_Error = 50,
+  CafeSyncGroupStatus_FieldNumber_ErrorId = 51,
 };
 
-@interface CafeRequestGroupStatus : GPBMessage
+@interface CafeSyncGroupStatus : GPBMessage
+
+/** sync group id */
+@property(nonatomic, readwrite, copy, null_resettable) NSString *id_p;
 
 @property(nonatomic, readwrite) int32_t numTotal;
 
@@ -1025,6 +1099,14 @@ typedef GPB_ENUM(CafeRequestGroupStatus_FieldNumber) {
 
 @property(nonatomic, readwrite) int64_t sizeComplete;
 
+@property(nonatomic, readwrite) int64_t groupsSizeTotal;
+
+@property(nonatomic, readwrite) int64_t groupsSizeComplete;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *error;
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *errorId;
+
 @end
 
 #pragma mark - CafeHTTPRequest
@@ -1033,7 +1115,7 @@ typedef GPB_ENUM(CafeHTTPRequest_FieldNumber) {
   CafeHTTPRequest_FieldNumber_Type = 1,
   CafeHTTPRequest_FieldNumber_URL = 2,
   CafeHTTPRequest_FieldNumber_Headers = 3,
-  CafeHTTPRequest_FieldNumber_Body = 4,
+  CafeHTTPRequest_FieldNumber_Path = 4,
 };
 
 @interface CafeHTTPRequest : GPBMessage
@@ -1046,7 +1128,7 @@ typedef GPB_ENUM(CafeHTTPRequest_FieldNumber) {
 /** The number of items in @c headers without causing the array to be created. */
 @property(nonatomic, readonly) NSUInteger headers_Count;
 
-@property(nonatomic, readwrite, copy, null_resettable) NSData *body;
+@property(nonatomic, readwrite, copy, null_resettable) NSString *path;
 
 @end
 

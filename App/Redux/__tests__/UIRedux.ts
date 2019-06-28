@@ -26,6 +26,7 @@ const sharedPhoto: IFiles = {
   files: [],
   likes: [],
   target: 'd',
+  data: 'data',
   threads: []
 }
 
@@ -37,35 +38,59 @@ describe('ui stories', () => {
   })
   describe('sharing a photo', () => {
     it('should update sharing photo via SharedPhoto', () => {
-      const state = reducer(initialState, actions.updateSharingPhotoImage(sharedImage))
+      const state = reducer(
+        initialState,
+        actions.updateSharingPhotoImage(sharedImage)
+      )
       expect(state.sharingPhoto!.image).toMatchObject(sharedImage)
     })
     it('should update sharing photo via photo hash', () => {
-      const state = reducer(initialState, actions.updateSharingPhotoImage(sharedPhoto))
+      const state = reducer(
+        initialState,
+        actions.updateSharingPhotoImage(sharedPhoto)
+      )
       expect(state.sharingPhoto!.image).toEqual(sharedPhoto)
     })
     it('should update sharing thread', () => {
-      const state = reducer(initialState, actions.updateSharingPhotoThread(threadId))
+      const state = reducer(
+        initialState,
+        actions.updateSharingPhotoThread(threadId)
+      )
       expect(state.sharingPhoto!.threadId).toEqual(threadId)
     })
     it('should update sharing comment', () => {
-      const state = reducer(initialState, actions.updateSharingPhotoComment(comment))
+      const state = reducer(
+        initialState,
+        actions.updateSharingPhotoComment(comment)
+      )
       expect(state.sharingPhoto!.comment).toEqual(comment)
     })
     it('should cancel sharing', () => {
-      const state = reducer(initialState, actions.updateSharingPhotoImage(sharedPhoto))
+      const state = reducer(
+        initialState,
+        actions.updateSharingPhotoImage(sharedPhoto)
+      )
       expect(state.sharingPhoto).toBeDefined()
       const state1 = reducer(state, actions.cancelSharingPhoto())
       expect(state1.sharingPhoto).toBeUndefined()
     })
     it('sharePhotoRequest should clear sharing state', () => {
-      const state0 = reducer(initialState, actions.updateSharingPhotoImage(sharedPhoto))
+      const state0 = reducer(
+        initialState,
+        actions.updateSharingPhotoImage(sharedPhoto)
+      )
       expect(state0.sharingPhoto).toBeDefined()
-      const state1 = reducer(initialState, actions.sharePhotoRequest('imageId', 'threadId'))
+      const state1 = reducer(
+        initialState,
+        actions.sharePhotoRequest('imageId', 'threadId')
+      )
       expect(state1.sharingPhoto).toBeUndefined()
     })
     it('imageSharingError should not update state', () => {
-      const state = reducer(initialState, actions.imageSharingError(new Error()))
+      const state = reducer(
+        initialState,
+        actions.imageSharingError(new Error())
+      )
       expect(state).toEqual(initialState)
     })
   })

@@ -6,12 +6,12 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
     "tsc": "tsc -p . --noEmit",
-    "lint": "tslint -c tslint.json --project ."
+    "lint": "eslint --fix --ext .mjs,.js,.jsx,.ts,.tsx ."
   },
   "dependencies": {
     "@textile/react-native-camera-roll": "1.1.6",
     "@textile/react-native-icon": "^1.0.0",
-    "@textile/react-native-sdk": "1.2.8",
+    "@textile/react-native-sdk": "2.1.5",
     "@textile/redux-saga-wait-for": "1.0.1",
     "apisauce": "^1.0.2",
     "moment": "^2.22.2",
@@ -21,7 +21,6 @@
     "react-native-actionsheet": "^2.4.2",
     "react-native-background-fetch": "^2.4.3",
     "react-native-background-timer": "2.1.0-alpha.6",
-    "react-native-background-upload": "https://github.com/textileio/react-native-background-upload#9dedcbae13815ce869e5d7809cf71e3c2d49cc0e",
     "react-native-config": "^0.11.7",
     "react-native-contacts": "^3.1.2",
     "react-native-easy-toast": "1.2.0",
@@ -31,7 +30,7 @@
     "react-native-gesture-handler": "^1.2.1",
     "react-native-hyperlink": "0.0.14",
     "react-native-image-pan-zoom": "^2.1.11",
-    "react-native-image-picker": "^0.27.1",
+    "react-native-image-picker": "^0.28.1",
     "react-native-modal": "^6.5.0",
     "react-native-push-notification": "^3.1.1",
     "react-native-qrcode": "^0.2.7",
@@ -48,7 +47,6 @@
     "uuid": "^3.3.2"
   },
   "devDependencies": {
-    "@textile/tslint-rules": "1.0.3",
     "@types/enzyme": "^3.1.14",
     "@types/enzyme-adapter-react-16": "^1.0.3",
     "@types/jest": "^24.0.11",
@@ -61,21 +59,28 @@
     "@types/react-redux": "6.0.14",
     "@types/react-test-renderer": "^16.8.1",
     "@types/uuid": "^3.4.4",
+    "@typescript-eslint/eslint-plugin": "^1.9.0",
+    "@typescript-eslint/parser": "^1.9.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "24.7.1",
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.6.0",
+    "eslint": "^5.16.0",
+    "eslint-config-bevry": "^1.2.0",
+    "eslint-config-prettier": "^4.2.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-react": "^7.13.0",
+    "eslint-plugin-react-hooks": "^1.6.0",
     "jest": "24.7.1",
     "jest-fetch-mock": "^1.6.6",
     "metro-react-native-babel-preset": "0.53.1",
+    "prettier": "^1.17.0",
     "react-dom": "^16.5.2",
     "react-test-renderer": "16.6.3",
     "reactotron-react-native": "^2.1.0",
     "reactotron-redux": "^2.1.0",
     "reactotron-redux-saga": "^2.1.0",
     "ts-jest": "^24.0.2",
-    "tslint": "^5.11.0",
-    "tslint-react": "^3.6.0",
     "typescript": "^3.2.4"
   },
   "jest": {
@@ -104,5 +109,26 @@
     "setupFiles": [
       "./tests/setup.js"
     ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "bevry"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    },
+    "rules": {
+      "no-undefined": 0,
+      "default-case": 0,
+      "react/no-string-refs": 1
+    }
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
   }
 }

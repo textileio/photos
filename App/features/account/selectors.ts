@@ -6,11 +6,15 @@ export const getPeerId = (state: AccountState) => state.peerId.value
 
 export const getAddress = (state: AccountState) => state.address.value
 
-export const getUsername = (state: AccountState) => state.profile.value && state.profile.value.name
+export const getUsername = (state: AccountState) =>
+  state.profile.value && state.profile.value.name
 
 export const getProfile = (state: AccountState) => state.profile.value
 
 export const getRecoveryPhrase = (state: AccountState) => state.recoveryPhrase
+
+export const makeSessionForId = (id: string) => (state: AccountState) =>
+  state.cafeSessions.sessions.find(session => session.id === id)
 
 export const bestSession = (state: AccountState) => {
   const values = state.cafeSessions.sessions

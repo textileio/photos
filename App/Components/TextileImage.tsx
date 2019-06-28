@@ -1,15 +1,20 @@
 import * as React from 'react'
-import { requireNativeComponent, ImageStyle, PixelRatio, ImageProps } from 'react-native'
+import {
+  requireNativeComponent,
+  ImageStyle,
+  PixelRatio,
+  ImageProps
+} from 'react-native'
 
 export interface OwnProps {
-  target: string,
-  index: number,
-  forMinWidth: number,
-  resizeMode: string,
-  ipfs?: boolean,
-  capInsets?: string,
-  style?: ImageStyle | ImageStyle[],
-  onLoad?: () => void,
+  target: string
+  index: number
+  forMinWidth: number
+  resizeMode: string
+  ipfs?: boolean
+  capInsets?: string
+  style?: ImageStyle | ImageStyle[]
+  onLoad?: () => void
   onError?: (error: string) => void
 }
 
@@ -28,7 +33,11 @@ export default class TextileImage extends React.PureComponent<Props> {
 
   _onError(event: any) {
     // TODO: need the real type for Event here...
-    if (!this.props.onError || !event.nativeEvent || !event.nativeEvent.message) {
+    if (
+      !this.props.onError ||
+      !event.nativeEvent ||
+      !event.nativeEvent.message
+    ) {
       return
     }
     this.props.onError(event.nativeEvent.message)
@@ -42,9 +51,9 @@ export default class TextileImage extends React.PureComponent<Props> {
       onError: this._onError.bind(this)
     }
     // setting it above seemed to still allow an undefined :/
-    nativeProps.ipfs = !!nativeProps.ipfs
+    nativeProps.ipfs = Boolean(nativeProps.ipfs)
     return <TextileImageView {...nativeProps} />
   }
 }
-// @ts-ignore
-const TextileImageView = requireNativeComponent('TextileImageView', TextileImage)
+
+const TextileImageView = requireNativeComponent('TextileImageView')

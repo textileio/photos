@@ -20,9 +20,7 @@ function navigate(routeName: string, params?: NavigationParams) {
 }
 
 function goBack() {
-  _navigator.dispatch(
-    NavigationActions.back()
-  )
+  _navigator.dispatch(NavigationActions.back())
 }
 
 export interface NavigationService {

@@ -51,6 +51,7 @@ static GPBFileDescriptor *ThreadsServiceRoot_FileDescriptor(void) {
 @dynamic hash_p;
 @dynamic ciphertext;
 @dynamic sig;
+@dynamic node;
 
 typedef struct ThreadEnvelope__storage_ {
   uint32_t _has_storage_[1];
@@ -58,6 +59,7 @@ typedef struct ThreadEnvelope__storage_ {
   NSString *hash_p;
   NSData *ciphertext;
   NSData *sig;
+  NSData *node;
 } ThreadEnvelope__storage_;
 
 // This method is threadsafe because it is initially called
@@ -99,6 +101,15 @@ typedef struct ThreadEnvelope__storage_ {
         .number = ThreadEnvelope_FieldNumber_Sig,
         .hasIndex = 3,
         .offset = (uint32_t)offsetof(ThreadEnvelope__storage_, sig),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeBytes,
+      },
+      {
+        .name = "node",
+        .dataTypeSpecific.className = NULL,
+        .number = ThreadEnvelope_FieldNumber_Node,
+        .hasIndex = 4,
+        .offset = (uint32_t)offsetof(ThreadEnvelope__storage_, node),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeBytes,
       },
@@ -284,11 +295,13 @@ typedef struct ThreadBlockHeader__storage_ {
 
 @dynamic hasInviter, inviter;
 @dynamic hasThread, thread;
+@dynamic invitee;
 
 typedef struct ThreadAdd__storage_ {
   uint32_t _has_storage_[1];
   Peer *inviter;
   Thread *thread;
+  NSString *invitee;
 } ThreadAdd__storage_;
 
 // This method is threadsafe because it is initially called
@@ -315,6 +328,15 @@ typedef struct ThreadAdd__storage_ {
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeMessage,
       },
+      {
+        .name = "invitee",
+        .dataTypeSpecific.className = NULL,
+        .number = ThreadAdd_FieldNumber_Invitee,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(ThreadAdd__storage_, invitee),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[ThreadAdd class]
@@ -335,6 +357,9 @@ typedef struct ThreadAdd__storage_ {
 @end
 
 #pragma mark - ThreadIgnore
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 
 @implementation ThreadIgnore
 
@@ -379,7 +404,12 @@ typedef struct ThreadIgnore__storage_ {
 
 @end
 
+#pragma clang diagnostic pop
+
 #pragma mark - ThreadFlag
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 
 @implementation ThreadFlag
 
@@ -423,6 +453,8 @@ typedef struct ThreadFlag__storage_ {
 }
 
 @end
+
+#pragma clang diagnostic pop
 
 #pragma mark - ThreadJoin
 
@@ -650,6 +682,9 @@ typedef struct ThreadFiles__storage_ {
 
 #pragma mark - ThreadComment
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
+
 @implementation ThreadComment
 
 @dynamic target;
@@ -704,7 +739,12 @@ typedef struct ThreadComment__storage_ {
 
 @end
 
+#pragma clang diagnostic pop
+
 #pragma mark - ThreadLike
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 
 @implementation ThreadLike
 
@@ -748,6 +788,8 @@ typedef struct ThreadLike__storage_ {
 }
 
 @end
+
+#pragma clang diagnostic pop
 
 
 #pragma clang diagnostic pop

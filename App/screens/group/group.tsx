@@ -1,14 +1,23 @@
 import React from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { Text, FlatList, ListRenderItemInfo, Dimensions, Alert } from 'react-native'
+import {
+  Text,
+  FlatList,
+  ListRenderItemInfo,
+  Dimensions,
+  Alert
+} from 'react-native'
 import { NavigationScreenProps, SafeAreaView } from 'react-navigation'
 import uuid from 'uuid/v4'
 import ActionSheet from 'react-native-actionsheet'
-import Textile, { IUser, Thread } from '@textile/react-native-sdk'
+import Textile, { IUser, Thread, FeedItemType } from '@textile/react-native-sdk'
 import moment from 'moment'
 
-import { TextileHeaderButtons, Item as TextileHeaderButtonsItem } from '../../Components/HeaderButtons'
+import {
+  TextileHeaderButtons,
+  Item as TextileHeaderButtonsItem
+} from '../../Components/HeaderButtons'
 import KeyboardResponsiveContainer from '../../Components/KeyboardResponsiveContainer'
 import AuthoringInput from '../../Components/authoring-input'
 import InviteContactModal from '../../Components/InviteContactModal'
@@ -41,6 +50,7 @@ const screenWidth = Dimensions.get('screen').width
 interface StateProps {
   items: ReadonlyArray<Item>
   groupName: string
+  initiator: string
   selfAddress: string
   renaming: boolean
   canInvite: boolean
@@ -59,7 +69,7 @@ interface DispatchProps {
 }
 
 interface NavProps {
-  threadId: string,
+  threadId: string
   groupName: string
   showActionSheet: () => void
 }
@@ -72,8 +82,9 @@ interface State {
 }
 
 class Group extends React.PureComponent<Props, State> {
-
-  static navigationOptions = ({ navigation }: NavigationScreenProps<NavProps>) => {
+  static navigationOptions = ({
+    navigation
+  }: NavigationScreenProps<NavProps>) => {
     // const openDrawer = navigation.getParam('openDrawer')
     // const addContact = navigation.getParam('addContact')
     const groupName = navigation.getParam('groupName')
@@ -81,12 +92,20 @@ class Group extends React.PureComponent<Props, State> {
     const back = () => navigation.goBack()
     const headerLeft = (
       <TextileHeaderButtons left={true}>
-        <TextileHeaderButtonsItem title='Back' iconName='arrow-left' onPress={back} />
+        <TextileHeaderButtonsItem
+          title="Back"
+          iconName="arrow-left"
+          onPress={back}
+        />
       </TextileHeaderButtons>
     )
     const headerRight = (
       <TextileHeaderButtons>
-        <TextileHeaderButtonsItem title='More' iconName='more-vertical' onPress={showActionSheet} />}
+        <TextileHeaderButtonsItem
+          title="More"
+          iconName="more-vertical"
+          onPress={showActionSheet}
+        />
       </TextileHeaderButtons>
     )
     return {
@@ -116,8 +135,23 @@ class Group extends React.PureComponent<Props, State> {
 
   render() {
     const threadId = this.props.navigation.getParam('threadId')
-    const options = (this.props.canInvite ? ['Invite Others'] : []).concat(['Rename Group', 'Leave Group', 'Cancel'])
-    const cancelButtonIndex = this.props.canInvite ? 3 : 2
+    const options = (this.props.canInvite ? ['Invite Others'] : [])
+      .concat(
+        this.props.selfAddress === this.props.initiator ? ['Rename Group'] : []
+      )
+      .concat(['Leave Group', 'Cancel'])
+    let cancelButtonIndex = 1
+    if (
+      this.props.canInvite &&
+      this.props.selfAddress === this.props.initiator
+    ) {
+      cancelButtonIndex = 3
+    } else if (
+      this.props.canInvite ||
+      this.props.selfAddress === this.props.initiator
+    ) {
+      cancelButtonIndex = 2
+    }
     return (
       <SafeAreaView style={{ flex: 1, flexGrow: 1 }}>
         <KeyboardResponsiveContainer>
@@ -126,12 +160,17 @@ class Group extends React.PureComponent<Props, State> {
             inverted={true}
             data={this.props.items}
             renderItem={this.renderRow}
+            keyExtractor={this.keyExtractor}
             initialNumToRender={5}
             windowSize={5}
             onEndReachedThreshold={5}
             maxToRenderPerBatch={5}
           />
-          <AuthoringInput containerStyle={{ }} onSendMessage={this.submit} onSharePhoto={this.props.showWalletPicker} />
+          <AuthoringInput
+            containerStyle={{}}
+            onSendMessage={this.submit}
+            onSharePhoto={this.props.showWalletPicker}
+          />
           <InviteContactModal
             isVisible={this.state.showInviteContactModal}
             cancel={this.hideInviteModal}
@@ -139,7 +178,9 @@ class Group extends React.PureComponent<Props, State> {
             selectedThreadName={this.props.groupName}
           />
           <ActionSheet
-            ref={(o: any) => { this.actionSheet = o }}
+            ref={(o: any) => {
+              this.actionSheet = o
+            }}
             title={this.props.groupName + ' options'}
             options={options}
             cancelButtonIndex={cancelButtonIndex}
@@ -158,12 +199,9 @@ class Group extends React.PureComponent<Props, State> {
   }
 
   sameUserAgain = (user: IUser, previous: Item): boolean => {
-    if (!previous || !previous.type) {
-      return false
-    }
     switch (previous.type) {
-      case 'message': {
-        return user.address === previous.data.user.address
+      case FeedItemType.Text: {
+        return user.address === previous.value.user.address
       }
       default: {
         return false
@@ -171,30 +209,67 @@ class Group extends React.PureComponent<Props, State> {
     }
   }
 
+  keyExtractor = (item: Item) => {
+    switch (item.type) {
+      case 'addingMessage':
+      case 'addingPhoto':
+        return item.key
+      default:
+        return item.block
+    }
+  }
+
   renderRow = ({ item, index }: ListRenderItemInfo<Item>) => {
     switch (item.type) {
-      case 'photo': {
-        const { user, caption, date, target, files, likes, comments, block } = item.data
-        const hasLiked = (likes.findIndex((likeInfo) => likeInfo.user.address === this.props.selfAddress) > -1) || this.liking(block)
-        const commentsData: ReadonlyArray<CommentData> = comments.map((comment) => {
-          return {
-            id: comment.id,
-            username: comment.user.name || '?',
-            body: comment.body
+      case FeedItemType.Files: {
+        const {
+          user,
+          caption,
+          date,
+          data,
+          target,
+          files,
+          likes,
+          comments,
+          block
+        } = item.value
+        const hasLiked =
+          likes.findIndex(
+            likeInfo => likeInfo.user.address === this.props.selfAddress
+          ) > -1 || this.liking(block)
+        const commentsData: ReadonlyArray<CommentData> = comments.map(
+          comment => {
+            return {
+              id: comment.id,
+              username: comment.user.name || '?',
+              body: comment.body
+            }
           }
-        })
+        )
         // Get full size image constraints
         const def = screenWidth
-        const pinchWidth = !files.length ? def : !files[0].links.large ? def : files[0].links.large.meta.fields.width.numberValue
-        const pinchHeight = !files.length ? def : !files[0].links.large ? def : files[0].links.large.meta.fields.height.numberValue
-        const fileIndex = files && files.length > 0 && files[0].index ? files[0].index : 0
+        const pinchWidth = !files.length
+          ? def
+          : !files[0].links.large
+          ? def
+          : files[0].links.large.meta.fields.width.numberValue
+        const pinchHeight = !files.length
+          ? def
+          : !files[0].links.large
+          ? def
+          : files[0].links.large.meta.fields.height.numberValue
+        const fileIndex =
+          files && files.length > 0 && files[0].index ? files[0].index : 0
         return (
           <Photo
             avatar={user.avatar}
             username={user.name.length > 0 ? user.name : 'unknown'}
             message={caption.length > 0 ? caption : undefined}
-            time={moment(Textile.util.timestampToDate(date)).calendar(undefined, momentSpec)}
-            photoId={target}
+            time={moment(Textile.util.timestampToDate(date)).calendar(
+              undefined,
+              momentSpec
+            )}
+            photoId={data}
             fileIndex={fileIndex}
             photoWidth={screenWidth}
             hasLiked={hasLiked}
@@ -216,15 +291,19 @@ class Group extends React.PureComponent<Props, State> {
           <ProcessingImage
             {...item.data}
             /* tslint:disable-next-line */
-            retry={() => {this.props.retryShare(item.key)}}
+            retry={() => {
+              this.props.retryShare(item.key)
+            }}
             /* tslint:disable-next-line */
-            cancel={() => {this.props.cancelShare(item.key)}}
+            cancel={() => {
+              this.props.cancelShare(item.key)
+            }}
           />
         )
       }
-      case 'message': {
-        const { user, body, date } = item.data
-        const isSameUser = this.sameUserAgain(user, this.props.items[(index + 1)])
+      case FeedItemType.Text: {
+        const { user, body, date } = item.value
+        const isSameUser = this.sameUserAgain(user, this.props.items[index + 1])
         const avatar = isSameUser ? undefined : user.avatar
         return (
           <Message
@@ -232,26 +311,32 @@ class Group extends React.PureComponent<Props, State> {
             username={user.name || 'unknown'}
             message={body}
             // TODO: deal with pb Timestamp to JS Date!
-            time={moment(Textile.util.timestampToDate(date)).calendar(undefined, momentSpec)}
+            time={moment(Textile.util.timestampToDate(date)).calendar(
+              undefined,
+              momentSpec
+            )}
             isSameUser={isSameUser}
           />
         )
       }
-      case 'leave':
-      case 'join': {
-        const { user, date } = item.data
-        const word = item.type === 'join' ? 'joined' : 'left'
+      case FeedItemType.Leave:
+      case FeedItemType.Join: {
+        const { user, date } = item.value
+        const word = item.type === FeedItemType.Join ? 'joined' : 'left'
         return (
           <Join
             avatar={user.avatar}
             username={user.name || 'unknown'}
             message={`${word} ${this.props.groupName}`}
-            time={moment(Textile.util.timestampToDate(date)).calendar(undefined, momentSpec)}
+            time={moment(Textile.util.timestampToDate(date)).calendar(
+              undefined,
+              momentSpec
+            )}
           />
         )
       }
       default:
-        return <Text>{`${item.type} - ${item.key}`}</Text>
+        return <Text>{`${item.type}`}</Text>
     }
   }
 
@@ -274,13 +359,15 @@ class Group extends React.PureComponent<Props, State> {
   }
 
   handleActionSheetResponse = (index: number) => {
-    const startingIndex = this.props.canInvite ? 1 : 0
-    if (this.props.canInvite && index === 0) {
-      this.showInviteModal()
-    } else if (index === startingIndex) {
-      this.showRenameGroupModal()
-    } else if (index === startingIndex + 1) {
-      this.props.leaveThread()
+    const actions = [
+      ...(this.props.canInvite ? [this.showInviteModal] : []),
+      ...(this.props.selfAddress === this.props.initiator
+        ? [this.showRenameGroupModal]
+        : []),
+      this.props.leaveThread
+    ]
+    if (index < actions.length) {
+      actions[index]()
     }
   }
 
@@ -317,10 +404,14 @@ class Group extends React.PureComponent<Props, State> {
   }
 }
 
-const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavProps>): StateProps => {
+const mapStateToProps = (
+  state: RootState,
+  ownProps: NavigationScreenProps<NavProps>
+): StateProps => {
   const threadId = ownProps.navigation.getParam('threadId')
   const items = groupItems(state.group, threadId)
   const threadData = state.photoViewing.threads[threadId]
+  const initiator = threadData ? threadData.initiator : ''
   const sharing = threadData ? threadData.sharing : Thread.Sharing.NOT_SHARED
   const canInvite = sharing !== Thread.Sharing.NOT_SHARED
   const groupName = threadData ? threadData.name : 'Unknown'
@@ -330,6 +421,7 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
   return {
     items,
     groupName,
+    initiator,
     selfAddress,
     renaming,
     canInvite,
@@ -337,19 +429,42 @@ const mapStateToProps = (state: RootState, ownProps: NavigationScreenProps<NavPr
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>, ownProps: NavigationScreenProps<NavProps>): DispatchProps => {
+const mapDispatchToProps = (
+  dispatch: Dispatch<RootAction>,
+  ownProps: NavigationScreenProps<NavProps>
+): DispatchProps => {
   const threadId = ownProps.navigation.getParam('threadId')
   return {
-    refresh: () => dispatch(groupActions.feed.refreshFeed.request({ id: threadId })),
-    sendMessage: (message: string) => dispatch(groupActions.addMessage.addMessage.request({ id: uuid(), groupId: threadId, body: message })),
+    refresh: () =>
+      dispatch(groupActions.feed.refreshFeed.request({ id: threadId })),
+    sendMessage: (message: string) =>
+      dispatch(
+        groupActions.addMessage.addMessage.request({
+          id: uuid(),
+          groupId: threadId,
+          body: message
+        })
+      ),
     // TODO: look at just doing direct navigation for this
-    showWalletPicker: () => { dispatch(UIActions.showWalletPicker(threadId)) },
-    addPhotoLike: (block: string) => dispatch(UIActions.addLike.request({ blockId: block })),
-    navigateToComments: (id: string) => dispatch(UIActions.navigateToCommentsRequest(id, threadId)),
-    leaveThread: () => dispatch(PhotoViewingActions.removeThreadRequest(threadId)),
-    retryShare: (key: string) => { dispatch(groupActions.addPhoto.retry(key)) },
-    cancelShare: (key: string) => { dispatch(groupActions.addPhoto.cancelRequest(key)) }
+    showWalletPicker: () => {
+      dispatch(UIActions.showWalletPicker(threadId))
+    },
+    addPhotoLike: (block: string) =>
+      dispatch(UIActions.addLike.request({ blockId: block })),
+    navigateToComments: (id: string) =>
+      dispatch(UIActions.navigateToCommentsRequest(id, threadId)),
+    leaveThread: () =>
+      dispatch(PhotoViewingActions.removeThreadRequest(threadId)),
+    retryShare: (key: string) => {
+      dispatch(groupActions.addPhoto.retry(key))
+    },
+    cancelShare: (key: string) => {
+      dispatch(groupActions.addPhoto.cancelRequest(key))
+    }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Group)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Group)

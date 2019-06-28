@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux'
 import { ActionType, getType } from 'typesafe-actions'
 import { IFiles } from '@textile/react-native-sdk'
+import { PersistConfig, persistReducer } from 'redux-persist'
+import { AsyncStorage } from 'react-native'
 
 import * as actions from './actions'
 import { ProcessingPhotos, ProcessingPhoto } from './models'
@@ -10,7 +12,7 @@ export interface PhotosState {
     readonly lastQueriedTime?: number
     readonly querying: boolean
     readonly error?: string
-  },
+  }
   readonly processingPhotos: ProcessingPhotos
   readonly photosData: {
     readonly querying: boolean
@@ -21,7 +23,14 @@ export interface PhotosState {
 
 export type PhotosAction = ActionType<typeof actions>
 
-export default combineReducers<PhotosState, PhotosAction>({
+const persistConfig: PersistConfig = {
+  key: 'photos',
+  storage: AsyncStorage,
+  whitelist: ['queryData', 'processingPhotos'],
+  debug: false
+}
+
+const reducer = combineReducers<PhotosState, PhotosAction>({
   queryData: (state = { querying: false }, action) => {
     switch (action.type) {
       case getType(actions.queryCameraRoll.request): {
@@ -32,7 +41,8 @@ export default combineReducers<PhotosState, PhotosAction>({
       }
       case getType(actions.queryCameraRoll.failure): {
         const { error } = action.payload
-        const message = error.message as string || error as string || 'unknown error'
+        const message =
+          (error.message as string) || (error as string) || 'unknown error'
         return { ...state, querying: false, error: message }
       }
       case getType(actions.updateLastQueriedTime): {
@@ -47,24 +57,30 @@ export default combineReducers<PhotosState, PhotosAction>({
       case getType(actions.queryCameraRoll.success): {
         return action.payload
           .map((photo): ProcessingPhoto => ({ photo, state: 'pending' }))
-          .reduce((accum, processingPhoto): ProcessingPhotos => ({ ...accum, [processingPhoto.photo.assetId]: processingPhoto }), state)
+          .reduce(
+            (accum, processingPhoto): ProcessingPhotos => ({
+              ...accum,
+              [processingPhoto.photo.assetId]: processingPhoto
+            }),
+            state
+          )
       }
       case getType(actions.photoProcessingBegan): {
         const { id } = action.payload
         const processingPhoto = state[id]
-        const updated: ProcessingPhoto = { ...processingPhoto, state: 'preparing' }
-        return { ...state, [id]: updated }
-      }
-      case getType(actions.photoPrepared): {
-        const { id, preparedFiles } = action.payload
-        const processingPhoto = state[id]
-        const updated: ProcessingPhoto = { ...processingPhoto, state: 'adding', preparedFiles }
+        const updated: ProcessingPhoto = {
+          ...processingPhoto,
+          state: 'adding'
+        }
         return { ...state, [id]: updated }
       }
       case getType(actions.photoAdded): {
         const { id } = action.payload
         const processingPhoto = state[id]
-        const updated: ProcessingPhoto = { ...processingPhoto, state: 'complete' }
+        const updated: ProcessingPhoto = {
+          ...processingPhoto,
+          state: 'complete'
+        }
         return { ...state, [id]: updated }
       }
       case getType(actions.photoCleanedUp): {
@@ -74,10 +90,14 @@ export default combineReducers<PhotosState, PhotosAction>({
       }
       case getType(actions.photoProcessingError): {
         const { id, error } = action.payload
-        const message = error.message as string || error as string || 'unknown error'
+        const message =
+          (error.message as string) || (error as string) || 'unknown error'
         const processingPhoto = state[id]
         const updated: ProcessingPhoto = { ...processingPhoto, error: message }
         return { ...state, [id]: updated }
+      }
+      case getType(actions.clearProcessingPhotos): {
+        return {}
       }
       default:
         return state
@@ -98,7 +118,8 @@ export default combineReducers<PhotosState, PhotosAction>({
       case getType(actions.refreshPhotos.failure):
       case getType(actions.loadMorePhotos.failure): {
         const { error } = action.payload
-        const message = error.message as string || error as string || 'unknown error'
+        const message =
+          (error.message as string) || (error as string) || 'unknown error'
         return { ...state, querying: false, error: message }
       }
       default:
@@ -106,3 +127,5 @@ export default combineReducers<PhotosState, PhotosAction>({
     }
   }
 })
+
+export default persistReducer(persistConfig, reducer)
