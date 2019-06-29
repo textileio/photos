@@ -132,6 +132,51 @@ typedef struct ThreadEnvelope__storage_ {
 
 @end
 
+#pragma mark - ThreadEnvelopeAck
+
+@implementation ThreadEnvelopeAck
+
+@dynamic id_p;
+
+typedef struct ThreadEnvelopeAck__storage_ {
+  uint32_t _has_storage_[1];
+  NSString *id_p;
+} ThreadEnvelopeAck__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "id_p",
+        .dataTypeSpecific.className = NULL,
+        .number = ThreadEnvelopeAck_FieldNumber_Id_p,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(ThreadEnvelopeAck__storage_, id_p),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[ThreadEnvelopeAck class]
+                                     rootClass:[ThreadsServiceRoot class]
+                                          file:ThreadsServiceRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(ThreadEnvelopeAck__storage_)
+                                         flags:GPBDescriptorInitializationFlag_None];
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
 #pragma mark - ThreadBlock
 
 @implementation ThreadBlock

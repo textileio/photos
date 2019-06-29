@@ -82,6 +82,18 @@ typedef GPB_ENUM(ThreadEnvelope_FieldNumber) {
 
 @end
 
+#pragma mark - ThreadEnvelopeAck
+
+typedef GPB_ENUM(ThreadEnvelopeAck_FieldNumber) {
+  ThreadEnvelopeAck_FieldNumber_Id_p = 1,
+};
+
+@interface ThreadEnvelopeAck : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *id_p;
+
+@end
+
 #pragma mark - ThreadBlock
 
 typedef GPB_ENUM(ThreadBlock_FieldNumber) {

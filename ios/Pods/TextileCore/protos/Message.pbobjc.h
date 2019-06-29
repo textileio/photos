@@ -44,6 +44,7 @@ typedef GPB_ENUM(Message_Type) {
   Message_Type_Ping = 0,
   Message_Type_Pong = 1,
   Message_Type_ThreadEnvelope = 10,
+  Message_Type_ThreadEnvelopeAck = 11,
   Message_Type_CafeChallenge = 50,
   Message_Type_CafeNonce = 51,
   Message_Type_CafeRegistration = 52,
