@@ -21,7 +21,14 @@ import styles from './Styles/ThreadCreateModal'
 
 interface DispatchProps {
   completeScreen: (threadName: string) => void
-  submit: (name: string, navigate: boolean, selectToShare: boolean) => void
+  submit: (
+    name: string,
+    type: Thread.Type,
+    sharing: Thread.Sharing,
+    whitelist: ReadonlyArray<string>,
+    navigate: boolean,
+    selectToShare: boolean
+  ) => void
 }
 
 interface ScreenProps {
@@ -30,16 +37,28 @@ interface ScreenProps {
   navigateTo?: boolean
   fullScreen?: boolean
   invites?: ReadonlyArray<string>
+  defaultName?: string
+  type?: Thread.Type
+  sharing?: Thread.Sharing
+  whitelist?: ReadonlyArray<string>
   cancel: () => void
   complete: () => void
 }
 
-class CreateThreadComponent extends React.Component<
-  DispatchProps & ScreenProps
-> {
-  state = {
-    value: '',
-    submitted: false
+type Props = DispatchProps & ScreenProps
+
+interface State {
+  value: string
+  submitted: boolean
+}
+
+class CreateThreadComponent extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props)
+    this.state = {
+      value: props.defaultName ? props.defaultName : '',
+      submitted: false
+    }
   }
 
   handleNewText = (text: string) => {
@@ -53,8 +72,20 @@ class CreateThreadComponent extends React.Component<
       }
       this.setState({ submitted: true })
       this.props.completeScreen(this.state.value)
+      const name = this.state.value
+      const type =
+        this.props.type !== undefined ? this.props.type : Thread.Type.OPEN
+      const sharing =
+        this.props.sharing !== undefined
+          ? this.props.sharing
+          : Thread.Sharing.SHARED
+      const whitelist =
+        this.props.whitelist !== undefined ? this.props.whitelist : []
       this.props.submit(
-        this.state.value,
+        name,
+        type,
+        sharing,
+        whitelist,
         Boolean(this.props.navigateTo),
         Boolean(this.props.selectToShare)
       )
@@ -129,21 +160,21 @@ const mapDispatchToProps = (
   dispatch: Dispatch<RootAction>,
   ownProps: ScreenProps
 ): DispatchProps => {
-  const threadConfig = {
-    type: Thread.Type.OPEN,
-    sharing: Thread.Sharing.SHARED,
-    whitelist: []
-  }
   return {
     completeScreen: () => {
       dispatch(
         PreferencesActions.completeTourSuccess('threadsManager' as TourScreens)
       )
     },
-    submit: (name, navigate, selectToShare) => {
+    submit: (name, type, sharing, whitelist, navigate, selectToShare) => {
       dispatch(
         PhotoViewingActions.addThreadRequest(
-          { ...threadConfig, name },
+          {
+            name,
+            type,
+            sharing,
+            whitelist
+          },
           {
             navigate,
             selectToShare,
