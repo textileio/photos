@@ -17,6 +17,8 @@
 
 @implementation RequestsHandler
 
+const int BATCH_SIZE = 16;
+
 dispatch_queue_t flushQueue;
 
 - (instancetype)init {
@@ -54,7 +56,7 @@ dispatch_queue_t flushQueue;
   UIBackgroundTaskIdentifier taskId = [UIApplication.sharedApplication beginBackgroundTaskWithExpirationHandler:nil];
 
   NSError *error;
-  NSData *cafeRequestsData = [self.node cafeRequests:-1 error:&error];
+  NSData *cafeRequestsData = [self.node cafeRequests:BATCH_SIZE error:&error];
   if (error) {
     NSLog(@"cafeRequests error: %@", error.localizedDescription);
     return;
@@ -66,17 +68,15 @@ dispatch_queue_t flushQueue;
     return;
   }
 
-  // Dispatch group used to wait until processing all CafeHTTPRequests in this call to process are complete
+  // Dispatch group used to wait until this CafeHTTPRequests batch in finished processing
   dispatch_group_t group = dispatch_group_create();
 
   for (NSString *requestId in requestIds.valuesArray) {
 
-    // TODO: Is there any reason to call failCafeRequest before it is marked as pending?
-    // TODO: Should we mark as pending before writing to disk or after?
-
     ProtoCallback *cb = [[ProtoCallback alloc] initWithCompletion:^(NSData * _Nonnull data, NSError * _Nonnull error) {
       if (!data) {
         NSLog(@"error writing request: %@", error.localizedDescription);
+        [self.node failCafeRequest:requestId reason:error.localizedDescription error:nil];
         NSLog(@"Leaving");
         dispatch_group_leave(group);
         return;
@@ -85,6 +85,7 @@ dispatch_queue_t flushQueue;
       CafeHTTPRequest *httpRequest = [[CafeHTTPRequest alloc] initWithData:data error:&error];
       if (!httpRequest) {
         NSLog(@"error unmarshalling CafeHTTPRequest: %@", error.localizedDescription);
+        [self.node failCafeRequest:requestId reason:error.localizedDescription error:nil];
         NSLog(@"Leaving");
         dispatch_group_leave(group);
         return;
@@ -117,6 +118,7 @@ dispatch_queue_t flushQueue;
       BOOL result = [self.node cafeRequestPending:requestId error:&error];
       if (!result) {
         NSLog(@"error marking as pending: %@", error.localizedDescription);
+        [self.node failCafeRequest:requestId reason:error.localizedDescription error:nil];
         NSLog(@"Leaving");
         dispatch_group_leave(group);
         return;
@@ -298,6 +300,13 @@ didCompleteWithError:(nullable NSError *)error {
     [self.node failCafeRequest:task.taskDescription reason:error error:nil];
   } else {
     [self.node completeCafeRequest:task.taskDescription error:nil];
+
+    // We can call flush again if there are no more pending tasks
+    [self.session getAllTasksWithCompletionHandler:^(NSArray<__kindof NSURLSessionTask *> * _Nonnull tasks) {
+      if ([tasks count] == 0) {
+        [self flush];
+      }
+    }];
   }
 }
 

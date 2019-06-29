@@ -623,6 +623,8 @@ with annotations amongst a group of peers
 
 // skipped method ThreadsService.NewEnvelope with unsupported parameter or return types
 
+// skipped method ThreadsService.NewEnvelopeAck with unsupported parameter or return types
+
 // skipped method ThreadsService.Ping with unsupported parameter or return types
 
 // skipped method ThreadsService.Protocol with unsupported parameter or return types
