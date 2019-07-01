@@ -108,12 +108,8 @@ apply from: "../../node_modules/react-native/react.gradle"
  * Upload all the APKs to the Play Store and people will download
  * the correct one based on the CPU architecture of their device.
  */
-<<<<<<< HEAD
-def enableSeparateBuildPerCPUArchitecture = false
-=======
  // Currently not used!
 def enableSeparateBuildPerCPUArchitecture = true
->>>>>>> master
 
 /**
  * Run Proguard to shrink the Java bytecode in release builds.
