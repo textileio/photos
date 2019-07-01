@@ -859,10 +859,10 @@
     react-native-safe-area-view "^0.13.0"
     react-native-screens "^1.0.0 || ^1.0.0-alpha"
 
-"@textile/js-types@0.2.6":
-  version "0.2.6"
-  resolved "https://registry.yarnpkg.com/@textile/js-types/-/js-types-0.2.6.tgz#eb397cada3a03241b09d97434a3bb910d9277c4c"
-  integrity sha512-OzzPyyVgysyPhf761rRqf8saDGbgdWSktiQJLrXoeopMqpQUOqWUZbdqUJ3aIyia3Iq3b8ltnwve/ALrymD3DA==
+"@textile/js-types@0.5.4":
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/@textile/js-types/-/js-types-0.5.4.tgz#f8dfc66b71a3ba23775f1887cdb582b3253b6902"
+  integrity sha512-EASPTxpXO0kWsxYSIIzt4q2H3M9yjdMXSSOrL0MJS6TNthS2m3FmRp6hvojS9zna3v3jtKkEUcFh2OIvPIlXGw==
   dependencies:
     protobufjs "^6.8.8"
 
@@ -877,12 +877,12 @@
   dependencies:
     react-native-vector-icons "^6.2.0"
 
-"@textile/react-native-sdk@1.2.13":
-  version "1.2.13"
-  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-1.2.13.tgz#426e6713f5a9e1e432cc23e4a3c92a78ddfd9027"
-  integrity sha512-8jnssC/cLMRTKV5/PrrBqPzZCP9mDso3SUFXhpbOTHyfCp6WIwoUGiRcFCt0aX/R6DVUHHyIRF3/YCm959SEBQ==
+"@textile/react-native-sdk@2.1.7":
+  version "2.1.7"
+  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-2.1.7.tgz#088eac21da6512e3c9a36a6412b1e023a8f5d898"
+  integrity sha512-RCnae172xiPpfsHoxQGQYiFOlcN9EfSfLyAKj4aafmPETXMM4FvjjfoAyLltKU44mVO55e6N5Xdu62xVxV6fxA==
   dependencies:
-    "@textile/js-types" "0.2.6"
+    "@textile/js-types" "0.5.4"
     buffer "^5.2.1"
 
 "@textile/redux-saga-wait-for@1.0.1":
@@ -5435,10 +5435,6 @@ react-native-background-timer@2.1.0-alpha.6:
   version "2.1.0-alpha.6"
   resolved "https://registry.yarnpkg.com/react-native-background-timer/-/react-native-background-timer-2.1.0-alpha.6.tgz#f8495a9c44d80295c088b09c59d88fdf0a8d6ecd"
 
-"react-native-background-upload@https://github.com/textileio/react-native-background-upload#9dedcbae13815ce869e5d7809cf71e3c2d49cc0e":
-  version "5.0.0"
-  resolved "https://github.com/textileio/react-native-background-upload#9dedcbae13815ce869e5d7809cf71e3c2d49cc0e"
-
 react-native-config@^0.11.7:
   version "0.11.7"
   resolved "https://registry.yarnpkg.com/react-native-config/-/react-native-config-0.11.7.tgz#a2b323f2ecd76a4df88cbb6bc86eaa2ef9febee7"
@@ -5494,9 +5490,10 @@ react-native-image-pan-zoom@^2.1.11:
   version "2.1.11"
   resolved "https://registry.yarnpkg.com/react-native-image-pan-zoom/-/react-native-image-pan-zoom-2.1.11.tgz#61bcb69219d95e76a9797d23e4a2e8e0bd654ae9"
 
-react-native-image-picker@^0.27.1:
-  version "0.27.1"
-  resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-0.27.1.tgz#32877c667e8c2713466fe178a6c7dd648e6cb5d3"
+react-native-image-picker@^0.28.1:
+  version "0.28.1"
+  resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-0.28.1.tgz#1127460522e0c9741fc62f3d040271d298fb6a6e"
+  integrity sha512-CW2dm+cjsdW2fjBW2WD/cSufNG0x0UpljwGHrjSzyB0TckoW+tjYv44UWtckCWxr1JtCg+QrYDO/MzlRyFcjwQ==
 
 react-native-modal@^6.5.0:
   version "6.5.0"

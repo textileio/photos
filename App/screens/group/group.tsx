@@ -11,7 +11,7 @@ import {
 import { NavigationScreenProps, SafeAreaView } from 'react-navigation'
 import uuid from 'uuid/v4'
 import ActionSheet from 'react-native-actionsheet'
-import Textile, { IUser, Thread } from '@textile/react-native-sdk'
+import Textile, { IUser, Thread, FeedItemType } from '@textile/react-native-sdk'
 import moment from 'moment'
 
 import {
@@ -135,23 +135,15 @@ class Group extends React.PureComponent<Props, State> {
 
   render() {
     const threadId = this.props.navigation.getParam('threadId')
-    const options = (this.props.canInvite ? ['Invite Others'] : [])
-      .concat(
-        this.props.selfAddress === this.props.initiator ? ['Rename Group'] : []
-      )
-      .concat(['Leave Group', 'Cancel'])
-    let cancelButtonIndex = 1
-    if (
-      this.props.canInvite &&
-      this.props.selfAddress === this.props.initiator
-    ) {
-      cancelButtonIndex = 3
-    } else if (
-      this.props.canInvite ||
-      this.props.selfAddress === this.props.initiator
-    ) {
-      cancelButtonIndex = 2
-    }
+    const options = [
+      ...(this.props.canInvite ? ['Invite Others'] : []),
+      ...(this.props.selfAddress === this.props.initiator
+        ? ['Rename Group']
+        : []),
+      'Leave Group',
+      'Cancel'
+    ]
+    const cancelButtonIndex = options.indexOf('Cancel')
     return (
       <SafeAreaView style={{ flex: 1, flexGrow: 1 }}>
         <KeyboardResponsiveContainer>
@@ -160,6 +152,7 @@ class Group extends React.PureComponent<Props, State> {
             inverted={true}
             data={this.props.items}
             renderItem={this.renderRow}
+            keyExtractor={this.keyExtractor}
             initialNumToRender={5}
             windowSize={5}
             onEndReachedThreshold={5}
@@ -198,12 +191,9 @@ class Group extends React.PureComponent<Props, State> {
   }
 
   sameUserAgain = (user: IUser, previous: Item): boolean => {
-    if (!previous || !previous.type) {
-      return false
-    }
     switch (previous.type) {
-      case 'message': {
-        return user.address === previous.data.user.address
+      case FeedItemType.Text: {
+        return user.address === previous.value.user.address
       }
       default: {
         return false
@@ -211,19 +201,30 @@ class Group extends React.PureComponent<Props, State> {
     }
   }
 
+  keyExtractor = (item: Item) => {
+    switch (item.type) {
+      case 'addingMessage':
+      case 'addingPhoto':
+        return item.key
+      default:
+        return item.block
+    }
+  }
+
   renderRow = ({ item, index }: ListRenderItemInfo<Item>) => {
     switch (item.type) {
-      case 'photo': {
+      case FeedItemType.Files: {
         const {
           user,
           caption,
           date,
+          data,
           target,
           files,
           likes,
           comments,
           block
-        } = item.data
+        } = item.value
         const hasLiked =
           likes.findIndex(
             likeInfo => likeInfo.user.address === this.props.selfAddress
@@ -260,7 +261,7 @@ class Group extends React.PureComponent<Props, State> {
               undefined,
               momentSpec
             )}
-            photoId={target}
+            photoId={data}
             fileIndex={fileIndex}
             photoWidth={screenWidth}
             hasLiked={hasLiked}
@@ -292,8 +293,8 @@ class Group extends React.PureComponent<Props, State> {
           />
         )
       }
-      case 'message': {
-        const { user, body, date } = item.data
+      case FeedItemType.Text: {
+        const { user, body, date } = item.value
         const isSameUser = this.sameUserAgain(user, this.props.items[index + 1])
         const avatar = isSameUser ? undefined : user.avatar
         return (
@@ -310,10 +311,10 @@ class Group extends React.PureComponent<Props, State> {
           />
         )
       }
-      case 'leave':
-      case 'join': {
-        const { user, date } = item.data
-        const word = item.type === 'join' ? 'joined' : 'left'
+      case FeedItemType.Leave:
+      case FeedItemType.Join: {
+        const { user, date } = item.value
+        const word = item.type === FeedItemType.Join ? 'joined' : 'left'
         return (
           <Join
             avatar={user.avatar}
@@ -327,7 +328,7 @@ class Group extends React.PureComponent<Props, State> {
         )
       }
       default:
-        return <Text>{`${item.type} - ${item.key}`}</Text>
+        return <Text>{`${item.type}`}</Text>
     }
   }
 
@@ -357,7 +358,9 @@ class Group extends React.PureComponent<Props, State> {
         : []),
       this.props.leaveThread
     ]
-    actions[index]()
+    if (index < actions.length) {
+      actions[index]()
+    }
   }
 
   showInviteModal = () => {

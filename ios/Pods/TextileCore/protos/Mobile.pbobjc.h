@@ -27,7 +27,6 @@
 
 CF_EXTERN_C_BEGIN
 
-@class Directory;
 @class Error;
 @class QueryResult;
 
@@ -45,10 +44,13 @@ typedef GPB_ENUM(MobileEventType) {
   MobileEventType_NodeStart = 0,
   MobileEventType_NodeOnline = 1,
   MobileEventType_NodeStop = 2,
-  MobileEventType_WalletUpdate = 10,
+  MobileEventType_AccountUpdate = 10,
   MobileEventType_ThreadUpdate = 11,
   MobileEventType_Notification = 12,
   MobileEventType_QueryResponse = 20,
+  MobileEventType_CafeSyncGroupUpdate = 30,
+  MobileEventType_CafeSyncGroupComplete = 31,
+  MobileEventType_CafeSyncGroupFailed = 32,
 };
 
 GPBEnumDescriptor *MobileEventType_EnumDescriptor(void);
@@ -108,25 +110,6 @@ typedef GPB_ENUM(MobileWalletAccount_FieldNumber) {
 @property(nonatomic, readwrite, copy, null_resettable) NSString *seed;
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *address;
-
-@end
-
-#pragma mark - MobilePreparedFiles
-
-typedef GPB_ENUM(MobilePreparedFiles_FieldNumber) {
-  MobilePreparedFiles_FieldNumber_Dir = 1,
-  MobilePreparedFiles_FieldNumber_Pin = 2,
-};
-
-@interface MobilePreparedFiles : GPBMessage
-
-@property(nonatomic, readwrite, strong, null_resettable) Directory *dir;
-/** Test to see if @c dir has been set. */
-@property(nonatomic, readwrite) BOOL hasDir;
-
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableDictionary<NSString*, NSString*> *pin;
-/** The number of items in @c pin without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger pin_Count;
 
 @end
 

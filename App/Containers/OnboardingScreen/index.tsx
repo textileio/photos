@@ -11,7 +11,8 @@ import ReferralCode from '../../Components/ReferralCode'
 import OnboardingUsername from '../../Containers/OnboardingUsername'
 import SetAvatar from '../../Containers/SetAvatar'
 import MailListSignupScreen from '../MailListSignupScreen'
-import PrefrencesActions from '../../Redux/PreferencesRedux'
+import PreferencesActions from '../../Redux/PreferencesRedux'
+import ChooseCafe from '../../Containers/ChooseCafe'
 import { RootAction, RootState } from '../../Redux/Types'
 import { color, spacing } from '../../styles'
 
@@ -77,7 +78,7 @@ class OnboardingScreen extends React.Component<Props, State> {
     if (
       !this.state.disableNext &&
       this.pages &&
-      this.pages.length - 1 > this.state.currentPage
+      this.state.currentPage < this.pages.length - 1
     ) {
       this.setState({
         showArrow: this.showArrowForIndex(this.state.currentPage + 1),
@@ -124,6 +125,7 @@ class OnboardingScreen extends React.Component<Props, State> {
         referralCode={this.props.referralCode}
         onSuccess={this.nextPage}
       />,
+      <ChooseCafe key="cafe" onSuccess={this.nextPage} />,
       <OnboardingUsername key="username" onSuccess={this.nextPage} />,
       <SetAvatar key="avatar" onSuccess={this.nextPage} />,
       <MailListSignupScreen key="mail" onSuccess={this.nextPage} />,
@@ -147,7 +149,7 @@ class OnboardingScreen extends React.Component<Props, State> {
           <View style={[CONTAINER, { marginBottom: spacing._016 }]}>
             {this.pages[this.state.currentPage]}
           </View>
-          {this.state.currentPage < 7 && (
+          {this.state.currentPage < 8 && (
             <View
               style={{
                 height: 60,
@@ -220,6 +222,15 @@ class OnboardingScreen extends React.Component<Props, State> {
                     }
                 ]}
               />
+              <View
+                style={[
+                  DOT,
+                  this.pages &&
+                    this.state.currentPage === 7 && {
+                      backgroundColor: color.action_4
+                    }
+                ]}
+              />
             </View>
           )}
           {this.state.showArrow && (
@@ -228,7 +239,7 @@ class OnboardingScreen extends React.Component<Props, State> {
               style={ARROW_FORWARD}
               onPress={this.nextPage}
             >
-              <Icon name={'arrow-right'} size={24} />
+              <Icon name="arrow-right" size={24} />
             </TouchableOpacity>
           )}
         </View>
@@ -243,7 +254,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
-  complete: () => dispatch(PrefrencesActions.onboardingSuccess())
+  complete: () => dispatch(PreferencesActions.onboardingSuccess())
 })
 
 export default connect(

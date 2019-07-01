@@ -8,6 +8,7 @@
 
 #import <TextileCore/Model.pbobjc.h>
 #import <TextileCore/View.pbobjc.h>
+#import "FeedItemData.h"
 
 #ifndef TextileDelegate_h
 #define TextileDelegate_h
@@ -74,9 +75,10 @@ NS_ASSUME_NONNULL_BEGIN
 @optional
 /**
  * Called when any thread receives an update
- * @param feedItem The thread update
+ * @param threadId The id of the thread being updated
+ * @param feedItemData The thread update
  */
-- (void)threadUpdateReceived:(FeedItem *)feedItem;
+- (void)threadUpdateReceived:(NSString *)threadId data:(FeedItemData *)feedItemData;
 
 @optional
 /**
@@ -136,6 +138,27 @@ NS_ASSUME_NONNULL_BEGIN
  * @param contact A contact query result
  */
 - (void)contactQueryResult:(NSString *)queryId contact:(Contact *)contact;
+
+@optional
+/**
+ * Called when there is a cafe sync group status update
+ * @param status Object containing information about a cafe sync group
+ */
+- (void)syncUpdate:(CafeSyncGroupStatus *)status;
+
+@optional
+/**
+ * Called when a cafe sync group is complete
+ * @param status Object containing information about a cafe sync group
+ */
+- (void)syncComplete:(CafeSyncGroupStatus *)status;
+
+@optional
+/**
+ * Called when a cafe sync group fails
+ * @param status Object containing information about a cafe sync group
+ */
+- (void)syncFailed:(CafeSyncGroupStatus *)status;
 
 @end
 

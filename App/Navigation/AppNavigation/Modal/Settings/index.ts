@@ -2,8 +2,9 @@ import { createStackNavigator } from 'react-navigation'
 
 import Account from '../../../../SB/views/UserProfile'
 import NotificationSettings from '../../../../SB/views/Notifications'
-import Cafes from '../../../../screens/cafes'
-import CafeSession from '../../../../screens/cafe-session'
+import Cafes from '../../../../Containers/Cafes'
+import RegisterCafe from '../../../../Containers/RegisterCafe'
+import Cafe from '../../../../Containers/Cafe'
 import Storage from '../../../../SB/views/Storage'
 import DeviceLogs from '../../../../SB/views/DeviceLogs'
 import NodeLogsScreen from '../../../../Components/NodeLogsScreen'
@@ -17,7 +18,8 @@ const nav = createStackNavigator(
     Account,
     NotificationSettings,
     Cafes,
-    CafeSession,
+    RegisterCafe,
+    Cafe,
     Storage,
     RecoveryPhrase,
     ChangeAvatar: SetAvatar,

@@ -1,9 +1,8 @@
 import { combineReducers } from 'redux'
 import { ActionType, getType } from 'typesafe-actions'
 
-import { UploadData, ProcessingImage, Upload } from './models'
+import { ProcessingImage } from './models'
 import * as actions from './actions'
-import { allComplete } from './utils'
 
 export interface ProcessingImagesState {
   readonly images: ReadonlyArray<ProcessingImage>
@@ -17,100 +16,11 @@ export default combineReducers<ProcessingImagesState, ProcessingImagesAction>({
       case getType(actions.insertImage): {
         const processingImage: ProcessingImage = {
           ...action.payload,
-          status: 'preparing'
+          status: 'adding'
         }
         return [...state, processingImage]
       }
-      case getType(actions.imagePrepared): {
-        const { uuid, preparedFiles } = action.payload
-        const images = state.map(image => {
-          if (image.uuid === uuid) {
-            const uploadData: UploadData = {}
-            Object.keys(preparedFiles.pin).forEach(key => {
-              uploadData[key] = {
-                id: key,
-                path: preparedFiles.pin[key],
-                status: 'pending',
-                uploadProgress: 0
-              }
-            })
-            const processingImage: ProcessingImage = {
-              ...image,
-              preparedFiles,
-              uploadData,
-              status: 'uploading'
-            }
-            return processingImage
-          }
-          return image
-        })
-        return images
-      }
-      case getType(actions.uploadStarted): {
-        const { uuid, uploadId } = action.payload
-        const images = state.map(image => {
-          if (image.uuid === uuid) {
-            const upload: Upload = {
-              ...image.uploadData![uploadId],
-              status: 'uploading'
-            }
-            const uploadData: UploadData = {
-              ...image.uploadData,
-              [uploadId]: upload
-            }
-            const processingImage: ProcessingImage = { ...image, uploadData }
-            return processingImage
-          }
-          return image
-        })
-        return images
-      }
-      case getType(actions.imageUploadProgress): {
-        const { uploadId, progress } = action.payload
-        const images = state.map(image => {
-          if (image.uploadData && image.uploadData[uploadId]) {
-            const upload: Upload = {
-              ...image.uploadData![uploadId],
-              uploadProgress: progress / 100
-            }
-            const uploadData: UploadData = {
-              ...image.uploadData,
-              [uploadId]: upload
-            }
-            const processingImage: ProcessingImage = { ...image, uploadData }
-            return processingImage
-          }
-          return image
-        })
-        return images
-      }
-      case getType(actions.imageUploadComplete): {
-        const { uploadId, responseCode, responseBody } = action.payload
-        const images = state.map(image => {
-          if (image.uploadData && image.uploadData[uploadId]) {
-            const upload: Upload = {
-              ...image.uploadData[uploadId],
-              responseCode,
-              responseBody,
-              status: 'complete'
-            }
-            const uploadData: UploadData = {
-              ...image.uploadData,
-              [uploadId]: upload
-            }
-            const status = allComplete(uploadData) ? 'sharing' : image.status
-            const processingImage: ProcessingImage = {
-              ...image,
-              uploadData,
-              status
-            }
-            return processingImage
-          }
-          return image
-        })
-        return images
-      }
-      case getType(actions.sharedToThread): {
+      case getType(actions.addedToThread): {
         const { uuid, block } = action.payload
         const images = state.map(image => {
           if (image.uuid === uuid) {
@@ -154,33 +64,6 @@ export default combineReducers<ProcessingImagesState, ProcessingImagesAction>({
             switch (error.type) {
               case 'general':
                 return { ...image, error: e }
-              case 'expiredToken':
-              case 'upload': {
-                const { uploadId } = error
-                if (image.uploadData && image.uploadData[uploadId]) {
-                  const upload: Upload = {
-                    ...image.uploadData[uploadId],
-                    error: e,
-                    status: 'error'
-                  }
-                  const uploadData: UploadData = {
-                    ...image.uploadData,
-                    [uploadId]: upload
-                  }
-                  // Don't set the ProcessingImage.error if it's an expired token error because
-                  // that is expected and handled by automatic retry
-                  const errorMessage =
-                    error.type === 'expiredToken' ? image.error : e
-                  const processingImage: ProcessingImage = {
-                    ...image,
-                    uploadData,
-                    error: errorMessage
-                  }
-                  return processingImage
-                } else {
-                  return { ...image, error: e } // TODO: and here?
-                }
-              }
             }
           }
           return image

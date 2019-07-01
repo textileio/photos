@@ -26,6 +26,7 @@ import Avatar from '../Components/Avatar'
 import Button from '../Components/LargeButton'
 import PhotoWithTextBox from '../SB/components/PhotoWithTextBox'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
+import CreateThreadModal from '../Components/CreateThreadModal'
 
 // Styles
 import styles from '../Components/Styles/ContactModal'
@@ -135,7 +136,6 @@ interface NavProps {
 }
 
 interface StateProps {
-  displayName: string
   threadThumbs: ReadonlyArray<ThreadThumbs>
   isContact: boolean
   removing: boolean
@@ -146,7 +146,6 @@ interface StateProps {
 interface DispatchProps {
   removeContact: () => void
   addContact: () => void
-  createDirectMessageThread: () => void
 }
 
 type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
@@ -156,7 +155,10 @@ type Route = {
   title: string
 }
 
-type State = NavigationState<Route>
+interface State {
+  showCreateGroupModal: boolean
+  routes: NavigationState<Route>
+}
 
 class ContactModal extends React.Component<Props, State> {
   static navigationOptions = ({
@@ -174,36 +176,40 @@ class ContactModal extends React.Component<Props, State> {
     }
   }
 
+  constructor(props: Props) {
+    super(props)
+    this.state = {
+      showCreateGroupModal: false,
+      routes: {
+        index: 0,
+        routes: [
+          {
+            key: 'threads',
+            title: 'Threads'
+          },
+          {
+            key: 'cafes',
+            title: 'Cafes'
+          }
+        ]
+      }
+    }
+  }
+
   navigateToThread(id: string) {
     return () => {
       this.props.navigation.navigate('ViewThread', { threadId: id })
     }
   }
 
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      index: 0,
-      routes: [
-        {
-          key: 'threads',
-          title: 'Threads'
-        },
-        {
-          key: 'cafes',
-          title: 'Cafes'
-        }
-      ]
-    }
-  }
-
   render() {
     const contact = this.props.navigation.getParam('contact')
-    const avatar = contact.avatar
+    const { name, address, avatar } = contact
     const removingText = this.props.removing ? 'Removing' : 'Remove'
     const addingText = this.props.adding ? 'Adding' : 'Add'
     const buttonText = this.props.isContact ? removingText : addingText
     const buttonDisabled = this.props.adding || this.props.removing
+    const displayName = name ? name : address.substring(0, 12)
     const cafeObjects = cafes(contact)
     const ThreadsScreen = (
       <ScrollView style={styles.threadsList}>
@@ -234,7 +240,7 @@ class ContactModal extends React.Component<Props, State> {
       <SafeAreaView style={container}>
         <View style={profile}>
           <Avatar style={profilePicture} target={avatar} />
-          <Text style={username}>{this.props.displayName}</Text>
+          <Text style={username}>{displayName}</Text>
           <View style={buttons}>
             <Button
               text={buttonText}
@@ -256,12 +262,21 @@ class ContactModal extends React.Component<Props, State> {
         {this.props.isContact && (
           <TabView<Route>
             style={tabView}
-            navigationState={this.state}
+            navigationState={this.state.routes}
             renderScene={sceneMap({
               threads: () => ThreadsScreen,
               cafes: () => CafesScreen
             })}
-            onIndexChange={index => this.setState({ index })}
+            onIndexChange={index =>
+              this.setState(prevState => {
+                return {
+                  routes: {
+                    ...prevState.routes,
+                    index
+                  }
+                }
+              })
+            }
             initialLayout={{
               width: Dimensions.get('window').width
             }}
@@ -277,6 +292,19 @@ class ContactModal extends React.Component<Props, State> {
             )}
           />
         )}
+        <CreateThreadModal
+          isVisible={this.state.showCreateGroupModal}
+          fullScreen={false}
+          selectToShare={false}
+          navigateTo={true}
+          invites={[address]}
+          defaultName={name}
+          whitelist={[address]}
+          type={Thread.Type.OPEN}
+          sharing={Thread.Sharing.NOT_SHARED}
+          cancel={this.cancelCreateThread}
+          complete={this.completeCreateThread}
+        />
       </SafeAreaView>
     )
   }
@@ -289,6 +317,18 @@ class ContactModal extends React.Component<Props, State> {
     this.props.addContact()
   }
 
+  cancelCreateThread = () => {
+    this.setState({
+      showCreateGroupModal: false
+    })
+  }
+
+  completeCreateThread = () => {
+    this.setState({
+      showCreateGroupModal: false
+    })
+  }
+
   createOrNavigateToDirectMessageThread = () => {
     if (this.props.directMessageThread) {
       // Navigate to direct message thread
@@ -298,7 +338,9 @@ class ContactModal extends React.Component<Props, State> {
         groupName: name
       })
     } else {
-      this.props.createDirectMessageThread()
+      this.setState({
+        showCreateGroupModal: true
+      })
     }
   }
 }
@@ -308,7 +350,6 @@ const mapStateToProps = (
   ownProps: NavigationScreenProps<NavProps>
 ): StateProps => {
   const contact = ownProps.navigation.getParam('contact')
-  const username = contact.name
   const address = contact.address
   // Check if this contact is already added
   const isContact = state.contacts.contacts.some(c => c.address === address)
@@ -320,7 +361,6 @@ const mapStateToProps = (
     Object.keys(state.contacts.addingContacts).indexOf(address) > -1
   const directMessageThread = getDirectMessageThread(state, address)
   return {
-    displayName: username ? username : address.substring(0, 12),
     threadThumbs: getThreadThumbs(state, address, 'name'),
     isContact,
     removing,
@@ -334,21 +374,11 @@ const mapDispatchToProps = (
   ownProps: NavigationScreenProps<NavProps>
 ): DispatchProps => {
   const contact = ownProps.navigation.getParam('contact')
-  const { address, name } = contact
-  const threadConfig = {
-    name,
-    whitelist: [address],
-    type: Thread.Type.OPEN,
-    sharing: Thread.Sharing.NOT_SHARED
-  }
+  const { address } = contact
   return {
     removeContact: () =>
       dispatch(contactsActions.removeContact.request(address)),
-    addContact: () => dispatch(contactsActions.addContactRequest(contact)),
-    createDirectMessageThread: () =>
-      dispatch(
-        PhotoViewingActions.addThreadRequest(threadConfig, { navigate: true })
-      )
+    addContact: () => dispatch(contactsActions.addContactRequest(contact))
   }
 }
 

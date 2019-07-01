@@ -71,7 +71,7 @@ class PhotoScreen extends React.Component<Props> {
       user,
       caption,
       date,
-      target,
+      data,
       files,
       likes,
       comments,
@@ -114,7 +114,7 @@ class PhotoScreen extends React.Component<Props> {
               undefined,
               momentSpec
             )}
-            photoId={target}
+            photoId={data}
             fileIndex={fileIndex}
             photoWidth={screenWidth}
             hasLiked={hasLiked}

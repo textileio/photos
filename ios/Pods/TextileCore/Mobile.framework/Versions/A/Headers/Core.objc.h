@@ -12,6 +12,7 @@
 
 
 @class CoreAddFileConfig;
+@class CoreBlockDownloads;
 @class CoreBlockOutbox;
 @class CoreCafeInbox;
 @class CoreCafeOutbox;
@@ -57,6 +58,24 @@
 @end
 
 /**
+ * BlockDownloads manages a queue of pending downloads
+ */
+@interface CoreBlockDownloads : NSObject <goSeqRefInterface, CoreCafeOutboxHandler> {
+}
+@property(strong, readonly) _Nonnull id _ref;
+
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
+// skipped constructor BlockDownloads.NewBlockDownloads with unsupported parameter or return types
+
+// skipped method BlockDownloads.Add with unsupported parameter or return types
+
+/**
+ * Flush processes pending messages
+ */
+- (void)flush;
+@end
+
+/**
  * BlockOutbox queues and processes outbound thread messages
  */
 @interface CoreBlockOutbox : NSObject <goSeqRefInterface, CoreCafeOutboxHandler> {
@@ -75,7 +94,7 @@
 @end
 
 /**
- * CafeInbox queues and processes outbound thread messages
+ * CafeInbox queues and processes downloaded cafe messages
  */
 @interface CoreCafeInbox : NSObject <goSeqRefInterface, CoreCafeOutboxHandler> {
 }
@@ -127,6 +146,10 @@
 - (nonnull instancetype)init;
 @property (nonatomic) long size;
 @property (nonatomic) NSString* _Nonnull group;
+@property (nonatomic) NSString* _Nonnull syncGroup;
+@property (nonatomic) NSString* _Nonnull cafe;
+// skipped method CafeRequestSettings.Options with unsupported parameter or return types
+
 @end
 
 /**
@@ -139,12 +162,18 @@
 - (nonnull instancetype)initWithRef:(_Nonnull id)ref;
 // skipped constructor CafeService.NewCafeService with unsupported parameter or return types
 
-// skipped method CafeService.CheckMessages with unsupported parameter or return types
-
-// skipped method CafeService.DeleteMessages with unsupported parameter or return types
-
-// skipped method CafeService.Deregister with unsupported parameter or return types
-
+/**
+ * CheckMessages asks each session's inbox for new messages
+ */
+- (BOOL)checkMessages:(NSString* _Nullable)cafeId error:(NSError* _Nullable* _Nullable)error;
+/**
+ * DeleteMessages deletes a page of messages from a cafe
+ */
+- (BOOL)deleteMessages:(NSString* _Nullable)cafeId error:(NSError* _Nullable* _Nullable)error;
+/**
+ * Deregister removes this peer from a cafe
+ */
+- (BOOL)deregister:(NSString* _Nullable)cafeId error:(NSError* _Nullable* _Nullable)error;
 /**
  * Flush begins handling requests recursively
  */
@@ -269,6 +298,8 @@
 - (NSString* _Nonnull)avatar;
 // skipped method Textile.Block with unsupported parameter or return types
 
+// skipped method Textile.BlockByParent with unsupported parameter or return types
+
 // skipped method Textile.BlockView with unsupported parameter or return types
 
 // skipped method Textile.Blocks with unsupported parameter or return types
@@ -276,13 +307,7 @@
 // skipped method Textile.BlocksByTarget with unsupported parameter or return types
 
 - (NSString* _Nonnull)cafeApiAddr;
-// skipped method Textile.CafeHTTPRequest with unsupported parameter or return types
-
 // skipped method Textile.CafeInfo with unsupported parameter or return types
-
-// skipped method Textile.CafeRequestGroupStatus with unsupported parameter or return types
-
-// skipped method Textile.CafeRequests with unsupported parameter or return types
 
 // skipped method Textile.CafeSession with unsupported parameter or return types
 
@@ -291,7 +316,6 @@
 // skipped method Textile.CafeTokens with unsupported parameter or return types
 
 - (BOOL)checkCafeMessages:(NSError* _Nullable* _Nullable)error;
-- (BOOL)cleanupCafeRequests:(NSError* _Nullable* _Nullable)error;
 /**
  * CloseChns closes update channels
  */
@@ -321,6 +345,8 @@ and stores (unless `store` is false) a bcrypt hashed version for later compariso
  * DataAtPath returns raw data behind an ipfs path
  */
 - (NSData* _Nullable)dataAtPath:(NSString* _Nullable)path error:(NSError* _Nullable* _Nullable)error;
+// skipped method Textile.Datastore with unsupported parameter or return types
+
 - (NSData* _Nullable)decrypt:(NSData* _Nullable)input error:(NSError* _Nullable* _Nullable)error;
 - (BOOL)deregisterCafe:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
 // skipped method Textile.DoneCh with unsupported parameter or return types
@@ -332,15 +358,23 @@ and stores (unless `store` is false) a bcrypt hashed version for later compariso
 
 // skipped method Textile.FileContent with unsupported parameter or return types
 
-// skipped method Textile.FileIndex with unsupported parameter or return types
-
 // skipped method Textile.FileIndexContent with unsupported parameter or return types
 
 // skipped method Textile.FileMeta with unsupported parameter or return types
 
 // skipped method Textile.Files with unsupported parameter or return types
 
+/**
+ * FlushBlocks flushes the block message outbox
+ */
+- (void)flushBlocks;
+/**
+ * FlushCafes flushes the cafe request outbox
+ */
+- (void)flushCafes;
 // skipped method Textile.GetMedia with unsupported parameter or return types
+
+// skipped method Textile.GetMillMedia with unsupported parameter or return types
 
 - (BOOL)ignoreInvite:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
 /**
@@ -478,8 +512,6 @@ Note: Only thread initiators can update the thread's name
 
 // skipped method Textile.Threads with unsupported parameter or return types
 
-// skipped method Textile.UpdateCafeRequestStatus with unsupported parameter or return types
-
 // skipped method Textile.UpdateCh with unsupported parameter or return types
 
 /**
@@ -505,7 +537,7 @@ bcrypt hashed equivalent
 @property (nonatomic) NSString* _Nonnull id_;
 @property (nonatomic) NSString* _Nonnull key;
 @property (nonatomic) NSString* _Nonnull name;
-// skipped field Thread.PrivKey with unsupported type: github.com/textileio/go-textile/vendor/github.com/libp2p/go-libp2p-crypto.PrivKey
+// skipped field Thread.PrivKey with unsupported type: github.com/textileio/go-textile/vendor/github.com/libp2p/go-libp2p-core/crypto.PrivKey
 
 // skipped field Thread.Schema with unsupported type: *github.com/textileio/go-textile/pb.Node
 
@@ -533,10 +565,8 @@ bcrypt hashed equivalent
  * Encrypt data with thread public key
  */
 - (NSData* _Nullable)encrypt:(NSData* _Nullable)data error:(NSError* _Nullable* _Nullable)error;
-/**
- * Head returns content id of the latest update
- */
-- (NSString* _Nonnull)head:(NSError* _Nullable* _Nullable)error;
+// skipped method Thread.Heads with unsupported parameter or return types
+
 // skipped method Thread.LatestFiles with unsupported parameter or return types
 
 // skipped method Thread.Peers with unsupported parameter or return types
@@ -568,6 +598,7 @@ bcrypt hashed equivalent
 // skipped field ThreadConfig.Service with unsupported type: func() *github.com/textileio/go-textile/core.ThreadsService
 
 @property (nonatomic) CoreBlockOutbox* _Nullable blockOutbox;
+@property (nonatomic) CoreBlockDownloads* _Nullable blockDownloads;
 @property (nonatomic) CoreCafeOutbox* _Nullable cafeOutbox;
 // skipped field ThreadConfig.AddPeer with unsupported type: func(*github.com/textileio/go-textile/pb.Peer) error
 
@@ -592,6 +623,8 @@ with annotations amongst a group of peers
 
 // skipped method ThreadsService.NewEnvelope with unsupported parameter or return types
 
+// skipped method ThreadsService.NewEnvelopeAck with unsupported parameter or return types
+
 // skipped method ThreadsService.Ping with unsupported parameter or return types
 
 // skipped method ThreadsService.Protocol with unsupported parameter or return types
@@ -604,6 +637,10 @@ with annotations amongst a group of peers
 - (void)start;
 @end
 
+/**
+ * CafeApiVersion is the cafe api version
+ */
+FOUNDATION_EXPORT NSString* _Nonnull const CoreCafeApiVersion;
 FOUNDATION_EXPORT NSString* _Nonnull const CoreContentLinkName;
 FOUNDATION_EXPORT NSString* _Nonnull const CoreMetaLinkName;
 
@@ -613,12 +650,6 @@ FOUNDATION_EXPORT NSString* _Nonnull const CoreMetaLinkName;
  */
 + (NSError* _Nullable) errAccountRequired;
 + (void) setErrAccountRequired:(NSError* _Nullable)v;
-
-/**
- * ErrBlockExists indicates a block has already been indexed
- */
-+ (NSError* _Nullable) errBlockExists;
-+ (void) setErrBlockExists:(NSError* _Nullable)v;
 
 /**
  * ErrBlockNotFound indicates a block was not found in the index
@@ -646,6 +677,12 @@ FOUNDATION_EXPORT NSString* _Nonnull const CoreMetaLinkName;
  */
 + (NSError* _Nullable) errInvalidFileNode;
 + (void) setErrInvalidFileNode:(NSError* _Nullable)v;
+
+/**
+ * ErrInvalidNode indicates the thread node is not valid
+ */
++ (NSError* _Nullable) errInvalidNode;
++ (void) setErrInvalidNode:(NSError* _Nullable)v;
 
 /**
  * ErrInvalidThreadBlock is a catch all error for malformed / invalid blocks
@@ -734,6 +771,9 @@ FOUNDATION_EXPORT NSString* _Nonnull const CoreMetaLinkName;
 // skipped function ConvertHeadersToCorsOptions with unsupported parameter or return types
 
 
+// skipped function CreateAndStartPeer with unsupported parameter or return types
+
+
 // skipped function FeedItemType with unsupported parameter or return types
 
 
@@ -749,6 +789,9 @@ FOUNDATION_EXPORT NSString* _Nonnull CoreGetRandomPort(void);
 
 
 // skipped function MigrateRepo with unsupported parameter or return types
+
+
+// skipped function NewBlockDownloads with unsupported parameter or return types
 
 
 // skipped function NewBlockOutbox with unsupported parameter or return types

@@ -25,7 +25,6 @@ import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.smixx.fabric.FabricPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
-import com.vydia.RNUploader.UploaderReactPackage;
 import io.textile.rnmobile.RNTextilePackage;
 import com.textile.textilenode.TextilePackage;
 
@@ -46,7 +45,6 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
           new RNTextilePackage(),
           new RNBackgroundFetchPackage(),
           new ReactNativePushNotificationPackage(),
-          new UploaderReactPackage(),
           new RNFSPackage(),
           new ImagePickerPackage(),
           new ReactNativeConfigPackage(),

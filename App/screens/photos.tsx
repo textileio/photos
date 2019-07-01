@@ -133,11 +133,11 @@ class Photos extends Component<Props> {
 
   renderRow = (row: ListRenderItemInfo<Item>) => {
     if (row.item.type === 'files') {
-      const { files, target } = row.item.files
+      const { files, data } = row.item.files
       const fileIndex = files.length > 0 && files[0].index ? files[0].index : 0
       return (
         <TextileImage
-          target={target}
+          target={data}
           index={fileIndex}
           forMinWidth={itemSize}
           resizeMode="cover"
