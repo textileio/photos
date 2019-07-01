@@ -5,9 +5,9 @@ import { ActionType, getType } from 'typesafe-actions'
 import RNPushNotification from 'react-native-push-notification'
 import Textile, {
   EventSubscription,
-  FeedItemType,
-  ICafeSyncGroupStatus
+  FeedItemType
 } from '@textile/react-native-sdk'
+import Long from 'long'
 
 import { toTypedNotification } from '../Services/Notifications'
 import { logNewEvent } from './DeviceLogs'
@@ -158,17 +158,24 @@ function nodeEvents() {
     )
     subscriptions.push(
       Textile.events.addSyncUpdateListener(status => {
-        emitter(groupActions.fileSync.syncUpdate(status))
+        const sizeComplete = Long.fromValue(status.sizeComplete).toNumber()
+        const sizeTotal = Long.fromValue(status.sizeTotal).toNumber()
+        const groupSizeComplete = Long.fromValue(status.groupsSizeComplete).toNumber()
+        const groupSizeTotal = Long.fromValue(status.groupsSizeTotal).toNumber()
+        const { id, numComplete, numTotal } = status
+        console.log(id, numComplete, numTotal, sizeComplete, sizeTotal, groupSizeComplete, groupSizeTotal)
+        emitter(groupActions.fileSync.syncUpdate(id, numComplete, numTotal, groupSizeComplete, groupSizeTotal))
       })
     )
     subscriptions.push(
       Textile.events.addSyncCompleteListener(status => {
-        emitter(groupActions.fileSync.syncComplete(status))
+        emitter(groupActions.fileSync.syncComplete(status.id))
       })
     )
     subscriptions.push(
       Textile.events.addSyncFailedListener(status => {
-        emitter(groupActions.fileSync.syncFailed(status))
+        const { id, errorId, error } = status
+        emitter(groupActions.fileSync.syncFailed(id, errorId, error))
       })
     )
     return () => {

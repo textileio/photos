@@ -222,6 +222,7 @@ class Group extends React.PureComponent<Props, State> {
   renderRow = ({ item, index }: ListRenderItemInfo<Item>) => {
     switch (item.type) {
       case FeedItemType.Files: {
+        const { value, syncStatus } = item
         const {
           user,
           caption,
@@ -232,7 +233,7 @@ class Group extends React.PureComponent<Props, State> {
           likes,
           comments,
           block
-        } = item.value
+        } = value
         const hasLiked =
           likes.findIndex(
             likeInfo => likeInfo.user.address === this.props.selfAddress
@@ -271,6 +272,7 @@ class Group extends React.PureComponent<Props, State> {
             )}
             photoId={data}
             fileIndex={fileIndex}
+            syncStaus={syncStatus}
             photoWidth={screenWidth}
             hasLiked={hasLiked}
             numberLikes={likes.length}

@@ -10,12 +10,22 @@ export const groupItems = (
 ): ReadonlyArray<Item> => {
   const feed = feedSelectors
     .feedItems(state.feed, groupId)
-    .map(feedItemData => ({
-      ...feedItemData,
-      status: fileSyncSelectors.makeStatusForId(feedItemData.block)(
+    .map(feedItemData => {
+      // console.log('LOOKING FOR:', feedItemData.block)
+      // console.log('CURRENT STATE:', state.fileSync.groups)
+      // const hasIt = Object.keys(state.fileSync.groups).indexOf(feedItemData.block)
+      // const status = fileSyncSelectors.makeStatusForId(feedItemData.block)(
+      //   state.fileSync
+      // )
+      // console.log('INCLUDES IT:', feedItemData.block, hasIt, status)
+      const syncStatus = fileSyncSelectors.makeStatusForId(feedItemData.block)(
         state.fileSync
       )
-    }))
+      return {
+        ...feedItemData,
+        syncStatus
+      }
+    })
   const processingImages = addPhotoSelectors.getProcessingImages(
     state.addPhoto,
     groupId

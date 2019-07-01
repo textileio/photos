@@ -6,15 +6,18 @@ import {
   Dimensions,
   Modal
 } from 'react-native'
+import { ICafeSyncGroupStatus } from '@textile/react-native-sdk'
+import ImageZoom from 'react-native-image-pan-zoom'
+import ProgressCircle from 'react-native-progress-circle'
+import Long from 'long'
 
 import Message, { Props as MessageProps } from './message'
 import ProgressiveImage from './ProgressiveImage'
 import LikeAndComment, {
   Props as LikeAndCommentProps
 } from './like-and-comment'
-import { spacing } from '../styles'
+import { spacing, size, color, textStyle } from '../styles'
 import Comments, { Props as CommentsProps } from './comments'
-import ImageZoom from 'react-native-image-pan-zoom'
 
 const CONTAINER: ViewStyle = {
   paddingTop: spacing._016,
@@ -30,6 +33,7 @@ interface Props extends MessageProps, LikeAndCommentProps, CommentsProps {
   photoId: string
   fileIndex: number
   photoWidth: number
+  syncStaus?: ICafeSyncGroupStatus
   pinchZoom?: boolean
   pinchHeight?: number
   pinchWidth?: number
@@ -117,6 +121,13 @@ export default class Photo extends React.PureComponent<Props> {
 
   renderSelection() {
     // Just uses a touchable image, when touched will enable it's own modal in full screen
+    let progress: number | undefined = 50
+    // if (this.props.syncStaus) {
+    //   const complete = Long.fromValue(this.props.syncStaus.sizeComplete || 0)
+    //   const total = Long.fromValue(this.props.syncStaus.sizeTotal || 0)
+    //   progress = complete.divide(total).toNumber() * 100
+    //   console.log('PROGRESS:', progress)
+    // }
     return (
       <TouchableOpacity
         style={CONTAINER}
@@ -137,7 +148,19 @@ export default class Photo extends React.PureComponent<Props> {
           this.props.photoWidth,
           this.props.photoWidth
         )}
-        <LikeAndComment {...this.props} />
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingLeft: spacing.screenEdge, paddingRight: spacing.screenEdge, paddingTop: spacing.screenEdge }}>
+          <LikeAndComment {...this.props} />
+          {progress &&
+            <ProgressCircle
+              percent={progress}
+              radius={size._012}
+              borderWidth={2}
+              color={color.brandBlue}
+              shadowColor={color.grey_4}
+              bgColor={color.screen_primary}
+            />
+          }
+        </View>
         <Comments {...this.props} />
       </TouchableOpacity>
     )

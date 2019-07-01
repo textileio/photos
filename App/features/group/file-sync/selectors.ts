@@ -1,5 +1,9 @@
 import { FileSyncState } from './reducer'
 
 export const makeStatusForId = (id: string) => (state: FileSyncState) => {
-  return state.groups[id]
+  if (Object.keys(state.groups).indexOf(id) > -1) {
+    return state.groups[id]
+  } else {
+    return undefined
+  }
 }
