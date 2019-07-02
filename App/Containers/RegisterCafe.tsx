@@ -60,9 +60,7 @@ interface State {
 }
 
 class RegisterCafe extends Component<Props, State> {
-  static navigationOptions = ({
-    navigation
-  }: NavigationScreenProps) => {
+  static navigationOptions = ({ navigation }: NavigationScreenProps) => {
     const goBack = () => navigation.goBack()
     const headerLeft = (
       <TextileHeaderButtons left={true}>

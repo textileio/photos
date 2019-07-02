@@ -21,10 +21,17 @@ const ICON: ViewStyle = {
 const actionText = (props: Props) => {
   return (
     <View style={CONTAINER}>
-      {props.iconName &&
-        <Icon style={ICON} name={props.iconName} size={size._024} color={color.grey_4} />
-      }
-      <Text style={{ ...textStyle.action_xs, color: color.grey_4 }}>{props.text}</Text>
+      {props.iconName && (
+        <Icon
+          style={ICON}
+          name={props.iconName}
+          size={size._024}
+          color={color.grey_4}
+        />
+      )}
+      <Text style={{ ...textStyle.action_xs, color: color.grey_4 }}>
+        {props.text}
+      </Text>
     </View>
   )
 }

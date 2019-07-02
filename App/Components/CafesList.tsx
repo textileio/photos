@@ -6,7 +6,7 @@ import { Buffer } from 'buffer'
 import ListItem from './ListItem'
 import RowSeparator from './RowSeparator'
 import ActionText from './action-text'
-import { size } from '../styles';
+import { size } from '../styles'
 
 interface Cafe {
   name: string
@@ -81,20 +81,24 @@ export default class CafesList extends Component<Props> {
   _renderItem = ({ item }: { item: Item }) => {
     switch (item.type) {
       case 'cafe':
-          return (
-            <ListItem
-              title={item.cafe.name}
-              subtitle={item.cafe.peerId}
-              selecting={true}
-              selected={item.cafe.peerId === this.props.selected}
-              onSelect={this.props.onSelect(item.cafe.peerId, item.cafe.token)}
-              disabled={this.props.disabled}
-            />
-          )
+        return (
+          <ListItem
+            title={item.cafe.name}
+            subtitle={item.cafe.peerId}
+            selecting={true}
+            selected={item.cafe.peerId === this.props.selected}
+            onSelect={this.props.onSelect(item.cafe.peerId, item.cafe.token)}
+            disabled={this.props.disabled}
+          />
+        )
       case 'addCustom':
         return (
-          <TouchableOpacity style={{ alignItems: 'center', padding: size._024 }} onPress={this.props.onAddCustom} disabled={this.props.disabled}>
-            <ActionText text='ADD A CUSTOM CAFE' iconName='pencil-create' />
+          <TouchableOpacity
+            style={{ alignItems: 'center', padding: size._024 }}
+            onPress={this.props.onAddCustom}
+            disabled={this.props.disabled}
+          >
+            <ActionText text="ADD A CUSTOM CAFE" iconName="pencil-create" />
           </TouchableOpacity>
         )
     }
