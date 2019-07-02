@@ -3,8 +3,8 @@ import { FlatList } from 'react-native'
 import Config from 'react-native-config'
 import { Buffer } from 'buffer'
 
-import CafeItem from './CafeItem'
-import Separator from './Separator'
+import ListItem from './ListItem'
+import RowSeparator from './RowSeparator'
 
 interface Cafe {
   name: string
@@ -14,7 +14,7 @@ interface Cafe {
 
 interface Props {
   selected?: string
-  onSelect: (peerId: string, token: string) => void
+  onSelect: (peerId: string, token: string) => () => void
   alreadyRegistered?: ReadonlyArray<string>
   ListHeaderComponent?: JSX.Element
   disabled?: boolean
@@ -38,10 +38,11 @@ export default class CafesList extends Component<Props> {
     })
     return (
       <FlatList
+        style={{ flex: 1 }}
         data={filteredCafes}
         keyExtractor={this._keyExtractor}
         renderItem={this._renderItem}
-        ItemSeparatorComponent={() => <Separator />}
+        ItemSeparatorComponent={RowSeparator}
         ListHeaderComponent={
           this.props.ListHeaderComponent
             ? this.props.ListHeaderComponent
@@ -53,16 +54,17 @@ export default class CafesList extends Component<Props> {
 
   _keyExtractor = (item: Cafe) => item.peerId
 
-  _renderItem = ({ item }: { item: Cafe }) => (
-    <CafeItem
-      name={item.name}
-      peerId={item.peerId}
-      token={item.token}
-      disabled={this.props.disabled !== undefined ? this.props.disabled : false}
-      selected={
-        this.props.selected ? item.peerId === this.props.selected : false
-      }
-      onPressItem={this.props.onSelect}
-    />
-  )
+  _renderItem = ({ item }: { item: Cafe }) => {
+    console.log(item)
+    return (
+      <ListItem
+        title={item.name}
+        subtitle={item.peerId}
+        selecting={true}
+        selected={item.peerId === this.props.selected}
+        onSelect={this.props.onSelect(item.peerId, item.token)}
+        disabled={this.props.disabled}
+      />
+    )
+  }
 }

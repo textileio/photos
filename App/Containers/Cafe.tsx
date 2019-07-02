@@ -19,7 +19,7 @@ import { cafesActions } from '../features/cafes'
 import Icon from '@textile/react-native-icon'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 import Button from '../Components/LargeButton'
-import Separator from '../Components/Separator'
+import RowSeparator from '../Components/RowSeparator'
 
 import { color, fontFamily, fontSize, spacing, size } from '../styles'
 
@@ -101,7 +101,7 @@ class Cafe extends Component<Props> {
 
   render() {
     // Hardcoded placeholder for services UI
-    const services = ['Backup', 'Inboxing', 'Push Notifications']
+    const services = ['Backup', 'Inboxing']
     const { id } = this.props.navigation.getParam('cafe')
     const buttonDisabled = !this.props.error && this.props.processing
     return (
@@ -117,7 +117,7 @@ class Cafe extends Component<Props> {
               <Icon name="check-mark" size={size._016} />
             </View>
           )}
-          ItemSeparatorComponent={() => <Separator />}
+          ItemSeparatorComponent={RowSeparator}
         />
         {this.props.error && <Text>{this.props.error}</Text>}
         <View style={ButtonContainer}>

@@ -319,15 +319,10 @@ class Contacts extends React.Component<Props, State> {
                 text={item.data.isContact ? 'added' : 'add'}
                 disabled={item.data.isContact || item.data.adding}
                 onPress={this.onAdd(item.data.contact)}
-              />,
-              <Icon
-                key="more"
-                name="chevron-right"
-                size={24}
-                color={color.grey_4}
               />
             ]}
             onPress={this.onPressTextile(item.data.contact)}
+            showDisclosure={true}
           />
         )
       case 'addressBook':

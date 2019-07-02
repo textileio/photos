@@ -16,28 +16,18 @@ interface Props {
   style?: ViewStyle
   onPress?: () => void
   onSelect?: () => void
+  disabled?: boolean
 }
 
 class ListItem extends React.PureComponent<Props> {
-  spliceRightItems = (items: JSX.Element[]) => {
+  spliceItems = (items: JSX.Element[]) => {
     const spliced: JSX.Element[] = []
     return spliced.concat.apply(
       [],
-      items.map((item, index) => [
-        <View key={index} style={{ width: spacing._008 }} />,
-        { ...item, key: index + items.length }
-      ])
-    )
-  }
-
-  spliceLeftItems = (items: JSX.Element[]) => {
-    const spliced: JSX.Element[] = []
-    return spliced.concat.apply(
-      [],
-      items.map((item, index) => [
-        { ...item, key: index + items.length },
-        <View key={index} style={{ width: spacing._008 }} />
-      ])
+      items.map((item, index) => {
+        const spacer = <View key={index} style={{ width: spacing._008 }} />
+        return items.length -1 !== index ? [{ ...item, key: index + items.length }, spacer] : [{ ...item, key: index + items.length }]
+    })
     )
   }
 
@@ -70,10 +60,11 @@ class ListItem extends React.PureComponent<Props> {
     ]
 
     return (
-      <TouchableOpacity delayPressIn={100} onPress={this.props.selecting ? this.props.onSelect : this.props.onPress}>
+      <TouchableOpacity delayPressIn={100} onPress={this.props.selecting ? this.props.onSelect : this.props.onPress} disabled={this.props.disabled}>
         <View
           style={{
             flex: 1,
+            opacity: this.props.disabled ? 0.5 : 1,
             flexDirection: 'row',
             alignItems: 'center',
             paddingLeft: spacing._012,
@@ -83,12 +74,13 @@ class ListItem extends React.PureComponent<Props> {
             ...this.props.style
           }}
         >
-          {this.spliceLeftItems(leftItems)}
+          {this.spliceItems(leftItems)}
           <View
             style={{
               flex: 1,
               justifyContent: 'center',
-              marginLeft: leftItems.length > 0 ? spacing._012 : 0
+              marginLeft: leftItems.length > 0 ? spacing._012 : 0,
+              marginRight: rightItems.length > 0 ? spacing._012 : 0
             }}
           >
             <Text style={{ ...textStyle.body_l, color: color.grey_2 }}>
@@ -100,7 +92,7 @@ class ListItem extends React.PureComponent<Props> {
               </Text>
             )}
           </View>
-          {this.spliceRightItems(rightItems)}
+          {this.spliceItems(rightItems)}
         </View>
       </TouchableOpacity>
     )

@@ -17,9 +17,6 @@ import Loading from '../Components/Loading'
 import { spacing, textStyle, color } from '../styles'
 
 const Container: ViewStyle = {
-  flexDirection: 'column',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
   flex: 1
 }
 
@@ -70,7 +67,7 @@ class ChooseCafe extends Component<Props, State> {
     }
   }
 
-  onSelect = (peerId: string, token: string) => {
+  onSelect = (peerId: string, token: string) => () => {
     // If already selected, deselect it
     this.setState(prevState => {
       const alreadySelected = prevState.selected

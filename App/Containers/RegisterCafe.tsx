@@ -24,10 +24,7 @@ import { cafesActions } from '../features/cafes'
 import { size, spacing, color } from '../styles'
 
 const Container: ViewStyle = {
-  flex: 1,
-  flexDirection: 'column',
-  justifyContent: 'flex-start',
-  alignItems: 'center'
+  flex: 1
 }
 
 const ListContainer: ViewStyle = {
@@ -152,7 +149,7 @@ class RegisterCafe extends Component<Props, State> {
     )
   }
 
-  onSelect = (peerId: string, token: string) => {
+  onSelect = (peerId: string, token: string) => () => {
     // If already selected, deselect it
     this.setState(prevState => {
       const alreadySelected = prevState.selected

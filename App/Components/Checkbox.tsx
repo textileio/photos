@@ -14,7 +14,6 @@ interface Props {
 const checkboxStyle: ViewStyle = {
   width: size._032,
   height: size._032,
-  marginRight: spacing._012,
   borderRadius: spacing._032 / 2,
   borderWidth: 1,
   alignItems: 'center',

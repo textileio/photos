@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 
 import Icon from '@textile/react-native-icon'
-import Separator from './Separator'
+import RowSeparator from './RowSeparator'
 
 import { color, fontFamily, spacing, size } from '../styles'
 
@@ -65,7 +65,7 @@ export default class CafeListHeader extends Component<Props> {
             </View>
           </View>
         </TouchableOpacity>
-        <Separator />
+        <RowSeparator />
       </View>
     )
   }
