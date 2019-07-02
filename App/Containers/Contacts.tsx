@@ -4,8 +4,6 @@ import { connect } from 'react-redux'
 import {
   View,
   Text,
-  FlatList,
-  ListRenderItemInfo,
   Keyboard,
   ViewStyle,
   TextStyle,
@@ -15,8 +13,7 @@ import {
   SectionListData,
   ActivityIndicator,
   TouchableOpacity,
-  SafeAreaView,
-  ColorPropType
+  SafeAreaView
 } from 'react-native'
 import { NavigationScreenProps, NavigationActions } from 'react-navigation'
 import Icon from '@textile/react-native-icon'
@@ -293,40 +290,15 @@ class Contacts extends React.Component<Props, State> {
         return <ActivityIndicator size="small" style={{ padding: 11 }} />
       case 'contact': {
         const contact = item.data
-        const leftItem = (
-          <View style={leftItemsStyle}>
-            {selecting && (
-              <Checkbox
-                checked={this.selected(contact.address)}
-                uncheckedColor={color.grey_3}
-                checkedColor={color.action_5}
-              />
-            )}
-            <Avatar style={avatarStyle} target={contact.avatar} />
-          </View>
-        )
-        // Only render select / deselect button if the multi-select new group UI is active
-        // If the multi-select new group UI is active, don't display more info button
-        const rightItems = selecting
-          ? []
-          : [
-              <Icon
-                key="more"
-                name="chevron-right"
-                size={24}
-                color={color.grey_4}
-              />
-            ]
         return (
           <ListItem
             title={contact.name || contact.address.substring(0, 10)}
-            leftItem={leftItem}
-            rightItems={rightItems}
-            onPress={
-              selecting
-                ? () => this.toggleSelected(contact.address)
-                : this.onPressTextile(contact)
-            }
+            leftItem={<Avatar style={avatarStyle} target={contact.avatar} />}
+            showDisclosure={true}
+            selecting={selecting}
+            selected={this.selected(contact.address)}
+            onPress={this.onPressTextile(contact)}
+            onSelect={() => this.toggleSelected(contact.address)}
           />
         )
       }

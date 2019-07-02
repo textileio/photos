@@ -1,3 +1,6 @@
+import { StyleSheet} from 'react-native'
+
+export const hairline = StyleSheet.hairlineWidth
 export const _004 = 4
 export const _008 = 8
 export const _012 = 12
