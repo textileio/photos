@@ -162,19 +162,22 @@ function nodeEvents() {
         const sizeTotal = Long.fromValue(status.sizeTotal).toNumber()
         const groupSizeComplete = Long.fromValue(status.groupsSizeComplete).toNumber()
         const groupSizeTotal = Long.fromValue(status.groupsSizeTotal).toNumber()
+        const total = Math.max(sizeTotal, groupSizeTotal)
         const { id, numComplete, numTotal } = status
         console.log(id, numComplete, numTotal, sizeComplete, sizeTotal, groupSizeComplete, groupSizeTotal)
-        emitter(groupActions.fileSync.syncUpdate(id, numComplete, numTotal, groupSizeComplete, groupSizeTotal))
+        emitter(groupActions.fileSync.syncUpdate(id, numComplete, numTotal, groupSizeComplete, total))
       })
     )
     subscriptions.push(
       Textile.events.addSyncCompleteListener(status => {
+        console.log(status.id, 'COMPLETE')
         emitter(groupActions.fileSync.syncComplete(status.id))
       })
     )
     subscriptions.push(
       Textile.events.addSyncFailedListener(status => {
         const { id, errorId, error } = status
+        console.log(id, 'ERROR:', error)
         emitter(groupActions.fileSync.syncFailed(id, errorId, error))
       })
     )
