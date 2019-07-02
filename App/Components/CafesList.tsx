@@ -55,7 +55,6 @@ export default class CafesList extends Component<Props> {
   _keyExtractor = (item: Cafe) => item.peerId
 
   _renderItem = ({ item }: { item: Cafe }) => {
-    console.log(item)
     return (
       <ListItem
         title={item.name}

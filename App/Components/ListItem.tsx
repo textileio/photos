@@ -26,41 +26,49 @@ class ListItem extends React.PureComponent<Props> {
       [],
       items.map((item, index) => {
         const spacer = <View key={index} style={{ width: spacing._008 }} />
-        return items.length -1 !== index ? [{ ...item, key: index + items.length }, spacer] : [{ ...item, key: index + items.length }]
-    })
+        return items.length - 1 !== index
+          ? [{ ...item, key: index + items.length }, spacer]
+          : [{ ...item, key: index + items.length }]
+      })
     )
   }
 
   render() {
-    const checkbox = this.props.selecting ? [(
-      <Checkbox
-        checked={this.props.selected || false}
-        uncheckedColor={color.grey_3}
-        checkedColor={color.action_5}
-      />
-    )] : []
+    const checkbox = this.props.selecting
+      ? [
+          <Checkbox
+            key="checkbox"
+            checked={this.props.selected || false}
+            uncheckedColor={color.grey_3}
+            checkedColor={color.action_5}
+          />
+        ]
+      : []
     const leftItem = this.props.leftItem ? [this.props.leftItem] : []
-    const leftItems = [
-      ...checkbox,
-      ...leftItem
-    ]
+    const leftItems = [...checkbox, ...leftItem]
 
-    const showDisclosure = (this.props.showDisclosure || false) && !(this.props.selecting || false)
-    const disclosureIcon = showDisclosure ? [(
-      <Icon
-        key="more"
-        name="chevron-right"
-        size={24}
-        color={color.grey_4}
-      />
-    )] : []
-    const rightItems = [
-      ...this.props.rightItems || [],
-      ...disclosureIcon
-    ]
+    const showDisclosure =
+      (this.props.showDisclosure || false) && !(this.props.selecting || false)
+    const disclosureIcon = showDisclosure
+      ? [
+          <Icon
+            key="more"
+            name="chevron-right"
+            size={24}
+            color={color.grey_4}
+          />
+        ]
+      : []
+    const rightItems = [...(this.props.rightItems || []), ...disclosureIcon]
 
     return (
-      <TouchableOpacity delayPressIn={100} onPress={this.props.selecting ? this.props.onSelect : this.props.onPress} disabled={this.props.disabled}>
+      <TouchableOpacity
+        delayPressIn={100}
+        onPress={
+          this.props.selecting ? this.props.onSelect : this.props.onPress
+        }
+        disabled={this.props.disabled}
+      >
         <View
           style={{
             flex: 1,
