@@ -39,7 +39,7 @@ class ListItem extends React.PureComponent<Props> {
           <Checkbox
             key="checkbox"
             checked={this.props.selected || false}
-            uncheckedColor={color.grey_3}
+            uncheckedColor={color.grey_4}
             checkedColor={color.action_5}
           />
         ]
