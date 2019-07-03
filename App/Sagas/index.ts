@@ -161,7 +161,6 @@ export default function*() {
 
     /* ------------- SDK ------------- */
     // takeLatest(getType(TriggersActions.backgroundFetch), runBackgroundUpdate),
-    // takeLatest(getType(TriggersActions.locationUpdate), runBackgroundUpdate),
     /* ------------- End SDK ------------- */
 
     takeEvery(getType(ThreadsActions.threadQRCodeRequest), displayThreadQRCode),

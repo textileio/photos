@@ -27,7 +27,6 @@ interface PropState {
   complete: boolean
   iOS: boolean
   cameraRoll: boolean
-  locationBackground: boolean
   infoVisible: boolean
   info?: StorageDescription
 }
@@ -58,7 +57,6 @@ class Storage extends React.PureComponent<Props> {
     complete: false,
     iOS: Platform.OS === 'ios',
     cameraRoll: false,
-    locationBackground: false,
     infoVisible: false
   }
   toggleOption = (name: string) => {

@@ -70,23 +70,6 @@ export function* presentPublicLinkInterface(
   }
 }
 
-export function* backgroundLocationPermissionsTrigger() {
-  if (Platform.OS === 'android') {
-    yield call(
-      PermissionsAndroid.request,
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      {
-        title: 'Location Please',
-        message:
-          'Background location allows Textile to wake up periodically to check for updates to your camera roll and to check for updates on your peer-to-peer network.',
-        buttonPositive: 'Ok'
-      }
-    )
-  } else {
-    yield call(navigator.geolocation.requestAuthorization)
-  }
-}
-
 export function* handleToggleVerboseUi(
   action: ActionType<typeof PreferencesActions.toggleVerboseUi>
 ) {
@@ -119,9 +102,7 @@ export function* updateServices(
     const service = yield select(PreferencesSelectors.service, name)
     currentStatus = !service ? false : service.status
   }
-  if (name === 'backgroundLocation' && currentStatus === true) {
-    yield* backgroundLocationPermissionsTrigger()
-  } else if (name === 'notifications' && currentStatus === true) {
+  if (name === 'notifications' && currentStatus === true) {
     yield call(NotificationsSagas.enable)
   }
 }

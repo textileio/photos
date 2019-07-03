@@ -36,7 +36,6 @@ import styles from './Styles/GroupsStyles'
 interface StateProps {
   groups: ReadonlyArray<GroupRows>
   showNotificationsPrompt: boolean
-  showLocationPrompt: boolean
   itemCount: number
 }
 
@@ -45,8 +44,6 @@ interface DispatchProps {
   navigateToThread: (id: string, name: string) => void
   enableNotifications: () => void
   completeNotifications: () => void
-  completeBackgroundLocation: () => void
-  enableLocation: () => void
 }
 
 interface NavProps {
@@ -168,9 +165,6 @@ class Groups extends React.PureComponent<Props, State> {
     ) {
       // ensure that it only gets called once by using the first update of the state or a new group add
       this.notificationPrompt()
-    } else if (this.props.groups.length && this.props.showLocationPrompt) {
-      // ensure it get
-      this.locationPrompt()
     }
   }
 
@@ -223,42 +217,6 @@ class Groups extends React.PureComponent<Props, State> {
       { cancelable: false }
     )
   }
-
-  // Simple Alert based prompt to get Notification permissions
-  locationPrompt() {
-    // give the user a prompt
-    const platform = Platform.OS === 'android' ? 'Android' : 'iOS'
-    // never show it again
-    this.props.completeBackgroundLocation()
-    Alert.alert(
-      'Location',
-      `Textile can find content shared to you more quickly by having ${platform} wake it up when you change locations. This data is never collected or stored.`,
-      [
-        {
-          text: 'Okay',
-          onPress: () => {
-            // never show it again
-            this.props.enableLocation()
-          }
-        },
-        {
-          text: 'Not now',
-          style: 'cancel',
-          onPress: () => {
-            // never show it again
-          }
-        },
-        {
-          text: 'Show all options',
-          onPress: () => {
-            // take them to settings
-            this.props.navigation.navigate('Settings')
-          }
-        }
-      ],
-      { cancelable: false }
-    )
-  }
 }
 
 interface GroupRows {
@@ -281,9 +239,6 @@ const mapStateToProps = (state: RootState): StateProps => {
     threads.length > 0 &&
     memberCount > threads.length
 
-  const showLocationPrompt =
-    PreferencesSelectors.showBackgroundLocationPrompt(state) && itemCount > 8
-
   const invites: GroupRows[] = inboundInvites(state).map(inbound => ({
     invite: inbound,
     id: inbound.inviteId
@@ -298,7 +253,6 @@ const mapStateToProps = (state: RootState): StateProps => {
   return {
     groups,
     showNotificationsPrompt,
-    showLocationPrompt,
     itemCount
   }
 }
@@ -314,16 +268,8 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
     enableNotifications: () => {
       dispatch(PreferencesActions.toggleServicesRequest('notifications', true))
     },
-    enableLocation: () => {
-      dispatch(
-        PreferencesActions.toggleServicesRequest('backgroundLocation', true)
-      )
-    },
     completeNotifications: () => {
       dispatch(PreferencesActions.completeTourSuccess('notifications'))
-    },
-    completeBackgroundLocation: () => {
-      dispatch(PreferencesActions.completeTourSuccess('location'))
     }
   }
 }
