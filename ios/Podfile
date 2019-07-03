@@ -10,7 +10,6 @@ target 'Textile' do
     'RCTActionSheet',
     'RCTBlob',
     'RCTCameraRoll',
-    'RCTGeolocation',
     'RCTImage',
     'RCTLinkingIOS',
     'RCTNetwork',

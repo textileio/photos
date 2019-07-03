@@ -40,8 +40,6 @@ PODS:
   - React/RCTCameraRoll (0.58.6):
     - React/Core
     - React/RCTImage
-  - React/RCTGeolocation (0.58.6):
-    - React/Core
   - React/RCTImage (0.58.6):
     - React/Core
     - React/RCTNetwork
@@ -84,7 +82,6 @@ DEPENDENCIES:
   - React/RCTAnimation (from `../node_modules/react-native`)
   - React/RCTBlob (from `../node_modules/react-native`)
   - React/RCTCameraRoll (from `../node_modules/react-native`)
-  - React/RCTGeolocation (from `../node_modules/react-native`)
   - React/RCTImage (from `../node_modules/react-native`)
   - React/RCTLinkingIOS (from `../node_modules/react-native`)
   - React/RCTNetwork (from `../node_modules/react-native`)
@@ -133,6 +130,6 @@ SPEC CHECKSUMS:
   TextileCore: ebf696e09332415483fcb82c2d46e6b3ba9f9fc8
   yoga: 32d7ef1081951e9a35a4c72a7be797598b138a48
 
-PODFILE CHECKSUM: 84e7a27ebd6d790f874f966858ddae2dffa70411
+PODFILE CHECKSUM: 36ad7912560dd55952aa548a3cb5c559f1721e85
 
 COCOAPODS: 1.6.1
