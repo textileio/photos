@@ -69,7 +69,7 @@ class RegisterCafe extends Component<Props, State> {
     )
     return {
       headerLeft,
-      headerTitle: 'Register With a New Cafe'
+      headerTitle: 'Register Cafe'
     }
   }
 

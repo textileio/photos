@@ -51,7 +51,11 @@ export default class CafesList extends Component<Props> {
         }
         return true
       })
-      .map(cafe => ({ type: 'cafe', cafe }))
+      .map(
+        (cafe): CafeItem => {
+          return { type: 'cafe', cafe }
+        }
+      )
     const data: Item[] = [...filteredCafes, { type: 'addCustom' }]
     return (
       <FlatList
@@ -98,7 +102,7 @@ export default class CafesList extends Component<Props> {
             onPress={this.props.onAddCustom}
             disabled={this.props.disabled}
           >
-            <ActionText text="ADD A CUSTOM CAFE" iconName="pencil-create" />
+            <ActionText text="ENTER CUSTOM CAFE" iconName="pencil-create" />
           </TouchableOpacity>
         )
     }
