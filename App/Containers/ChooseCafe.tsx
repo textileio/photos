@@ -10,21 +10,18 @@ import { cafesActions } from '../features/cafes'
 
 import CafesList from '../Components/CafesList'
 import Button from '../Components/LargeButton'
-import CafeListHeader from '../Components/CafeListHeader'
 import CafePeerIdModal from '../Components/CafePeerIdModal'
 import Loading from '../Components/Loading'
 
 import { spacing, textStyle, color } from '../styles'
 
 const Container: ViewStyle = {
-  flexDirection: 'column',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
   flex: 1
 }
 
 const TITLE: TextStyle = {
   ...textStyle.header_l,
+  marginTop: spacing._016,
   marginBottom: spacing._008,
   paddingHorizontal: spacing._016
 }
@@ -36,7 +33,8 @@ const SUBTITLE: TextStyle = {
 }
 
 const SubmitButton: ViewStyle = {
-  marginTop: spacing._016
+  marginTop: spacing._016,
+  alignSelf: 'center'
 }
 
 interface OwnProps {
@@ -70,7 +68,7 @@ class ChooseCafe extends Component<Props, State> {
     }
   }
 
-  onSelect = (peerId: string, token: string) => {
+  onSelect = (peerId: string, token: string) => () => {
     // If already selected, deselect it
     this.setState(prevState => {
       const alreadySelected = prevState.selected
@@ -117,14 +115,12 @@ class ChooseCafe extends Component<Props, State> {
             disabled={registering}
             selected={peerId}
             onSelect={this.onSelect}
-            ListHeaderComponent={
-              <CafeListHeader onPress={this.togglePeerIdModal} />
-            }
+            onAddCustom={this.togglePeerIdModal}
           />
         )}
         {error && <Text>{error}</Text>}
         <Button
-          text="Continue"
+          text="Register Cafe"
           onPress={this.onButtonPress}
           processing={registering}
           disabled={buttonDisabled}

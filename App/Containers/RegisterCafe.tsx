@@ -24,10 +24,7 @@ import { cafesActions } from '../features/cafes'
 import { size, spacing, color } from '../styles'
 
 const Container: ViewStyle = {
-  flex: 1,
-  flexDirection: 'column',
-  justifyContent: 'flex-start',
-  alignItems: 'center'
+  flex: 1
 }
 
 const ListContainer: ViewStyle = {
@@ -52,11 +49,7 @@ interface DispatchProps {
   register: (peerId: string, token: string, success: () => void) => void
 }
 
-interface NavProps {
-  openPeerIdModal: () => void
-}
-
-type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
+type Props = StateProps & DispatchProps & NavigationScreenProps
 
 interface State {
   selected?: {
@@ -67,25 +60,16 @@ interface State {
 }
 
 class RegisterCafe extends Component<Props, State> {
-  static navigationOptions = ({
-    navigation
-  }: NavigationScreenProps<NavProps>) => {
+  static navigationOptions = ({ navigation }: NavigationScreenProps) => {
     const goBack = () => navigation.goBack()
-    const openPeerIdModal = navigation.getParam('openPeerIdModal')
     const headerLeft = (
       <TextileHeaderButtons left={true}>
         <Item title="Back" onPress={goBack} iconName="arrow-left" />
       </TextileHeaderButtons>
     )
-    const headerRight = (
-      <TextileHeaderButtons>
-        <Item title="Search" onPress={openPeerIdModal} iconName="search" />
-      </TextileHeaderButtons>
-    )
     return {
       headerLeft,
-      headerTitle: 'Register With a New Cafe',
-      headerRight
+      headerTitle: 'Register Cafe'
     }
   }
 
@@ -94,12 +78,6 @@ class RegisterCafe extends Component<Props, State> {
     this.state = {
       peerIdModalIsVisible: false
     }
-  }
-
-  componentDidMount() {
-    this.props.navigation.setParams({
-      openPeerIdModal: this.togglePeerIdModal
-    })
   }
 
   render() {
@@ -130,6 +108,7 @@ class RegisterCafe extends Component<Props, State> {
               selected={peerId}
               onSelect={this.onSelect}
               alreadyRegistered={this.props.alreadyRegistered}
+              onAddCustom={this.togglePeerIdModal}
             />
           )}
         </View>
@@ -152,7 +131,7 @@ class RegisterCafe extends Component<Props, State> {
     )
   }
 
-  onSelect = (peerId: string, token: string) => {
+  onSelect = (peerId: string, token: string) => () => {
     // If already selected, deselect it
     this.setState(prevState => {
       const alreadySelected = prevState.selected
