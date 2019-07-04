@@ -4,7 +4,6 @@ import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
 import Config from 'react-native-config'
-import Icon from '@textile/react-native-icon'
 
 import OnboardingMessage from '../../Components/OnboardingMessage'
 import ReferralCode from '../../Components/ReferralCode'
@@ -16,9 +15,19 @@ import ChooseCafe from '../../Containers/ChooseCafe'
 import { RootAction, RootState } from '../../Redux/Types'
 import { color, spacing } from '../../styles'
 
+// Styles
+
 const CONTAINER: ViewStyle = {
   flex: 1,
   backgroundColor: color.screen_primary
+}
+
+const PROGRESS_BAR: ViewStyle = {
+  height: 60,
+  width: '100%',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center'
 }
 
 const DOT: ViewStyle = {
@@ -29,12 +38,38 @@ const DOT: ViewStyle = {
   borderRadius: 4
 }
 
-const ARROW_FORWARD: ViewStyle = {
-  position: 'absolute',
-  bottom: spacing._016,
-  right: spacing._016,
-  alignSelf: 'flex-end'
+const DOT_ACTIVE: ViewStyle = {
+  backgroundColor: color.action_4
 }
+
+// Components
+
+// Individual dot displayed at bottom of screen. Is highlighted when active.
+interface DotProps {
+  active: boolean
+}
+
+const Dot = (props: DotProps) => {
+  return <View style={[DOT, props.active && DOT_ACTIVE]} />
+}
+
+interface ProgressBarProps {
+  length: number
+  active: number
+}
+
+// List of dots displayed at the bottom of the screen as a progress bar
+const ProgressBar = (props: ProgressBarProps) => {
+  return (
+    <View style={PROGRESS_BAR}>
+      {[...Array(props.length).keys()].map(i => {
+        return <Dot key={i} active={i === props.active} />
+      })}
+    </View>
+  )
+}
+
+// Props & State
 
 interface StateProps {
   referralCode?: string
@@ -47,9 +82,7 @@ interface DispatchProps {
 type Props = StateProps & DispatchProps & NavigationScreenProps
 
 interface State {
-  showArrow: boolean
   currentPage: number
-  disableNext: boolean
 }
 
 class OnboardingScreen extends React.Component<Props, State> {
@@ -58,36 +91,17 @@ class OnboardingScreen extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      showArrow: false,
-      currentPage: 0,
-      disableNext: false
+      currentPage: 0
     }
   }
 
-  componentDidMount() {
-    this.setState({
-      showArrow: this.showArrowForIndex(0)
-    })
-  }
-
-  showArrowForIndex = (index: number) => {
-    return index <= 2
-  }
-
   nextPage = () => {
-    if (
-      !this.state.disableNext &&
-      this.pages &&
-      this.state.currentPage < this.pages.length - 1
-    ) {
-      this.setState({
-        showArrow: this.showArrowForIndex(this.state.currentPage + 1),
-        currentPage: this.state.currentPage + 1,
-        disableNext: true
+    if (this.pages && this.state.currentPage < this.pages.length - 1) {
+      this.setState(prevState => {
+        return {
+          currentPage: prevState.currentPage + 1
+        }
       })
-      setTimeout(() => {
-        this.setState({ disableNext: false })
-      }, 350)
     }
   }
 
@@ -98,27 +112,6 @@ class OnboardingScreen extends React.Component<Props, State> {
 
   pagesArray = () => {
     const pages = [
-      <OnboardingMessage
-        key="own"
-        title="Own your memories"
-        subtitle="Your data is stored in a decentralized system to bring you full ownership of your photos."
-        image={require('./statics/secure.png')}
-        showArrow={true}
-      />,
-      <OnboardingMessage
-        key="better"
-        title="Better together"
-        subtitle="Create private threads to share your photos with friends and family."
-        image={require('./statics/share.png')}
-        showArrow={true}
-      />,
-      <OnboardingMessage
-        key="backed"
-        title="Backed up safely"
-        subtitle="Everytime you take a picture, Textile will be there to automatically sync your photos."
-        image={require('./statics/sync.png')}
-        showArrow={true}
-      />,
       <ReferralCode
         key="referral"
         targetReferralCode={Config.RN_TEMPORARY_REFERRAL}
@@ -141,6 +134,11 @@ class OnboardingScreen extends React.Component<Props, State> {
     return pages
   }
 
+  displayProgressBar = () => {
+    const displayProgressBar = [false, true, true, true, true, true]
+    return displayProgressBar[this.state.currentPage]
+  }
+
   render() {
     this.pages = this.pagesArray()
     return (
@@ -149,98 +147,11 @@ class OnboardingScreen extends React.Component<Props, State> {
           <View style={[CONTAINER, { marginBottom: spacing._016 }]}>
             {this.pages[this.state.currentPage]}
           </View>
-          {this.state.currentPage < 8 && (
-            <View
-              style={{
-                height: 60,
-                width: '100%',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
-              <View
-                style={[
-                  DOT,
-                  this.pages &&
-                    this.state.currentPage === 0 && {
-                      backgroundColor: color.action_4
-                    }
-                ]}
-              />
-              <View
-                style={[
-                  DOT,
-                  this.pages &&
-                    this.state.currentPage === 1 && {
-                      backgroundColor: color.action_4
-                    }
-                ]}
-              />
-              <View
-                style={[
-                  DOT,
-                  this.pages &&
-                    this.state.currentPage === 2 && {
-                      backgroundColor: color.action_4
-                    }
-                ]}
-              />
-              <View
-                style={[
-                  DOT,
-                  this.pages &&
-                    this.state.currentPage === 3 && {
-                      backgroundColor: color.action_4
-                    }
-                ]}
-              />
-              <View
-                style={[
-                  DOT,
-                  this.pages &&
-                    this.state.currentPage === 4 && {
-                      backgroundColor: color.action_4
-                    }
-                ]}
-              />
-              <View
-                style={[
-                  DOT,
-                  this.pages &&
-                    this.state.currentPage === 5 && {
-                      backgroundColor: color.action_4
-                    }
-                ]}
-              />
-              <View
-                style={[
-                  DOT,
-                  this.pages &&
-                    this.state.currentPage === 6 && {
-                      backgroundColor: color.action_4
-                    }
-                ]}
-              />
-              <View
-                style={[
-                  DOT,
-                  this.pages &&
-                    this.state.currentPage === 7 && {
-                      backgroundColor: color.action_4
-                    }
-                ]}
-              />
-            </View>
-          )}
-          {this.state.showArrow && (
-            <TouchableOpacity
-              hitSlop={{ top: 10, left: 10, bottom: 10, right: 10 }}
-              style={ARROW_FORWARD}
-              onPress={this.nextPage}
-            >
-              <Icon name="arrow-right" size={24} />
-            </TouchableOpacity>
+          {this.displayProgressBar() && (
+            <ProgressBar
+              length={this.pages.length}
+              active={this.state.currentPage}
+            />
           )}
         </View>
       </SafeAreaView>
