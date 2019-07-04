@@ -16,6 +16,7 @@ import Textile from '@textile/react-native-sdk'
 import { TextileHeaderButtons, Item as TextileItem } from './HeaderButtons'
 import { color, fontSize, spacing } from '../styles'
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
+import AppConfig from '../Config/app-config'
 
 interface NavProps {
   refresh: () => void
@@ -78,8 +79,7 @@ export default class NodeLogsScreen extends Component<
       error: undefined
     })
     try {
-      const repoPath = await Textile.repoPath()
-      const logFilePath = `${repoPath}/logs/textile.log`
+      const logFilePath = `${AppConfig.textileRepoPath}/logs/textile.log`
       const exists = await FS.exists(logFilePath)
       if (exists) {
         const stats = await FS.stat(logFilePath)
