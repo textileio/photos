@@ -1,6 +1,6 @@
 /* eslint camelcase: 0 */
 import { eventChannel } from 'redux-saga'
-import { all, call, put, take, select } from 'redux-saga/effects'
+import { all, takeEvery, call, put, take, select } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import RNPushNotification from 'react-native-push-notification'
 import Textile, {
@@ -195,7 +195,25 @@ function* handleNodeEvents() {
   }
 }
 
-function* initializeTextile() {
+function* checkInitialization() {
+  try {
+    const initialized = yield call(
+      Textile.isInitialized,
+      AppConfig.textileRepoPath
+    )
+    if (initialized) {
+      yield put(TextileEventsActions.nodeInitialized())
+      const verbose = yield select(PreferencesSelectors.verboseUi)
+      yield call(Textile.launch, AppConfig.textileRepoPath, verbose)
+    }
+  } catch (error) {
+    yield call(logNewEvent, 'checkInitialization', error.message, true)
+  }
+}
+
+function* initializeTextileWithNewAccount(
+  action: ActionType<typeof TextileEventsActions.initializeNewAccount>
+) {
   try {
     const initialized = yield call(
       Textile.isInitialized,
@@ -210,6 +228,37 @@ function* initializeTextile() {
         true
       )
       yield put(accountActions.setRecoveryPhrase(phrase))
+      yield put(TextileEventsActions.nodeInitialized())
+    } else {
+      yield put(TextileEventsActions.nodeInitialized())
+    }
+    yield call(Textile.launch, AppConfig.textileRepoPath, verbose)
+  } catch (error) {
+    yield put(TextileEventsActions.failedToInitializeNode(error))
+  }
+}
+
+function* initializeTextileWithAccountSeed(
+  action: ActionType<typeof TextileEventsActions.initializeExistingAccount>
+) {
+  const { seed } = action.payload
+  try {
+    const initialized = yield call(
+      Textile.isInitialized,
+      AppConfig.textileRepoPath
+    )
+    const verbose = yield select(PreferencesSelectors.verboseUi)
+    if (!initialized) {
+      yield call(
+        Textile.initialize,
+        AppConfig.textileRepoPath,
+        seed,
+        verbose,
+        true
+      )
+      yield put(TextileEventsActions.nodeInitialized())
+    } else {
+      yield put(TextileEventsActions.nodeInitialized())
     }
     yield call(Textile.launch, AppConfig.textileRepoPath, verbose)
   } catch (error) {
@@ -382,7 +431,15 @@ export function* newError() {
 export function* startSagas() {
   yield all([
     call(handleNodeEvents),
-    call(initializeTextile),
+    call(checkInitialization),
+    takeEvery(
+      getType(TextileEventsActions.initializeNewAccount),
+      initializeTextileWithNewAccount
+    ),
+    takeEvery(
+      getType(TextileEventsActions.initializeExistingAccount),
+      initializeTextileWithAccountSeed
+    ),
     call(startNodeFinished),
     call(stopNodeAfterDelayStarting),
     call(stopNodeAfterDelayCancelled),

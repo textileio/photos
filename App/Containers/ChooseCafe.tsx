@@ -15,7 +15,7 @@ import Loading from '../Components/Loading'
 
 import { spacing, textStyle, color } from '../styles'
 
-const Container: ViewStyle = {
+const CONTAINER: ViewStyle = {
   flex: 1
 }
 
@@ -32,7 +32,7 @@ const SUBTITLE: TextStyle = {
   paddingHorizontal: spacing._016
 }
 
-const SubmitButton: ViewStyle = {
+const SUBMITBUTTON: ViewStyle = {
   marginTop: spacing._016,
   alignSelf: 'center'
 }
@@ -99,7 +99,7 @@ class ChooseCafe extends Component<Props, State> {
     const registering = registrationStarted && !error
     const buttonDisabled = !this.state.selected || registering
     return (
-      <SafeAreaView style={Container}>
+      <SafeAreaView style={CONTAINER}>
         <Text style={TITLE}>Choose a Cafe</Text>
         <Text style={SUBTITLE}>
           Cafes are trustless, always-on nodes that assist the peer network.
@@ -124,7 +124,7 @@ class ChooseCafe extends Component<Props, State> {
           onPress={this.onButtonPress}
           processing={registering}
           disabled={buttonDisabled}
-          style={SubmitButton}
+          style={SUBMITBUTTON}
         />
         <CafePeerIdModal
           isVisible={this.state.peerIdModalIsVisible}

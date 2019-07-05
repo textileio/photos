@@ -7,7 +7,28 @@ export enum NodeState {
   online = 'online'
 }
 
+export enum TextileInstanceState {
+  uninitialized = 'uninitialized',
+  initializing = 'initializing',
+  initialized = 'initialized'
+}
+
 const actions = {
+  initializeNewAccount: createAction(
+    'INITIALIZE_CREATING_NEW_WALLET_AND_ACCOUNT',
+    resolve => {
+      return () => resolve()
+    }
+  ),
+  initializeExistingAccount: createAction(
+    'INITIALIZE_WITH_EXISTING_ACCOUNT_SEED',
+    resolve => {
+      return (seed: string) => resolve({ seed })
+    }
+  ),
+  nodeInitialized: createAction('NODE_INITIALIZED', resolve => {
+    return () => resolve()
+  }),
   failedToInitializeNode: createAction('FAILED_TO_INITIALIZE_NODE', resolve => {
     return (error: any) => resolve({ error })
   }),
@@ -48,11 +69,18 @@ interface TextileEventsState {
     readonly state: NodeState
     readonly error?: string
   }
+  readonly textileInstanceState: {
+    readonly state: TextileInstanceState
+    readonly error?: string
+  }
 }
 
 export const initialState: TextileEventsState = {
   nodeState: {
     state: NodeState.stopped
+  },
+  textileInstanceState: {
+    state: TextileInstanceState.uninitialized
   }
 }
 
@@ -61,11 +89,34 @@ export function reducer(
   action: TextileEventsAction
 ): TextileEventsState {
   switch (action.type) {
+    case getType(actions.initializeNewAccount):
+    case getType(actions.initializeExistingAccount): {
+      return {
+        ...state,
+        textileInstanceState: {
+          state: TextileInstanceState.initializing
+        }
+      }
+    }
     case getType(actions.failedToInitializeNode): {
       const { error } = action.payload
       const message =
         (error.message as string) || (error as string) || 'unknown error'
-      return { ...state, nodeState: { ...state.nodeState, error: message } }
+      return {
+        ...state,
+        textileInstanceState: {
+          state: TextileInstanceState.uninitialized,
+          error: message
+        }
+      }
+    }
+    case getType(actions.nodeInitialized): {
+      return {
+        ...state,
+        textileInstanceState: {
+          state: TextileInstanceState.initialized
+        }
+      }
     }
     case getType(actions.nodeStarted):
       return { ...state, nodeState: { state: NodeState.started } }

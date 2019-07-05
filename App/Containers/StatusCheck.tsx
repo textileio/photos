@@ -19,10 +19,12 @@ type Props = StateProps & NavigationScreenProps<{}>
 
 class StatusCheck extends React.Component<Props, {}> {
   static getDerivedStateFromProps(props: Props, state: {}) {
-    if (!props.nodeError && props.nodeStarted && !props.onboarded) {
-      props.navigation.navigate('OnboardingNavigation')
-    } else if (!props.nodeError && props.nodeStarted) {
-      props.navigation.navigate('ModalNavigation')
+    if (!props.nodeError) {
+      if (!props.onboarded) {
+        props.navigation.navigate('OnboardingNavigation')
+      } else if (props.nodeStarted) {
+        props.navigation.navigate('ModalNavigation')
+      }
     }
     // tslint:disable-next-line no-null-keyword
     return null

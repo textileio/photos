@@ -9,9 +9,10 @@ import OnboardingMessage from '../../Components/OnboardingMessage'
 import ReferralCode from '../../Components/ReferralCode'
 import OnboardingUsername from '../../Containers/OnboardingUsername'
 import SetAvatar from '../../Containers/SetAvatar'
-import MailListSignupScreen from '../MailListSignupScreen'
+import MailListSignupScreen from '../../Containers/MailListSignupScreen'
 import PreferencesActions from '../../Redux/PreferencesRedux'
 import ChooseCafe from '../../Containers/ChooseCafe'
+import AccountScreen from '../../Containers/AccountScreen'
 import { RootAction, RootState } from '../../Redux/Types'
 import { color, spacing } from '../../styles'
 
@@ -103,17 +104,18 @@ class OnboardingScreen extends React.Component<Props, State> {
           key="referral"
           targetReferralCode={Config.RN_TEMPORARY_REFERRAL}
           referralCode={this.props.referralCode}
-          onSuccess={() => this.selectFlow('newAccount')}
+          onSuccess={this.nextPage}
+        />,
+        <AccountScreen
+          key="account"
+          onSuccess={(flow: string) => this.selectFlow(flow)}
         />
       ]
     }
   }
 
   nextPage = () => {
-    if (
-      this.state.flowSelected &&
-      this.state.currentPage < this.state.pages.length - 1
-    ) {
+    if (this.state.currentPage < this.state.pages.length - 1) {
       this.setState(prevState => {
         return {
           currentPage: prevState.currentPage + 1
@@ -137,6 +139,17 @@ class OnboardingScreen extends React.Component<Props, State> {
         <ChooseCafe key="cafe" onSuccess={this.nextPage} />,
         <OnboardingUsername key="username" onSuccess={this.nextPage} />,
         <SetAvatar key="avatar" onSuccess={this.nextPage} />,
+        <MailListSignupScreen key="mail" onSuccess={this.nextPage} />,
+        <OnboardingMessage
+          key="ready"
+          title="All ready!"
+          subtitle="You're all set up. Enjoy using Textile :)"
+          image={require('./statics/sync.png')}
+          buttonText="Get Started"
+          onButtonPress={this.complete}
+        />
+      ],
+      existingAccount: [
         <MailListSignupScreen key="mail" onSuccess={this.nextPage} />,
         <OnboardingMessage
           key="ready"
