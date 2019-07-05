@@ -48,7 +48,6 @@ You should store a file called, `.env` in the root of your Textile Mobile folder
 
 ```
 RN_TEXTILE_CAFES_JSON="base64 encoded Cafe[] JSON"
-RN_TEXTILE_CAFE_API_PIN_PATH="/cafe/v0/pin"
 RN_TEXTILE_GATEWAY_URL="http://{gateway-address}"
 RN_TEXTILE_CAMERA_ROLL_THREAD_KEY="photos-camera_roll"
 RN_TEMPORARY_REFERRAL="SOMETHING"
@@ -57,4 +56,21 @@ RN_IOS_STORE_LINK="https://<ios store link>"
 RN_ANDROID_STORE_LINK="https://<android store link>"
 ```
 
-You can find the values for `optional-cafe-url` in the Quick Start step above and the `gateway-address` (including port) should be found in the Cafe setup step above.
+`RN_TEXTILE_CAFES_JSON` should be the base64 encoded contents of a json file similar to:
+
+```
+[
+  {
+    "name": "A display name",
+    "peerId": "a-peer-id",
+    "token": "a-cafe-token"
+  },
+  {
+    "name": "Another display name",
+    "peerId": "another-peer-id",
+    "token": "another-cafe-token"
+  }
+]
+```
+
+The `gateway-address` (including port) and information to fill out the above json object should be found in the Cafe setup step above.

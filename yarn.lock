@@ -2287,11 +2287,11 @@ escodegen@^1.9.1:
     source-map "~0.6.1"
 
 eslint-config-bevry@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-bevry/-/eslint-config-bevry-1.2.0.tgz#4762adefd9c94ee4a0ef88ffaedcb72a7c0a026d"
-  integrity sha512-rKia79mwLRaYIRq4jJPHLbuxVqYqiGGDnVoQi8Onwcze6YqHTOk4wixdi1N0gk7K0Y5KkhSLZsB0VIcvNET6ZA==
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/eslint-config-bevry/-/eslint-config-bevry-1.2.1.tgz#26abaea84820a27ae6a625d47d00f6a73e59f931"
+  integrity sha512-sVMeRnWLf9yIhbbPU1zFYGZ4c4v3z3gqjU6Ei1vnOtPP0mQU/xWwij9yRMHa26h1YHFuoBDY5X2UwGELwEfR/Q==
   dependencies:
-    semver "^5.6.0"
+    semver "^6.0.0"
 
 eslint-config-prettier@^4.2.0:
   version "4.3.0"
@@ -6148,6 +6148,7 @@ semver@^5.0.3, semver@^5.1.0, semver@^5.3.0, semver@^5.4.1, semver@^5.5, semver@
 semver@^5.6.0:
   version "5.7.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.7.0.tgz#790a7cf6fea5459bac96110b29b60412dc8ff96b"
+  integrity sha512-Ya52jSX2u7QKghxeoFGpLwCtGlt7j0oY9DYb5apt9nPlJ42ID+ulTXESnt/qAQcoSERyZ5sl3LDIOw0nAn/5DA==
 
 semver@^6.0.0:
   version "6.0.0"
