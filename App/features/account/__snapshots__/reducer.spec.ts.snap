@@ -9,7 +9,6 @@ Object {
     "sessions": Array [],
   },
   "chosenProfilePhoto": Object {},
-  "initialized": false,
   "peerId": Object {},
   "profile": Object {
     "processing": true,
