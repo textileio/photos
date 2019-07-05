@@ -81,22 +81,39 @@ interface DispatchProps {
 
 type Props = StateProps & DispatchProps & NavigationScreenProps
 
+// flowSelected is the onboarding flow the user selected
+// it starts out undefined when the user hasn't chosen whether they are going to
+// connect an existing account or create a new account
 interface State {
+  flowSelected?: string
+  pages?: any
   currentPage: number
 }
 
 class OnboardingScreen extends React.Component<Props, State> {
-  pages?: any
-
   constructor(props: Props) {
     super(props)
+    // pages are the onboarding pages the user must go through no matter what
+    // flow they select. The last page in the list should call selectFlow and pass
+    // in which onboarding flow the user has chosen
     this.state = {
-      currentPage: 0
+      currentPage: 0,
+      pages: [
+        <ReferralCode
+          key="referral"
+          targetReferralCode={Config.RN_TEMPORARY_REFERRAL}
+          referralCode={this.props.referralCode}
+          onSuccess={() => this.selectFlow('newAccount')}
+        />
+      ]
     }
   }
 
   nextPage = () => {
-    if (this.pages && this.state.currentPage < this.pages.length - 1) {
+    if (
+      this.state.flowSelected &&
+      this.state.currentPage < this.state.pages.length - 1
+    ) {
       this.setState(prevState => {
         return {
           currentPage: prevState.currentPage + 1
@@ -110,46 +127,43 @@ class OnboardingScreen extends React.Component<Props, State> {
     this.props.navigation.navigate('StatusCheck')
   }
 
-  pagesArray = () => {
-    const pages = [
-      <ReferralCode
-        key="referral"
-        targetReferralCode={Config.RN_TEMPORARY_REFERRAL}
-        referralCode={this.props.referralCode}
-        onSuccess={this.nextPage}
-      />,
-      <ChooseCafe key="cafe" onSuccess={this.nextPage} />,
-      <OnboardingUsername key="username" onSuccess={this.nextPage} />,
-      <SetAvatar key="avatar" onSuccess={this.nextPage} />,
-      <MailListSignupScreen key="mail" onSuccess={this.nextPage} />,
-      <OnboardingMessage
-        key="ready"
-        title="All ready!"
-        subtitle="You're all set up. Enjoy using Textile :)"
-        image={require('./statics/sync.png')}
-        buttonText="Get Started"
-        onButtonPress={this.complete}
-      />
-    ]
-    return pages
-  }
-
-  displayProgressBar = () => {
-    const displayProgressBar = [false, true, true, true, true, true]
-    return displayProgressBar[this.state.currentPage]
+  selectFlow = (flow: string) => {
+    // The "flow" is the onboarding path the user selects, identified by a string
+    // That string is indexed into a map (string->list of pages) to start the onboarding
+    const pages: {
+      [index: string]: JSX.Element[]
+    } = {
+      newAccount: [
+        <ChooseCafe key="cafe" onSuccess={this.nextPage} />,
+        <OnboardingUsername key="username" onSuccess={this.nextPage} />,
+        <SetAvatar key="avatar" onSuccess={this.nextPage} />,
+        <MailListSignupScreen key="mail" onSuccess={this.nextPage} />,
+        <OnboardingMessage
+          key="ready"
+          title="All ready!"
+          subtitle="You're all set up. Enjoy using Textile :)"
+          image={require('./statics/sync.png')}
+          buttonText="Get Started"
+          onButtonPress={this.complete}
+        />
+      ]
+    }
+    this.setState({
+      currentPage: 0,
+      pages: pages[flow]
+    })
   }
 
   render() {
-    this.pages = this.pagesArray()
     return (
       <SafeAreaView style={CONTAINER}>
         <View style={CONTAINER}>
           <View style={[CONTAINER, { marginBottom: spacing._016 }]}>
-            {this.pages[this.state.currentPage]}
+            {this.state.pages[this.state.currentPage]}
           </View>
-          {this.displayProgressBar() && (
+          {this.state.flowSelected && (
             <ProgressBar
-              length={this.pages.length}
+              length={this.state.pages.length}
               active={this.state.currentPage}
             />
           )}
