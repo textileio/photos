@@ -35,7 +35,8 @@ platform :android do
     crashlytics(
       api_token: ENV['FABRIC_API_TOKEN'],
       build_secret: ENV['FABRIC_BUILD_SECRET'],
-      groups: 'textile-internal'
+      groups: 'textile-internal',
+      apk_path: './app/build/outputs/apk/release/app-arm64-v8a-release.apk'
     )
   end
 

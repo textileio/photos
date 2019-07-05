@@ -57,7 +57,6 @@ interface OwnProps {
   complete: boolean
   iOS: boolean
   cameraRoll: boolean
-  locationBackground: boolean
   infoVisible: boolean
   info?: ServiceInfo
 }
@@ -96,7 +95,6 @@ class Notifications extends React.PureComponent<Props> {
     complete: false,
     iOS: Platform.OS === 'ios',
     cameraRoll: false,
-    locationBackground: false,
     infoVisible: false
   }
 

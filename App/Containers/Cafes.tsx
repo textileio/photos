@@ -7,8 +7,8 @@ import { ICafeSession } from '@textile/react-native-sdk'
 import { RootState } from '../Redux/Types'
 
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
-import Separator from '../Components/Separator'
-import Cafe from '../Components/Cafe'
+import RowSeparator from '../Components/RowSeparator'
+import ListItem from '../Components/ListItem'
 
 const CONTAINER: ViewStyle = {
   flex: 1
@@ -53,19 +53,26 @@ class Cafes extends Component<Props> {
           data={this.props.sessions}
           keyExtractor={this._keyExtractor}
           renderItem={this._renderItem}
-          ItemSeparatorComponent={() => <Separator />}
+          ItemSeparatorComponent={RowSeparator}
         />
       </SafeAreaView>
     )
   }
 
   _renderItem = ({ item }: { item: ICafeSession }) => {
-    return <Cafe peerId={item.id} onPress={() => this.onCafePress(item)} />
+    return (
+      <ListItem
+        title={item.cafe.url}
+        subtitle={item.cafe.peer}
+        showDisclosure={true}
+        onPress={this.onCafePress(item)}
+      />
+    )
   }
 
   _keyExtractor = (item: ICafeSession) => item.id
 
-  onCafePress = (cafe: ICafeSession) => {
+  onCafePress = (cafe: ICafeSession) => () => {
     this.props.navigation.navigate('Cafe', {
       cafe
     })

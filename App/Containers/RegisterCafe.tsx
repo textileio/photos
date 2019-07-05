@@ -12,20 +12,19 @@ import { NavigationScreenProps } from 'react-navigation'
 
 import { RootState, RootAction } from '../Redux/Types'
 import { RegisterCafes } from '../features/cafes/reducer'
+import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
 
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import Icon from '@textile/react-native-icon'
 import CafesList from '../Components/CafesList'
 import CafePeerIdModal from '../Components/CafePeerIdModal'
+import Loading from '../Components/Loading'
 import { cafesActions } from '../features/cafes'
 
-import { size, spacing, fontFamily, color } from '../styles'
+import { size, spacing, color } from '../styles'
 
 const Container: ViewStyle = {
-  flex: 1,
-  flexDirection: 'column',
-  justifyContent: 'flex-start',
-  alignItems: 'center'
+  flex: 1
 }
 
 const ListContainer: ViewStyle = {
@@ -43,17 +42,14 @@ const Buttons: ViewStyle = {
 interface StateProps {
   alreadyRegistered: ReadonlyArray<string>
   registeringCafes: RegisterCafes
+  nodeOnline: boolean
 }
 
 interface DispatchProps {
   register: (peerId: string, token: string, success: () => void) => void
 }
 
-interface NavProps {
-  openPeerIdModal: () => void
-}
-
-type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
+type Props = StateProps & DispatchProps & NavigationScreenProps
 
 interface State {
   selected?: {
@@ -64,25 +60,16 @@ interface State {
 }
 
 class RegisterCafe extends Component<Props, State> {
-  static navigationOptions = ({
-    navigation
-  }: NavigationScreenProps<NavProps>) => {
+  static navigationOptions = ({ navigation }: NavigationScreenProps) => {
     const goBack = () => navigation.goBack()
-    const openPeerIdModal = navigation.getParam('openPeerIdModal')
     const headerLeft = (
       <TextileHeaderButtons left={true}>
         <Item title="Back" onPress={goBack} iconName="arrow-left" />
       </TextileHeaderButtons>
     )
-    const headerRight = (
-      <TextileHeaderButtons>
-        <Item title="Search" onPress={openPeerIdModal} iconName="search" />
-      </TextileHeaderButtons>
-    )
     return {
       headerLeft,
-      headerTitle: 'Register With a New Cafe',
-      headerRight
+      headerTitle: 'Register Cafe'
     }
   }
 
@@ -91,12 +78,6 @@ class RegisterCafe extends Component<Props, State> {
     this.state = {
       peerIdModalIsVisible: false
     }
-  }
-
-  componentDidMount() {
-    this.props.navigation.setParams({
-      openPeerIdModal: this.togglePeerIdModal
-    })
   }
 
   render() {
@@ -115,12 +96,21 @@ class RegisterCafe extends Component<Props, State> {
     return (
       <SafeAreaView style={Container}>
         <View style={ListContainer}>
-          <CafesList
-            disabled={registering}
-            selected={peerId}
-            onSelect={this.onSelect}
-            alreadyRegistered={this.props.alreadyRegistered}
-          />
+          {!this.props.nodeOnline && (
+            <Loading
+              color={color.brandBlue}
+              text={'Waiting for node to be online...'}
+            />
+          )}
+          {this.props.nodeOnline && (
+            <CafesList
+              disabled={registering}
+              selected={peerId}
+              onSelect={this.onSelect}
+              alreadyRegistered={this.props.alreadyRegistered}
+              onAddCustom={this.togglePeerIdModal}
+            />
+          )}
         </View>
         <View style={Buttons}>
           {error && <Text>{error}</Text>}
@@ -141,7 +131,7 @@ class RegisterCafe extends Component<Props, State> {
     )
   }
 
-  onSelect = (peerId: string, token: string) => {
+  onSelect = (peerId: string, token: string) => () => {
     // If already selected, deselect it
     this.setState(prevState => {
       const alreadySelected = prevState.selected
@@ -193,7 +183,8 @@ const mapStateToProps = (state: RootState): StateProps => {
   const sessions = state.account.cafeSessions.sessions
   return {
     alreadyRegistered: sessions.map(session => session.id),
-    registeringCafes: state.cafes.registerCafe
+    registeringCafes: state.cafes.registerCafe,
+    nodeOnline: TextileEventsSelectors.online(state)
   }
 }
 

@@ -25,7 +25,12 @@ class App extends Component {
     return (
       <Provider store={store}>
         <PersistGate
-          loading={<Loading color={color.brandRed} />}
+          loading={
+            <Loading
+              color={color.brandRed}
+              text={'Loading persisted data...'}
+            />
+          }
           persistor={persistor}
         >
           <RootContainer />
