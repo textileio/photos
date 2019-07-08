@@ -1,12 +1,10 @@
-import { RootState } from '../../Redux/Types'
+import { InitializationState } from './reducer'
 import { TextileInstanceState } from './models'
 
-export const onboarded = (state: RootState) => {
-  return state.initialization.onboarding.completed
+export const onboarded = (state: InitializationState) => {
+  return state.onboarding.completed
 }
 
-export const initialized = (state: RootState) => {
-  return (
-    state.initialization.instance.state === TextileInstanceState.initialized
-  )
+export const initialized = (state: InitializationState) => {
+  return state.instance.state === TextileInstanceState.initialized
 }
