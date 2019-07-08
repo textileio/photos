@@ -80,7 +80,6 @@ interface StateProps {
 
 interface DispatchProps {
   nextPage: () => void
-  selectPath: (path: string) => void
   complete: () => void
 }
 
@@ -95,8 +94,7 @@ class OnboardingScreen extends React.Component<Props> {
   pages = () => {
     // The onboarding path is a stack of pages identified by a string
     // The pages in `default` are the those that the user must go through before
-    // choosing an onboarding path. The last page in the list should call selectPath
-    // to select the path the user will take
+    // choosing an onboarding path.
     const onboardingSuccessMessage = (
       <OnboardingMessage
         key="ready"
@@ -119,7 +117,6 @@ class OnboardingScreen extends React.Component<Props> {
         />,
         <InitializeTextile
           key="account"
-          onSuccess={(path: string) => this.props.selectPath(path)}
         />
       ],
       newAccount: [
@@ -167,9 +164,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
   complete: () => dispatch(initializationActions.onboardingSuccess()),
-  nextPage: () => dispatch(initializationActions.nextPage()),
-  selectPath: (path: string) =>
-    dispatch(initializationActions.chooseOnboardingPath(path))
+  nextPage: () => dispatch(initializationActions.nextPage())
 })
 
 export default connect(

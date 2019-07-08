@@ -42,10 +42,9 @@ function* initializeTextileWithNewAccount(
         true
       )
       yield put(accountActions.setRecoveryPhrase(phrase))
-      yield put(actions.nodeInitialized())
-    } else {
-      yield put(actions.nodeInitialized())
     }
+    yield put(actions.nodeInitialized())
+    yield put(actions.chooseOnboardingPath('newAccount'))
     yield call(Textile.launch, AppConfig.textileRepoPath, verbose)
   } catch (error) {
     yield put(actions.failedToInitializeNode(error))
@@ -70,17 +69,16 @@ function* initializeTextileWithAccountSeed(
         verbose,
         true
       )
-      yield put(actions.nodeInitialized())
-    } else {
-      yield put(actions.nodeInitialized())
     }
+    yield put(actions.nodeInitialized())
+    yield put(actions.chooseOnboardingPath('existingAccount'))
     yield call(Textile.launch, AppConfig.textileRepoPath, verbose)
   } catch (error) {
     yield put(actions.failedToInitializeNode(error))
   }
 }
 
-export default function*() {
+export default function* () {
   yield all([
     call(checkInitialization),
     takeEvery(

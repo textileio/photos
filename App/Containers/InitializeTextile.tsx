@@ -27,10 +27,6 @@ const TITLE: TextStyle = {
   paddingHorizontal: spacing._016
 }
 
-interface OwnProps {
-  onSuccess: (flow: string) => void
-}
-
 interface StateProps {
   initializationState: TextileInstanceState
   error?: string
@@ -41,10 +37,10 @@ interface DispatchProps {
   existingAccount: (seed: string) => void
 }
 
-type Props = OwnProps & DispatchProps & StateProps
+type Props = DispatchProps & StateProps
 
 interface State {
-  newAccountModalIsVisible: boolean
+  existingAccountModalIsVisible: boolean
   flow: string
 }
 
@@ -52,15 +48,8 @@ class InitializeTextile extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      newAccountModalIsVisible: false,
+      existingAccountModalIsVisible: false,
       flow: ''
-    }
-  }
-
-  // If the node is initialized, move to the next page in onboarding
-  componentDidUpdate() {
-    if (this.props.initializationState === TextileInstanceState.initialized) {
-      this.props.onSuccess(this.state.flow)
     }
   }
 
@@ -78,7 +67,7 @@ class InitializeTextile extends Component<Props, State> {
           <Text>I want to make a new account</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={this.toggleNewAccountModal}
+          onPress={this.toggleExistingAccountModal}
           disabled={initializing}
         >
           <Text>No</Text>
@@ -86,9 +75,9 @@ class InitializeTextile extends Component<Props, State> {
         </TouchableOpacity>
         {this.props.error && <Text>{this.props.error}</Text>}
         <AccountSeedModal
-          isVisible={this.state.newAccountModalIsVisible}
+          isVisible={this.state.existingAccountModalIsVisible}
           complete={this.chooseExistingAccount}
-          close={this.toggleNewAccountModal}
+          close={this.toggleExistingAccountModal}
         />
       </SafeAreaView>
     )
@@ -108,10 +97,10 @@ class InitializeTextile extends Component<Props, State> {
     this.props.newAccount()
   }
 
-  toggleNewAccountModal = () => {
+  toggleExistingAccountModal = () => {
     this.setState(prevState => {
       return {
-        newAccountModalIsVisible: !prevState.newAccountModalIsVisible
+        existingAccountModalIsVisible: !prevState.existingAccountModalIsVisible
       }
     })
   }
