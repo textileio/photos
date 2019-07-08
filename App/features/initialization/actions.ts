@@ -1,10 +1,7 @@
 import { createAction } from 'typesafe-actions'
 
 export const initializeNewAccount = createAction(
-  'initialization/INITIALIZE_CREATING_NEW_WALLET_AND_ACCOUNT',
-  resolve => {
-    return () => resolve()
-  }
+  'initialization/INITIALIZE_CREATING_NEW_WALLET_AND_ACCOUNT'
 )
 
 export const initializeExistingAccount = createAction(
@@ -14,9 +11,7 @@ export const initializeExistingAccount = createAction(
   }
 )
 
-export const nodeInitialized = createAction('initialization/NODE_INITIALIZED', resolve => {
-  return () => resolve()
-})
+export const nodeInitialized = createAction('initialization/NODE_INITIALIZED')
 
 export const failedToInitializeNode = createAction(
   'initialization/FAILED_TO_INITIALIZE_NODE',
@@ -39,13 +34,8 @@ export const setCurrentPage = createAction(
   }
 )
 
-export const nextPage = createAction('initialization/NEXT_PAGE_ONBOARDING', resolve => {
-  return () => resolve()
-})
+export const nextPage = createAction('initialization/NEXT_PAGE_ONBOARDING')
 
 export const onboardingSuccess = createAction(
-  'initialization/COMPLETE_ONBOARDING',
-  resolve => {
-    return () => resolve()
-  }
+  'initialization/COMPLETE_ONBOARDING'
 )
