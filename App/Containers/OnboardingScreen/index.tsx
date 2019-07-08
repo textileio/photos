@@ -115,9 +115,7 @@ class OnboardingScreen extends React.Component<Props> {
           referralCode={this.props.referralCode}
           onSuccess={this.props.nextPage}
         />,
-        <InitializeTextile
-          key="account"
-        />
+        <InitializeTextile key="account" />
       ],
       newAccount: [
         <ChooseCafe key="cafe" onSuccess={this.props.nextPage} />,

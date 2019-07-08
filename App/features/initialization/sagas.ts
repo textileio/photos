@@ -78,7 +78,7 @@ function* initializeTextileWithAccountSeed(
   }
 }
 
-export default function* () {
+export default function*() {
   yield all([
     call(checkInitialization),
     takeEvery(
