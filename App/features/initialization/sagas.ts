@@ -8,6 +8,7 @@ import { logNewEvent } from '../../Sagas/DeviceLogs'
 import { accountActions } from '../account'
 
 import * as actions from './actions'
+import * as initializationSelectors from './selectors'
 
 function* checkInitialization() {
   try {
@@ -18,6 +19,15 @@ function* checkInitialization() {
       AppConfig.textileRepoPath
     )
     if (initialized) {
+      const initializedInState = yield select(
+        initializationSelectors.initialized
+      )
+      // If the instance is already initialized, but that is not reflected in the state
+      // then fix that. This is important for a user that migrates to the new version
+      // of the application whose Textile instance is already initialized.
+      if (!initializedInState) {
+        yield put(actions.nodeInitialized())
+      }
       const verbose = yield select(PreferencesSelectors.verboseUi)
       yield call(Textile.launch, AppConfig.textileRepoPath, verbose)
     }
