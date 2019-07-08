@@ -39,7 +39,7 @@ export const setCurrentPage = createAction(
   }
 )
 
-export const nextPage = createAction('NEXT_PAGE_ONBOARDING', resolve => {
+export const nextPage = createAction('initialization/NEXT_PAGE_ONBOARDING', resolve => {
   return () => resolve()
 })
 
