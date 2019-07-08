@@ -14,7 +14,6 @@ import { logNewEvent } from './DeviceLogs'
 import { pendingInvitesTask, cameraRollThreadCreateTask } from './ThreadsSagas'
 import { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import { RootAction } from '../Redux/Types'
-import { accountActions } from '../features/account'
 import TextileEventsActions, {
   TextileEventsAction
 } from '../Redux/TextileEventsRedux'
@@ -195,77 +194,6 @@ function* handleNodeEvents() {
   }
 }
 
-function* checkInitialization() {
-  try {
-    const initialized = yield call(
-      Textile.isInitialized,
-      AppConfig.textileRepoPath
-    )
-    if (initialized) {
-      yield put(TextileEventsActions.nodeInitialized())
-      const verbose = yield select(PreferencesSelectors.verboseUi)
-      yield call(Textile.launch, AppConfig.textileRepoPath, verbose)
-    }
-  } catch (error) {
-    yield call(logNewEvent, 'checkInitialization', error.message, true)
-  }
-}
-
-function* initializeTextileWithNewAccount(
-  action: ActionType<typeof TextileEventsActions.initializeNewAccount>
-) {
-  try {
-    const initialized = yield call(
-      Textile.isInitialized,
-      AppConfig.textileRepoPath
-    )
-    const verbose = yield select(PreferencesSelectors.verboseUi)
-    if (!initialized) {
-      const phrase = yield call(
-        Textile.initializeCreatingNewWalletAndAccount,
-        AppConfig.textileRepoPath,
-        verbose,
-        true
-      )
-      yield put(accountActions.setRecoveryPhrase(phrase))
-      yield put(TextileEventsActions.nodeInitialized())
-    } else {
-      yield put(TextileEventsActions.nodeInitialized())
-    }
-    yield call(Textile.launch, AppConfig.textileRepoPath, verbose)
-  } catch (error) {
-    yield put(TextileEventsActions.failedToInitializeNode(error))
-  }
-}
-
-function* initializeTextileWithAccountSeed(
-  action: ActionType<typeof TextileEventsActions.initializeExistingAccount>
-) {
-  const { seed } = action.payload
-  try {
-    const initialized = yield call(
-      Textile.isInitialized,
-      AppConfig.textileRepoPath
-    )
-    const verbose = yield select(PreferencesSelectors.verboseUi)
-    if (!initialized) {
-      yield call(
-        Textile.initialize,
-        AppConfig.textileRepoPath,
-        seed,
-        verbose,
-        true
-      )
-      yield put(TextileEventsActions.nodeInitialized())
-    } else {
-      yield put(TextileEventsActions.nodeInitialized())
-    }
-    yield call(Textile.launch, AppConfig.textileRepoPath, verbose)
-  } catch (error) {
-    yield put(TextileEventsActions.failedToInitializeNode(error))
-  }
-}
-
 export function* refreshMessages() {
   while (true) {
     try {
@@ -431,15 +359,6 @@ export function* newError() {
 export function* startSagas() {
   yield all([
     call(handleNodeEvents),
-    call(checkInitialization),
-    takeEvery(
-      getType(TextileEventsActions.initializeNewAccount),
-      initializeTextileWithNewAccount
-    ),
-    takeEvery(
-      getType(TextileEventsActions.initializeExistingAccount),
-      initializeTextileWithAccountSeed
-    ),
     call(startNodeFinished),
     call(stopNodeAfterDelayStarting),
     call(stopNodeAfterDelayCancelled),

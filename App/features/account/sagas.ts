@@ -17,7 +17,7 @@ import Textile, {
 import * as actions from './actions'
 import { contactsActions } from '../../features/contacts'
 import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
-import PreferencesActions from '../../Redux/PreferencesRedux'
+import { initializationActions } from '../../features/initialization'
 import TextileEventsActions, {
   TextileEventsSelectors
 } from '../../Redux/TextileEventsRedux'
@@ -29,7 +29,7 @@ function* onNodeStarted() {
   while (
     yield take([
       getType(TextileEventsActions.nodeStarted),
-      getType(PreferencesActions.onboardingSuccess)
+      getType(initializationActions.onboardingSuccess)
     ])
   ) {
     yield call(logNewEvent, 'nodeStarted', 'refresh account data')

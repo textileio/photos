@@ -51,7 +51,7 @@ class StatusCheck extends React.Component<Props, {}> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   return {
-    onboarded: state.preferences.onboarded,
+    onboarded: state.initialization.onboarding.completed,
     nodeStarted: TextileEventsSelectors.started(state),
     nodeError: state.textile.nodeState.error
   }

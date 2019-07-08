@@ -10,9 +10,9 @@ import ReferralCode from '../../Components/ReferralCode'
 import OnboardingUsername from '../../Containers/OnboardingUsername'
 import SetAvatar from '../../Containers/SetAvatar'
 import MailListSignupScreen from '../../Containers/MailListSignupScreen'
-import PreferencesActions from '../../Redux/PreferencesRedux'
 import ChooseCafe from '../../Containers/ChooseCafe'
 import AccountScreen from '../../Containers/AccountScreen'
+import { initializationActions } from '../../features/initialization'
 import { RootAction, RootState } from '../../Redux/Types'
 import { color, spacing } from '../../styles'
 
@@ -74,110 +74,82 @@ const ProgressBar = (props: ProgressBarProps) => {
 
 interface StateProps {
   referralCode?: string
+  path: string
+  currentPage: number
 }
 
 interface DispatchProps {
+  nextPage: () => void
+  selectPath: (path: string) => void
   complete: () => void
 }
 
 type Props = StateProps & DispatchProps & NavigationScreenProps
 
-// flowSelected is the onboarding flow the user selected
-// it starts out undefined when the user hasn't chosen whether they are going to
-// connect an existing account or create a new account
-interface State {
-  flowSelected?: string
-  pages?: any
-  currentPage: number
-}
-
-class OnboardingScreen extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    // pages are the onboarding pages the user must go through no matter what
-    // flow they select. The last page in the list should call selectFlow and pass
-    // in which onboarding flow the user has chosen
-    this.state = {
-      currentPage: 0,
-      pages: [
-        <ReferralCode
-          key="referral"
-          targetReferralCode={Config.RN_TEMPORARY_REFERRAL}
-          referralCode={this.props.referralCode}
-          onSuccess={this.nextPage}
-        />,
-        <AccountScreen
-          key="account"
-          onSuccess={(flow: string) => this.selectFlow(flow)}
-        />
-      ]
-    }
-  }
-
-  nextPage = () => {
-    if (this.state.currentPage < this.state.pages.length - 1) {
-      this.setState(prevState => {
-        return {
-          currentPage: prevState.currentPage + 1
-        }
-      })
-    }
-  }
-
+class OnboardingScreen extends React.Component<Props> {
   complete = () => {
     this.props.complete()
     this.props.navigation.navigate('StatusCheck')
   }
 
-  selectFlow = (flow: string) => {
-    // The "flow" is the onboarding path the user selects, identified by a string
-    // That string is indexed into a map (string->list of pages) to start the onboarding
-    const pages: {
-      [index: string]: JSX.Element[]
+  pages = () => {
+    // The onboarding path is a stack of pages identified by a string
+    // The pages in `default` are the those that the user must go through before
+    // choosing an onboarding path. The last page in the list should call selectPath
+    // to select the path the user will take
+    const onboardingSuccessMessage = (
+      <OnboardingMessage
+        key="ready"
+        title="All ready!"
+        subtitle="You're all set up. Enjoy using Textile :)"
+        image={require('./statics/sync.png')}
+        buttonText="Get Started"
+        onButtonPress={this.complete}
+      />
+    )
+    const paths: {
+      [path: string]: JSX.Element[]
     } = {
-      newAccount: [
-        <ChooseCafe key="cafe" onSuccess={this.nextPage} />,
-        <OnboardingUsername key="username" onSuccess={this.nextPage} />,
-        <SetAvatar key="avatar" onSuccess={this.nextPage} />,
-        <MailListSignupScreen key="mail" onSuccess={this.nextPage} />,
-        <OnboardingMessage
-          key="ready"
-          title="All ready!"
-          subtitle="You're all set up. Enjoy using Textile :)"
-          image={require('./statics/sync.png')}
-          buttonText="Get Started"
-          onButtonPress={this.complete}
+      default: [
+        <ReferralCode
+          key="referral"
+          targetReferralCode={Config.RN_TEMPORARY_REFERRAL}
+          referralCode={this.props.referralCode}
+          onSuccess={this.props.nextPage}
+        />,
+        <AccountScreen
+          key="account"
+          onSuccess={(path: string) => this.props.selectPath(path)}
         />
       ],
+      newAccount: [
+        <ChooseCafe key="cafe" onSuccess={this.props.nextPage} />,
+        <OnboardingUsername key="username" onSuccess={this.props.nextPage} />,
+        <SetAvatar key="avatar" onSuccess={this.props.nextPage} />,
+        <MailListSignupScreen key="mail" onSuccess={this.props.nextPage} />,
+        onboardingSuccessMessage
+      ],
       existingAccount: [
-        <MailListSignupScreen key="mail" onSuccess={this.nextPage} />,
-        <OnboardingMessage
-          key="ready"
-          title="All ready!"
-          subtitle="You're all set up. Enjoy using Textile :)"
-          image={require('./statics/sync.png')}
-          buttonText="Get Started"
-          onButtonPress={this.complete}
-        />
+        <ChooseCafe key="cafe" onSuccess={this.props.nextPage} />,
+        <MailListSignupScreen key="mail" onSuccess={this.props.nextPage} />,
+        onboardingSuccessMessage
       ]
     }
-    this.setState({
-      currentPage: 0,
-      pages: pages[flow]
-    })
+    return paths[this.props.path]
   }
 
   render() {
+    const pages = this.pages()
     return (
       <SafeAreaView style={CONTAINER}>
         <View style={CONTAINER}>
           <View style={[CONTAINER, { marginBottom: spacing._016 }]}>
-            {this.state.pages[this.state.currentPage]}
+            {pages[this.props.currentPage]}
           </View>
-          {this.state.flowSelected && (
+          {this.props.path !== 'default' && (
             <ProgressBar
-              length={this.state.pages.length}
-              active={this.state.currentPage}
+              length={pages.length}
+              active={this.props.currentPage}
             />
           )}
         </View>
@@ -188,11 +160,16 @@ class OnboardingScreen extends React.Component<Props, State> {
 
 const mapStateToProps = (state: RootState): StateProps => ({
   referralCode:
-    state.auth.invite !== undefined ? state.auth.invite.referral : undefined
+    state.auth.invite !== undefined ? state.auth.invite.referral : undefined,
+  path: state.initialization.onboarding.path,
+  currentPage: state.initialization.onboarding.currentPage
 })
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
-  complete: () => dispatch(PreferencesActions.onboardingSuccess())
+  complete: () => dispatch(initializationActions.onboardingSuccess()),
+  nextPage: () => dispatch(initializationActions.nextPage()),
+  selectPath: (path: string) =>
+    dispatch(initializationActions.chooseOnboardingPath(path))
 })
 
 export default connect(

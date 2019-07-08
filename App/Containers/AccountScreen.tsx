@@ -10,9 +10,8 @@ import {
 } from 'react-native'
 
 import { RootState, RootAction } from '../Redux/Types'
-import TextileEventsActions, {
-  TextileInstanceState
-} from '../Redux/TextileEventsRedux'
+import { initializationActions } from '../features/initialization'
+import { TextileInstanceState } from '../features/initialization/models'
 import AccountSeedModal from '../Components/AccountSeedModal'
 
 import { spacing, textStyle, color } from '../styles'
@@ -128,16 +127,16 @@ class AccountScreen extends Component<Props, State> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   return {
-    textileInstanceState: state.textile.textileInstanceState.state,
-    error: state.textile.textileInstanceState.error
+    textileInstanceState: state.initialization.instance.state,
+    error: state.initialization.instance.error
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
-    newAccount: () => dispatch(TextileEventsActions.initializeNewAccount()),
+    newAccount: () => dispatch(initializationActions.initializeNewAccount()),
     existingAccount: (seed: string) =>
-      dispatch(TextileEventsActions.initializeExistingAccount(seed))
+      dispatch(initializationActions.initializeExistingAccount(seed))
   }
 }
 

@@ -26,6 +26,10 @@ import { contactsSaga } from '../features/contacts'
 import { groupSaga, groupActions } from '../features/group'
 import { photosSaga } from '../features/photos'
 import { cafesSaga } from '../features/cafes'
+import {
+  initializationSaga,
+  initializationActions
+} from '../features/initialization'
 
 import { startup } from './StartupSagas'
 
@@ -111,6 +115,7 @@ export default function*() {
     call(groupSaga),
     call(photosSaga),
     call(cafesSaga),
+    call(initializationSaga),
 
     call(startSagas),
 
@@ -221,6 +226,9 @@ export default function*() {
 
     // DeepLinks
     takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),
-    takeEvery(getType(PreferencesActions.onboardingSuccess), inviteAfterOnboard)
+    takeEvery(
+      getType(initializationActions.onboardingSuccess),
+      inviteAfterOnboard
+    )
   ])
 }

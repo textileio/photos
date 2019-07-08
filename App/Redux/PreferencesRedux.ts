@@ -2,9 +2,6 @@ import { createAction, ActionType, getType } from 'typesafe-actions'
 import { RootState } from './Types'
 
 const actions = {
-  onboardingSuccess: createAction('ONBOARDING_SUCCESS', resolve => {
-    return () => resolve()
-  }),
   toggleVerboseUi: createAction('TOGGLE_VERBOSE_UI', resolve => {
     return () => resolve()
   }),
@@ -73,7 +70,6 @@ export interface PreferencesState {
   readonly storage: { readonly [k in StorageType]: Service }
   readonly tourScreens: { readonly [k in TourScreens]: boolean } // true = still need to show, false = no need
   viewSettings: ViewSettings
-  onboarded: boolean
   verboseUi: boolean
   verboseUiOptions: {
     nodeStateOverlay: boolean
@@ -83,7 +79,6 @@ export interface PreferencesState {
 }
 
 export const initialState: PreferencesState = {
-  onboarded: false,
   tourScreens: {
     wallet: true,
     threads: true,
@@ -175,8 +170,6 @@ export function reducer(
           nodeStateOverlay: !state.verboseUiOptions.nodeStateOverlay
         }
       }
-    case getType(actions.onboardingSuccess):
-      return { ...state, onboarded: true }
     case getType(actions.toggleVerboseUi):
       return { ...state, verboseUi: !state.verboseUi }
     case getType(actions.completeTourSuccess):
@@ -221,7 +214,6 @@ export function reducer(
 }
 
 export const PreferencesSelectors = {
-  onboarded: (state: RootState) => state.preferences.onboarded,
   service: (state: RootState, name: ServiceType) =>
     state.preferences.services[name],
   serviceStatus: (state: RootState, name: ServiceType) =>

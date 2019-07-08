@@ -22,6 +22,7 @@ import { groupReducer } from '../features/group'
 import { photosReducer } from '../features/photos'
 import { cafesReducer } from '../features/cafes'
 import { fileSyncReducer } from '../features/file-sync'
+import { initializationReducer } from '../features/initialization'
 
 const migrations: MigrationManifest = {
   0: persistedState => {
@@ -381,7 +382,8 @@ const rootReducer = combineReducers({
   group: groupReducer,
   photos: photosReducer,
   cafes: cafesReducer,
-  fileSync: fileSyncReducer
+  fileSync: fileSyncReducer,
+  initialization: initializationReducer
 })
 
 export default persistReducer(persistConfig, rootReducer)
