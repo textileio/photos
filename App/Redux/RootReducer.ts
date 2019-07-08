@@ -355,14 +355,37 @@ const migrations: MigrationManifest = {
     const state = persistedState as any
     const { cameraRoll, group, uploadingImages, photos, ...rest } = state
     return rest
+  },
+  22: persistedState => {
+    // Move onboarded from preferences to initialization
+    const state = persistedState as any
+    const { onboarded, ...rest } = state.preferences
+    const { initialization } = state.preferences
+    return {
+      ...state,
+      preferences: rest,
+      initialization: {
+        ...initialization,
+        onboarding: {
+          ...initialization.onboarding,
+          completed: onboarded
+        }
+      }
+    }
   }
 }
 
 const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,
-  version: 21,
-  whitelist: ['account', 'preferences', 'deviceLogs', 'fileSync'],
+  version: 22,
+  whitelist: [
+    'account',
+    'preferences',
+    'deviceLogs',
+    'fileSync',
+    'initialization'
+  ],
   migrate: createMigrate(migrations, { debug: false }),
   debug: false
 }

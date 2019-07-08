@@ -11,12 +11,13 @@ import * as actions from './actions'
 
 function* checkInitialization() {
   try {
+    // Check if the persisted state already indicates that the Textile instance
+    // is initialized
     const initialized = yield call(
       Textile.isInitialized,
       AppConfig.textileRepoPath
     )
     if (initialized) {
-      yield put(actions.nodeInitialized())
       const verbose = yield select(PreferencesSelectors.verboseUi)
       yield call(Textile.launch, AppConfig.textileRepoPath, verbose)
     }
