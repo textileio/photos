@@ -3,6 +3,7 @@ import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import {
   SafeAreaView,
+  View,
   TouchableOpacity,
   Text,
   ViewStyle,
@@ -13,11 +14,26 @@ import { RootState, RootAction } from '../Redux/Types'
 import { initializationActions } from '../features/initialization'
 import { TextileInstanceState } from '../features/initialization/models'
 import AccountSeedModal from '../Components/AccountSeedModal'
+import Icon from '@textile/react-native-icon'
+import Loading from '../Components/Loading'
 
-import { spacing, textStyle, color } from '../styles'
+import { spacing, textStyle, size, color } from '../styles'
 
 const CONTAINER: ViewStyle = {
   flex: 1
+}
+
+const OPTION: ViewStyle = {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginTop: spacing._024
+}
+
+const DESCRIPTION: ViewStyle = {
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'flex-start'
 }
 
 const TITLE: TextStyle = {
@@ -25,6 +41,25 @@ const TITLE: TextStyle = {
   marginTop: spacing._016,
   marginBottom: spacing._008,
   paddingHorizontal: spacing._016
+}
+
+const HEADER: TextStyle = {
+  ...textStyle.header_m,
+  marginBottom: spacing._008,
+  paddingHorizontal: spacing._016
+}
+
+const SUBHEADER: TextStyle = {
+  ...textStyle.body_m,
+  marginBottom: spacing._008,
+  paddingHorizontal: spacing._016
+}
+
+const ICON: ViewStyle = {
+  margin: spacing._016,
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'flex-end'
 }
 
 interface StateProps {
@@ -41,7 +76,7 @@ type Props = DispatchProps & StateProps
 
 interface State {
   existingAccountModalIsVisible: boolean
-  flow: string
+  path: string
 }
 
 class InitializeTextile extends Component<Props, State> {
@@ -49,7 +84,7 @@ class InitializeTextile extends Component<Props, State> {
     super(props)
     this.state = {
       existingAccountModalIsVisible: false,
-      flow: ''
+      path: ''
     }
   }
 
@@ -63,15 +98,35 @@ class InitializeTextile extends Component<Props, State> {
           onPress={this.chooseNewAccount}
           disabled={initializing}
         >
-          <Text>Yes</Text>
-          <Text>I want to make a new account</Text>
+          <View style={OPTION}>
+            <View style={DESCRIPTION}>
+              <Text style={HEADER}>Yes</Text>
+              <Text style={SUBHEADER}>I want to make a new account</Text>
+            </View>
+            {initializing && this.state.path === 'newAccount' ? (
+              <Loading color={color.grey_4} style={ICON} />
+            ) : (
+              <Icon style={ICON} name="plus" size={size._032} />
+            )}
+          </View>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={this.toggleExistingAccountModal}
           disabled={initializing}
         >
-          <Text>No</Text>
-          <Text>I want to connect an existing account</Text>
+          <View style={OPTION}>
+            <View style={DESCRIPTION}>
+              <Text style={HEADER}>No</Text>
+              <Text style={SUBHEADER}>
+                I want to connect an existing account
+              </Text>
+            </View>
+            {initializing && this.state.path === 'existingAcount' ? (
+              <Loading color={color.grey_4} style={ICON} />
+            ) : (
+              <Icon style={ICON} name="arrow-right" size={size._032} />
+            )}
+          </View>
         </TouchableOpacity>
         {this.props.error && <Text>{this.props.error}</Text>}
         <AccountSeedModal
@@ -85,14 +140,14 @@ class InitializeTextile extends Component<Props, State> {
 
   chooseExistingAccount = (seed: string) => {
     this.setState({
-      flow: 'existingAccount'
+      path: 'existingAccount'
     })
     this.props.existingAccount(seed)
   }
 
   chooseNewAccount = () => {
     this.setState({
-      flow: 'newAccount'
+      path: 'newAccount'
     })
     this.props.newAccount()
   }
