@@ -32,7 +32,7 @@ interface OwnProps {
 }
 
 interface StateProps {
-  textileInstanceState: TextileInstanceState
+  initializationState: TextileInstanceState
   error?: string
 }
 
@@ -48,7 +48,7 @@ interface State {
   flow: string
 }
 
-class AccountScreen extends Component<Props, State> {
+class InitializeTextile extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -58,23 +58,15 @@ class AccountScreen extends Component<Props, State> {
   }
 
   // If the node is initialized, move to the next page in onboarding
-  // If the node is initialized but onboarding isn't completed, the user
-  // must have exited in the middle of creating a new account
-  componentDidMount() {
-    if (this.props.textileInstanceState === TextileInstanceState.initialized) {
-      this.props.onSuccess(this.state.flow)
-    }
-  }
-
   componentDidUpdate() {
-    if (this.props.textileInstanceState === TextileInstanceState.initialized) {
+    if (this.props.initializationState === TextileInstanceState.initialized) {
       this.props.onSuccess(this.state.flow)
     }
   }
 
   render() {
     const initializing =
-      this.props.textileInstanceState === TextileInstanceState.initializing
+      this.props.initializationState === TextileInstanceState.initializing
     return (
       <SafeAreaView style={CONTAINER}>
         <Text style={TITLE}>Are you new to Textile?</Text>
@@ -127,7 +119,7 @@ class AccountScreen extends Component<Props, State> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   return {
-    textileInstanceState: state.initialization.instance.state,
+    initializationState: state.initialization.instance.state,
     error: state.initialization.instance.error
   }
 }
@@ -143,4 +135,4 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AccountScreen)
+)(InitializeTextile)

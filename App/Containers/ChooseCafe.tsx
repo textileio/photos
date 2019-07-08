@@ -32,7 +32,7 @@ const SUBTITLE: TextStyle = {
   paddingHorizontal: spacing._016
 }
 
-const SUBMITBUTTON: ViewStyle = {
+const SUBMIT_BUTTON: ViewStyle = {
   marginTop: spacing._016,
   alignSelf: 'center'
 }
@@ -124,7 +124,7 @@ class ChooseCafe extends Component<Props, State> {
           onPress={this.onButtonPress}
           processing={registering}
           disabled={buttonDisabled}
-          style={SUBMITBUTTON}
+          style={SUBMIT_BUTTON}
         />
         <CafePeerIdModal
           isVisible={this.state.peerIdModalIsVisible}
