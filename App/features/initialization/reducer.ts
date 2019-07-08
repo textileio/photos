@@ -4,10 +4,7 @@ import { ActionType, getType } from 'typesafe-actions'
 import { TextileInstanceState } from './models'
 import * as actions from './actions'
 
-// If path is undefined, they haven't chosen an onboarding path yet
 // When the path changes, currentPage should be reset to 0
-// If onboarding is complete, both the path and currentPage should be undefined
-// as they will be stale
 export interface InitializationState {
   readonly onboarding: {
     completed: boolean
