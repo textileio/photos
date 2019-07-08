@@ -360,14 +360,11 @@ const migrations: MigrationManifest = {
     // Move onboarded from preferences to initialization
     const state = persistedState as any
     const { onboarded, ...rest } = state.preferences
-    const { initialization } = state.preferences
     return {
       ...state,
       preferences: rest,
       initialization: {
-        ...initialization,
         onboarding: {
-          ...initialization.onboarding,
           completed: onboarded
         }
       }
