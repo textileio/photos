@@ -1,18 +1,22 @@
-import { createAppContainer, createSwitchNavigator } from 'react-navigation'
+import { createAppContainer, createStackNavigator } from 'react-navigation'
 
-import OnboardingNavigation from './Onboarding'
-import ModalNavigation from './Modal'
+import SwitchNav from './Switch'
+import AddContact from './AddContact'
+import Settings from './Settings'
+import NewAccountOnboarding from '../../screens/obboarding/new-account'
+import ExistingAccountOnboarding from '../../screens/obboarding/existing-account'
 
-import StatusCheck from '../../Containers/StatusCheck'
-
-const nav = createSwitchNavigator(
+const nav = createStackNavigator(
   {
-    StatusCheck,
-    OnboardingNavigation,
-    ModalNavigation
+    SwitchNav,
+    AddContact,
+    Settings,
+    NewAccountOnboarding,
+    ExistingAccountOnboarding
   },
   {
-    initialRouteName: 'StatusCheck'
+    mode: 'modal',
+    headerMode: 'none'
   }
 )
 

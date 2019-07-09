@@ -7,9 +7,11 @@ import FatalErrorView from '../Components/FatalErrorView'
 
 import { RootState } from '../Redux/Types'
 import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
+import { initializationSelectors } from '../features/initialization'
 import { color } from '../styles'
 
 interface StateProps {
+  initialized: boolean
   onboarded: boolean
   nodeStarted: boolean
   nodeError?: string
@@ -20,10 +22,10 @@ type Props = StateProps & NavigationScreenProps<{}>
 class StatusCheck extends React.Component<Props, {}> {
   static getDerivedStateFromProps(props: Props, state: {}) {
     if (!props.nodeError) {
-      if (!props.onboarded) {
-        props.navigation.navigate('OnboardingNavigation')
+      if (!props.initialized) {
+        props.navigation.navigate('Initialize')
       } else if (props.nodeStarted) {
-        props.navigation.navigate('ModalNavigation')
+        props.navigation.navigate('PrimaryNav')
       }
     }
     // tslint:disable-next-line no-null-keyword
@@ -49,8 +51,9 @@ class StatusCheck extends React.Component<Props, {}> {
   }
 }
 
-const mapStateToProps = (state: RootState): StateProps => {
+function mapStateToProps(state: RootState): StateProps {
   return {
+    initialized: initializationSelectors.initialized(state.initialization),
     onboarded: state.initialization.onboarding.completed,
     nodeStarted: TextileEventsSelectors.started(state),
     nodeError: state.textile.nodeState.error

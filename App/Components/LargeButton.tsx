@@ -11,7 +11,7 @@ interface Props {
   onPress?: () => void
 }
 
-const button = (props: Props) => {
+function button(props: Props) {
   const { text, onPress, style, processing } = props
   return (
     <Button
