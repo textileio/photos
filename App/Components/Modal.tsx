@@ -32,7 +32,7 @@ type Fields = {
 export default class Modal<FormFields extends Fields> extends Component<
   Props<FormFields>,
   State<FormFields>
-> {
+  > {
   constructor(props: Props<FormFields>) {
     super(props)
     this.state = {
@@ -40,7 +40,7 @@ export default class Modal<FormFields extends Fields> extends Component<
     }
   }
 
-  _buildOnChangeText = (key: string) => {
+  _buildOnChangeText = (key: keyof FormFields) => {
     return (newValue: string) => {
       this.setState(prevState => {
         return {
