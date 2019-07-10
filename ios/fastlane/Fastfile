@@ -99,7 +99,7 @@ platform :ios do
       :PROVISIONING_PROFILE_SPECIFIER => PROFILE
     }
     match(type: "appstore") # more information: https://codesigning.guide
-    set_info_plist_value(path: "./Textile/Info.plist", key: "UIFileSharingEnabled", value: false)
+    # set_info_plist_value(path: "./Textile/Info.plist", key: "UIFileSharingEnabled", value: false)
     tag = ENV['CIRCLE_TAG'] # looks like ios_1.2.3_456
     parts = tag.split("_")
     increment_version_number(
