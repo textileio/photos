@@ -21,7 +21,9 @@ import Button from '../Components/SmallButton'
 import WaitListSignupScreen from '../Components/WaitListSignupScreen'
 
 import { RootState, RootAction } from '../Redux/Types'
+import { initializationActions } from '../features/initialization'
 import { spacing, textStyle, fontFamily, color, size } from '../styles'
+import { OnboardingPath } from '../features/initialization/models'
 
 const targetReferralCode = Config.RN_TEMPORARY_REFERRAL
 
@@ -71,14 +73,6 @@ const TEXT_INPUT: TextStyle = {
   marginBottom: spacing._004
 }
 
-const LABEL: TextStyle = {
-  fontFamily: fontFamily.regular
-}
-
-const INPUT_WRAPPER: ViewStyle = {
-  marginBottom: spacing._004
-}
-
 const BUTTON: ViewStyle = {
   ...ITEM,
   alignSelf: 'stretch',
@@ -120,7 +114,10 @@ interface OwnProps {
 
 interface StateProps {}
 
-interface DispatchProps {}
+interface DispatchProps {
+  onboardNewAccount: () => void
+  onboardExistingAccount: () => void
+}
 
 type Props = StateProps & DispatchProps & OwnProps
 
@@ -178,14 +175,14 @@ class Initialize extends Component<Props, State> {
             <Button
               text="Create New Account"
               disabled={!this.state.valid}
-              // onPress={this.props.onSuccess}
+              onPress={this.props.onboardNewAccount}
               style={BUTTON}
               textStyle={BUTTON_TEXT}
             />
             <Button
               text="Sync Existing Account"
               disabled={!this.state.valid}
-              // onPress={this.props.onSuccess}
+              onPress={this.props.onboardExistingAccount}
               style={BUTTON2}
               textStyle={BUTTON_TEXT2}
             />
@@ -228,7 +225,18 @@ function mapStateToProps(state: RootState): StateProps {
 }
 
 function mapDispatchToProps(dispatch: Dispatch<RootAction>): DispatchProps {
-  return {}
+  return {
+    onboardNewAccount: () =>
+      dispatch(
+        initializationActions.chooseOnboardingPath(OnboardingPath.newAccount)
+      ),
+    onboardExistingAccount: () =>
+      dispatch(
+        initializationActions.chooseOnboardingPath(
+          OnboardingPath.existingAccount
+        )
+      )
+  }
 }
 
 export default connect(

@@ -2,6 +2,8 @@ import { all, takeEvery, put, call, select } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import Textile from '@textile/react-native-sdk'
 
+import NavService from '../../Services/NavigationService'
+import { RootState } from '../../Redux/Types'
 import { PreferencesSelectors } from '../../Redux/PreferencesRedux'
 import AppConfig from '../../Config/app-config'
 import { logNewEvent } from '../../Sagas/DeviceLogs'
@@ -9,6 +11,7 @@ import { accountActions } from '../account'
 
 import * as actions from './actions'
 import * as initializationSelectors from './selectors'
+import { OnboardingPath } from './models'
 
 function* checkInitialization() {
   try {
@@ -19,8 +22,8 @@ function* checkInitialization() {
       AppConfig.textileRepoPath
     )
     if (initialized) {
-      const initializedInState = yield select(
-        initializationSelectors.initialized
+      const initializedInState = yield select((state: RootState) =>
+        initializationSelectors.initialized(state.initialization)
       )
       // If the instance is already initialized, but that is not reflected in the state
       // then fix that. This is important for a user that migrates to the new version
@@ -36,9 +39,7 @@ function* checkInitialization() {
   }
 }
 
-function* initializeTextileWithNewAccount(
-  action: ActionType<typeof actions.initializeNewAccount>
-) {
+function* initializeTextileWithNewAccount() {
   try {
     const initialized = yield call(
       Textile.isInitialized,
@@ -55,7 +56,7 @@ function* initializeTextileWithNewAccount(
       yield put(accountActions.setRecoveryPhrase(phrase))
     }
     yield put(actions.nodeInitialized())
-    yield put(actions.chooseOnboardingPath('newAccount'))
+    yield call(NavService.navigate, 'PrimaryNav')
     yield call(Textile.launch, AppConfig.textileRepoPath, verbose)
   } catch (error) {
     yield put(actions.failedToInitializeNode(error))
@@ -89,16 +90,25 @@ function* initializeTextileWithAccountSeed(
   }
 }
 
+function* handleOnboardingChoice(
+  action: ActionType<typeof actions.chooseOnboardingPath>
+) {
+  const { path } = action.payload
+  if (path === OnboardingPath.newAccount) {
+    // yield call(NavService.navigate, 'NewAccountOnboarding')
+    yield call(initializeTextileWithNewAccount)
+  } else if (path === OnboardingPath.existingAccount) {
+    yield call(NavService.navigate, 'ExistingAccountOnboarding')
+  }
+}
+
 export default function*() {
   yield all([
     call(checkInitialization),
     takeEvery(
-      getType(actions.initializeNewAccount),
-      initializeTextileWithNewAccount
-    ),
-    takeEvery(
       getType(actions.initializeExistingAccount),
       initializeTextileWithAccountSeed
-    )
+    ),
+    takeEvery(getType(actions.chooseOnboardingPath), handleOnboardingChoice)
   ])
 }

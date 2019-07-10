@@ -1,15 +1,15 @@
 import { combineReducers } from 'redux'
 import { ActionType, getType } from 'typesafe-actions'
 
-import { TextileInstanceState } from './models'
+import { TextileInstanceState, OnboardingPath } from './models'
 import * as actions from './actions'
 
 // When the path changes, currentPage should be reset to 0
 export interface InitializationState {
   readonly onboarding: {
-    completed: boolean
-    path: string
-    currentPage: number
+    readonly completed: boolean
+    readonly path: OnboardingPath
+    readonly currentPage: number
   }
   readonly instance: {
     readonly state: TextileInstanceState
@@ -23,7 +23,7 @@ export default combineReducers<InitializationState, InitializationAction>({
   onboarding: (
     state = {
       completed: false,
-      path: 'default',
+      path: OnboardingPath.none,
       currentPage: 0
     },
     action

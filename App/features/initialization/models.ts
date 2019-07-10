@@ -7,3 +7,9 @@ export enum TextileInstanceState {
   initializing = 'initializing',
   initialized = 'initialized'
 }
+
+export enum OnboardingPath {
+  none,
+  newAccount,
+  existingAccount
+}

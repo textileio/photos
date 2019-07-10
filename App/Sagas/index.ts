@@ -115,9 +115,10 @@ export default function*() {
     call(groupSaga),
     call(photosSaga),
     call(cafesSaga),
-    call(initializationSaga),
 
     call(startSagas),
+
+    call(initializationSaga), // Needs to go after startSagas so that textile event listeners are set up before textile is launched
 
     call(monitorNewThreadActions),
 

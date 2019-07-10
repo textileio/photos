@@ -1,4 +1,5 @@
 import { createAction } from 'typesafe-actions'
+import { OnboardingPath } from './models'
 
 export const initializeNewAccount = createAction(
   'initialization/INITIALIZE_CREATING_NEW_WALLET_AND_ACCOUNT'
@@ -23,7 +24,7 @@ export const failedToInitializeNode = createAction(
 export const chooseOnboardingPath = createAction(
   'initialization/CHOOSE_ONBOARDING_PATH',
   resolve => {
-    return (path: string) => resolve({ path })
+    return (path: OnboardingPath) => resolve({ path })
   }
 )
 
