@@ -15,15 +15,14 @@ import {
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import Config from 'react-native-config'
+import { NavigationScreenProps } from 'react-navigation'
 import Modal from 'react-native-modal'
 
 import Button from '../Components/SmallButton'
 import WaitListSignupScreen from '../Components/WaitListSignupScreen'
 
 import { RootState, RootAction } from '../Redux/Types'
-import { initializationActions } from '../features/initialization'
 import { spacing, textStyle, fontFamily, color, size } from '../styles'
-import { OnboardingPath } from '../features/initialization/models'
 
 const targetReferralCode = Config.RN_TEMPORARY_REFERRAL
 
@@ -56,7 +55,7 @@ const TITLE: TextStyle = {
   ...textStyle.header_l,
   marginTop: spacing._016,
   textAlign: 'center',
-  color: color.grey_2
+  color: color.accent2_2
 }
 
 const SUBTITLE: TextStyle = {
@@ -73,10 +72,12 @@ const TEXT_INPUT: TextStyle = {
   marginBottom: spacing._004
 }
 
+const buttonColor = color.action_3
+
 const BUTTON: ViewStyle = {
   ...ITEM,
   alignSelf: 'stretch',
-  backgroundColor: color.brandBlue
+  backgroundColor: buttonColor
 }
 
 const BUTTON_TEXT: TextStyle = {
@@ -87,12 +88,12 @@ const BUTTON2: ViewStyle = {
   ...ITEM,
   alignSelf: 'stretch',
   backgroundColor: 'transparent',
-  borderColor: color.brandBlue,
+  borderColor: buttonColor,
   borderWidth: 1
 }
 
 const BUTTON_TEXT2: TextStyle = {
-  color: color.brandBlue
+  color: buttonColor
 }
 
 const LINK: TextStyle = {
@@ -114,12 +115,9 @@ interface OwnProps {
 
 interface StateProps {}
 
-interface DispatchProps {
-  onboardNewAccount: () => void
-  onboardExistingAccount: () => void
-}
+interface DispatchProps {}
 
-type Props = StateProps & DispatchProps & OwnProps
+type Props = StateProps & DispatchProps & OwnProps & NavigationScreenProps
 
 interface State {
   valid: boolean
@@ -175,14 +173,14 @@ class Initialize extends Component<Props, State> {
             <Button
               text="Create New Account"
               disabled={!this.state.valid}
-              onPress={this.props.onboardNewAccount}
+              onPress={this.onNewAccount}
               style={BUTTON}
               textStyle={BUTTON_TEXT}
             />
             <Button
               text="Sync Existing Account"
               disabled={!this.state.valid}
-              onPress={this.props.onboardExistingAccount}
+              onPress={this.onExistingAccount}
               style={BUTTON2}
               textStyle={BUTTON_TEXT2}
             />
@@ -218,6 +216,11 @@ class Initialize extends Component<Props, State> {
       showWaitlistSignup: false
     })
   }
+
+  onNewAccount = () => this.props.navigation.navigate('NewAccountOnboarding')
+
+  onExistingAccount = () =>
+    this.props.navigation.navigate('ExistingAccountOnboarding')
 }
 
 function mapStateToProps(state: RootState): StateProps {
@@ -225,18 +228,7 @@ function mapStateToProps(state: RootState): StateProps {
 }
 
 function mapDispatchToProps(dispatch: Dispatch<RootAction>): DispatchProps {
-  return {
-    onboardNewAccount: () =>
-      dispatch(
-        initializationActions.chooseOnboardingPath(OnboardingPath.newAccount)
-      ),
-    onboardExistingAccount: () =>
-      dispatch(
-        initializationActions.chooseOnboardingPath(
-          OnboardingPath.existingAccount
-        )
-      )
-  }
+  return {}
 }
 
 export default connect(

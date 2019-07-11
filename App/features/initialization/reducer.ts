@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 import { ActionType, getType } from 'typesafe-actions'
 
-import { TextileInstanceState, OnboardingPath } from './models'
+import { InitializationStatus, OnboardingPath } from './models'
 import * as actions from './actions'
 
 // When the path changes, currentPage should be reset to 0
@@ -12,7 +12,7 @@ export interface InitializationState {
     readonly currentPage: number
   }
   readonly instance: {
-    readonly state: TextileInstanceState
+    readonly state: InitializationStatus
     readonly error?: string
   }
 }
@@ -23,7 +23,7 @@ export default combineReducers<InitializationState, InitializationAction>({
   onboarding: (
     state = {
       completed: false,
-      path: OnboardingPath.none,
+      path: 'default',
       currentPage: 0
     },
     action
@@ -60,7 +60,7 @@ export default combineReducers<InitializationState, InitializationAction>({
   },
   instance: (
     state = {
-      state: TextileInstanceState.uninitialized
+      state: 'uninitialized'
     },
     action
   ) => {
@@ -68,7 +68,7 @@ export default combineReducers<InitializationState, InitializationAction>({
       case getType(actions.initializeNewAccount):
       case getType(actions.initializeExistingAccount): {
         return {
-          state: TextileInstanceState.initializing
+          state: 'creatingWallet'
         }
       }
       case getType(actions.failedToInitializeNode): {
@@ -76,13 +76,13 @@ export default combineReducers<InitializationState, InitializationAction>({
         const message =
           (error.message as string) || (error as string) || 'unknown error'
         return {
-          state: TextileInstanceState.uninitialized,
+          state: 'uninitialized',
           error: message
         }
       }
-      case getType(actions.nodeInitialized): {
+      case getType(actions.updateInitializationStatus): {
         return {
-          state: TextileInstanceState.initialized
+          state: action.payload.status
         }
       }
       default:

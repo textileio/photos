@@ -1,15 +1,11 @@
-// The initialization state of the Textile instance
-// Uninitialized: before an account is synced/created
-// Initializing: the user has initiated the account sync/creation process
-// Initialized: the instance is initialized as an account peer
-export enum TextileInstanceState {
-  uninitialized = 'uninitialized',
-  initializing = 'initializing',
-  initialized = 'initialized'
-}
+// The initialization state of the Textile instance. Some of these are "fake" to provide UX
+// uninitialized: before an account is synced/created
+// creatingWallet and creatingAccount: the user has initiated the account sync/creation process
+// initialized: the node repo is initialized
+export type InitializationStatus =
+  | 'uninitialized'
+  | 'creatingWallet'
+  | 'creatingAccount'
+  | 'initialized'
 
-export enum OnboardingPath {
-  none,
-  newAccount,
-  existingAccount
-}
+export type OnboardingPath = 'default' | 'newAccount' | 'existingAccount'

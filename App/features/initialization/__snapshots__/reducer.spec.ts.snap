@@ -8,7 +8,7 @@ Object {
   "onboarding": Object {
     "completed": false,
     "currentPage": 0,
-    "path": 0,
+    "path": "default",
   },
 }
 `;

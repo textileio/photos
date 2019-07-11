@@ -21,7 +21,7 @@ interface Props extends ActivityIndicatorProps {
   text?: string
 }
 
-const loading = (props: Props) => {
+export default function loading(props: Props) {
   const backgroundColor = props.backgroundColor
     ? props.backgroundColor
     : color.screen_primary
@@ -40,5 +40,3 @@ const loading = (props: Props) => {
     </View>
   )
 }
-
-export default loading

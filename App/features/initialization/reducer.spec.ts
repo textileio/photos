@@ -1,6 +1,6 @@
 import * as actions from './actions'
 import reducer from './reducer'
-import { TextileInstanceState } from './models'
+import { InitializationStatus } from './models'
 
 const initialState = reducer(undefined, {} as any)
 
@@ -38,13 +38,19 @@ describe('initialization', () => {
   describe('textile account initialization', () => {
     it('should initialize a new account', () => {
       const state0 = reducer(initialState, actions.initializeNewAccount())
-      expect(state0.instance.state).toEqual(TextileInstanceState.initializing)
-      const state1 = reducer(state0, actions.nodeInitialized())
-      expect(state1.instance.state).toEqual(TextileInstanceState.initialized)
+      const creatingWallet: InitializationStatus = 'creatingWallet'
+      expect(state0.instance.state).toEqual(creatingWallet)
+      const state1 = reducer(
+        state0,
+        actions.updateInitializationStatus('initialized')
+      )
+      const initialized: InitializationStatus = 'initialized'
+      expect(state1.instance.state).toEqual(initialized)
     })
     it('should log an error initializing a new account', () => {
       const state0 = reducer(initialState, actions.initializeNewAccount())
-      expect(state0.instance.state).toEqual(TextileInstanceState.initializing)
+      const creatingWallet: InitializationStatus = 'creatingWallet'
+      expect(state0.instance.state).toEqual(creatingWallet)
       const state1 = reducer(
         state0,
         actions.failedToInitializeNode(initializationError)

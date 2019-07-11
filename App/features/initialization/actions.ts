@@ -1,5 +1,5 @@
 import { createAction } from 'typesafe-actions'
-import { OnboardingPath } from './models'
+import { OnboardingPath, InitializationStatus } from './models'
 
 export const initializeNewAccount = createAction(
   'initialization/INITIALIZE_CREATING_NEW_WALLET_AND_ACCOUNT'
@@ -12,7 +12,12 @@ export const initializeExistingAccount = createAction(
   }
 )
 
-export const nodeInitialized = createAction('initialization/NODE_INITIALIZED')
+export const updateInitializationStatus = createAction(
+  'initialization/UPDATE_INITIALIZATION_STATUS',
+  resolve => {
+    return (status: InitializationStatus) => resolve({ status })
+  }
+)
 
 export const failedToInitializeNode = createAction(
   'initialization/FAILED_TO_INITIALIZE_NODE',

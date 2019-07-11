@@ -1,8 +1,8 @@
+import { delay } from 'redux-saga'
 import { all, takeEvery, put, call, select } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import Textile from '@textile/react-native-sdk'
 
-import NavService from '../../Services/NavigationService'
 import { RootState } from '../../Redux/Types'
 import { PreferencesSelectors } from '../../Redux/PreferencesRedux'
 import AppConfig from '../../Config/app-config'
@@ -11,7 +11,6 @@ import { accountActions } from '../account'
 
 import * as actions from './actions'
 import * as initializationSelectors from './selectors'
-import { OnboardingPath } from './models'
 
 function* checkInitialization() {
   try {
@@ -29,7 +28,7 @@ function* checkInitialization() {
       // then fix that. This is important for a user that migrates to the new version
       // of the application whose Textile instance is already initialized.
       if (!initializedInState) {
-        yield put(actions.nodeInitialized())
+        yield put(actions.updateInitializationStatus('initialized'))
       }
       const verbose = yield select(PreferencesSelectors.verboseUi)
       yield call(Textile.launch, AppConfig.textileRepoPath, verbose)
@@ -39,8 +38,14 @@ function* checkInitialization() {
   }
 }
 
-function* initializeTextileWithNewAccount() {
+function* initializeTextileWithNewAccount(
+  action: ActionType<typeof actions.initializeNewAccount>
+) {
   try {
+    yield call(delay, 2500)
+    yield put(actions.updateInitializationStatus('creatingAccount'))
+    yield call(delay, 2500)
+
     const initialized = yield call(
       Textile.isInitialized,
       AppConfig.textileRepoPath
@@ -55,8 +60,8 @@ function* initializeTextileWithNewAccount() {
       )
       yield put(accountActions.setRecoveryPhrase(phrase))
     }
-    yield put(actions.nodeInitialized())
-    yield call(NavService.navigate, 'PrimaryNav')
+    yield put(actions.updateInitializationStatus('initialized'))
+    // yield call(NavService.navigate, 'StatusCheck')
     yield call(Textile.launch, AppConfig.textileRepoPath, verbose)
   } catch (error) {
     yield put(actions.failedToInitializeNode(error))
@@ -82,23 +87,11 @@ function* initializeTextileWithAccountSeed(
         true
       )
     }
-    yield put(actions.nodeInitialized())
+    yield put(actions.updateInitializationStatus('initialized'))
     yield put(actions.chooseOnboardingPath('existingAccount'))
     yield call(Textile.launch, AppConfig.textileRepoPath, verbose)
   } catch (error) {
     yield put(actions.failedToInitializeNode(error))
-  }
-}
-
-function* handleOnboardingChoice(
-  action: ActionType<typeof actions.chooseOnboardingPath>
-) {
-  const { path } = action.payload
-  if (path === OnboardingPath.newAccount) {
-    // yield call(NavService.navigate, 'NewAccountOnboarding')
-    yield call(initializeTextileWithNewAccount)
-  } else if (path === OnboardingPath.existingAccount) {
-    yield call(NavService.navigate, 'ExistingAccountOnboarding')
   }
 }
 
@@ -109,6 +102,9 @@ export default function*() {
       getType(actions.initializeExistingAccount),
       initializeTextileWithAccountSeed
     ),
-    takeEvery(getType(actions.chooseOnboardingPath), handleOnboardingChoice)
+    takeEvery(
+      getType(actions.initializeNewAccount),
+      initializeTextileWithNewAccount
+    )
   ])
 }
