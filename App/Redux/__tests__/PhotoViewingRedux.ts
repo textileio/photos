@@ -17,7 +17,8 @@ const thread = {
   type: threadType,
   initiator: threadInitiator,
   sharing: threadSharing,
-  whitelist: threadWhitelist
+  whitelist: threadWhitelist,
+  valid: true
 }
 const photos: IFiles[] = [
   {
