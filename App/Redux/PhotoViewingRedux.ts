@@ -223,6 +223,7 @@ export function reducer(
         sharing,
         whitelist,
         initiator,
+        valid: true,
         querying: false,
         photos: []
       }
