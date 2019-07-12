@@ -14,6 +14,7 @@ interface ThreadDescription extends ThreadConfig {
   id: string
   key: string
   initiator: string
+  valid: boolean
 }
 
 // If a list of invites is included in ThreadOptions, send out those invites after
@@ -104,6 +105,7 @@ export interface ThreadData {
   readonly sharing: Thread.Sharing
   readonly whitelist: ReadonlyArray<string>
   readonly initiator: string
+  readonly valid: boolean
   readonly error?: string
 }
 
@@ -161,7 +163,8 @@ export function reducer(
         type,
         sharing,
         whitelist,
-        initiator
+        initiator,
+        valid
       } = action.payload
       if (state.threads[id]) {
         return state
@@ -178,6 +181,7 @@ export function reducer(
             sharing,
             whitelist,
             initiator,
+            valid,
             querying: false,
             photos: []
           }

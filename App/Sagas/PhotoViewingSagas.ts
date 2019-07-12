@@ -138,7 +138,9 @@ export function* refreshThreads(
        */
       const isSharedThread = thread.key.indexOf('textile_photos-shared') === 0
       if (isSharedThread) {
-        yield put(PhotoViewingActions.insertThread(thread))
+        const valid = thread.headBlocks.length > 0
+        const withValid = { ...thread, valid }
+        yield put(PhotoViewingActions.insertThread(withValid))
         yield put(PhotoViewingActions.refreshThreadRequest(thread.id))
       }
     }
