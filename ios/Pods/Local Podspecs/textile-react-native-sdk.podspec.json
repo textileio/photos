@@ -1,6 +1,6 @@
 {
   "name": "textile-react-native-sdk",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "summary": "## Getting started",
   "description": "## Getting started",
   "homepage": "https://github.com/textileio/react-native-sdk#readme",
@@ -8,7 +8,7 @@
   "authors": "textile.io",
   "source": {
     "git": "https://github.com/textileio/react-native-sdk.git",
-    "tag": "v3.0.0"
+    "tag": "v3.0.1"
   },
   "platforms": {
     "ios": "9.0",
@@ -19,7 +19,7 @@
 
     ],
     "Textile": [
-      "2.0.0"
+      "2.0.1"
     ]
   },
   "preserve_paths": [

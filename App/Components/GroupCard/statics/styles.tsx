@@ -62,8 +62,8 @@ export default StyleSheet.create({
     flex: 1
   },
   groupMiddleColumn: {
-    alignItems: 'flex-start',
-    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingLeft: 18,
     flex: 1
   },

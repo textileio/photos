@@ -8,9 +8,9 @@ import {
   Text,
   TouchableOpacity,
   Alert,
-  Platform,
   ListRenderItemInfo
 } from 'react-native'
+import Toast from 'react-native-easy-toast'
 
 import { RootAction, RootState } from '../Redux/Types'
 
@@ -88,6 +88,8 @@ class Groups extends React.PureComponent<Props, State> {
     }
   }
 
+  toast?: Toast
+
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -112,6 +114,7 @@ class Groups extends React.PureComponent<Props, State> {
           id={item.group.id}
           {...item.group}
           onPress={this._onPressItem}
+          onPressInvalid={this.displayThreadInvalidMessage}
         />
       )
     } else if (item.invite) {
@@ -148,6 +151,15 @@ class Groups extends React.PureComponent<Props, State> {
 
   completeCreateThread = () => {
     this.setState({ showCreateGroupModal: false })
+  }
+
+  displayThreadInvalidMessage = () => {
+    if (this.toast) {
+      this.toast.show(
+        'This group contains invald data. It may not work correctly and you should probably delete it.',
+        3000
+      )
+    }
   }
 
   componentDidMount() {
@@ -187,6 +199,12 @@ class Groups extends React.PureComponent<Props, State> {
           cancel={this.cancelCreateThread}
           complete={this.completeCreateThread}
         />
+        <Toast
+          ref={toast => {
+            this.toast = toast ? toast : undefined
+          }}
+          position="center"
+        />
       </View>
     )
   }
@@ -225,7 +243,7 @@ interface GroupRows {
   id: string
 }
 
-const mapStateToProps = (state: RootState): StateProps => {
+function mapStateToProps(state: RootState): StateProps {
   const threads: GroupAuthors[] = getThreadsAndMembers(state, 8)
   const memberCount = threads.reduce((prev, thread) => {
     return prev + thread.memberCount
@@ -257,7 +275,7 @@ const mapStateToProps = (state: RootState): StateProps => {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
+function mapDispatchToProps(dispatch: Dispatch<RootAction>): DispatchProps {
   return {
     refreshMessages: () => {
       dispatch(TextileEventsActions.refreshMessagesRequest())
