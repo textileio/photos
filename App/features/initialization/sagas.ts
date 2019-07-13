@@ -73,6 +73,9 @@ function* initializeTextileWithAccountSeed(
 ) {
   const { seed } = action.payload
   try {
+    yield put(actions.updateInitializationStatus('creatingAccount'))
+    yield call(delay, 2500)
+
     const initialized = yield call(
       Textile.isInitialized,
       AppConfig.textileRepoPath

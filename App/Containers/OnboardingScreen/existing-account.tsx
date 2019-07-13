@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
 import Config from 'react-native-config'
 
+import InitializeExisting from '../initialize-existing'
 import OnboardingMessage from '../../Components/OnboardingMessage'
 import ReferralCode from '../../Components/ReferralCode'
 import OnboardingUsername from '../../Containers/OnboardingUsername'
@@ -96,6 +97,7 @@ class OnboardingScreen extends React.Component<Props> {
     // The pages in `default` are the those that the user must go through before
     // choosing an onboarding path.
     return [
+      <InitializeExisting key="initialize" onSuccess={this.props.nextPage} />,
       <ChooseCafe key="cafe" onSuccess={this.props.nextPage} />,
       <MailListSignupScreen key="mail" onSuccess={this.props.nextPage} />,
       <OnboardingMessage
