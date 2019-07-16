@@ -1,18 +1,11 @@
 import React, { Component } from 'react'
 import { FlatList, TouchableOpacity } from 'react-native'
-import Config from 'react-native-config'
-import { Buffer } from 'buffer'
 
+import { Cafe, cafes } from '../Models/cafes'
 import ListItem from './ListItem'
 import RowSeparator from './RowSeparator'
 import ActionText from './action-text'
 import { size } from '../styles'
-
-interface Cafe {
-  name: string
-  peerId: string
-  token: string
-}
 
 interface Props {
   selected?: string
@@ -22,10 +15,6 @@ interface Props {
   disabled?: boolean
   onAddCustom?: () => void
 }
-
-const cafesBase64 = Config.RN_TEXTILE_CAFES_JSON
-const cafesString = new Buffer(cafesBase64, 'base64').toString()
-const cafes: Cafe[] = JSON.parse(cafesString)
 
 interface CafeItem {
   type: 'cafe'
