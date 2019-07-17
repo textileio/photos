@@ -10,11 +10,12 @@ import {
 import { ActionType, getType } from 'typesafe-actions'
 import Textile, {
   IContact,
-  ICafeSession,
-  ICafeSessionList
+  ICafeSessionList,
+  ICafeSession
 } from '@textile/react-native-sdk'
 
 import * as actions from './actions'
+import { sessions } from './selectors'
 import { contactsActions } from '../../features/contacts'
 import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
 import PreferencesActions from '../../Redux/PreferencesRedux'
@@ -25,6 +26,7 @@ import { logNewEvent } from '../../Sagas/DeviceLogs'
 import * as CameraRoll from '../../Services/CameraRoll'
 import { SharedImage } from '../group/add-photo/models'
 import { cafesMap } from '../../Models/cafes'
+import { RootState } from '../../Redux/Types'
 
 function* onNodeStarted() {
   while (
@@ -191,8 +193,10 @@ function* refreshCafeSession(
 function* refreshExpiredSessions() {
   while (yield take([getType(TextileEventsActions.nodeOnline)])) {
     try {
-      const list: ICafeSessionList = yield call(Textile.cafes.sessions)
-      for (const session of list.items) {
+      const sessionsList: ICafeSession[] = yield select((state: RootState) =>
+        sessions(state.account)
+      )
+      for (const session of sessionsList) {
         const now = new Date()
         const exp = Textile.util.timestampToDate(session.exp)
         if (exp <= now) {

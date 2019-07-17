@@ -9,6 +9,7 @@ import { RootState } from '../Redux/Types'
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import RowSeparator from '../Components/RowSeparator'
 import ListItem from '../Components/ListItem'
+import { accountSelectors } from '../features/account'
 
 const CONTAINER: ViewStyle = {
   flex: 1
@@ -79,9 +80,9 @@ class Cafes extends Component<Props> {
   }
 }
 
-const mapStateToProps = (state: RootState): StateProps => {
+function mapStateToProps(state: RootState): StateProps {
   return {
-    sessions: state.account.cafeSessions.sessions
+    sessions: accountSelectors.sessions(state.account)
   }
 }
 

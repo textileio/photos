@@ -114,18 +114,33 @@ class CafeSession extends Component<Props> {
   }
 }
 
-const mapStateToProps = (
+function mapStateToProps(
   state: RootState,
   ownProps: NavigationScreenProps<NavProps>
-): StateProps => ({
-  cafeSession: accountSelectors.makeSessionForId(
-    ownProps.navigation.getParam('cafeSessionId')
-  )(state.account)
-})
+): StateProps {
+  return {
+    cafeSession: accountSelectors.makeSessionForId(
+      ownProps.navigation.getParam('cafeSessionId')
+    )(state.account)
+  }
+}
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
-  refreshSession: () => dispatch(accountActions.refreshCafeSessionsRequest())
-})
+function mapDispatchToProps(
+  dispatch: Dispatch<RootAction>,
+  ownProps: Props
+): DispatchProps {
+  return {
+    refreshSession: () => {
+      if (ownProps.cafeSession) {
+        dispatch(
+          accountActions.refreshCafeSession.request({
+            peerId: ownProps.cafeSession.cafe.peer
+          })
+        )
+      }
+    }
+  }
+}
 
 export default connect(
   mapStateToProps,

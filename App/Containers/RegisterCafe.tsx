@@ -9,13 +9,13 @@ import {
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { NavigationScreenProps } from 'react-navigation'
+import Icon from '@textile/react-native-icon'
 
 import { RootState, RootAction } from '../Redux/Types'
 import { RegisterCafes } from '../features/cafes/reducer'
 import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
-
+import { accountSelectors } from '../features/account'
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
-import Icon from '@textile/react-native-icon'
 import CafesList from '../Components/CafesList'
 import CafePeerIdModal from '../Components/CafePeerIdModal'
 import Loading from '../Components/Loading'
@@ -179,8 +179,8 @@ class RegisterCafe extends Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: RootState): StateProps => {
-  const sessions = state.account.cafeSessions.sessions
+function mapStateToProps(state: RootState): StateProps {
+  const sessions = accountSelectors.sessions(state.account)
   return {
     alreadyRegistered: sessions.map(session => session.id),
     registeringCafes: state.cafes.registerCafe,
@@ -188,7 +188,7 @@ const mapStateToProps = (state: RootState): StateProps => {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
+function mapDispatchToProps(dispatch: Dispatch<RootAction>): DispatchProps {
   return {
     register: (peerId: string, token: string, success: () => void) =>
       dispatch(
