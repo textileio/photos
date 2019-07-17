@@ -1,5 +1,3 @@
-import Textile, { ICafeSession } from '@textile/react-native-sdk'
-
 import { AccountState } from './reducer'
 
 export function getPeerId(state: AccountState) {
@@ -20,17 +18,4 @@ export function getProfile(state: AccountState) {
 
 export function getRecoveryPhrase(state: AccountState) {
   return state.recoveryPhrase
-}
-
-export function makeSessionForId(id: string) {
-  return (state: AccountState) =>
-    Object.keys(state.cafeSessions.sessions)
-      .map(key => state.cafeSessions.sessions[key].session)
-      .find(session => session.id === id)
-}
-
-export function sessions(state: AccountState) {
-  return Object.keys(state.cafeSessions.sessions).map(
-    key => state.cafeSessions.sessions[key].session
-  )
 }

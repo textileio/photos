@@ -2,6 +2,7 @@ import { combineReducers } from 'redux'
 import { ActionType, getType } from 'typesafe-actions'
 
 import * as actions from './actions'
+import { CafeSessionsData } from './models'
 
 export interface RegisterCafes {
   readonly [peerId: string]: {
@@ -18,6 +19,11 @@ export interface DeregisterCafes {
 export interface CafesState {
   readonly registerCafe: RegisterCafes
   readonly deregisterCafe: DeregisterCafes
+  readonly cafeSessions: {
+    readonly sessions: CafeSessionsData
+    readonly processing: boolean
+    readonly error?: string
+  }
 }
 
 export type CafesAction = ActionType<typeof actions>
@@ -72,6 +78,71 @@ export default combineReducers<CafesState, CafesAction>({
           ...state,
           [id]: {
             error: errorMessage
+          }
+        }
+      }
+      default:
+        return state
+    }
+  },
+  cafeSessions: (state = { sessions: {}, processing: false }, action) => {
+    switch (action.type) {
+      case getType(actions.getCafeSessions.request): {
+        return { ...state, processing: true, error: undefined }
+      }
+      case getType(actions.getCafeSessions.success): {
+        const { sessions } = action.payload
+        const cafeSessionsData = sessions.reduce(
+          (cafeSessionsData, session) => {
+            return {
+              ...cafeSessionsData,
+              [session.cafe.peer]: { session, processing: false }
+            }
+          },
+          {} as CafeSessionsData
+        )
+        return { sessions: cafeSessionsData, processing: false }
+      }
+      case getType(actions.getCafeSessions.failure): {
+        const { error } = action.payload
+        const message =
+          (error.message as string) || (error as string) || 'unknown error'
+        return { ...state, error: message, processing: false }
+      }
+      case getType(actions.refreshCafeSession.request): {
+        const { peerId } = action.payload
+        return {
+          ...state,
+          sessions: {
+            ...state.sessions,
+            [peerId]: { ...state.sessions[peerId], processing: true }
+          }
+        }
+      }
+      case getType(actions.refreshCafeSession.success): {
+        const { session } = action.payload
+        const peerId = session.cafe.peer
+        return {
+          ...state,
+          sessions: {
+            ...state.sessions,
+            [peerId]: { session, processing: false }
+          }
+        }
+      }
+      case getType(actions.refreshCafeSession.failure): {
+        const { peerId, error } = action.payload
+        const message =
+          (error.message as string) || (error as string) || 'unknown error'
+        return {
+          ...state,
+          sessions: {
+            ...state.sessions,
+            [peerId]: {
+              ...state.sessions[peerId],
+              processing: false,
+              error: message
+            }
           }
         }
       }

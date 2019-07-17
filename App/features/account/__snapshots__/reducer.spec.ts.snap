@@ -4,10 +4,6 @@ exports[`account initial state should match snapshot 1`] = `
 Object {
   "address": Object {},
   "avatar": Object {},
-  "cafeSessions": Object {
-    "processing": false,
-    "sessions": Object {},
-  },
   "chosenProfilePhoto": Object {},
   "initialized": false,
   "peerId": Object {},

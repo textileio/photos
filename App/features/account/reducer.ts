@@ -4,7 +4,6 @@ import { IContact } from '@textile/react-native-sdk'
 
 import { SharedImage } from '../group/add-photo/models'
 import * as actions from './actions'
-import { CafeSessionsData } from './models'
 
 export interface AccountState {
   readonly initialized: boolean // splitting 'Preferences.onboarded' to within sdk 'initialized' and app specific 'onboarded'
@@ -30,11 +29,6 @@ export interface AccountState {
     readonly error?: string
   }
   readonly recoveryPhrase: string
-  readonly cafeSessions: {
-    readonly sessions: CafeSessionsData
-    readonly processing: boolean
-    readonly error?: string
-  }
 }
 
 export type AccountAction = ActionType<typeof actions>
@@ -121,71 +115,6 @@ export default combineReducers<AccountState, AccountAction>({
     switch (action.type) {
       case getType(actions.setRecoveryPhrase):
         return action.payload.recoveryPhrase
-      default:
-        return state
-    }
-  },
-  cafeSessions: (state = { sessions: {}, processing: false }, action) => {
-    switch (action.type) {
-      case getType(actions.getCafeSessions.request): {
-        return { ...state, processing: true, error: undefined }
-      }
-      case getType(actions.getCafeSessions.success): {
-        const { sessions } = action.payload
-        const cafeSessionsData = sessions.reduce(
-          (cafeSessionsData, session) => {
-            return {
-              ...cafeSessionsData,
-              [session.cafe.peer]: { session, processing: false }
-            }
-          },
-          {} as CafeSessionsData
-        )
-        return { sessions: cafeSessionsData, processing: false }
-      }
-      case getType(actions.getCafeSessions.failure): {
-        const { error } = action.payload
-        const message =
-          (error.message as string) || (error as string) || 'unknown error'
-        return { ...state, error: message, processing: false }
-      }
-      case getType(actions.refreshCafeSession.request): {
-        const { peerId } = action.payload
-        return {
-          ...state,
-          sessions: {
-            ...state.sessions,
-            [peerId]: { ...state.sessions[peerId], processing: true }
-          }
-        }
-      }
-      case getType(actions.refreshCafeSession.success): {
-        const { session } = action.payload
-        const peerId = session.cafe.peer
-        return {
-          ...state,
-          sessions: {
-            ...state.sessions,
-            [peerId]: { session, processing: false }
-          }
-        }
-      }
-      case getType(actions.refreshCafeSession.failure): {
-        const { peerId, error } = action.payload
-        const message =
-          (error.message as string) || (error as string) || 'unknown error'
-        return {
-          ...state,
-          sessions: {
-            ...state.sessions,
-            [peerId]: {
-              ...state.sessions[peerId],
-              processing: false,
-              error: message
-            }
-          }
-        }
-      }
       default:
         return state
     }

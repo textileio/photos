@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { NavigationScreenProps } from 'react-navigation'
 import { ICafeSession } from '@textile/react-native-sdk'
 
-import { accountSelectors } from '../features/account'
+import { cafesSelectors } from '../features/cafes'
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import ListItem from '../Components/ListItem'
 import RowSeparator from '../Components/RowSeparator'
@@ -59,7 +59,7 @@ class Cafes extends Component<Props> {
 
 function mapStateToProps(state: RootState): StateProps {
   return {
-    sessions: accountSelectors.sessions(state.account)
+    sessions: cafesSelectors.sessions(state.cafes)
   }
 }
 

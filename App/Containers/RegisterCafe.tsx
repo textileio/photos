@@ -14,7 +14,7 @@ import Icon from '@textile/react-native-icon'
 import { RootState, RootAction } from '../Redux/Types'
 import { RegisterCafes } from '../features/cafes/reducer'
 import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
-import { accountSelectors } from '../features/account'
+import { cafesSelectors } from '../features/cafes'
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import CafesList from '../Components/CafesList'
 import CafePeerIdModal from '../Components/CafePeerIdModal'
@@ -180,7 +180,7 @@ class RegisterCafe extends Component<Props, State> {
 }
 
 function mapStateToProps(state: RootState): StateProps {
-  const sessions = accountSelectors.sessions(state.account)
+  const sessions = cafesSelectors.sessions(state.cafes)
   return {
     alreadyRegistered: sessions.map(session => session.id),
     registeringCafes: state.cafes.registerCafe,

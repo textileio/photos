@@ -1,5 +1,5 @@
 import { createAction, createAsyncAction } from 'typesafe-actions'
-import { ICafeSession, IContact } from '@textile/react-native-sdk'
+import { IContact } from '@textile/react-native-sdk'
 
 import { SharedImage } from '../group/add-photo/models'
 
@@ -86,19 +86,3 @@ export const setRecoveryPhrase = createAction(
     return (recoveryPhrase: string) => resolve({ recoveryPhrase })
   }
 )
-
-export const getCafeSessions = createAsyncAction(
-  'account/GET_CAFE_SESSIONS_REQUEST',
-  'account/GET_CAFE_SESSIONS_SUCCESS',
-  'account/GET_CAFE_SESSIONS_FAILURE'
-)<void, { sessions: ReadonlyArray<ICafeSession> }, { error: any }>()
-
-export const refreshCafeSession = createAsyncAction(
-  'account/REFRESH_CAFE_SESSION_REQUEST',
-  'account/REFRESH_CAFE_SESSION_SUCCESS',
-  'account/REFRESH_CAFE_SESSION_FAILURE'
-)<
-  { peerId: string },
-  { session: ICafeSession },
-  { peerId: string; error: any }
->()

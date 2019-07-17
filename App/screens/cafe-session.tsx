@@ -10,7 +10,7 @@ import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import ListItem from '../Components/ListItem'
 import RowSeparator from '../Components/RowSeparator'
 import { RootAction, RootState } from '../Redux/Types'
-import { accountActions, accountSelectors } from '../features/account'
+import { cafesActions, cafesSelectors } from '../features/cafes'
 
 interface Row {
   title: string
@@ -119,9 +119,9 @@ function mapStateToProps(
   ownProps: NavigationScreenProps<NavProps>
 ): StateProps {
   return {
-    cafeSession: accountSelectors.makeSessionForId(
+    cafeSession: cafesSelectors.makeSessionForId(
       ownProps.navigation.getParam('cafeSessionId')
-    )(state.account)
+    )(state.cafes)
   }
 }
 
@@ -133,7 +133,7 @@ function mapDispatchToProps(
     refreshSession: () => {
       if (ownProps.cafeSession) {
         dispatch(
-          accountActions.refreshCafeSession.request({
+          cafesActions.refreshCafeSession.request({
             peerId: ownProps.cafeSession.cafe.peer
           })
         )

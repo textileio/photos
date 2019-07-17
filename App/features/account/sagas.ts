@@ -1,21 +1,8 @@
-import {
-  take,
-  put,
-  call,
-  all,
-  select,
-  fork,
-  takeEvery
-} from 'redux-saga/effects'
+import { take, put, call, all, select, takeEvery } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
-import Textile, {
-  IContact,
-  ICafeSessionList,
-  ICafeSession
-} from '@textile/react-native-sdk'
+import Textile, { IContact } from '@textile/react-native-sdk'
 
 import * as actions from './actions'
-import { sessions } from './selectors'
 import { contactsActions } from '../../features/contacts'
 import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
 import PreferencesActions from '../../Redux/PreferencesRedux'
@@ -25,8 +12,6 @@ import TextileEventsActions, {
 import { logNewEvent } from '../../Sagas/DeviceLogs'
 import * as CameraRoll from '../../Services/CameraRoll'
 import { SharedImage } from '../group/add-photo/models'
-import { cafesMap } from '../../Models/cafes'
-import { RootState } from '../../Redux/Types'
 
 function* onNodeStarted() {
   while (
@@ -40,7 +25,6 @@ function* onNodeStarted() {
       yield put(actions.refreshProfileRequest())
       yield put(actions.refreshPeerIdRequest())
       yield put(actions.refreshAddressRequest())
-      yield put(actions.getCafeSessions.request())
       yield put(contactsActions.getContactsRequest())
       yield put(PhotoViewingActions.refreshThreadsRequest())
     } catch (error) {
@@ -147,68 +131,6 @@ function* setAvatar() {
   }
 }
 
-function* getCafeSessions() {
-  while (true) {
-    try {
-      yield take(getType(actions.getCafeSessions.request))
-      const list: ICafeSessionList = yield call(Textile.cafes.sessions)
-      yield put(actions.getCafeSessions.success({ sessions: list.items }))
-    } catch (error) {
-      yield call(logNewEvent, 'getCafeSessions', error.message, true)
-      yield put(actions.getCafeSessions.failure({ error }))
-    }
-  }
-}
-
-function* refreshCafeSession(
-  action: ActionType<typeof actions.refreshCafeSession.request>
-) {
-  const { peerId } = action.payload
-  try {
-    const session = yield call(Textile.cafes.refreshSession, peerId)
-    if (session) {
-      yield put(actions.refreshCafeSession.success({ session }))
-    } else {
-      throw new Error('session not found')
-    }
-  } catch (error) {
-    const message =
-      (error.message as string) || (error as string) || 'unknown error'
-    if (message === 'unauthorized') {
-      try {
-        const cafe = cafesMap[peerId]
-        if (!cafe) {
-          throw new Error('need to re-register cafe, but have no cafe info')
-        }
-        yield call(Textile.cafes.register, cafe.peerId, cafe.token)
-      } catch (error) {
-        yield put(actions.refreshCafeSession.failure({ peerId, error }))
-      }
-    } else {
-      yield put(actions.refreshCafeSession.failure({ peerId, error }))
-    }
-  }
-}
-
-function* refreshExpiredSessions() {
-  while (yield take([getType(TextileEventsActions.nodeOnline)])) {
-    try {
-      const sessionsList: ICafeSession[] = yield select((state: RootState) =>
-        sessions(state.account)
-      )
-      for (const session of sessionsList) {
-        const now = new Date()
-        const exp = Textile.util.timestampToDate(session.exp)
-        if (exp <= now) {
-          yield put(
-            actions.refreshCafeSession.request({ peerId: session.cafe.peer })
-          )
-        }
-      }
-    } catch (error) {}
-  }
-}
-
 export default function*() {
   yield all([
     call(onNodeStarted),
@@ -217,9 +139,6 @@ export default function*() {
     call(refreshAddress),
     call(setUsername),
     call(setAvatar),
-    call(getCafeSessions),
-    call(refreshExpiredSessions),
-    takeEvery(getType(actions.refreshCafeSession.request), refreshCafeSession),
     takeEvery(getType(actions.chooseProfilePhoto.request), chooseProfilePhoto)
   ])
 }
