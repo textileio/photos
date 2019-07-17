@@ -3,7 +3,7 @@ import { ActionType, getType } from 'typesafe-actions'
 import Textile from '@textile/react-native-sdk'
 
 import * as actions from './actions'
-import { refreshCafeSessionsRequest } from '../account/actions'
+import { accountActions } from '../account'
 
 function* registerCafe(
   action: ActionType<typeof actions.registerCafe.request>
@@ -12,7 +12,7 @@ function* registerCafe(
   try {
     yield call(Textile.cafes.register, peerId, token)
     yield put(actions.registerCafe.success(peerId))
-    yield put(refreshCafeSessionsRequest())
+    yield put(accountActions.getCafeSessions.request())
     if (success) {
       yield call(success)
     }
@@ -28,7 +28,7 @@ function* deregisterCafe(
   try {
     yield call(Textile.cafes.deregister, id)
     yield put(actions.deregisterCafe.success(id))
-    yield put(refreshCafeSessionsRequest())
+    yield put(accountActions.getCafeSessions.request())
     if (success) {
       yield call(success)
     }

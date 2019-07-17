@@ -87,24 +87,18 @@ export const setRecoveryPhrase = createAction(
   }
 )
 
-export const getCafeSessionsRequest = createAction(
-  'account/GET_CAFE_SESSIONS_REQUEST'
-)
+export const getCafeSessions = createAsyncAction(
+  'account/GET_CAFE_SESSIONS_REQUEST',
+  'account/GET_CAFE_SESSIONS_SUCCESS',
+  'account/GET_CAFE_SESSIONS_FAILURE'
+)<void, { sessions: ReadonlyArray<ICafeSession> }, { error: any }>()
 
-export const refreshCafeSessionsRequest = createAction(
-  'account/REFRESH_CAFE_SESSIONS_REQUEST'
-)
-
-export const cafeSessionsSuccess = createAction(
-  'account/CAFE_SESSIONS_SUCCESS',
-  resolve => {
-    return (sessions: ReadonlyArray<ICafeSession>) => resolve({ sessions })
-  }
-)
-
-export const cafeSessionsError = createAction(
-  'account/CAFE_SESSIONS_ERROR',
-  resolve => {
-    return (error: any) => resolve({ error })
-  }
-)
+export const refreshCafeSession = createAsyncAction(
+  'account/REFRESH_CAFE_SESSION_REQUEST',
+  'account/REFRESH_CAFE_SESSION_SUCCESS',
+  'account/REFRESH_CAFE_SESSION_FAILURE'
+)<
+  { peerId: string },
+  { session: ICafeSession },
+  { peerId: string; error: any }
+>()

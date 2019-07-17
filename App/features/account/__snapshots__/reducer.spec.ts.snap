@@ -6,7 +6,7 @@ Object {
   "avatar": Object {},
   "cafeSessions": Object {
     "processing": false,
-    "sessions": Array [],
+    "sessions": Object {},
   },
   "chosenProfilePhoto": Object {},
   "initialized": false,
