@@ -75,13 +75,14 @@ interface GroupAuthors {
   readonly size: number
   readonly members: IContact[]
   readonly thumb?: IFiles
+  readonly valid: boolean
 }
 
 interface StateProps {
   threads: ReadonlyArray<GroupAuthors>
 }
 
-const mapStateToProps = (state: RootState): StateProps => {
+function mapStateToProps(state: RootState): StateProps {
   const ownAddress = accountSelectors.getAddress(state.account)
   const profile = state.account.profile.value
   const threads = getThreads(state, 'date').map(thread => {
@@ -99,7 +100,8 @@ const mapStateToProps = (state: RootState): StateProps => {
       // total number of images in the thread
       size: thread.photos.length,
       members,
-      thumb
+      thumb,
+      valid: thread.valid
     }
   })
   return {
@@ -112,7 +114,7 @@ interface DispatchProps {
   navigateToThread: (id: string, name: string) => void
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
+function mapDispatchToProps(dispatch: Dispatch<RootAction>): DispatchProps {
   return {
     refreshMessages: () => {
       dispatch(TextileEventsActions.refreshMessagesRequest())

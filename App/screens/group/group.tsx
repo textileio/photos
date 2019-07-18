@@ -190,7 +190,10 @@ class Group extends React.PureComponent<Props, State> {
     )
   }
 
-  sameUserAgain = (user: IUser, previous: Item): boolean => {
+  sameUserAgain = (user: IUser, previous?: Item): boolean => {
+    if (!previous) {
+      return false
+    }
     switch (previous.type) {
       case FeedItemType.Text: {
         return user.address === previous.value.user.address
