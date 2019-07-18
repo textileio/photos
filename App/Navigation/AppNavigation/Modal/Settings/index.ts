@@ -3,6 +3,8 @@ import { createStackNavigator } from 'react-navigation'
 import Account from '../../../../SB/views/UserProfile'
 import NotificationSettings from '../../../../SB/views/Notifications'
 import Cafes from '../../../../Containers/Cafes'
+import AccountSeed from '../../../../Containers/AccountSeed'
+import QRCode from '../../../../Containers/QRCode'
 import RegisterCafe from '../../../../Containers/RegisterCafe'
 import Cafe from '../../../../Containers/Cafe'
 import Storage from '../../../../SB/views/Storage'
@@ -18,6 +20,8 @@ const nav = createStackNavigator(
     Account,
     NotificationSettings,
     Cafes,
+    AccountSeed,
+    QRCode,
     RegisterCafe,
     Cafe,
     Storage,

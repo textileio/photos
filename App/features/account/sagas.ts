@@ -38,6 +38,7 @@ function* onNodeStarted() {
       yield put(actions.refreshPeerIdRequest())
       yield put(actions.refreshAddressRequest())
       yield put(actions.getCafeSessionsRequest())
+      yield put(actions.refreshAccountSeed.request())
       yield put(contactsActions.getContactsRequest())
       yield put(PhotoViewingActions.refreshThreadsRequest())
     } catch (error) {
@@ -161,6 +162,15 @@ function* getCafeSessions() {
   }
 }
 
+function* refreshAccountSeed() {
+  try {
+    const seed = yield call(Textile.account.seed)
+    yield put(actions.refreshAccountSeed.success(seed))
+  } catch (error) {
+    yield put(actions.refreshAccountSeed.failure(error))
+  }
+}
+
 function* refreshCafeSessions() {
   while (true) {
     try {
@@ -200,6 +210,7 @@ export default function*() {
     call(setAvatar),
     call(getCafeSessions),
     call(refreshCafeSessions),
+    takeEvery(getType(actions.refreshAccountSeed.request), refreshAccountSeed),
     takeEvery(getType(actions.chooseProfilePhoto.request), chooseProfilePhoto)
   ])
 }
