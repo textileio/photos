@@ -65,7 +65,10 @@ describe('account', () => {
   })
   describe('account seed', () => {
     it('should update account seed', () => {
-      const state0 = reducer(initialState, actions.refreshAccountSeed.success(accountSeed))
+      const state0 = reducer(
+        initialState,
+        actions.refreshAccountSeed.success(accountSeed)
+      )
       expect(state0.accountSeed.value).toEqual(accountSeed)
     })
   })

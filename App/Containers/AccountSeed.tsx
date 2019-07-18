@@ -151,11 +151,13 @@ class AccountSeed extends Component<Props, State> {
           </TouchableOpacity>
         )}
         {this.props.error && (
-          <Text style={ERROR}>Error retrieving your account seed:</Text>
+          <Text style={ERROR}>
+            Error retrieving your account seed: {this.props.error}
+          </Text>
         )}
         {!this.props.seed && !this.props.error && (
           <Text style={ERROR}>
-            Your account seed has not been loaded into the redux store.
+            Error: Your account seed has not been loaded into the redux store.
           </Text>
         )}
         <Animated.View
