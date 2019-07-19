@@ -32,7 +32,7 @@ type Fields = {
 export default class Modal<FormFields extends Fields> extends Component<
   Props<FormFields>,
   State<FormFields>
-  > {
+> {
   constructor(props: Props<FormFields>) {
     super(props)
     this.state = {

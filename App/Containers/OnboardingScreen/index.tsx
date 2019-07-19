@@ -11,7 +11,6 @@ import OnboardingUsername from '../../Containers/OnboardingUsername'
 import SetAvatar from '../../Containers/SetAvatar'
 import MailListSignupScreen from '../../Containers/MailListSignupScreen'
 import ChooseCafe from '../../Containers/ChooseCafe'
-import InitializeTextile from '../InitializeTextile'
 import { initializationActions } from '../../features/initialization'
 import { RootAction, RootState } from '../../Redux/Types'
 import { color, spacing } from '../../styles'
@@ -114,8 +113,7 @@ class OnboardingScreen extends React.Component<Props> {
           targetReferralCode={Config.RN_TEMPORARY_REFERRAL}
           referralCode={this.props.referralCode}
           onSuccess={this.props.nextPage}
-        />,
-        <InitializeTextile key="account" />
+        />
       ],
       newAccount: [
         <ChooseCafe key="cafe" onSuccess={this.props.nextPage} />,
