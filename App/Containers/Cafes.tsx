@@ -73,9 +73,9 @@ class Cafes extends Component<Props> {
 
   _keyExtractor = (item: ICafeSession) => item.id
 
-  onCafePress = (cafe: ICafeSession) => () => {
+  onCafePress = (cafeSession: ICafeSession) => () => {
     this.props.navigation.navigate('Cafe', {
-      cafe
+      cafeSession
     })
   }
 }

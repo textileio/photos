@@ -27,12 +27,12 @@ export const deregisterCafe = createAsyncAction(
   'cafes/DEREGISTER_CAFE_ERROR'
 )<
   {
-    id: string
+    peerId: string
     success?: () => void
   },
   string,
   {
-    id: string
+    peerId: string
     error: any
   }
 >()

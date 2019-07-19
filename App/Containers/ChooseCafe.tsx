@@ -5,8 +5,8 @@ import { connect } from 'react-redux'
 
 import { RootState, RootAction } from '../Redux/Types'
 import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
-import { RegisterCafes } from '../features/cafes/reducer'
-import { cafesActions } from '../features/cafes'
+import { Cafe } from '../features/cafes/models'
+import { cafesActions, cafesSelectors } from '../features/cafes'
 
 import CafesList from '../Components/CafesList'
 import Button from '../Components/LargeButton'
@@ -42,7 +42,7 @@ interface OwnProps {
 }
 
 interface StateProps {
-  registeringCafes: RegisterCafes
+  registeringCafes: Cafe[]
   nodeOnline: boolean
 }
 
@@ -89,14 +89,11 @@ class ChooseCafe extends Component<Props, State> {
     const { peerId } = this.state.selected
       ? this.state.selected
       : { peerId: undefined }
-    const registrationStarted = peerId
-      ? Object.keys(this.props.registeringCafes).indexOf(peerId) > -1
-      : false
-    const error =
-      peerId && registrationStarted
-        ? this.props.registeringCafes[peerId].error
-        : undefined
-    const registering = registrationStarted && !error
+    const registeringCafe = this.props.registeringCafes.find(
+      cafe => cafe.peerId === peerId
+    )
+    const error = peerId && registeringCafe ? registeringCafe.error : undefined
+    const registering = registeringCafe && !error
     const buttonDisabled = !this.state.selected || registering
     return (
       <SafeAreaView style={Container}>
@@ -179,7 +176,7 @@ class ChooseCafe extends Component<Props, State> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   return {
-    registeringCafes: state.cafes.registerCafe,
+    registeringCafes: cafesSelectors.regesteringCafes(state.cafes),
     nodeOnline: TextileEventsSelectors.online(state)
   }
 }
