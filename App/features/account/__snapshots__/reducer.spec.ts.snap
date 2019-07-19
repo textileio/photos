@@ -5,10 +5,6 @@ Object {
   "accountSeed": Object {},
   "address": Object {},
   "avatar": Object {},
-  "cafeSessions": Object {
-    "processing": false,
-    "sessions": Array [],
-  },
   "chosenProfilePhoto": Object {},
   "initialized": false,
   "peerId": Object {},
