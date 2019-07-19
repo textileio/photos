@@ -34,7 +34,7 @@
     "react-native-modal": "^6.5.0",
     "react-native-push-notification": "^3.1.1",
     "react-native-qrcode": "^0.2.7",
-    "react-native-reanimated": "^1.0.1",
+    "react-native-reanimated": "1.0.1",
     "react-native-scalable-image": "^0.4.0",
     "react-native-tab-view": "^2.6.1",
     "react-native-version-number": "textileio/react-native-version-number",
