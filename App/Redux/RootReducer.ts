@@ -357,6 +357,12 @@ const migrations: MigrationManifest = {
     return rest
   },
   22: persistedState => {
+    // remove cafeSessions persisted data from account key
+    const state = persistedState as any
+    const { cafeSessions, ...rest } = state.account
+    return { ...state, account: rest }
+  },
+  23: persistedState => {
     // Move onboarded from preferences to initialization
     const state = persistedState as any
     const { onboarded, ...rest } = state.preferences
@@ -375,7 +381,7 @@ const migrations: MigrationManifest = {
 const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,
-  version: 22,
+  version: 23,
   whitelist: [
     'account',
     'preferences',
