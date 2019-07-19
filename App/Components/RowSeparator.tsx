@@ -1,11 +1,10 @@
 import React from 'react'
-import { Platform, Dimensions, View } from 'react-native'
-import { color } from '../styles'
+import { Platform, View } from 'react-native'
+import { color, size, spacing } from '../styles'
 
 const separator = () => {
-  const scale = Dimensions.get('screen').scale
-  const height = scale > 1 ? 0.5 : 1
-  const margin = Platform.OS === 'ios' ? 12 : 0
+  const height = size.hairline
+  const margin = Platform.OS === 'ios' ? spacing._012 : 0
   return (
     <View
       style={{

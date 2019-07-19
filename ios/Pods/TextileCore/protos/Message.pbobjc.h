@@ -44,6 +44,7 @@ typedef GPB_ENUM(Message_Type) {
   Message_Type_Ping = 0,
   Message_Type_Pong = 1,
   Message_Type_ThreadEnvelope = 10,
+  Message_Type_ThreadEnvelopeAck = 11,
   Message_Type_CafeChallenge = 50,
   Message_Type_CafeNonce = 51,
   Message_Type_CafeRegistration = 52,
@@ -108,8 +109,8 @@ BOOL Message_Type_IsValidValue(int32_t value);
 typedef GPB_ENUM(Message_FieldNumber) {
   Message_FieldNumber_Type = 1,
   Message_FieldNumber_Payload = 2,
-  Message_FieldNumber_RequestId = 3,
-  Message_FieldNumber_IsResponse = 4,
+  Message_FieldNumber_Request = 3,
+  Message_FieldNumber_Response = 4,
 };
 
 @interface Message : GPBMessage
@@ -121,10 +122,10 @@ typedef GPB_ENUM(Message_FieldNumber) {
 @property(nonatomic, readwrite) BOOL hasPayload;
 
 /** optional */
-@property(nonatomic, readwrite) int32_t requestId;
+@property(nonatomic, readwrite) int32_t request;
 
 /** optional */
-@property(nonatomic, readwrite) BOOL isResponse;
+@property(nonatomic, readwrite) BOOL response;
 
 @end
 

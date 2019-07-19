@@ -59,6 +59,22 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   }
 }
 
+- (void)processData:(NSData *)data error:(NSError *)error {
+  dispatch_async(dispatch_get_main_queue(), ^{
+    if (data) {
+      UIImage *image = [UIImage imageWithData:data scale:1];
+      super.image = image;
+      if (self.onLoad) {
+        self.onLoad(@{});
+      }
+    } else {
+      if (self.onError) {
+        self.onError(@{ @"message" : error.localizedDescription });
+      }
+    }
+  });
+}
+
 - (void)render {
   if (self.needsRenderResizeMode) {
     if (self.resizeMode == RCTResizeModeRepeat) {
@@ -72,36 +88,17 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
   }
 
   if (self.needsRenderImage) {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-      NSError *error;
-      UIImage *image;
-      if (self.ipfs) {
-        NSData *imageData = [Textile.instance.ipfs dataAtPath:self.target error:&error];
-        if (imageData) {
-          image = [UIImage imageWithData:imageData scale:1];
-        }
-      } else {
-        NSString *path = [NSString stringWithFormat:@"%@/%d", self.target, self.index];
-        NSString *urlString = [Textile.instance.files imageDataForMinWidth:path minWidth:self.forMinWidth error:&error];
-        if (urlString) {
-          NSURL *url = [NSURL URLWithString:urlString];
-          NSData *imageData = [NSData dataWithContentsOfURL:url];
-          image = [UIImage imageWithData:imageData scale:1];
-        }
-      }
-      dispatch_async(dispatch_get_main_queue(), ^{
-        if (error) {
-          if (self.onError) {
-            self.onError(@{ @"message" : error.localizedDescription });
-          }
-        } else {
-          super.image = image;
-          if (self.onLoad) {
-            self.onLoad(@{});
-          }
-        }
-      });
-    });
+    if (self.ipfs) {
+      [Textile.instance.ipfs dataAtPath:self.target completion:^(NSData * _Nullable data, NSString * _Nullable media, NSError * _Nonnull error) {
+        [self processData:data error:error];
+      }];
+    } else {
+      NSString *path = [NSString stringWithFormat:@"%@/%d", self.target, self.index];
+      [Textile.instance.files imageContentForMinWidth:path minWidth:self.forMinWidth completion:^(NSData * _Nullable data, NSString * _Nullable media, NSError * _Nonnull error) {
+        [self processData:data error:error];
+      }];
+    }
+
     self.needsRenderImage = false;
   }
 }

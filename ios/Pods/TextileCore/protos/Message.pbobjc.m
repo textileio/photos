@@ -50,13 +50,13 @@ static GPBFileDescriptor *MessageRoot_FileDescriptor(void) {
 
 @dynamic type;
 @dynamic hasPayload, payload;
-@dynamic requestId;
-@dynamic isResponse;
+@dynamic request;
+@dynamic response;
 
 typedef struct Message__storage_ {
   uint32_t _has_storage_[1];
   Message_Type type;
-  int32_t requestId;
+  int32_t request;
   GPBAny *payload;
 } Message__storage_;
 
@@ -85,21 +85,21 @@ typedef struct Message__storage_ {
         .dataType = GPBDataTypeMessage,
       },
       {
-        .name = "requestId",
+        .name = "request",
         .dataTypeSpecific.className = NULL,
-        .number = Message_FieldNumber_RequestId,
+        .number = Message_FieldNumber_Request,
         .hasIndex = 2,
-        .offset = (uint32_t)offsetof(Message__storage_, requestId),
-        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .offset = (uint32_t)offsetof(Message__storage_, request),
+        .flags = GPBFieldOptional,
         .dataType = GPBDataTypeInt32,
       },
       {
-        .name = "isResponse",
+        .name = "response",
         .dataTypeSpecific.className = NULL,
-        .number = Message_FieldNumber_IsResponse,
+        .number = Message_FieldNumber_Response,
         .hasIndex = 3,
         .offset = 4,  // Stored in _has_storage_ to save space.
-        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .flags = GPBFieldOptional,
         .dataType = GPBDataTypeBool,
       },
     };
@@ -111,11 +111,6 @@ typedef struct Message__storage_ {
                                     fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
                                    storageSize:sizeof(Message__storage_)
                                          flags:GPBDescriptorInitializationFlag_None];
-#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
-    static const char *extraTextFormatInfo =
-        "\002\003\t\000\004\n\000";
-    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
-#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     #if defined(DEBUG) && DEBUG
       NSAssert(descriptor == nil, @"Startup recursed!");
     #endif  // DEBUG
@@ -144,25 +139,26 @@ GPBEnumDescriptor *Message_Type_EnumDescriptor(void) {
   static _Atomic(GPBEnumDescriptor*) descriptor = nil;
   if (!descriptor) {
     static const char *valueNames =
-        "Ping\000Pong\000ThreadEnvelope\000CafeChallenge\000C"
-        "afeNonce\000CafeRegistration\000CafeDeregistra"
-        "tion\000CafeDeregistrationAck\000CafeSession\000C"
-        "afeRefreshSession\000CafeStore\000CafeStoreAck"
-        "\000CafeUnstore\000CafeUnstoreAck\000CafeObject\000C"
-        "afeObjectList\000CafeStoreThread\000CafeStoreT"
-        "hreadAck\000CafeUnstoreThread\000CafeUnstoreTh"
-        "readAck\000CafeDeliverMessage\000CafeCheckMess"
-        "ages\000CafeMessages\000CafeDeleteMessages\000Caf"
-        "eDeleteMessagesAck\000CafeYouHaveMail\000CafeP"
-        "ublishPeer\000CafePublishPeerAck\000CafeQuery\000"
-        "CafeQueryRes\000CafePubsubQuery\000CafePubsubQ"
-        "ueryRes\000Error\000CafeContactQuery\000CafeConta"
-        "ctQueryRes\000CafePubsubContactQuery\000CafePu"
-        "bsubContactQueryRes\000";
+        "Ping\000Pong\000ThreadEnvelope\000ThreadEnvelopeA"
+        "ck\000CafeChallenge\000CafeNonce\000CafeRegistrat"
+        "ion\000CafeDeregistration\000CafeDeregistratio"
+        "nAck\000CafeSession\000CafeRefreshSession\000Cafe"
+        "Store\000CafeStoreAck\000CafeUnstore\000CafeUnsto"
+        "reAck\000CafeObject\000CafeObjectList\000CafeStor"
+        "eThread\000CafeStoreThreadAck\000CafeUnstoreTh"
+        "read\000CafeUnstoreThreadAck\000CafeDeliverMes"
+        "sage\000CafeCheckMessages\000CafeMessages\000Cafe"
+        "DeleteMessages\000CafeDeleteMessagesAck\000Caf"
+        "eYouHaveMail\000CafePublishPeer\000CafePublish"
+        "PeerAck\000CafeQuery\000CafeQueryRes\000CafePubsu"
+        "bQuery\000CafePubsubQueryRes\000Error\000CafeCont"
+        "actQuery\000CafeContactQueryRes\000CafePubsubC"
+        "ontactQuery\000CafePubsubContactQueryRes\000";
     static const int32_t values[] = {
         Message_Type_Ping,
         Message_Type_Pong,
         Message_Type_ThreadEnvelope,
+        Message_Type_ThreadEnvelopeAck,
         Message_Type_CafeChallenge,
         Message_Type_CafeNonce,
         Message_Type_CafeRegistration,
@@ -217,6 +213,7 @@ BOOL Message_Type_IsValidValue(int32_t value__) {
     case Message_Type_Ping:
     case Message_Type_Pong:
     case Message_Type_ThreadEnvelope:
+    case Message_Type_ThreadEnvelopeAck:
     case Message_Type_CafeChallenge:
     case Message_Type_CafeNonce:
     case Message_Type_CafeRegistration:

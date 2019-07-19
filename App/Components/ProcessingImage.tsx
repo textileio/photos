@@ -9,8 +9,6 @@ import {
   TextStyle
 } from 'react-native'
 
-import ProgressBar from './ProgressBar'
-
 const CONTAINER: ViewStyle = {
   flexDirection: 'row',
   justifyContent: 'flex-start',
@@ -60,7 +58,6 @@ const ERROR: TextStyle = {
 export interface IProcessingImageProps {
   id: string
   imageUri: string
-  progress: number
   message?: string
   errorMessage?: string
   retry?: () => void
@@ -68,7 +65,7 @@ export interface IProcessingImageProps {
 }
 
 const ProcessingImage = (props: IProcessingImageProps) => {
-  const { imageUri, progress, message, errorMessage, retry, cancel } = props
+  const { imageUri, message, errorMessage, retry, cancel } = props
 
   let content: JSX.Element
   if (errorMessage) {
@@ -84,7 +81,6 @@ const ProcessingImage = (props: IProcessingImageProps) => {
       <Fragment>
         <View style={STACK}>
           <Text style={STATUS} />
-          <ProgressBar progress={progress} />
           <Text style={STATUS}>{message}</Text>
         </View>
         {cancel && <Button title={'Cancel'} onPress={cancel} />}

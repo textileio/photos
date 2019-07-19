@@ -4,7 +4,7 @@ import { ActionType, getType } from 'typesafe-actions'
 import uuid from 'uuid/v4'
 
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
-import { InboundInvite } from '../Redux/ThreadsRedux'
+import ThreadsActions, { InboundInvite } from '../Redux/ThreadsRedux'
 import { inboundInviteByThreadName } from '../Redux/ThreadsSelectors'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
 import UIActions from '../Redux/UIRedux'
@@ -69,7 +69,8 @@ export function* monitorThreadAddedNotifications(
     // We need this one because the callback we get from the node doesn't include key. This queries for the thread and gets
     // all the required data for threadAdded()
     const thread: IThread = yield call(Textile.threads.get, action.payload.id)
-    yield put(PhotoViewingActions.threadAdded(thread))
+    const withValid = { ...thread, valid: true }
+    yield put(PhotoViewingActions.threadAdded(withValid))
   } catch (error) {
     yield put(
       TextileEventsActions.newErrorMessage(
@@ -85,6 +86,7 @@ export function* addThread(
   action: ActionType<typeof PhotoViewingActions.addThreadRequest>
 ) {
   const { name, whitelist, type, sharing } = action.payload
+  const { invites } = action.meta
   try {
     const key = `textile_photos-shared-${uuid()}`
     const config: IAddThreadConfig = {
@@ -96,7 +98,15 @@ export function* addThread(
       force: false,
       whitelist: whitelist ? (whitelist as string[]) : []
     }
-    yield call(Textile.threads.add, config)
+    const threadId: IThread = yield call(Textile.threads.add, config)
+    if (invites) {
+      yield put(
+        ThreadsActions.addInternalInvitesRequest(
+          threadId.id,
+          invites as string[]
+        )
+      )
+    }
   } catch (error) {
     yield put(TextileEventsActions.newErrorMessage('addThread', error.message))
     yield put(PhotoViewingActions.addThreadError(error))
@@ -129,7 +139,9 @@ export function* refreshThreads(
        */
       const isSharedThread = thread.key.indexOf('textile_photos-shared') === 0
       if (isSharedThread) {
-        yield put(PhotoViewingActions.insertThread(thread))
+        const valid = thread.headBlocks.length > 0
+        const withValid = { ...thread, valid }
+        yield put(PhotoViewingActions.insertThread(withValid))
         yield put(PhotoViewingActions.refreshThreadRequest(thread.id))
       }
     }

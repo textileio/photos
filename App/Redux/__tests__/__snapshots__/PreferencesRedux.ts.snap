@@ -25,9 +25,6 @@ Object {
     "PEER_LEFT": Object {
       "status": false,
     },
-    "backgroundLocation": Object {
-      "status": false,
-    },
     "notifications": Object {
       "status": false,
     },
@@ -51,7 +48,6 @@ Object {
   },
   "tourScreens": Object {
     "feed": true,
-    "location": true,
     "notifications": true,
     "threadView": true,
     "threads": true,

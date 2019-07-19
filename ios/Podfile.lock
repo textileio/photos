@@ -6,7 +6,7 @@ PODS:
     - DoubleConversion
     - glog
   - glog (0.3.5)
-  - Protobuf (3.7.0)
+  - Protobuf (3.8.0)
   - React (0.58.6):
     - React/Core (= 0.58.6)
   - React/Core (0.58.6):
@@ -40,8 +40,6 @@ PODS:
   - React/RCTCameraRoll (0.58.6):
     - React/Core
     - React/RCTImage
-  - React/RCTGeolocation (0.58.6):
-    - React/Core
   - React/RCTImage (0.58.6):
     - React/Core
     - React/RCTNetwork
@@ -61,13 +59,15 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
-  - Textile (0.1.14):
-    - Protobuf (~> 3.7)
-    - TextileCore (~> 0.1.14)
-  - textile-react-native-sdk (1.2.8):
+  - RNReanimated (1.0.1):
     - React
-    - Textile (= 0.1.14)
-  - TextileCore (0.1.14):
+  - Textile (2.0.1):
+    - Protobuf (~> 3.7)
+    - TextileCore (~> 0.6.2)
+  - textile-react-native-sdk (3.0.1):
+    - React
+    - Textile (= 2.0.1)
+  - TextileCore (0.6.2):
     - Protobuf (~> 3.7)
   - yoga (0.58.6.React)
 
@@ -82,7 +82,6 @@ DEPENDENCIES:
   - React/RCTAnimation (from `../node_modules/react-native`)
   - React/RCTBlob (from `../node_modules/react-native`)
   - React/RCTCameraRoll (from `../node_modules/react-native`)
-  - React/RCTGeolocation (from `../node_modules/react-native`)
   - React/RCTImage (from `../node_modules/react-native`)
   - React/RCTLinkingIOS (from `../node_modules/react-native`)
   - React/RCTNetwork (from `../node_modules/react-native`)
@@ -91,6 +90,7 @@ DEPENDENCIES:
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTVibration (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
+  - RNReanimated (from `../node_modules/react-native-reanimated`)
   - "textile-react-native-sdk (from `../node_modules/@textile/react-native-sdk`)"
   - yoga (from `../node_modules/react-native/ReactCommon/yoga/yoga.podspec`)
 
@@ -110,6 +110,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   React:
     :path: "../node_modules/react-native"
+  RNReanimated:
+    :path: "../node_modules/react-native-reanimated"
   textile-react-native-sdk:
     :path: "../node_modules/@textile/react-native-sdk"
   yoga:
@@ -120,13 +122,14 @@ SPEC CHECKSUMS:
   DoubleConversion: bb338842f62ab1d708ceb63ec3d999f0f3d98ecd
   Folly: de497beb10f102453a1afa9edbf8cf8a251890de
   glog: aefd1eb5dda2ab95ba0938556f34b98e2da3a60d
-  Protobuf: 7a877b7f3e5964e3fce995e2eb323dbc6831bb5a
+  Protobuf: 3f617b9a6e73605565086864c9bc26b2bf2dd5a3
   React: 130b87b2d5e2baac646954282cab87be986d98fc
-  Textile: 29c6e830baecee5cb43ab9129c1b7c9612e45d2e
-  textile-react-native-sdk: 9631befcc6918ff051e94559423366c7a33e29d1
-  TextileCore: 25e8c7e1988b3729e9d241f3a5c0bd0cd2e85f9f
+  RNReanimated: c8dd490ca98a4edcba229bfa49f2516c95a43afb
+  Textile: 1f9d276e8be4bdd996dbcbb0a57a904838e96221
+  textile-react-native-sdk: 44fc7315d91de551f1e63b96f12c3b592668dc1d
+  TextileCore: 2a2a1715ac409f93043256d3eed0d97196b59858
   yoga: 32d7ef1081951e9a35a4c72a7be797598b138a48
 
-PODFILE CHECKSUM: ca4e3721ffcdf9e08aab5cb312d1a92bd9fc4a64
+PODFILE CHECKSUM: 36ad7912560dd55952aa548a3cb5c559f1721e85
 
 COCOAPODS: 1.6.1

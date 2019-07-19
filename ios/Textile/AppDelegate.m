@@ -14,6 +14,7 @@
 
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
+#import <Textile/TextileApi.h>
 
 @implementation AppDelegate
 
@@ -39,9 +40,10 @@
   return YES;
 }
 
-- (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler
-{
-  self.backgroundCompletionHandler = completionHandler;
+- (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler {
+  if ([identifier isEqualToString:TEXTILE_BACKGROUND_SESSION_ID]) {
+    Textile.instance.backgroundCompletionHandler = completionHandler;
+  }
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url

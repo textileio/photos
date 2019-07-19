@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux'
 import { ActionType, getType } from 'typesafe-actions'
 import { IFiles } from '@textile/react-native-sdk'
+import { PersistConfig, persistReducer } from 'redux-persist'
+import { AsyncStorage } from 'react-native'
 
 import * as actions from './actions'
 import { ProcessingPhotos, ProcessingPhoto } from './models'
@@ -21,7 +23,14 @@ export interface PhotosState {
 
 export type PhotosAction = ActionType<typeof actions>
 
-export default combineReducers<PhotosState, PhotosAction>({
+const persistConfig: PersistConfig = {
+  key: 'photos',
+  storage: AsyncStorage,
+  whitelist: ['queryData', 'processingPhotos'],
+  debug: false
+}
+
+const reducer = combineReducers<PhotosState, PhotosAction>({
   queryData: (state = { querying: false }, action) => {
     switch (action.type) {
       case getType(actions.queryCameraRoll.request): {
@@ -61,17 +70,7 @@ export default combineReducers<PhotosState, PhotosAction>({
         const processingPhoto = state[id]
         const updated: ProcessingPhoto = {
           ...processingPhoto,
-          state: 'preparing'
-        }
-        return { ...state, [id]: updated }
-      }
-      case getType(actions.photoPrepared): {
-        const { id, preparedFiles } = action.payload
-        const processingPhoto = state[id]
-        const updated: ProcessingPhoto = {
-          ...processingPhoto,
-          state: 'adding',
-          preparedFiles
+          state: 'adding'
         }
         return { ...state, [id]: updated }
       }
@@ -96,6 +95,9 @@ export default combineReducers<PhotosState, PhotosAction>({
         const processingPhoto = state[id]
         const updated: ProcessingPhoto = { ...processingPhoto, error: message }
         return { ...state, [id]: updated }
+      }
+      case getType(actions.clearProcessingPhotos): {
+        return {}
       }
       default:
         return state
@@ -125,3 +127,5 @@ export default combineReducers<PhotosState, PhotosAction>({
     }
   }
 })
+
+export default persistReducer(persistConfig, reducer)

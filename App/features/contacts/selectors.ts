@@ -86,7 +86,9 @@ export const searchResults = (state: ContactsState) => {
       ...(textileData || []),
       ...state.textileSearchResults.results
         .filter((current, index, arr) => {
-          const sames = arr.filter(el => el.address === current.address)
+          const sames = arr.filter(
+            (el, ind) => el.address === current.address && ind > index
+          )
           return sames.length === 1
         })
         .map(result => {

@@ -1,4 +1,6 @@
 rootProject.name = 'Textile'
+include ':react-native-reanimated'
+project(':react-native-reanimated').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-reanimated/android')
 include ':@textile_react-native-camera-roll'
 project(':@textile_react-native-camera-roll').projectDir = new File(rootProject.projectDir, '../node_modules/@textile/react-native-camera-roll/android')
 
@@ -9,8 +11,6 @@ include ':react-native-background-fetch'
 project(':react-native-background-fetch').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-background-fetch/android')
 include ':react-native-push-notification'
 project(':react-native-push-notification').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-push-notification/android')
-include ':react-native-background-upload'
-project(':react-native-background-upload').projectDir = new File(settingsDir, '../node_modules/react-native-background-upload/android')
 include ':react-native-fs'
 project(':react-native-fs').projectDir = new File(settingsDir, '../node_modules/react-native-fs/android')
 include ':react-native-image-picker'

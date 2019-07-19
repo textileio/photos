@@ -58,6 +58,7 @@ typedef GPB_ENUM(ThreadEnvelope_FieldNumber) {
   ThreadEnvelope_FieldNumber_Hash_p = 2,
   ThreadEnvelope_FieldNumber_Ciphertext = 3,
   ThreadEnvelope_FieldNumber_Sig = 4,
+  ThreadEnvelope_FieldNumber_Node = 5,
 };
 
 /**
@@ -68,13 +69,28 @@ typedef GPB_ENUM(ThreadEnvelope_FieldNumber) {
 @property(nonatomic, readwrite, copy, null_resettable) NSString *thread;
 
 /** hash of encrypted block */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *hash_p;
+@property(nonatomic, readwrite, copy, null_resettable) NSString *hash_p GPB_DEPRECATED_MSG("ThreadEnvelope.hash is deprecated (see threads_service.proto).");
 
 /** encrypted ThreadBlock, also stored on ipfs for recovery */
-@property(nonatomic, readwrite, copy, null_resettable) NSData *ciphertext;
+@property(nonatomic, readwrite, copy, null_resettable) NSData *ciphertext GPB_DEPRECATED_MSG("ThreadEnvelope.ciphertext is deprecated (see threads_service.proto).");
 
 /** account signature */
 @property(nonatomic, readwrite, copy, null_resettable) NSData *sig;
+
+/** block node (v2) */
+@property(nonatomic, readwrite, copy, null_resettable) NSData *node;
+
+@end
+
+#pragma mark - ThreadEnvelopeAck
+
+typedef GPB_ENUM(ThreadEnvelopeAck_FieldNumber) {
+  ThreadEnvelopeAck_FieldNumber_Id_p = 1,
+};
+
+@interface ThreadEnvelopeAck : GPBMessage
+
+@property(nonatomic, readwrite, copy, null_resettable) NSString *id_p;
 
 @end
 
@@ -128,9 +144,9 @@ typedef GPB_ENUM(ThreadBlockHeader_FieldNumber) {
 /** Test to see if @c date has been set. */
 @property(nonatomic, readwrite) BOOL hasDate;
 
-@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *parentsArray;
+@property(nonatomic, readwrite, strong, null_resettable) NSMutableArray<NSString*> *parentsArray GPB_DEPRECATED_MSG("ThreadBlockHeader.parents is deprecated (see threads_service.proto).");
 /** The number of items in @c parentsArray without causing the array to be created. */
-@property(nonatomic, readonly) NSUInteger parentsArray_Count;
+@property(nonatomic, readonly) NSUInteger parentsArray_Count GPB_DEPRECATED_MSG("ThreadBlockHeader.parents is deprecated (see threads_service.proto).");
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *author;
 
@@ -143,6 +159,7 @@ typedef GPB_ENUM(ThreadBlockHeader_FieldNumber) {
 typedef GPB_ENUM(ThreadAdd_FieldNumber) {
   ThreadAdd_FieldNumber_Inviter = 1,
   ThreadAdd_FieldNumber_Thread = 2,
+  ThreadAdd_FieldNumber_Invitee = 3,
 };
 
 /**
@@ -158,6 +175,8 @@ typedef GPB_ENUM(ThreadAdd_FieldNumber) {
 /** Test to see if @c thread has been set. */
 @property(nonatomic, readwrite) BOOL hasThread;
 
+@property(nonatomic, readwrite, copy, null_resettable) NSString *invitee;
+
 @end
 
 #pragma mark - ThreadIgnore
@@ -166,6 +185,7 @@ typedef GPB_ENUM(ThreadIgnore_FieldNumber) {
   ThreadIgnore_FieldNumber_Target = 1,
 };
 
+GPB_DEPRECATED_MSG("ThreadIgnore is deprecated (see threads_service.proto).")
 @interface ThreadIgnore : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *target;
@@ -178,6 +198,7 @@ typedef GPB_ENUM(ThreadFlag_FieldNumber) {
   ThreadFlag_FieldNumber_Target = 1,
 };
 
+GPB_DEPRECATED_MSG("ThreadFlag is deprecated (see threads_service.proto).")
 @interface ThreadFlag : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *target;
@@ -242,7 +263,7 @@ typedef GPB_ENUM(ThreadFiles_FieldNumber) {
 @interface ThreadFiles : GPBMessage
 
 /** top-level file hash */
-@property(nonatomic, readwrite, copy, null_resettable) NSString *target;
+@property(nonatomic, readwrite, copy, null_resettable) NSString *target GPB_DEPRECATED_MSG("ThreadFiles.target is deprecated (see threads_service.proto).");
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *body;
 
@@ -260,6 +281,7 @@ typedef GPB_ENUM(ThreadComment_FieldNumber) {
   ThreadComment_FieldNumber_Body = 2,
 };
 
+GPB_DEPRECATED_MSG("ThreadComment is deprecated (see threads_service.proto).")
 @interface ThreadComment : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *target;
@@ -274,6 +296,7 @@ typedef GPB_ENUM(ThreadLike_FieldNumber) {
   ThreadLike_FieldNumber_Target = 1,
 };
 
+GPB_DEPRECATED_MSG("ThreadLike is deprecated (see threads_service.proto).")
 @interface ThreadLike : GPBMessage
 
 @property(nonatomic, readwrite, copy, null_resettable) NSString *target;

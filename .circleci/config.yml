@@ -289,7 +289,8 @@ jobs:
       - deploy:
           name: release apk
           command: |
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_TAG} android/app/build/outputs/apk/release/*.apk
+            rm android/app/build/outputs/apk/release/*.json
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_TAG} android/app/build/outputs/apk/release/
   ios:
     macos:
       xcode: '10.2.1'
@@ -459,7 +460,7 @@ jobs:
 
   ios-release:
     macos:
-      xcode: '10.2.1'
+      xcode: '10.2.0'
     environment:
       LC_ALL: en_US.UTF-8
       LANG: en_US.UTF-8
