@@ -1,4 +1,6 @@
 import { combineReducers } from 'redux'
+import { PersistConfig, persistReducer } from 'redux-persist'
+import { AsyncStorage } from 'react-native'
 import { ActionType, getType } from 'typesafe-actions'
 
 import * as actions from './actions'
@@ -15,7 +17,14 @@ export interface CafesState {
 
 export type CafesAction = ActionType<typeof actions>
 
-export default combineReducers<CafesState, CafesAction>({
+const persistConfig: PersistConfig = {
+  key: 'cafes',
+  storage: AsyncStorage,
+  whitelist: ['cafes'],
+  debug: false
+}
+
+const reducer = combineReducers<CafesState, CafesAction>({
   cafes: (state = {}, action) => {
     switch (action.type) {
       // Update our list of registered cafes with cafes that are actuall registered to
@@ -152,3 +161,5 @@ export default combineReducers<CafesState, CafesAction>({
     }
   }
 })
+
+export default persistReducer(persistConfig, reducer)
