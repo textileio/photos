@@ -132,24 +132,6 @@ function* setAvatar() {
   }
 }
 
-<<<<<<< HEAD
-function* getCafeSessions() {
-  while (true) {
-    try {
-      yield take(getType(actions.getCafeSessionsRequest))
-      const list: ICafeSessionList | undefined = yield call(
-        Textile.cafes.sessions
-      )
-      if (list) {
-        yield put(actions.cafeSessionsSuccess(list.items))
-      }
-    } catch (error) {
-      yield call(logNewEvent, 'getCafeSessions', error.message, true)
-      yield put(actions.cafeSessionsError(error))
-    }
-  }
-}
-
 function* refreshAccountSeed() {
   try {
     const seed = yield call(Textile.account.seed)
@@ -159,37 +141,6 @@ function* refreshAccountSeed() {
   }
 }
 
-function* refreshCafeSessions() {
-  while (true) {
-    try {
-      yield take(getType(actions.refreshCafeSessionsRequest))
-      let sessions: ICafeSession[] = []
-      const list: ICafeSessionList | undefined = yield call(
-        Textile.cafes.sessions
-      )
-      if (list) {
-        const refreshEffcts = list.items.map(session => {
-          return call(Textile.cafes.refreshSession, session.id)
-        })
-        const results: Array<ICafeSession | undefined> = yield all(
-          refreshEffcts
-        )
-        sessions = results.reduce<ICafeSession[]>((acc, val) => {
-          if (val) {
-            acc.push(val)
-          }
-          return acc
-        }, [])
-      }
-      yield put(actions.cafeSessionsSuccess(sessions))
-    } catch (error) {
-      yield put(actions.cafeSessionsError(error))
-    }
-  }
-}
-
-=======
->>>>>>> master
 export default function* () {
   yield all([
     call(onNodeStarted),
@@ -198,12 +149,7 @@ export default function* () {
     call(refreshAddress),
     call(setUsername),
     call(setAvatar),
-<<<<<<< HEAD
-    call(getCafeSessions),
-    call(refreshCafeSessions),
     takeEvery(getType(actions.refreshAccountSeed.request), refreshAccountSeed),
-=======
->>>>>>> master
     takeEvery(getType(actions.chooseProfilePhoto.request), chooseProfilePhoto)
   ])
 }
