@@ -9,6 +9,7 @@ import { RootState } from '../Redux/Types'
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import RowSeparator from '../Components/RowSeparator'
 import ListItem from '../Components/ListItem'
+import { cafesSelectors } from '../features/cafes'
 
 const CONTAINER: ViewStyle = {
   flex: 1
@@ -72,16 +73,16 @@ class Cafes extends Component<Props> {
 
   _keyExtractor = (item: ICafeSession) => item.id
 
-  onCafePress = (cafe: ICafeSession) => () => {
+  onCafePress = (cafeSession: ICafeSession) => () => {
     this.props.navigation.navigate('Cafe', {
-      cafe
+      cafeSession
     })
   }
 }
 
-const mapStateToProps = (state: RootState): StateProps => {
+function mapStateToProps(state: RootState): StateProps {
   return {
-    sessions: state.account.cafeSessions.sessions
+    sessions: cafesSelectors.sessions(state.cafes)
   }
 }
 
