@@ -7,9 +7,10 @@ import {
   Text,
   TextStyle,
   TouchableOpacity,
-  Clipboard,
-  Animated
+  Clipboard
 } from 'react-native'
+import Toast from 'react-native-easy-toast'
+import QRCode from 'react-native-qrcode'
 
 import { NavigationScreenProps } from 'react-navigation'
 import { RootState } from '../Redux/Types'
@@ -47,11 +48,12 @@ const BOLD: TextStyle = {
   fontFamily: fontFamily.bold
 }
 
-const ACCOUNT_SEED: TextStyle = {
-  ...textStyle.body_l,
-  textAlign: 'center',
-  marginBottom: spacing._016,
-  paddingHorizontal: spacing._032
+const QR_CODE_CONTAINER: ViewStyle = {
+  width: '100%',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'flex-start',
+  marginBottom: spacing._016
 }
 
 const ACTION_CONTAINER: ViewStyle = {
@@ -59,20 +61,6 @@ const ACTION_CONTAINER: ViewStyle = {
   flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'flex-start'
-}
-
-const FLASH: ViewStyle = {
-  position: 'absolute',
-  bottom: 20,
-  width: '100%',
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'flex-end'
-}
-
-const FLASH_MESSAGE: TextStyle = {
-  ...textStyle.body_s_medium,
-  textAlign: 'center'
 }
 
 const ERROR: TextStyle = {
@@ -88,11 +76,7 @@ interface StateProps {
 }
 type Props = StateProps & NavigationScreenProps
 
-interface State {
-  flashOpacity: Animated.Value
-}
-
-class AccountSeed extends Component<Props, State> {
+class AccountSeed extends Component<Props> {
   static navigationOptions = ({ navigation }: NavigationScreenProps) => {
     const goBack = () => navigation.goBack()
     const headerLeft = (
@@ -106,28 +90,15 @@ class AccountSeed extends Component<Props, State> {
     }
   }
 
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      flashOpacity: new Animated.Value(0)
-    }
-  }
+  toast?: Toast
 
   writeToClipboard = async () => {
     if (this.props.seed) {
       await Clipboard.setString(this.props.seed)
-      // Animate in flash message, then hide it
-      Animated.sequence([
-        Animated.timing(this.state.flashOpacity, {
-          toValue: 1,
-          duration: 300
-        }),
-        Animated.delay(750),
-        Animated.timing(this.state.flashOpacity, {
-          toValue: 0,
-          duration: 300
-        })
-      ]).start()
+      // Show alert
+      if (this.toast) {
+        this.toast.show('Copied Account Seed to Clipboard', 3000)
+      }
     }
   }
 
@@ -144,7 +115,14 @@ class AccountSeed extends Component<Props, State> {
             style={FULL_WIDTH}
             onLongPress={this.writeToClipboard}
           >
-            <Text style={ACCOUNT_SEED}>{this.props.seed}</Text>
+            <View style={QR_CODE_CONTAINER}>
+              <QRCode
+                value={this.props.seed}
+                size={240}
+                bgColor="transparent"
+                fgColor="white"
+              />
+            </View>
             <View style={ACTION_CONTAINER}>
               <ActionText text="HOLD DOWN TO COPY" iconName="clipboard" />
             </View>
@@ -160,14 +138,12 @@ class AccountSeed extends Component<Props, State> {
             Error: Your account seed has not been loaded into the redux store.
           </Text>
         )}
-        <Animated.View
-          style={{
-            ...FLASH,
-            opacity: this.state.flashOpacity
+        <Toast
+          ref={toast => {
+            this.toast = toast ? toast : undefined
           }}
-        >
-          <Text style={FLASH_MESSAGE}>COPIED</Text>
-        </Animated.View>
+          position="center"
+        />
       </SafeAreaView>
     )
   }

@@ -80,10 +80,6 @@ class UserProfile extends React.PureComponent<Props> {
     this.props.navigation.navigate('AccountSeed')
   }
 
-  _qrCode = () => {
-    this.props.navigation.navigate('QRCode')
-  }
-
   _storage = () => {
     this.props.navigation.navigate('Storage')
   }
@@ -191,9 +187,6 @@ class UserProfile extends React.PureComponent<Props> {
           </TouchableOpacity>
           <TouchableOpacity style={styles.listItem} onPress={this._accountSeed}>
             <Text style={styles.listText}>Account Seed</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.listItem} onPress={this._qrCode}>
-            <Text style={styles.listText}>Account QR Code</Text>
           </TouchableOpacity>
           {this.props.verboseUi && (
             <TouchableOpacity style={styles.listItem} onPress={this._storage}>

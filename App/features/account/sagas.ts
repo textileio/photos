@@ -141,7 +141,7 @@ function* refreshAccountSeed() {
   }
 }
 
-export default function* () {
+export default function*() {
   yield all([
     call(onNodeStarted),
     call(refreshProfile),
