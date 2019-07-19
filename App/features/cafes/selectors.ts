@@ -1,7 +1,4 @@
-import Textile, { ICafeSession } from '@textile/react-native-sdk'
-
 import { CafesState } from './reducer'
-import { statement } from '@babel/template'
 
 export function makeCafeForPeerId(peerId: string) {
   return (state: CafesState) => state.cafes[peerId]
