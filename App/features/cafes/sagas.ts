@@ -8,7 +8,8 @@ import Textile, {
 import { RootState } from '../../Redux/Types'
 import PreferencesActions from '../../Redux/PreferencesRedux'
 import * as actions from './actions'
-import { sessions } from './selectors'
+import { sessions, makeCafeForPeerId } from './selectors'
+import { Cafe } from './models'
 import TextileEventsActions from '../../Redux/TextileEventsRedux'
 import { cafesMap } from '../../Models/cafes'
 import { logNewEvent } from '../../Sagas/DeviceLogs'
@@ -89,11 +90,22 @@ function* refreshCafeSession(
       (error.message as string) || (error as string) || 'unknown error'
     if (message === 'unauthorized') {
       try {
+        let token: string | undefined
+        // try to get the cafe token from static cafes bundled with the app
         const cafe = cafesMap[peerId]
-        if (!cafe) {
-          throw new Error('need to re-register cafe, but have no cafe info')
+        if (cafe) {
+          token = cafe.token
+        } else {
+          // if not, try to get the token from persisted data about registered cafes
+          const cafe: Cafe = yield select((state: RootState) =>
+            makeCafeForPeerId(peerId)(state.cafes)
+          )
+          token = cafe.token
         }
-        yield call(Textile.cafes.register, cafe.peerId, cafe.token)
+        if (!token) {
+          throw new Error('need to re-register cafe, but have no cafe token')
+        }
+        yield call(Textile.cafes.register, peerId, token)
       } catch (error) {
         yield put(actions.refreshCafeSession.failure({ peerId, error }))
       }
