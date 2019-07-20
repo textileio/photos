@@ -9,6 +9,12 @@ export const chooseProfilePhoto = createAsyncAction(
   'account/CHOOSE_PROFILE_PHOTO_ERROR'
 )<void, { image: SharedImage; data: string }, any>()
 
+export const refreshAccountSeed = createAsyncAction(
+  'account/REFRESH_ACCOUNT_SEED_REQUEST',
+  'account/REFRESH_ACCOUNT_SEED_SUCCESS',
+  'account/REFRESH_ACCOUNT_SEED_FAILURE'
+)<void, string, any>()
+
 export const cancelProfilePhotoUpdate = createAction(
   'account/CANCEL_PROFILE_PHOTO_UPDATE',
   resolve => {

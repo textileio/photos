@@ -15,6 +15,7 @@ const profile: IContact = {
 const peerId = 'peerId'
 const error = 'error'
 const recoveryPhrase = 'recoveryPhrase'
+const accountSeed = 'accountSeed'
 
 describe('account', () => {
   describe('initial state', () => {
@@ -60,6 +61,15 @@ describe('account', () => {
     it('should track peer id error', () => {
       const state0 = reducer(initialState, actions.refreshPeerIdError(error))
       expect(state0.peerId.error).toEqual(error)
+    })
+  })
+  describe('account seed', () => {
+    it('should update account seed', () => {
+      const state0 = reducer(
+        initialState,
+        actions.refreshAccountSeed.success(accountSeed)
+      )
+      expect(state0.accountSeed.value).toEqual(accountSeed)
     })
   })
   describe('avatar', () => {

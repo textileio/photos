@@ -25,6 +25,10 @@ export interface AccountState {
     readonly value?: string
     readonly error?: string
   }
+  readonly accountSeed: {
+    readonly value?: string
+    readonly error?: string
+  }
   readonly avatar: {
     readonly error?: string
   }
@@ -91,6 +95,24 @@ export default combineReducers<AccountState, AccountAction>({
       }
       case getType(actions.refreshAddressError): {
         const obj = action.payload.error
+        const error =
+          (obj.message as string) || (obj as string) || 'unknown error'
+        return { ...state, error }
+      }
+      default:
+        return state
+    }
+  },
+  accountSeed: (state = {}, action) => {
+    switch (action.type) {
+      case getType(actions.refreshAccountSeed.request): {
+        return {}
+      }
+      case getType(actions.refreshAccountSeed.success): {
+        return { value: action.payload }
+      }
+      case getType(actions.refreshAccountSeed.failure): {
+        const obj = action.payload
         const error =
           (obj.message as string) || (obj as string) || 'unknown error'
         return { ...state, error }
