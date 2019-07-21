@@ -138,7 +138,7 @@ class Cafe extends Component<Props> {
     const cafeSession = this.props.navigation.getParam('cafeSession')
     const { cafe, exp } = cafeSession
     const { peer } = cafe
-    const seconds = (exp.seconds as number) * 1000
+    const seconds = (exp.seconds as number) * 1000 + exp.nanos / 1000000
     const expirationDate = moment(new Date(seconds)).format(
       'MMMM Do YYYY [at] h:mm a'
     )
