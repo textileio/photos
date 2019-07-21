@@ -12,6 +12,7 @@ import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { NavigationScreenProps } from 'react-navigation'
 import { ICafeSession } from '@textile/react-native-sdk'
+import moment from 'moment'
 
 import { RootState, RootAction } from '../Redux/Types'
 import { cafesActions, cafesSelectors } from '../features/cafes'
@@ -21,7 +22,14 @@ import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 import Button from '../Components/LargeButton'
 import RowSeparator from '../Components/RowSeparator'
 
-import { color, fontFamily, fontSize, spacing, size } from '../styles'
+import {
+  color,
+  fontFamily,
+  fontSize,
+  textStyle,
+  spacing,
+  size
+} from '../styles'
 
 const Container: ViewStyle = {
   flexDirection: 'column',
@@ -56,25 +64,50 @@ const ServiceTitle: TextStyle = {
   textAlign: 'left'
 }
 
-const ButtonContainer: ViewStyle = {
-  width: Dimensions.get('window').width,
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'center'
-}
-
-const DeregisterButton: ViewStyle = {
-  backgroundColor: color.severe_3,
+const ExpirationDate: TextStyle = {
+  fontFamily: fontFamily.medium,
+  fontSize: fontSize._20,
+  paddingHorizontal: spacing._016,
   marginTop: spacing._016
 }
 
+const ButtonsContainer: ViewStyle = {
+  width: Dimensions.get('window').width,
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginTop: spacing._024,
+  paddingHorizontal: spacing._016
+}
+
+const DeregisterButton: ViewStyle = {
+  backgroundColor: color.severe_3
+}
+
+const RefreshButton: ViewStyle = {
+  backgroundColor: color.action_3,
+  marginRight: spacing._016
+}
+
+const Error: TextStyle = {
+  color: color.severe_3,
+  paddingHorizontal: spacing._016
+}
+
 interface StateProps {
-  processing: boolean
-  error?: string
+  cafe: {
+    processing: boolean
+    error?: string
+  }
+  session: {
+    processing: boolean
+    error?: string
+  }
 }
 
 interface DispatchProps {
   deregister: (success: () => void) => void
+  refresh: () => void
 }
 
 interface NavProps {
@@ -102,8 +135,16 @@ class Cafe extends Component<Props> {
   render() {
     // Hardcoded placeholder for services UI
     const services = ['Backup', 'Inboxing']
-    const { peer } = this.props.navigation.getParam('cafeSession').cafe
-    const buttonDisabled = !this.props.error && this.props.processing
+    const cafeSession = this.props.navigation.getParam('cafeSession')
+    const { cafe, exp } = cafeSession
+    const { peer } = cafe
+    const seconds = (exp.seconds as number) * 1000
+    const expirationDate = moment(new Date(seconds)).format(
+      'MMMM Do YYYY [at] h:mm a'
+    )
+    const refreshButtonDisabled = this.props.session.processing
+    const deregisterButtonDisabled =
+      !this.props.cafe.error && this.props.cafe.processing
     return (
       <SafeAreaView style={Container}>
         <Text style={PeerId}>{peer}</Text>
@@ -119,14 +160,31 @@ class Cafe extends Component<Props> {
           )}
           ItemSeparatorComponent={RowSeparator}
         />
-        {this.props.error && <Text>{this.props.error}</Text>}
-        <View style={ButtonContainer}>
+        {this.props.cafe.error && (
+          <Text style={Error}>Cafe error: {this.props.cafe.error}</Text>
+        )}
+        {this.props.session.error && (
+          <Text style={Error}>
+            Cafe session error: {this.props.session.error}
+          </Text>
+        )}
+        <Text style={ExpirationDate}>
+          Your session expires on {expirationDate}
+        </Text>
+        <View style={ButtonsContainer}>
+          <Button
+            text="Refresh"
+            onPress={this.props.refresh}
+            style={RefreshButton}
+            processing={refreshButtonDisabled}
+            disabled={refreshButtonDisabled}
+          />
           <Button
             text="Deregister"
             onPress={this.deregister}
             style={DeregisterButton}
-            processing={buttonDisabled}
-            disabled={buttonDisabled}
+            processing={deregisterButtonDisabled}
+            disabled={deregisterButtonDisabled}
           />
         </View>
       </SafeAreaView>
@@ -145,10 +203,17 @@ const mapStateToProps = (
 ): StateProps => {
   const { peer } = ownProps.navigation.getParam('cafeSession').cafe
   const cafe = cafesSelectors.makeCafeForPeerId(peer)(state.cafes)
+  const cafeSession = cafesSelectors.makeCafeSessionForPeerId(peer)(state.cafes)
   const processing = cafe ? cafe.state === 'deregistering' : false
   return {
-    processing,
-    error: processing ? cafe.error : undefined
+    cafe: {
+      processing,
+      error: processing ? cafe.error : undefined
+    },
+    session: {
+      processing: cafeSession.processing,
+      error: cafeSession.error
+    }
   }
 }
 
@@ -159,7 +224,10 @@ const mapDispatchToProps = (
   const { peer } = ownProps.navigation.getParam('cafeSession').cafe
   return {
     deregister: (success: () => void) =>
-      dispatch(cafesActions.deregisterCafe.request({ peerId: peer, success }))
+      dispatch(cafesActions.deregisterCafe.request({ peerId: peer, success })),
+    refresh: () => {
+      dispatch(cafesActions.refreshCafeSession.request({ peerId: peer }))
+    }
   }
 }
 
