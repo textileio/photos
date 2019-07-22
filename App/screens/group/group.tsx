@@ -6,7 +6,7 @@ import {
   FlatList,
   ListRenderItemInfo,
   Dimensions,
-  Alert
+  TouchableOpacity
 } from 'react-native'
 import { NavigationScreenProps, SafeAreaView } from 'react-navigation'
 import uuid from 'uuid/v4'
@@ -55,6 +55,7 @@ interface StateProps {
   renaming: boolean
   canInvite: boolean
   liking: ReadonlyArray<string>
+  ownAddress: string
 }
 
 interface DispatchProps {
@@ -71,7 +72,7 @@ interface DispatchProps {
 interface NavProps {
   threadId: string
   groupName: string
-  showActionSheet: () => void
+  showThreadActionSheet: () => void
 }
 
 type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
@@ -79,6 +80,8 @@ type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 interface State {
   showInviteContactModal: boolean
   showRenameGroupModal: boolean
+  // The current selected block (message/photo). For use in the block action sheet
+  selectedBlockId?: string
 }
 
 class Group extends React.PureComponent<Props, State> {
@@ -88,7 +91,7 @@ class Group extends React.PureComponent<Props, State> {
     // const openDrawer = navigation.getParam('openDrawer')
     // const addContact = navigation.getParam('addContact')
     const groupName = navigation.getParam('groupName')
-    const showActionSheet = navigation.getParam('showActionSheet')
+    const showThreadActionSheet = navigation.getParam('showThreadActionSheet')
     const back = () => navigation.goBack()
     const headerLeft = (
       <TextileHeaderButtons left={true}>
@@ -104,7 +107,7 @@ class Group extends React.PureComponent<Props, State> {
         <TextileHeaderButtonsItem
           title="More"
           iconName="more-vertical"
-          onPress={showActionSheet}
+          onPress={showThreadActionSheet}
         />
       </TextileHeaderButtons>
     )
@@ -115,7 +118,10 @@ class Group extends React.PureComponent<Props, State> {
     }
   }
 
-  actionSheet: any
+  // Action sheet to handle thread options like renaming the thread
+  threadActionSheet: any
+  // Action sheet to handle block options like removing (ignoring) a message
+  blockActionSheet: any
 
   constructor(props: Props) {
     super(props)
@@ -129,13 +135,14 @@ class Group extends React.PureComponent<Props, State> {
     this.props.navigation.addListener('willFocus', this.onFocus)
     this.props.navigation.setParams({
       groupName: this.props.groupName,
-      showActionSheet: this.showActionSheet
+      showThreadActionSheet: this.showThreadActionSheet
     })
   }
 
   render() {
     const threadId = this.props.navigation.getParam('threadId')
-    const options = [
+    // Thread action sheet
+    const threadActionSheetOptions = [
       ...(this.props.canInvite ? ['Invite Others'] : []),
       ...(this.props.selfAddress === this.props.initiator
         ? ['Rename Group']
@@ -143,7 +150,12 @@ class Group extends React.PureComponent<Props, State> {
       'Leave Group',
       'Cancel'
     ]
-    const cancelButtonIndex = options.indexOf('Cancel')
+    const threadCancelButtonIndex = threadActionSheetOptions.indexOf('Cancel')
+    // Block action sheet
+    const blockActionSheetOptions = [
+      'Cancel'
+    ]
+    const blockCancelButtonIndex = blockActionSheetOptions.indexOf('Cancel')
     return (
       <SafeAreaView style={{ flex: 1, flexGrow: 1 }}>
         <KeyboardResponsiveContainer>
@@ -171,12 +183,21 @@ class Group extends React.PureComponent<Props, State> {
           />
           <ActionSheet
             ref={(o: any) => {
-              this.actionSheet = o
+              this.threadActionSheet = o
             }}
             title={this.props.groupName + ' options'}
-            options={options}
-            cancelButtonIndex={cancelButtonIndex}
-            onPress={this.handleActionSheetResponse}
+            options={threadActionSheetOptions}
+            cancelButtonIndex={threadCancelButtonIndex}
+            onPress={this.handleThreadActionSheetResponse}
+          />
+          <ActionSheet
+            ref={(o: any) => {
+              this.blockActionSheet = o
+            }}
+            title={'Message options'}
+            options={blockActionSheetOptions}
+            cancelButtonIndex={blockCancelButtonIndex}
+            onPress={this.handleBlockActionSheetResponse}
           />
           <RenameGroupModal
             isVisible={this.state.showRenameGroupModal}
@@ -228,6 +249,7 @@ class Group extends React.PureComponent<Props, State> {
           comments,
           block
         } = item.value
+        const isOwnPhoto = user.address === this.props.ownAddress
         const hasLiked =
           likes.findIndex(
             likeInfo => likeInfo.user.address === this.props.selfAddress
@@ -246,39 +268,44 @@ class Group extends React.PureComponent<Props, State> {
         const pinchWidth = !files.length
           ? def
           : !files[0].links.large
-          ? def
-          : files[0].links.large.meta.fields.width.numberValue
+            ? def
+            : files[0].links.large.meta.fields.width.numberValue
         const pinchHeight = !files.length
           ? def
           : !files[0].links.large
-          ? def
-          : files[0].links.large.meta.fields.height.numberValue
+            ? def
+            : files[0].links.large.meta.fields.height.numberValue
         const fileIndex =
           files && files.length > 0 && files[0].index ? files[0].index : 0
         return (
-          <Photo
-            avatar={user.avatar}
-            username={user.name.length > 0 ? user.name : 'unknown'}
-            message={caption.length > 0 ? caption : undefined}
-            time={moment(Textile.util.timestampToDate(date)).calendar(
-              undefined,
-              momentSpec
-            )}
-            photoId={data}
-            fileIndex={fileIndex}
-            photoWidth={screenWidth}
-            hasLiked={hasLiked}
-            numberLikes={likes.length}
-            numberComments={comments.length}
-            onLike={this.onLike(block)}
-            onComment={this.onComment(target)}
-            comments={commentsData}
-            commentsDisplayMax={5}
-            onViewComments={this.onComment(target)}
-            pinchZoom={true}
-            pinchWidth={pinchWidth}
-            pinchHeight={pinchHeight}
-          />
+          <TouchableOpacity
+            disabled={!isOwnPhoto}
+            onPress={() => this.showBlockActionSheet(item.block)}
+          >
+            <Photo
+              avatar={user.avatar}
+              username={user.name.length > 0 ? user.name : 'unknown'}
+              message={caption.length > 0 ? caption : undefined}
+              time={moment(Textile.util.timestampToDate(date)).calendar(
+                undefined,
+                momentSpec
+              )}
+              photoId={data}
+              fileIndex={fileIndex}
+              photoWidth={screenWidth}
+              hasLiked={hasLiked}
+              numberLikes={likes.length}
+              numberComments={comments.length}
+              onLike={this.onLike(block)}
+              onComment={this.onComment(target)}
+              comments={commentsData}
+              commentsDisplayMax={5}
+              onViewComments={this.onComment(target)}
+              pinchZoom={true}
+              pinchWidth={pinchWidth}
+              pinchHeight={pinchHeight}
+            />
+          </TouchableOpacity>
         )
       }
       case 'addingPhoto': {
@@ -299,19 +326,25 @@ class Group extends React.PureComponent<Props, State> {
       case FeedItemType.Text: {
         const { user, body, date } = item.value
         const isSameUser = this.sameUserAgain(user, this.props.items[index + 1])
+        const isOwnMessage = user.address === this.props.ownAddress
         const avatar = isSameUser ? undefined : user.avatar
         return (
-          <Message
-            avatar={avatar}
-            username={user.name || 'unknown'}
-            message={body}
-            // TODO: deal with pb Timestamp to JS Date!
-            time={moment(Textile.util.timestampToDate(date)).calendar(
-              undefined,
-              momentSpec
-            )}
-            isSameUser={isSameUser}
-          />
+          <TouchableOpacity
+            disabled={!isOwnMessage}
+            onPress={() => this.showBlockActionSheet(item.block)}
+          >
+            <Message
+              avatar={avatar}
+              username={user.name || 'unknown'}
+              message={body}
+              // TODO: deal with pb Timestamp to JS Date!
+              time={moment(Textile.util.timestampToDate(date)).calendar(
+                undefined,
+                momentSpec
+              )}
+              isSameUser={isSameUser}
+            />
+          </TouchableOpacity>
         )
       }
       case FeedItemType.Leave:
@@ -349,11 +382,18 @@ class Group extends React.PureComponent<Props, State> {
     return () => this.props.navigateToComments(target)
   }
 
-  showActionSheet = () => {
-    this.actionSheet.show()
+  showThreadActionSheet = () => {
+    this.threadActionSheet.show()
   }
 
-  handleActionSheetResponse = (index: number) => {
+  showBlockActionSheet = (blockId: string) => {
+    this.setState({
+      selectedBlockId: blockId
+    })
+    this.blockActionSheet.show()
+  }
+
+  handleThreadActionSheetResponse = (index: number) => {
     const actions = [
       ...(this.props.canInvite ? [this.showInviteModal] : []),
       ...(this.props.selfAddress === this.props.initiator
@@ -364,6 +404,9 @@ class Group extends React.PureComponent<Props, State> {
     if (index < actions.length) {
       actions[index]()
     }
+  }
+
+  handleBlockActionSheetResponse = (index: number) => {
   }
 
   showInviteModal = () => {
@@ -413,6 +456,7 @@ const mapStateToProps = (
   const selfAddress = accountSelectors.getAddress(state.account) || ''
   const renaming = Object.keys(state.group.renameGroup).indexOf(threadId) > -1
   const liking = Object.keys(state.ui.likingPhotos)
+  const ownAddress = state.account.address.value ? state.account.address.value : ''
   return {
     items,
     groupName,
@@ -420,7 +464,8 @@ const mapStateToProps = (
     selfAddress,
     renaming,
     canInvite,
-    liking
+    liking,
+    ownAddress
   }
 }
 
