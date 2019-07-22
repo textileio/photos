@@ -4,6 +4,7 @@ import { NavigationScreenProps } from 'react-navigation'
 
 import Loading from '../Components/Loading'
 import FatalErrorView from '../Components/FatalErrorView'
+import Initialize from '../screens/initialize'
 
 import { RootState } from '../Redux/Types'
 import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
@@ -21,12 +22,13 @@ type Props = StateProps & NavigationScreenProps<{}>
 
 class StatusCheck extends React.Component<Props, {}> {
   static getDerivedStateFromProps(props: Props, state: {}) {
-    if (!props.nodeError) {
-      if (!props.initialized) {
-        props.navigation.navigate('Initialize')
-      } else if (props.nodeStarted) {
-        props.navigation.navigate('PrimaryNav')
-      }
+    if (
+      !props.nodeError &&
+      props.initialized &&
+      props.nodeStarted &&
+      props.onboarded
+    ) {
+      props.navigation.navigate('PrimaryNav')
     }
     // tslint:disable-next-line no-null-keyword
     return null
@@ -38,7 +40,9 @@ class StatusCheck extends React.Component<Props, {}> {
   }
 
   render() {
-    if (this.props.nodeError) {
+    if (!this.props.initialized) {
+      return <Initialize navigation={this.props.navigation} />
+    } else if (this.props.nodeError) {
       return <FatalErrorView message={this.props.nodeError} />
     } else {
       return (
