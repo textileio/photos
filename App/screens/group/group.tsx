@@ -67,6 +67,7 @@ interface DispatchProps {
   leaveThread: () => void
   retryShare: (key: string) => void
   cancelShare: (key: string) => void
+  remove: (blockId: string) => void
 }
 
 interface NavProps {
@@ -152,9 +153,7 @@ class Group extends React.PureComponent<Props, State> {
     ]
     const threadCancelButtonIndex = threadActionSheetOptions.indexOf('Cancel')
     // Block action sheet
-    const blockActionSheetOptions = [
-      'Cancel'
-    ]
+    const blockActionSheetOptions = ['Remove', 'Cancel']
     const blockCancelButtonIndex = blockActionSheetOptions.indexOf('Cancel')
     return (
       <SafeAreaView style={{ flex: 1, flexGrow: 1 }}>
@@ -268,19 +267,19 @@ class Group extends React.PureComponent<Props, State> {
         const pinchWidth = !files.length
           ? def
           : !files[0].links.large
-            ? def
-            : files[0].links.large.meta.fields.width.numberValue
+          ? def
+          : files[0].links.large.meta.fields.width.numberValue
         const pinchHeight = !files.length
           ? def
           : !files[0].links.large
-            ? def
-            : files[0].links.large.meta.fields.height.numberValue
+          ? def
+          : files[0].links.large.meta.fields.height.numberValue
         const fileIndex =
           files && files.length > 0 && files[0].index ? files[0].index : 0
         return (
           <TouchableOpacity
             disabled={!isOwnPhoto}
-            onPress={() => this.showBlockActionSheet(item.block)}
+            onLongPress={() => this.showBlockActionSheet(item.block)}
           >
             <Photo
               avatar={user.avatar}
@@ -331,7 +330,7 @@ class Group extends React.PureComponent<Props, State> {
         return (
           <TouchableOpacity
             disabled={!isOwnMessage}
-            onPress={() => this.showBlockActionSheet(item.block)}
+            onLongPress={() => this.showBlockActionSheet(item.block)}
           >
             <Message
               avatar={avatar}
@@ -407,6 +406,14 @@ class Group extends React.PureComponent<Props, State> {
   }
 
   handleBlockActionSheetResponse = (index: number) => {
+    const actions = [
+      () =>
+        this.state.selectedBlockId &&
+        this.props.remove(this.state.selectedBlockId)
+    ]
+    if (index < actions.length) {
+      actions[index]()
+    }
   }
 
   showInviteModal = () => {
@@ -456,7 +463,9 @@ const mapStateToProps = (
   const selfAddress = accountSelectors.getAddress(state.account) || ''
   const renaming = Object.keys(state.group.renameGroup).indexOf(threadId) > -1
   const liking = Object.keys(state.ui.likingPhotos)
-  const ownAddress = state.account.address.value ? state.account.address.value : ''
+  const ownAddress = state.account.address.value
+    ? state.account.address.value
+    : ''
   return {
     items,
     groupName,
@@ -500,6 +509,9 @@ const mapDispatchToProps = (
     },
     cancelShare: (key: string) => {
       dispatch(groupActions.addPhoto.cancelRequest(key))
+    },
+    remove: (blockId: string) => {
+      dispatch(groupActions.ignore.ignore.request(blockId))
     }
   }
 }
