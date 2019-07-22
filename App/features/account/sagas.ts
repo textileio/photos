@@ -25,6 +25,7 @@ function* onNodeStarted() {
       yield put(actions.refreshProfileRequest())
       yield put(actions.refreshPeerIdRequest())
       yield put(actions.refreshAddressRequest())
+      yield put(actions.refreshAccountSeed.request())
       yield put(contactsActions.getContactsRequest())
       yield put(PhotoViewingActions.refreshThreadsRequest())
     } catch (error) {
@@ -131,6 +132,15 @@ function* setAvatar() {
   }
 }
 
+function* refreshAccountSeed() {
+  try {
+    const seed = yield call(Textile.account.seed)
+    yield put(actions.refreshAccountSeed.success(seed))
+  } catch (error) {
+    yield put(actions.refreshAccountSeed.failure(error))
+  }
+}
+
 export default function*() {
   yield all([
     call(onNodeStarted),
@@ -139,6 +149,7 @@ export default function*() {
     call(refreshAddress),
     call(setUsername),
     call(setAvatar),
+    takeEvery(getType(actions.refreshAccountSeed.request), refreshAccountSeed),
     takeEvery(getType(actions.chooseProfilePhoto.request), chooseProfilePhoto)
   ])
 }

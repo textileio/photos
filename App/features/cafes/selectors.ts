@@ -4,6 +4,10 @@ export function makeCafeForPeerId(peerId: string) {
   return (state: CafesState) => state.cafes[peerId]
 }
 
+export function makeCafeSessionForPeerId(peerId: string) {
+  return (state: CafesState) => state.cafeSessions.sessions[peerId]
+}
+
 export function regesteringCafes(state: CafesState) {
   return Object.keys(state.cafes)
     .map(peerId => state.cafes[peerId])
