@@ -75,7 +75,7 @@ class Cafes extends Component<Props> {
 
   onCafePress = (cafeSession: ICafeSession) => () => {
     this.props.navigation.navigate('Cafe', {
-      cafeSession
+      peerId: cafeSession.id
     })
   }
 }

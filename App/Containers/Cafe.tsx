@@ -11,7 +11,8 @@ import {
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { NavigationScreenProps } from 'react-navigation'
-import { ICafeSession } from '@textile/react-native-sdk'
+import { Cafe as CafeModel, CafeSessionData } from '../features/cafes/models'
+import Textile from '@textile/react-native-sdk'
 import moment from 'moment'
 
 import { RootState, RootAction } from '../Redux/Types'
@@ -24,8 +25,6 @@ import RowSeparator from '../Components/RowSeparator'
 
 import {
   color,
-  fontFamily,
-  fontSize,
   textStyle,
   spacing,
   size
@@ -37,17 +36,23 @@ const Container: ViewStyle = {
   alignItems: 'flex-start'
 }
 
+const URL: TextStyle = {
+  ...textStyle.header_m,
+  textAlign: 'left',
+  paddingHorizontal: spacing._016,
+  paddingTop: spacing._016
+}
+
 const PeerId: TextStyle = {
-  textAlign: 'center',
-  fontFamily: fontFamily.bold,
-  fontSize: fontSize._24,
-  padding: spacing._016
+  ...textStyle.body_m,
+  textAlign: 'left',
+  paddingHorizontal: spacing._016,
+  marginBottom: spacing._016
 }
 
 const ServicesHeader: TextStyle = {
+  ...textStyle.header_s,
   textAlign: 'left',
-  fontFamily: fontFamily.medium,
-  fontSize: fontSize._20,
   paddingLeft: spacing._016,
   marginBottom: spacing._008
 }
@@ -65,8 +70,7 @@ const ServiceTitle: TextStyle = {
 }
 
 const ExpirationDate: TextStyle = {
-  fontFamily: fontFamily.medium,
-  fontSize: fontSize._20,
+  ...textStyle.header_s,
   paddingHorizontal: spacing._016,
   marginTop: spacing._016
 }
@@ -95,14 +99,8 @@ const Error: TextStyle = {
 }
 
 interface StateProps {
-  cafe: {
-    processing: boolean
-    error?: string
-  }
-  session: {
-    processing: boolean
-    error?: string
-  }
+  cafe: CafeModel
+  session: CafeSessionData
 }
 
 interface DispatchProps {
@@ -111,7 +109,7 @@ interface DispatchProps {
 }
 
 interface NavProps {
-  cafeSession: ICafeSession
+  peerId: string
 }
 
 type Props = NavigationScreenProps<NavProps> & StateProps & DispatchProps
@@ -135,18 +133,19 @@ class Cafe extends Component<Props> {
   render() {
     // Hardcoded placeholder for services UI
     const services = ['Backup', 'Inboxing']
-    const cafeSession = this.props.navigation.getParam('cafeSession')
-    const { cafe, exp } = cafeSession
-    const { peer } = cafe
-    const seconds = (exp.seconds as number) * 1000 + exp.nanos / 1000000
-    const expirationDate = moment(new Date(seconds)).format(
+    const { cafe, exp } = this.props.session.session
+    const { peer, url } = cafe
+    const date = Textile.util.timestampToDate(exp)
+    const expirationDate = moment(date).format(
       'MMMM Do YYYY [at] h:mm a'
     )
     const refreshButtonDisabled = this.props.session.processing
+    const cafeProcessing = this.props.cafe.state === 'deregistering'
     const deregisterButtonDisabled =
-      !this.props.cafe.error && this.props.cafe.processing
+      !this.props.cafe.error && cafeProcessing
     return (
       <SafeAreaView style={Container}>
+        <Text style={URL}>{url}</Text>
         <Text style={PeerId}>{peer}</Text>
         <Text style={ServicesHeader}>Services</Text>
         <FlatList
@@ -201,19 +200,12 @@ const mapStateToProps = (
   state: RootState,
   ownProps: NavigationScreenProps<NavProps>
 ): StateProps => {
-  const { peer } = ownProps.navigation.getParam('cafeSession').cafe
+  const peer = ownProps.navigation.getParam('peerId')
   const cafe = cafesSelectors.makeCafeForPeerId(peer)(state.cafes)
-  const cafeSession = cafesSelectors.makeCafeSessionForPeerId(peer)(state.cafes)
-  const processing = cafe ? cafe.state === 'deregistering' : false
+  const session = cafesSelectors.makeCafeSessionForPeerId(peer)(state.cafes)
   return {
-    cafe: {
-      processing,
-      error: processing ? cafe.error : undefined
-    },
-    session: {
-      processing: cafeSession.processing,
-      error: cafeSession.error
-    }
+    cafe,
+    session
   }
 }
 
@@ -221,7 +213,7 @@ const mapDispatchToProps = (
   dispatch: Dispatch<RootAction>,
   ownProps: NavigationScreenProps<NavProps>
 ): DispatchProps => {
-  const { peer } = ownProps.navigation.getParam('cafeSession').cafe
+  const peer = ownProps.navigation.getParam('peerId')
   return {
     deregister: (success: () => void) =>
       dispatch(cafesActions.deregisterCafe.request({ peerId: peer, success })),
