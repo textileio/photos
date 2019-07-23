@@ -55,6 +55,7 @@ interface StateProps {
   renaming: boolean
   canInvite: boolean
   liking: ReadonlyArray<string>
+  removing: ReadonlyArray<string>
   ownAddress: string
 }
 
@@ -278,7 +279,7 @@ class Group extends React.PureComponent<Props, State> {
           files && files.length > 0 && files[0].index ? files[0].index : 0
         return (
           <TouchableOpacity
-            disabled={!isOwnPhoto}
+            disabled={!isOwnPhoto || this.removing(item.block)}
             onLongPress={() => this.showBlockActionSheet(item.block)}
           >
             <Photo
@@ -329,7 +330,7 @@ class Group extends React.PureComponent<Props, State> {
         const avatar = isSameUser ? undefined : user.avatar
         return (
           <TouchableOpacity
-            disabled={!isOwnMessage}
+            disabled={!isOwnMessage || this.removing(item.block)}
             onLongPress={() => this.showBlockActionSheet(item.block)}
           >
             <Message
@@ -447,6 +448,10 @@ class Group extends React.PureComponent<Props, State> {
   liking = (blockId: string) => {
     return this.props.liking.indexOf(blockId) !== -1
   }
+
+  removing = (blockId: string) => {
+    return this.props.removing.indexOf(blockId) !== -1
+  }
 }
 
 const mapStateToProps = (
@@ -463,6 +468,7 @@ const mapStateToProps = (
   const selfAddress = accountSelectors.getAddress(state.account) || ''
   const renaming = Object.keys(state.group.renameGroup).indexOf(threadId) > -1
   const liking = Object.keys(state.ui.likingPhotos)
+  const removing = Object.keys(state.group.ignore)
   const ownAddress = state.account.address.value
     ? state.account.address.value
     : ''
@@ -474,6 +480,7 @@ const mapStateToProps = (
     renaming,
     canInvite,
     liking,
+    removing,
     ownAddress
   }
 }
