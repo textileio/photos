@@ -271,10 +271,10 @@ class Group extends React.PureComponent<Props, State> {
             numberLikes={likes.length}
             numberComments={comments.length}
             onLike={this.onLike(block)}
-            onComment={this.onComment(target)}
+            onComment={this.onComment(block)}
             comments={commentsData}
             commentsDisplayMax={5}
-            onViewComments={this.onComment(target)}
+            onViewComments={this.onComment(block)}
             pinchZoom={true}
             pinchWidth={pinchWidth}
             pinchHeight={pinchHeight}
