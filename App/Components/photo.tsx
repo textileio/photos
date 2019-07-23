@@ -34,7 +34,7 @@ interface Props extends MessageProps, LikeAndCommentProps, CommentsProps {
   pinchZoom?: boolean
   pinchHeight?: number
   pinchWidth?: number
-  onLongPress: () => void
+  onLongPress?: () => void
 }
 
 export default class Photo extends React.PureComponent<Props> {

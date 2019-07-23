@@ -6,7 +6,8 @@ import {
   FlatList,
   ListRenderItemInfo,
   Dimensions,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  View
 } from 'react-native'
 import { NavigationScreenProps, SafeAreaView } from 'react-navigation'
 import uuid from 'uuid/v4'
@@ -56,7 +57,6 @@ interface StateProps {
   canInvite: boolean
   liking: ReadonlyArray<string>
   removing: ReadonlyArray<string>
-  ownAddress: string
 }
 
 interface DispatchProps {
@@ -194,7 +194,7 @@ class Group extends React.PureComponent<Props, State> {
             ref={(o: any) => {
               this.blockActionSheet = o
             }}
-            title={'Message options'}
+            title={'Options'}
             options={blockActionSheetOptions}
             cancelButtonIndex={blockCancelButtonIndex}
             onPress={this.handleBlockActionSheetResponse}
@@ -249,7 +249,7 @@ class Group extends React.PureComponent<Props, State> {
           comments,
           block
         } = item.value
-        const isOwnPhoto = user.address === this.props.ownAddress
+        const isOwnPhoto = user.address === this.props.selfAddress
         const canRemove = isOwnPhoto && !this.removing(item.block)
         const hasLiked =
           likes.findIndex(
@@ -327,24 +327,27 @@ class Group extends React.PureComponent<Props, State> {
       case FeedItemType.Text: {
         const { user, body, date } = item.value
         const isSameUser = this.sameUserAgain(user, this.props.items[index + 1])
-        const isOwnMessage = user.address === this.props.ownAddress
+        const isOwnMessage = user.address === this.props.selfAddress
+        const canRemove = isOwnMessage && !this.removing(item.block)
         const avatar = isSameUser ? undefined : user.avatar
         return (
           <TouchableWithoutFeedback
-            disabled={!isOwnMessage || this.removing(item.block)}
+            disabled={!canRemove}
             onLongPress={() => this.showBlockActionSheet(item.block)}
           >
-            <Message
-              avatar={avatar}
-              username={user.name || 'unknown'}
-              message={body}
-              // TODO: deal with pb Timestamp to JS Date!
-              time={moment(Textile.util.timestampToDate(date)).calendar(
-                undefined,
-                momentSpec
-              )}
-              isSameUser={isSameUser}
-            />
+            <View>
+              <Message
+                avatar={avatar}
+                username={user.name || 'unknown'}
+                message={body}
+                // TODO: deal with pb Timestamp to JS Date!
+                time={moment(Textile.util.timestampToDate(date)).calendar(
+                  undefined,
+                  momentSpec
+                )}
+                isSameUser={isSameUser}
+              />
+            </View>
           </TouchableWithoutFeedback>
         )
       }
@@ -470,9 +473,6 @@ const mapStateToProps = (
   const renaming = Object.keys(state.group.renameGroup).indexOf(threadId) > -1
   const liking = Object.keys(state.ui.likingPhotos)
   const removing = Object.keys(state.group.ignore)
-  const ownAddress = state.account.address.value
-    ? state.account.address.value
-    : ''
   return {
     items,
     groupName,
@@ -481,8 +481,7 @@ const mapStateToProps = (
     renaming,
     canInvite,
     liking,
-    removing,
-    ownAddress
+    removing
   }
 }
 

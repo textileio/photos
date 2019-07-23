@@ -132,11 +132,7 @@ class PhotoScreen extends React.Component<Props> {
             pinchZoom={true}
             pinchWidth={pinchWidth}
             pinchHeight={pinchHeight}
-            onLongPress={() => {
-              if (canRemove) {
-                this.props.remove()
-              }
-            }}
+            onLongPress={canRemove ? this.props.remove : undefined}
           />
         )}
       </ScrollView>

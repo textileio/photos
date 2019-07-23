@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { View, ScrollView, ViewStyle } from 'react-native'
 import { NavigationActions, SafeAreaView } from 'react-navigation'
 import Textile, { IComment } from '@textile/react-native-sdk'
+import ActionSheet from 'react-native-actionsheet'
 
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 
@@ -36,6 +37,8 @@ interface DispatchProps {
 
 interface ComponentState {
   submitting: boolean
+  // The current selected block (message/photo). For use in the block action sheet
+  selectedBlockId?: string
 }
 
 type Props = StateProps & DispatchProps
@@ -62,6 +65,8 @@ class Comments extends Component<Props, ComponentState> {
   }
 
   scrollView?: ScrollView
+  // Action sheet to handle block options like removing (ignoring) a comment
+  blockActionSheet: any
 
   constructor(props: Props) {
     super(props)
@@ -106,23 +111,25 @@ class Comments extends Component<Props, ComponentState> {
   }
 
   render() {
+    // Block action sheet
+    const blockActionSheetOptions = ['Remove', 'Cancel']
+    const blockCancelButtonIndex = blockActionSheetOptions.indexOf('Cancel')
     const commentCardProps = this.props.comments
       .slice()
       .reverse()
       .map(comment => {
+        const isOwnPhoto = this.props.selfAddress === comment.user.address
+        const isRemoving = this.props.removing.indexOf(comment.id) !== -1
+        const canRemove = isOwnPhoto && !isRemoving
         const props: CommentCardProps = {
           username: comment.user.name || 'unknown',
           avatar: comment.user.avatar,
           comment: comment.body,
           date: Textile.util.timestampToDate(comment.date),
           isCaption: false,
-          onLongPress: () => {
-            const isOwnPhoto = this.props.selfAddress === comment.user.address
-            const isRemoving = this.props.removing.indexOf(comment.id) !== -1
-            if (isOwnPhoto && !isRemoving) {
-              this.props.remove(comment.id)
-            }
-          }
+          onLongPress: canRemove
+            ? () => this.showBlockActionSheet(comment.id)
+            : undefined
         }
         return props
       })
@@ -149,8 +156,35 @@ class Comments extends Component<Props, ComponentState> {
             showError={this.props.commentError}
           />
         </KeyboardResponsiveContainer>
+        <ActionSheet
+          ref={(o: any) => {
+            this.blockActionSheet = o
+          }}
+          title={'Comment options'}
+          options={blockActionSheetOptions}
+          cancelButtonIndex={blockCancelButtonIndex}
+          onPress={this.handleBlockActionSheetResponse}
+        />
       </SafeAreaView>
     )
+  }
+
+  showBlockActionSheet = (blockId: string) => {
+    this.setState({
+      selectedBlockId: blockId
+    })
+    this.blockActionSheet.show()
+  }
+
+  handleBlockActionSheetResponse = (index: number) => {
+    const actions = [
+      () =>
+        this.state.selectedBlockId &&
+        this.props.remove(this.state.selectedBlockId)
+    ]
+    if (index < actions.length) {
+      actions[index]()
+    }
   }
 }
 
