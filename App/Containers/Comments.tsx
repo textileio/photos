@@ -3,7 +3,7 @@ import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { View, ScrollView, ViewStyle } from 'react-native'
 import { NavigationActions, SafeAreaView } from 'react-navigation'
-import Textile from '@textile/react-native-sdk'
+import Textile, { IComment } from '@textile/react-native-sdk'
 
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 
@@ -16,10 +16,14 @@ import CommentBox from '../SB/components/CommentBox/CommentBox'
 import styles from './Styles/CommentsStyle'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { RootState, RootAction } from '../Redux/Types'
+import { groupActions } from '../features/group'
+import { accountSelectors } from '../features/account'
 
 interface StateProps {
+  selfAddress: string
   captionCommentCardProps?: CommentCardProps
-  commentCardProps: CommentCardProps[]
+  removing: string[]
+  comments: IComment[]
   commentValue?: string
   commentError?: boolean
 }
@@ -27,6 +31,7 @@ interface StateProps {
 interface DispatchProps {
   updateComment: (comment: string) => void
   submitComment: () => void
+  remove: (id: string) => void
 }
 
 interface ComponentState {
@@ -72,9 +77,7 @@ class Comments extends Component<Props, ComponentState> {
   }
 
   componentDidUpdate(previousProps: Props) {
-    if (
-      this.props.commentCardProps.length > previousProps.commentCardProps.length
-    ) {
+    if (this.props.comments.length > previousProps.comments.length) {
       // New comment added, scroll down, need timeout to allow rendering
       setTimeout(this.scrollToEnd, 100)
     }
@@ -103,6 +106,26 @@ class Comments extends Component<Props, ComponentState> {
   }
 
   render() {
+    const commentCardProps = this.props.comments
+      .slice()
+      .reverse()
+      .map(comment => {
+        const props: CommentCardProps = {
+          username: comment.user.name || 'unknown',
+          avatar: comment.user.avatar,
+          comment: comment.body,
+          date: Textile.util.timestampToDate(comment.date),
+          isCaption: false,
+          onLongPress: () => {
+            const isOwnPhoto = this.props.selfAddress === comment.user.address
+            const isRemoving = this.props.removing.indexOf(comment.id) !== -1
+            if (isOwnPhoto && !isRemoving) {
+              this.props.remove(comment.id)
+            }
+          }
+        }
+        return props
+      })
     return (
       <SafeAreaView style={styles.safeContainer}>
         <KeyboardResponsiveContainer style={styles.container as ViewStyle}>
@@ -114,7 +137,7 @@ class Comments extends Component<Props, ComponentState> {
             style={styles.contentContainer}
           >
             <View>
-              {this.props.commentCardProps.map((commentCardProps, i) => (
+              {commentCardProps.map((commentCardProps, i) => (
                 <CommentCard key={i} {...commentCardProps} />
               ))}
             </View>
@@ -132,6 +155,7 @@ class Comments extends Component<Props, ComponentState> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
+  const selfAddress = accountSelectors.getAddress(state.account) || ''
   const { viewingPhoto } = state.photoViewing
 
   let captionCommentCardProps: CommentCardProps | undefined
@@ -146,23 +170,18 @@ const mapStateToProps = (state: RootState): StateProps => {
   }
 
   const comments = viewingPhoto ? viewingPhoto.comments : []
-  const commentCardProps = comments
-    .slice()
-    .reverse()
-    .map(comment => {
-      const props: CommentCardProps = {
-        username: comment.user.name || 'unknown',
-        avatar: comment.user.avatar,
-        comment: comment.body,
-        date: Textile.util.timestampToDate(comment.date),
-        isCaption: false
-      }
-      return props
-    })
+
+  const removing = viewingPhoto
+    ? Object.keys(state.group.ignore).filter(key => {
+        return state.group.ignore[key] !== {}
+      })
+    : []
 
   return {
+    selfAddress,
     captionCommentCardProps,
-    commentCardProps,
+    comments,
+    removing,
     commentValue: state.photoViewing.authoringComment,
     commentError: state.photoViewing.authoringCommentError
   }
@@ -174,7 +193,8 @@ const mapDispatchToProps = (
 ): DispatchProps => ({
   updateComment: (comment: string) =>
     dispatch(PhotoViewingActions.updateComment(comment)),
-  submitComment: () => dispatch(PhotoViewingActions.addCommentRequest())
+  submitComment: () => dispatch(PhotoViewingActions.addCommentRequest()),
+  remove: (id: string) => dispatch(groupActions.ignore.ignore.request(id))
 })
 
 export default connect(

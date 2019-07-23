@@ -3,6 +3,7 @@ import {
   View,
   ViewStyle,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Dimensions,
   Modal
 } from 'react-native'
@@ -33,6 +34,7 @@ interface Props extends MessageProps, LikeAndCommentProps, CommentsProps {
   pinchZoom?: boolean
   pinchHeight?: number
   pinchWidth?: number
+  onLongPress: () => void
 }
 
 export default class Photo extends React.PureComponent<Props> {
@@ -46,14 +48,16 @@ export default class Photo extends React.PureComponent<Props> {
 
   progressiveElement(width: number, height: number, minWidth: number) {
     return (
-      <ProgressiveImage
-        imageId={this.props.photoId}
-        fileIndex={this.props.fileIndex}
-        showPreview={true}
-        forMinWidth={minWidth}
-        style={{ width, height, overflow: 'hidden' }}
-        resizeMode={'cover'}
-      />
+      <TouchableWithoutFeedback onLongPress={this.props.onLongPress}>
+        <ProgressiveImage
+          imageId={this.props.photoId}
+          fileIndex={this.props.fileIndex}
+          showPreview={true}
+          forMinWidth={minWidth}
+          style={{ width, height, overflow: 'hidden' }}
+          resizeMode={'cover'}
+        />
+      </TouchableWithoutFeedback>
     )
   }
 
@@ -85,6 +89,7 @@ export default class Photo extends React.PureComponent<Props> {
         maxScale={2.5}
         enableCenterFocus={false}
         onClick={this.toggleSelected}
+        onLongPress={this.props.onLongPress}
         clickDistance={1}
       >
         <View
@@ -122,6 +127,7 @@ export default class Photo extends React.PureComponent<Props> {
         style={CONTAINER}
         activeOpacity={1}
         onPress={this.toggleSelected}
+        onLongPress={this.props.onLongPress}
       >
         <Modal
           animationType={'fade'}

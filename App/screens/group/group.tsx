@@ -6,7 +6,7 @@ import {
   FlatList,
   ListRenderItemInfo,
   Dimensions,
-  TouchableOpacity
+  TouchableWithoutFeedback
 } from 'react-native'
 import { NavigationScreenProps, SafeAreaView } from 'react-navigation'
 import uuid from 'uuid/v4'
@@ -250,6 +250,7 @@ class Group extends React.PureComponent<Props, State> {
           block
         } = item.value
         const isOwnPhoto = user.address === this.props.ownAddress
+        const canRemove = isOwnPhoto && !this.removing(item.block)
         const hasLiked =
           likes.findIndex(
             likeInfo => likeInfo.user.address === this.props.selfAddress
@@ -278,34 +279,34 @@ class Group extends React.PureComponent<Props, State> {
         const fileIndex =
           files && files.length > 0 && files[0].index ? files[0].index : 0
         return (
-          <TouchableOpacity
-            disabled={!isOwnPhoto || this.removing(item.block)}
-            onLongPress={() => this.showBlockActionSheet(item.block)}
-          >
-            <Photo
-              avatar={user.avatar}
-              username={user.name.length > 0 ? user.name : 'unknown'}
-              message={caption.length > 0 ? caption : undefined}
-              time={moment(Textile.util.timestampToDate(date)).calendar(
-                undefined,
-                momentSpec
-              )}
-              photoId={data}
-              fileIndex={fileIndex}
-              photoWidth={screenWidth}
-              hasLiked={hasLiked}
-              numberLikes={likes.length}
-              numberComments={comments.length}
-              onLike={this.onLike(block)}
-              onComment={this.onComment(target)}
-              comments={commentsData}
-              commentsDisplayMax={5}
-              onViewComments={this.onComment(target)}
-              pinchZoom={true}
-              pinchWidth={pinchWidth}
-              pinchHeight={pinchHeight}
-            />
-          </TouchableOpacity>
+          <Photo
+            avatar={user.avatar}
+            username={user.name.length > 0 ? user.name : 'unknown'}
+            message={caption.length > 0 ? caption : undefined}
+            time={moment(Textile.util.timestampToDate(date)).calendar(
+              undefined,
+              momentSpec
+            )}
+            photoId={data}
+            fileIndex={fileIndex}
+            photoWidth={screenWidth}
+            hasLiked={hasLiked}
+            numberLikes={likes.length}
+            numberComments={comments.length}
+            onLike={this.onLike(block)}
+            onComment={this.onComment(target)}
+            comments={commentsData}
+            commentsDisplayMax={5}
+            onViewComments={this.onComment(target)}
+            pinchZoom={true}
+            pinchWidth={pinchWidth}
+            pinchHeight={pinchHeight}
+            onLongPress={() => {
+              if (canRemove) {
+                this.showBlockActionSheet(item.block)
+              }
+            }}
+          />
         )
       }
       case 'addingPhoto': {
@@ -329,7 +330,7 @@ class Group extends React.PureComponent<Props, State> {
         const isOwnMessage = user.address === this.props.ownAddress
         const avatar = isSameUser ? undefined : user.avatar
         return (
-          <TouchableOpacity
+          <TouchableWithoutFeedback
             disabled={!isOwnMessage || this.removing(item.block)}
             onLongPress={() => this.showBlockActionSheet(item.block)}
           >
@@ -344,7 +345,7 @@ class Group extends React.PureComponent<Props, State> {
               )}
               isSameUser={isSameUser}
             />
-          </TouchableOpacity>
+          </TouchableWithoutFeedback>
         )
       }
       case FeedItemType.Leave:
