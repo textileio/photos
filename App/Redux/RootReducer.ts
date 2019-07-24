@@ -355,6 +355,12 @@ const migrations: MigrationManifest = {
     return rest
   },
   22: persistedState => {
+    // remove cafeSessions persisted data from account key
+    const state = persistedState as any
+    const { cafeSessions, ...rest } = state.account
+    return { ...state, account: rest }
+  },
+  23: persistedState => {
     const state = persistedState as any
     const { fileSync, ...rest } = state
     return rest
@@ -364,7 +370,7 @@ const migrations: MigrationManifest = {
 const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,
-  version: 22,
+  version: 23,
   whitelist: ['account', 'preferences', 'deviceLogs'],
   migrate: createMigrate(migrations, { debug: false }),
   debug: false

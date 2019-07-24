@@ -1,18 +1,6 @@
-import {
-  take,
-  put,
-  call,
-  all,
-  select,
-  fork,
-  takeEvery
-} from 'redux-saga/effects'
+import { take, put, call, all, select, takeEvery } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
-import Textile, {
-  IContact,
-  ICafeSession,
-  ICafeSessionList
-} from '@textile/react-native-sdk'
+import Textile, { IContact } from '@textile/react-native-sdk'
 
 import * as actions from './actions'
 import { contactsActions } from '../../features/contacts'
@@ -37,7 +25,7 @@ function* onNodeStarted() {
       yield put(actions.refreshProfileRequest())
       yield put(actions.refreshPeerIdRequest())
       yield put(actions.refreshAddressRequest())
-      yield put(actions.getCafeSessionsRequest())
+      yield put(actions.refreshAccountSeed.request())
       yield put(contactsActions.getContactsRequest())
       yield put(PhotoViewingActions.refreshThreadsRequest())
     } catch (error) {
@@ -144,49 +132,12 @@ function* setAvatar() {
   }
 }
 
-function* getCafeSessions() {
-  while (true) {
-    try {
-      yield take(getType(actions.getCafeSessionsRequest))
-      const list: ICafeSessionList | undefined = yield call(
-        Textile.cafes.sessions
-      )
-      if (list) {
-        yield put(actions.cafeSessionsSuccess(list.items))
-      }
-    } catch (error) {
-      yield call(logNewEvent, 'getCafeSessions', error.message, true)
-      yield put(actions.cafeSessionsError(error))
-    }
-  }
-}
-
-function* refreshCafeSessions() {
-  while (true) {
-    try {
-      yield take(getType(actions.refreshCafeSessionsRequest))
-      let sessions: ICafeSession[] = []
-      const list: ICafeSessionList | undefined = yield call(
-        Textile.cafes.sessions
-      )
-      if (list) {
-        const refreshEffcts = list.items.map(session => {
-          return call(Textile.cafes.refreshSession, session.id)
-        })
-        const results: Array<ICafeSession | undefined> = yield all(
-          refreshEffcts
-        )
-        sessions = results.reduce<ICafeSession[]>((acc, val) => {
-          if (val) {
-            acc.push(val)
-          }
-          return acc
-        }, [])
-      }
-      yield put(actions.cafeSessionsSuccess(sessions))
-    } catch (error) {
-      yield put(actions.cafeSessionsError(error))
-    }
+function* refreshAccountSeed() {
+  try {
+    const seed = yield call(Textile.account.seed)
+    yield put(actions.refreshAccountSeed.success(seed))
+  } catch (error) {
+    yield put(actions.refreshAccountSeed.failure(error))
   }
 }
 
@@ -198,8 +149,7 @@ export default function*() {
     call(refreshAddress),
     call(setUsername),
     call(setAvatar),
-    call(getCafeSessions),
-    call(refreshCafeSessions),
+    takeEvery(getType(actions.refreshAccountSeed.request), refreshAccountSeed),
     takeEvery(getType(actions.chooseProfilePhoto.request), chooseProfilePhoto)
   ])
 }

@@ -76,6 +76,10 @@ class UserProfile extends React.PureComponent<Props> {
     this.props.navigation.navigate('Cafes')
   }
 
+  _accountSeed = () => {
+    this.props.navigation.navigate('AccountSeed')
+  }
+
   _storage = () => {
     this.props.navigation.navigate('Storage')
   }
@@ -180,6 +184,9 @@ class UserProfile extends React.PureComponent<Props> {
           </TouchableOpacity>
           <TouchableOpacity style={styles.listItem} onPress={this._cafes}>
             <Text style={styles.listText}>Cafes</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.listItem} onPress={this._accountSeed}>
+            <Text style={styles.listText}>Account Seed</Text>
           </TouchableOpacity>
           {this.props.verboseUi && (
             <TouchableOpacity style={styles.listItem} onPress={this._storage}>

@@ -2,15 +2,6 @@ import { ServiceInfo } from '.'
 
 export default function(service: string): ServiceInfo | undefined {
   switch (service) {
-    case 'backgroundLocation':
-      return {
-        title: 'Wake with location',
-        subtitle: 'More timely notifications',
-        details:
-          'Background location allows Textile to wake up periodically to check for updates on your peer-to-peer network. ' +
-          'Without background location the app will never get any new information, it will be a pretty boring place. ' +
-          'We never keep, store, process, or share your location data with anyone or any device.'
-      }
     case 'notifications':
       return {
         title: 'Notifications',

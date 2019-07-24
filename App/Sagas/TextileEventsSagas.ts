@@ -28,6 +28,7 @@ import PhotoViewingActions, {
 import { contactsActions, ContactsAction } from '../features/contacts'
 import DeviceLogsActions, { DeviceLogsAction } from '../Redux/DeviceLogsRedux'
 import { groupActions, GroupAction } from '../features/group'
+import AppConfig from '../Config/app-config'
 
 function displayNotification(message: string, title?: string) {
   RNPushNotification.localNotification({
@@ -160,12 +161,30 @@ function nodeEvents() {
       Textile.events.addSyncUpdateListener(status => {
         const sizeComplete = Long.fromValue(status.sizeComplete).toNumber()
         const sizeTotal = Long.fromValue(status.sizeTotal).toNumber()
-        const groupSizeComplete = Long.fromValue(status.groupsSizeComplete).toNumber()
+        const groupSizeComplete = Long.fromValue(
+          status.groupsSizeComplete
+        ).toNumber()
         const groupSizeTotal = Long.fromValue(status.groupsSizeTotal).toNumber()
         const total = Math.max(sizeTotal, groupSizeTotal)
         const { id, numComplete, numTotal } = status
-        console.log(id, numComplete, numTotal, sizeComplete, sizeTotal, groupSizeComplete, groupSizeTotal)
-        emitter(groupActions.fileSync.syncUpdate(id, numComplete, numTotal, groupSizeComplete, total))
+        console.log(
+          id,
+          numComplete,
+          numTotal,
+          sizeComplete,
+          sizeTotal,
+          groupSizeComplete,
+          groupSizeTotal
+        )
+        emitter(
+          groupActions.fileSync.syncUpdate(
+            id,
+            numComplete,
+            numTotal,
+            groupSizeComplete,
+            total
+          )
+        )
       })
     )
     subscriptions.push(
@@ -204,15 +223,21 @@ function* handleNodeEvents() {
 
 function* initializeTextile() {
   try {
-    const verbose = yield select(PreferencesSelectors.verboseUi)
-    const phrase: string | undefined = yield call(
-      Textile.initialize,
-      verbose,
-      true
+    const initialized = yield call(
+      Textile.isInitialized,
+      AppConfig.textileRepoPath
     )
-    if (phrase) {
+    const verbose = yield select(PreferencesSelectors.verboseUi)
+    if (!initialized) {
+      const phrase = yield call(
+        Textile.initializeCreatingNewWalletAndAccount,
+        AppConfig.textileRepoPath,
+        verbose,
+        true
+      )
       yield put(accountActions.setRecoveryPhrase(phrase))
     }
+    yield call(Textile.launch, AppConfig.textileRepoPath, verbose)
   } catch (error) {
     yield put(TextileEventsActions.failedToInitializeNode(error))
   }

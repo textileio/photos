@@ -10,7 +10,7 @@ import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
 import ListItem from '../Components/ListItem'
 import RowSeparator from '../Components/RowSeparator'
 import { RootAction, RootState } from '../Redux/Types'
-import { accountActions, accountSelectors } from '../features/account'
+import { cafesActions, cafesSelectors } from '../features/cafes'
 
 interface Row {
   title: string
@@ -114,18 +114,33 @@ class CafeSession extends Component<Props> {
   }
 }
 
-const mapStateToProps = (
+function mapStateToProps(
   state: RootState,
   ownProps: NavigationScreenProps<NavProps>
-): StateProps => ({
-  cafeSession: accountSelectors.makeSessionForId(
-    ownProps.navigation.getParam('cafeSessionId')
-  )(state.account)
-})
+): StateProps {
+  return {
+    cafeSession: cafesSelectors.makeSessionForId(
+      ownProps.navigation.getParam('cafeSessionId')
+    )(state.cafes)
+  }
+}
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
-  refreshSession: () => dispatch(accountActions.refreshCafeSessionsRequest())
-})
+function mapDispatchToProps(
+  dispatch: Dispatch<RootAction>,
+  ownProps: Props
+): DispatchProps {
+  return {
+    refreshSession: () => {
+      if (ownProps.cafeSession) {
+        dispatch(
+          cafesActions.refreshCafeSession.request({
+            peerId: ownProps.cafeSession.cafe.peer
+          })
+        )
+      }
+    }
+  }
+}
 
 export default connect(
   mapStateToProps,

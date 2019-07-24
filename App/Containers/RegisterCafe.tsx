@@ -9,25 +9,21 @@ import {
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { NavigationScreenProps } from 'react-navigation'
+import Icon from '@textile/react-native-icon'
 
 import { RootState, RootAction } from '../Redux/Types'
-import { RegisterCafes } from '../features/cafes/reducer'
+import { Cafe } from '../features/cafes/models'
 import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
-
+import { cafesActions, cafesSelectors } from '../features/cafes'
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
-import Icon from '@textile/react-native-icon'
 import CafesList from '../Components/CafesList'
 import CafePeerIdModal from '../Components/CafePeerIdModal'
 import Loading from '../Components/Loading'
-import { cafesActions } from '../features/cafes'
 
 import { size, spacing, color } from '../styles'
 
 const Container: ViewStyle = {
-  flex: 1,
-  flexDirection: 'column',
-  justifyContent: 'flex-start',
-  alignItems: 'center'
+  flex: 1
 }
 
 const ListContainer: ViewStyle = {
@@ -44,7 +40,7 @@ const Buttons: ViewStyle = {
 
 interface StateProps {
   alreadyRegistered: ReadonlyArray<string>
-  registeringCafes: RegisterCafes
+  registeringCafes: Cafe[]
   nodeOnline: boolean
 }
 
@@ -52,11 +48,7 @@ interface DispatchProps {
   register: (peerId: string, token: string, success: () => void) => void
 }
 
-interface NavProps {
-  openPeerIdModal: () => void
-}
-
-type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
+type Props = StateProps & DispatchProps & NavigationScreenProps
 
 interface State {
   selected?: {
@@ -67,25 +59,16 @@ interface State {
 }
 
 class RegisterCafe extends Component<Props, State> {
-  static navigationOptions = ({
-    navigation
-  }: NavigationScreenProps<NavProps>) => {
+  static navigationOptions = ({ navigation }: NavigationScreenProps) => {
     const goBack = () => navigation.goBack()
-    const openPeerIdModal = navigation.getParam('openPeerIdModal')
     const headerLeft = (
       <TextileHeaderButtons left={true}>
         <Item title="Back" onPress={goBack} iconName="arrow-left" />
       </TextileHeaderButtons>
     )
-    const headerRight = (
-      <TextileHeaderButtons>
-        <Item title="Search" onPress={openPeerIdModal} iconName="search" />
-      </TextileHeaderButtons>
-    )
     return {
       headerLeft,
-      headerTitle: 'Register With a New Cafe',
-      headerRight
+      headerTitle: 'Register Cafe'
     }
   }
 
@@ -96,24 +79,15 @@ class RegisterCafe extends Component<Props, State> {
     }
   }
 
-  componentDidMount() {
-    this.props.navigation.setParams({
-      openPeerIdModal: this.togglePeerIdModal
-    })
-  }
-
   render() {
     const { peerId } = this.state.selected
       ? this.state.selected
       : { peerId: undefined }
-    const registrationStarted = peerId
-      ? Object.keys(this.props.registeringCafes).indexOf(peerId) > -1
-      : false
-    const error =
-      peerId && registrationStarted
-        ? this.props.registeringCafes[peerId].error
-        : undefined
-    const registering = registrationStarted && !error
+    const registeringCafe = this.props.registeringCafes.find(
+      cafe => cafe.peerId === peerId
+    )
+    const error = peerId && registeringCafe ? registeringCafe.error : undefined
+    const registering = registeringCafe && !error
     const buttonDisabled = !this.state.selected || registering
     return (
       <SafeAreaView style={Container}>
@@ -130,6 +104,7 @@ class RegisterCafe extends Component<Props, State> {
               selected={peerId}
               onSelect={this.onSelect}
               alreadyRegistered={this.props.alreadyRegistered}
+              onAddCustom={this.togglePeerIdModal}
             />
           )}
         </View>
@@ -152,7 +127,7 @@ class RegisterCafe extends Component<Props, State> {
     )
   }
 
-  onSelect = (peerId: string, token: string) => {
+  onSelect = (peerId: string, token: string) => () => {
     // If already selected, deselect it
     this.setState(prevState => {
       const alreadySelected = prevState.selected
@@ -200,16 +175,16 @@ class RegisterCafe extends Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: RootState): StateProps => {
-  const sessions = state.account.cafeSessions.sessions
+function mapStateToProps(state: RootState): StateProps {
+  const sessions = cafesSelectors.sessions(state.cafes)
   return {
     alreadyRegistered: sessions.map(session => session.id),
-    registeringCafes: state.cafes.registerCafe,
+    registeringCafes: cafesSelectors.regesteringCafes(state.cafes),
     nodeOnline: TextileEventsSelectors.online(state)
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
+function mapDispatchToProps(dispatch: Dispatch<RootAction>): DispatchProps {
   return {
     register: (peerId: string, token: string, success: () => void) =>
       dispatch(

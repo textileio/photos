@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { View, Text, ViewStyle, ImageStyle, TextStyle } from 'react-native'
 
 import Avatar from './Avatar'

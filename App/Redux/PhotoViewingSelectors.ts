@@ -21,6 +21,7 @@ export interface GroupAuthors {
   readonly size: number
   readonly members: IContact[]
   readonly memberCount: number
+  readonly valid: boolean
   readonly thumb?: IFiles
 }
 
@@ -125,7 +126,8 @@ export function getThreadsAndMembers(
       // required to ensure up to date index
       members: [...members],
       memberCount: allMembers.length,
-      thumb
+      thumb,
+      valid: thread.valid
     }
   })
   return threads

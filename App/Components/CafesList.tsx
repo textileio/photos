@@ -1,47 +1,58 @@
 import React, { Component } from 'react'
-import { FlatList } from 'react-native'
-import Config from 'react-native-config'
-import { Buffer } from 'buffer'
+import { FlatList, TouchableOpacity } from 'react-native'
 
-import CafeItem from './CafeItem'
-import Separator from './Separator'
-
-interface Cafe {
-  name: string
-  peerId: string
-  token: string
-}
+import { Cafe, cafes } from '../Models/cafes'
+import ListItem from './ListItem'
+import RowSeparator from './RowSeparator'
+import ActionText from './action-text'
+import { size } from '../styles'
 
 interface Props {
   selected?: string
-  onSelect: (peerId: string, token: string) => void
+  onSelect: (peerId: string, token: string) => () => void
   alreadyRegistered?: ReadonlyArray<string>
   ListHeaderComponent?: JSX.Element
   disabled?: boolean
+  onAddCustom?: () => void
 }
 
-const cafesBase64 = Config.RN_TEXTILE_CAFES_JSON
-const cafesString = new Buffer(cafesBase64, 'base64').toString()
-const cafes: Cafe[] = JSON.parse(cafesString)
+interface CafeItem {
+  type: 'cafe'
+  cafe: Cafe
+}
+
+interface AddCustomItem {
+  type: 'addCustom'
+}
+
+type Item = CafeItem | AddCustomItem
 
 export default class CafesList extends Component<Props> {
   render() {
     // Filter cafes as not to include those the user is already registered with
     // not used during onboarding
-    const filteredCafes = cafes.filter(cafe => {
-      if (this.props.alreadyRegistered) {
-        if (this.props.alreadyRegistered.indexOf(cafe.peerId) !== -1) {
-          return false
+    const filteredCafes: CafeItem[] = cafes
+      .filter(cafe => {
+        if (this.props.alreadyRegistered) {
+          if (this.props.alreadyRegistered.indexOf(cafe.peerId) !== -1) {
+            return false
+          }
         }
-      }
-      return true
-    })
+        return true
+      })
+      .map(
+        (cafe): CafeItem => {
+          return { type: 'cafe', cafe }
+        }
+      )
+    const data: Item[] = [...filteredCafes, { type: 'addCustom' }]
     return (
       <FlatList
-        data={filteredCafes}
+        style={{ flex: 1 }}
+        data={data}
         keyExtractor={this._keyExtractor}
         renderItem={this._renderItem}
-        ItemSeparatorComponent={() => <Separator />}
+        ItemSeparatorComponent={RowSeparator}
         ListHeaderComponent={
           this.props.ListHeaderComponent
             ? this.props.ListHeaderComponent
@@ -51,18 +62,38 @@ export default class CafesList extends Component<Props> {
     )
   }
 
-  _keyExtractor = (item: Cafe) => item.peerId
+  _keyExtractor = (item: Item) => {
+    switch (item.type) {
+      case 'cafe':
+        return item.cafe.peerId
+      case 'addCustom':
+        return 'addCustom'
+    }
+  }
 
-  _renderItem = ({ item }: { item: Cafe }) => (
-    <CafeItem
-      name={item.name}
-      peerId={item.peerId}
-      token={item.token}
-      disabled={this.props.disabled !== undefined ? this.props.disabled : false}
-      selected={
-        this.props.selected ? item.peerId === this.props.selected : false
-      }
-      onPressItem={this.props.onSelect}
-    />
-  )
+  _renderItem = ({ item }: { item: Item }) => {
+    switch (item.type) {
+      case 'cafe':
+        return (
+          <ListItem
+            title={item.cafe.name}
+            subtitle={item.cafe.peerId}
+            selecting={true}
+            selected={item.cafe.peerId === this.props.selected}
+            onSelect={this.props.onSelect(item.cafe.peerId, item.cafe.token)}
+            disabled={this.props.disabled}
+          />
+        )
+      case 'addCustom':
+        return (
+          <TouchableOpacity
+            style={{ alignItems: 'center', padding: size._024 }}
+            onPress={this.props.onAddCustom}
+            disabled={this.props.disabled}
+          >
+            <ActionText text="ENTER CUSTOM CAFE" iconName="pencil-create" />
+          </TouchableOpacity>
+        )
+    }
+  }
 }

@@ -5,26 +5,23 @@ import { connect } from 'react-redux'
 
 import { RootState, RootAction } from '../Redux/Types'
 import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
-import { RegisterCafes } from '../features/cafes/reducer'
-import { cafesActions } from '../features/cafes'
+import { Cafe } from '../features/cafes/models'
+import { cafesActions, cafesSelectors } from '../features/cafes'
 
 import CafesList from '../Components/CafesList'
 import Button from '../Components/LargeButton'
-import CafeListHeader from '../Components/CafeListHeader'
 import CafePeerIdModal from '../Components/CafePeerIdModal'
 import Loading from '../Components/Loading'
 
 import { spacing, textStyle, color } from '../styles'
 
 const Container: ViewStyle = {
-  flexDirection: 'column',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
   flex: 1
 }
 
 const TITLE: TextStyle = {
   ...textStyle.header_l,
+  marginTop: spacing._016,
   marginBottom: spacing._008,
   paddingHorizontal: spacing._016
 }
@@ -36,7 +33,8 @@ const SUBTITLE: TextStyle = {
 }
 
 const SubmitButton: ViewStyle = {
-  marginTop: spacing._016
+  marginTop: spacing._016,
+  alignSelf: 'center'
 }
 
 interface OwnProps {
@@ -44,7 +42,7 @@ interface OwnProps {
 }
 
 interface StateProps {
-  registeringCafes: RegisterCafes
+  registeringCafes: Cafe[]
   nodeOnline: boolean
 }
 
@@ -70,7 +68,7 @@ class ChooseCafe extends Component<Props, State> {
     }
   }
 
-  onSelect = (peerId: string, token: string) => {
+  onSelect = (peerId: string, token: string) => () => {
     // If already selected, deselect it
     this.setState(prevState => {
       const alreadySelected = prevState.selected
@@ -91,14 +89,11 @@ class ChooseCafe extends Component<Props, State> {
     const { peerId } = this.state.selected
       ? this.state.selected
       : { peerId: undefined }
-    const registrationStarted = peerId
-      ? Object.keys(this.props.registeringCafes).indexOf(peerId) > -1
-      : false
-    const error =
-      peerId && registrationStarted
-        ? this.props.registeringCafes[peerId].error
-        : undefined
-    const registering = registrationStarted && !error
+    const registeringCafe = this.props.registeringCafes.find(
+      cafe => cafe.peerId === peerId
+    )
+    const error = peerId && registeringCafe ? registeringCafe.error : undefined
+    const registering = registeringCafe && !error
     const buttonDisabled = !this.state.selected || registering
     return (
       <SafeAreaView style={Container}>
@@ -117,14 +112,12 @@ class ChooseCafe extends Component<Props, State> {
             disabled={registering}
             selected={peerId}
             onSelect={this.onSelect}
-            ListHeaderComponent={
-              <CafeListHeader onPress={this.togglePeerIdModal} />
-            }
+            onAddCustom={this.togglePeerIdModal}
           />
         )}
         {error && <Text>{error}</Text>}
         <Button
-          text="Continue"
+          text="Register Cafe"
           onPress={this.onButtonPress}
           processing={registering}
           disabled={buttonDisabled}
@@ -183,7 +176,7 @@ class ChooseCafe extends Component<Props, State> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   return {
-    registeringCafes: state.cafes.registerCafe,
+    registeringCafes: cafesSelectors.regesteringCafes(state.cafes),
     nodeOnline: TextileEventsSelectors.online(state)
   }
 }

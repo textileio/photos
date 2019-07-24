@@ -105,12 +105,12 @@ export default class CafePeerIdModal extends Component<Props, State> {
       >
         <SafeAreaView style={ModalView}>
           <View style={Container}>
-            <Text style={Header}>Enter Your Own Cafe</Text>
+            <Text style={Header}>Custom Cafe</Text>
             <View style={InputContainer}>
               <Input
                 style={InputStyle}
                 value={this.state.peerId}
-                label={peerIdInputIsBlank ? 'Enter cafe peer id...' : ''}
+                label={peerIdInputIsBlank ? 'Peer ID...' : ''}
                 onChangeText={this.handleNewPeerId}
               />
             </View>
@@ -118,7 +118,7 @@ export default class CafePeerIdModal extends Component<Props, State> {
               <Input
                 style={InputStyle}
                 value={this.state.token}
-                label={tokenInputIsBlank ? 'Enter token...' : ''}
+                label={tokenInputIsBlank ? 'Token...' : ''}
                 onChangeText={this.handleNewToken}
               />
             </View>

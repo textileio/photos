@@ -69,7 +69,8 @@ export function* monitorThreadAddedNotifications(
     // We need this one because the callback we get from the node doesn't include key. This queries for the thread and gets
     // all the required data for threadAdded()
     const thread: IThread = yield call(Textile.threads.get, action.payload.id)
-    yield put(PhotoViewingActions.threadAdded(thread))
+    const withValid = { ...thread, valid: true }
+    yield put(PhotoViewingActions.threadAdded(withValid))
   } catch (error) {
     yield put(
       TextileEventsActions.newErrorMessage(
@@ -138,7 +139,9 @@ export function* refreshThreads(
        */
       const isSharedThread = thread.key.indexOf('textile_photos-shared') === 0
       if (isSharedThread) {
-        yield put(PhotoViewingActions.insertThread(thread))
+        const valid = thread.headBlocks.length > 0
+        const withValid = { ...thread, valid }
+        yield put(PhotoViewingActions.insertThread(withValid))
         yield put(PhotoViewingActions.refreshThreadRequest(thread.id))
       }
     }

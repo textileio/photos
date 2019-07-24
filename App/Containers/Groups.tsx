@@ -8,9 +8,9 @@ import {
   Text,
   TouchableOpacity,
   Alert,
-  Platform,
   ListRenderItemInfo
 } from 'react-native'
+import Toast from 'react-native-easy-toast'
 
 import { RootAction, RootState } from '../Redux/Types'
 
@@ -36,7 +36,6 @@ import styles from './Styles/GroupsStyles'
 interface StateProps {
   groups: ReadonlyArray<GroupRows>
   showNotificationsPrompt: boolean
-  showLocationPrompt: boolean
   itemCount: number
 }
 
@@ -45,8 +44,6 @@ interface DispatchProps {
   navigateToThread: (id: string, name: string) => void
   enableNotifications: () => void
   completeNotifications: () => void
-  completeBackgroundLocation: () => void
-  enableLocation: () => void
 }
 
 interface NavProps {
@@ -91,6 +88,8 @@ class Groups extends React.PureComponent<Props, State> {
     }
   }
 
+  toast?: Toast
+
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -115,6 +114,7 @@ class Groups extends React.PureComponent<Props, State> {
           id={item.group.id}
           {...item.group}
           onPress={this._onPressItem}
+          onPressInvalid={this.displayThreadInvalidMessage}
         />
       )
     } else if (item.invite) {
@@ -153,6 +153,15 @@ class Groups extends React.PureComponent<Props, State> {
     this.setState({ showCreateGroupModal: false })
   }
 
+  displayThreadInvalidMessage = () => {
+    if (this.toast) {
+      this.toast.show(
+        'This group contains invald data. It may not work correctly and you should probably delete it.',
+        3000
+      )
+    }
+  }
+
   componentDidMount() {
     this.props.navigation.setParams({
       openDrawer: this.openDrawer,
@@ -168,9 +177,6 @@ class Groups extends React.PureComponent<Props, State> {
     ) {
       // ensure that it only gets called once by using the first update of the state or a new group add
       this.notificationPrompt()
-    } else if (this.props.groups.length && this.props.showLocationPrompt) {
-      // ensure it get
-      this.locationPrompt()
     }
   }
 
@@ -192,6 +198,12 @@ class Groups extends React.PureComponent<Props, State> {
           navigateTo={true}
           cancel={this.cancelCreateThread}
           complete={this.completeCreateThread}
+        />
+        <Toast
+          ref={toast => {
+            this.toast = toast ? toast : undefined
+          }}
+          position="center"
         />
       </View>
     )
@@ -223,42 +235,6 @@ class Groups extends React.PureComponent<Props, State> {
       { cancelable: false }
     )
   }
-
-  // Simple Alert based prompt to get Notification permissions
-  locationPrompt() {
-    // give the user a prompt
-    const platform = Platform.OS === 'android' ? 'Android' : 'iOS'
-    // never show it again
-    this.props.completeBackgroundLocation()
-    Alert.alert(
-      'Location',
-      `Textile can find content shared to you more quickly by having ${platform} wake it up when you change locations. This data is never collected or stored.`,
-      [
-        {
-          text: 'Okay',
-          onPress: () => {
-            // never show it again
-            this.props.enableLocation()
-          }
-        },
-        {
-          text: 'Not now',
-          style: 'cancel',
-          onPress: () => {
-            // never show it again
-          }
-        },
-        {
-          text: 'Show all options',
-          onPress: () => {
-            // take them to settings
-            this.props.navigation.navigate('Settings')
-          }
-        }
-      ],
-      { cancelable: false }
-    )
-  }
 }
 
 interface GroupRows {
@@ -267,7 +243,7 @@ interface GroupRows {
   id: string
 }
 
-const mapStateToProps = (state: RootState): StateProps => {
+function mapStateToProps(state: RootState): StateProps {
   const threads: GroupAuthors[] = getThreadsAndMembers(state, 8)
   const memberCount = threads.reduce((prev, thread) => {
     return prev + thread.memberCount
@@ -280,9 +256,6 @@ const mapStateToProps = (state: RootState): StateProps => {
     PreferencesSelectors.showNotificationPrompt(state) &&
     threads.length > 0 &&
     memberCount > threads.length
-
-  const showLocationPrompt =
-    PreferencesSelectors.showBackgroundLocationPrompt(state) && itemCount > 8
 
   const invites: GroupRows[] = inboundInvites(state).map(inbound => ({
     invite: inbound,
@@ -298,12 +271,11 @@ const mapStateToProps = (state: RootState): StateProps => {
   return {
     groups,
     showNotificationsPrompt,
-    showLocationPrompt,
     itemCount
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
+function mapDispatchToProps(dispatch: Dispatch<RootAction>): DispatchProps {
   return {
     refreshMessages: () => {
       dispatch(TextileEventsActions.refreshMessagesRequest())
@@ -314,16 +286,8 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
     enableNotifications: () => {
       dispatch(PreferencesActions.toggleServicesRequest('notifications', true))
     },
-    enableLocation: () => {
-      dispatch(
-        PreferencesActions.toggleServicesRequest('backgroundLocation', true)
-      )
-    },
     completeNotifications: () => {
       dispatch(PreferencesActions.completeTourSuccess('notifications'))
-    },
-    completeBackgroundLocation: () => {
-      dispatch(PreferencesActions.completeTourSuccess('location'))
     }
   }
 }

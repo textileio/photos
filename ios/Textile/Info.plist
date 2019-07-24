@@ -68,12 +68,6 @@
 	<string>So you can take a photo and store it in the secure Textile cloud.</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Authorizing access to your contacts makes it easy for you to invite others to Textile. None of you contact data is saved or transmitted in any way.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>We use location changes to trigger auto-uploading of your photos.</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>We use location changes to trigger auto-uploading of your photos.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We use location changes to trigger auto-uploading of your photos.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>We would like to save photos to your photo gallery</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -99,7 +93,6 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
-		<string>location</string>
 	</array>
 	<key>UIFileSharingEnabled</key>
 	<true/>

@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 import { ActionType, getType } from 'typesafe-actions'
-import { IContact, ICafeSession } from '@textile/react-native-sdk'
+import { IContact } from '@textile/react-native-sdk'
 
 import { SharedImage } from '../group/add-photo/models'
 import * as actions from './actions'
@@ -25,15 +25,14 @@ export interface AccountState {
     readonly value?: string
     readonly error?: string
   }
+  readonly accountSeed: {
+    readonly value?: string
+    readonly error?: string
+  }
   readonly avatar: {
     readonly error?: string
   }
   readonly recoveryPhrase: string
-  readonly cafeSessions: {
-    readonly sessions: ReadonlyArray<ICafeSession>
-    readonly processing: boolean
-    readonly error?: string
-  }
 }
 
 export type AccountAction = ActionType<typeof actions>
@@ -104,6 +103,24 @@ export default combineReducers<AccountState, AccountAction>({
         return state
     }
   },
+  accountSeed: (state = {}, action) => {
+    switch (action.type) {
+      case getType(actions.refreshAccountSeed.request): {
+        return {}
+      }
+      case getType(actions.refreshAccountSeed.success): {
+        return { value: action.payload }
+      }
+      case getType(actions.refreshAccountSeed.failure): {
+        const obj = action.payload
+        const error =
+          (obj.message as string) || (obj as string) || 'unknown error'
+        return { ...state, error }
+      }
+      default:
+        return state
+    }
+  },
   avatar: (state = {}, action) => {
     switch (action.type) {
       case getType(actions.setAvatar.failure): {
@@ -120,26 +137,6 @@ export default combineReducers<AccountState, AccountAction>({
     switch (action.type) {
       case getType(actions.setRecoveryPhrase):
         return action.payload.recoveryPhrase
-      default:
-        return state
-    }
-  },
-  cafeSessions: (state = { processing: false, sessions: [] }, action) => {
-    switch (action.type) {
-      case getType(actions.refreshCafeSessionsRequest):
-        return { ...state, processing: true, error: undefined }
-      case getType(actions.cafeSessionsSuccess):
-        return {
-          sessions: action.payload.sessions,
-          processing: false,
-          error: undefined
-        }
-      case getType(actions.cafeSessionsError): {
-        const obj = action.payload.error
-        const error =
-          (obj.message as string) || (obj as string) || 'unknown error'
-        return { ...state, processing: false, error }
-      }
       default:
         return state
     }

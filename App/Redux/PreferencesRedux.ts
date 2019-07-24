@@ -47,9 +47,7 @@ export type TourScreens =
   | 'threadsManager'
   | 'notifications'
   | 'feed'
-  | 'location'
 export type ServiceType =
-  | 'backgroundLocation'
   | 'notifications'
   | 'INVITE_RECEIVED'
   | 'ACCOUNT_PEER_JOINED'
@@ -92,8 +90,7 @@ export const initialState: PreferencesState = {
     threadView: true,
     threadsManager: true,
     notifications: true,
-    feed: true,
-    location: true
+    feed: true
   },
   services: {
     notifications: {
@@ -118,9 +115,6 @@ export const initialState: PreferencesState = {
       status: false
     },
     PEER_LEFT: {
-      status: false
-    },
-    backgroundLocation: {
       status: false
     }
   },
@@ -244,14 +238,7 @@ export const PreferencesSelectors = {
   autoPinStatus: (state: RootState) =>
     state.preferences.storage.autoPinPhotos.status,
   showNotificationPrompt: (state: RootState) =>
-    state.preferences.tourScreens.notifications,
-  showBackgroundLocationPrompt: (state: RootState) => {
-    return (
-      !state.preferences.tourScreens.notifications && // completed notification tour
-      state.preferences.services.notifications.status === true && // enabled notifications
-      state.preferences.tourScreens.location === true
-    ) // hasn't been prompted for location permission
-  }
+    state.preferences.tourScreens.notifications
 }
 
 export default actions
