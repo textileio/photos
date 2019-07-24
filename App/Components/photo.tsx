@@ -6,7 +6,6 @@ import {
   Dimensions,
   Modal
 } from 'react-native'
-import { ICafeSyncGroupStatus } from '@textile/react-native-sdk'
 import ImageZoom from 'react-native-image-pan-zoom'
 import ProgressCircle from 'react-native-progress-circle'
 import Long from 'long'
@@ -18,6 +17,7 @@ import LikeAndComment, {
 } from './like-and-comment'
 import { spacing, size, color, textStyle } from '../styles'
 import Comments, { Props as CommentsProps } from './comments'
+import { GroupStatus } from '../features/group/file-sync/models'
 
 const CONTAINER: ViewStyle = {
   paddingTop: spacing._016,
@@ -33,7 +33,7 @@ interface Props extends MessageProps, LikeAndCommentProps, CommentsProps {
   photoId: string
   fileIndex: number
   photoWidth: number
-  syncStaus?: ICafeSyncGroupStatus
+  syncStaus?: GroupStatus
   pinchZoom?: boolean
   pinchHeight?: number
   pinchWidth?: number
