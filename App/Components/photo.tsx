@@ -121,7 +121,7 @@ export default class Photo extends React.PureComponent<Props> {
 
   renderSelection() {
     // Just uses a touchable image, when touched will enable it's own modal in full screen
-    let progress: number | undefined = 50
+    const progress: number | undefined = 50
     // if (this.props.syncStaus) {
     //   const complete = Long.fromValue(this.props.syncStaus.sizeComplete || 0)
     //   const total = Long.fromValue(this.props.syncStaus.sizeTotal || 0)
@@ -148,9 +148,17 @@ export default class Photo extends React.PureComponent<Props> {
           this.props.photoWidth,
           this.props.photoWidth
         )}
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingLeft: spacing.screenEdge, paddingRight: spacing.screenEdge, paddingTop: spacing.screenEdge }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingLeft: spacing.screenEdge,
+            paddingRight: spacing.screenEdge,
+            paddingTop: spacing.screenEdge
+          }}
+        >
           <LikeAndComment {...this.props} />
-          {progress &&
+          {progress && (
             <ProgressCircle
               percent={progress}
               radius={size._012}
@@ -159,7 +167,7 @@ export default class Photo extends React.PureComponent<Props> {
               shadowColor={color.grey_4}
               bgColor={color.screen_primary}
             />
-          }
+          )}
         </View>
         <Comments {...this.props} />
       </TouchableOpacity>

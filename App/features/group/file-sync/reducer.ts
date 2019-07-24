@@ -17,13 +17,25 @@ export default combineReducers<FileSyncState, FileSyncAction>({
   groups: (state = {}, action) => {
     switch (action.type) {
       case getType(actions.syncUpdate): {
-        const { groupId, numberComplete, numberTotal, sizeComplete, sizeTotal } = action.payload
-        return { ...state, [groupId]: { numberComplete, numberTotal, sizeComplete, sizeTotal  } }
+        const {
+          groupId,
+          numberComplete,
+          numberTotal,
+          sizeComplete,
+          sizeTotal
+        } = action.payload
+        return {
+          ...state,
+          [groupId]: { numberComplete, numberTotal, sizeComplete, sizeTotal }
+        }
       }
       case getType(actions.syncFailed): {
         const { groupId, errorId, reason } = action.payload
         const previous = state[groupId]
-        return { ...state, [groupId]: { ...previous, error: { id: errorId, reason } } }
+        return {
+          ...state,
+          [groupId]: { ...previous, error: { id: errorId, reason } }
+        }
       }
       case getType(actions.syncComplete): {
         const { groupId } = action.payload
