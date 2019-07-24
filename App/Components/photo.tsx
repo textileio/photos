@@ -7,7 +7,7 @@ import {
   Modal
 } from 'react-native'
 import ImageZoom from 'react-native-image-pan-zoom'
-import ProgressCircle from 'react-native-progress-circle'
+import { Circle } from 'react-native-progress'
 import Long from 'long'
 
 import Message, { Props as MessageProps } from './message'
@@ -121,13 +121,12 @@ export default class Photo extends React.PureComponent<Props> {
 
   renderSelection() {
     // Just uses a touchable image, when touched will enable it's own modal in full screen
-    const progress: number | undefined = 50
-    // if (this.props.syncStaus) {
-    //   const complete = Long.fromValue(this.props.syncStaus.sizeComplete || 0)
-    //   const total = Long.fromValue(this.props.syncStaus.sizeTotal || 0)
-    //   progress = complete.divide(total).toNumber() * 100
-    //   console.log('PROGRESS:', progress)
-    // }
+    let progress: number | undefined
+    if (this.props.syncStaus) {
+      const { sizeComplete, sizeTotal } = this.props.syncStaus
+      progress = sizeComplete / sizeTotal
+      console.log('PROGRESS:', progress)
+    }
     return (
       <TouchableOpacity
         style={CONTAINER}
@@ -158,14 +157,13 @@ export default class Photo extends React.PureComponent<Props> {
           }}
         >
           <LikeAndComment {...this.props} />
-          {progress && (
-            <ProgressCircle
-              percent={progress}
-              radius={size._012}
-              borderWidth={2}
+          {progress !== undefined && (
+            <Circle
+              showsText={false}
+              size={size._024}
+              thickness={2}
+              progress={progress}
               color={color.brandBlue}
-              shadowColor={color.grey_4}
-              bgColor={color.screen_primary}
             />
           )}
         </View>
