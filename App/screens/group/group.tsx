@@ -257,10 +257,17 @@ class Group extends React.PureComponent<Props, State> {
           ) > -1 || this.liking(block)
         const commentsData: ReadonlyArray<CommentData> = comments.map(
           comment => {
+            const isOwnComment = user.address === comment.user.address
+            const isRemovingComment =
+              this.props.removing.indexOf(comment.id) !== -1
+            const canRemoveComment = isOwnComment && !isRemovingComment
             return {
               id: comment.id,
               username: comment.user.name || '?',
-              body: comment.body
+              body: comment.body,
+              onLongPress: canRemoveComment
+                ? () => this.showBlockActionSheet(comment.id)
+                : undefined
             }
           }
         )

@@ -89,7 +89,6 @@ export default class Photo extends React.PureComponent<Props> {
         maxScale={2.5}
         enableCenterFocus={false}
         onClick={this.toggleSelected}
-        onLongPress={this.props.onLongPress}
         clickDistance={1}
       >
         <View
@@ -127,7 +126,6 @@ export default class Photo extends React.PureComponent<Props> {
         style={CONTAINER}
         activeOpacity={1}
         onPress={this.toggleSelected}
-        onLongPress={this.props.onLongPress}
       >
         <Modal
           animationType={'fade'}
