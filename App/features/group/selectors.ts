@@ -11,13 +11,6 @@ export const groupItems = (
   const feed = feedSelectors
     .feedItems(state.feed, groupId)
     .map(feedItemData => {
-      // console.log('LOOKING FOR:', feedItemData.block)
-      // console.log('CURRENT STATE:', state.fileSync.groups)
-      // const hasIt = Object.keys(state.fileSync.groups).indexOf(feedItemData.block)
-      // const status = fileSyncSelectors.makeStatusForId(feedItemData.block)(
-      //   state.fileSync
-      // )
-      // console.log('INCLUDES IT:', feedItemData.block, hasIt, status)
       const syncStatus = fileSyncSelectors.makeStatusForId(feedItemData.block)(
         state.fileSync
       )

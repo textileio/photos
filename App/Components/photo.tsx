@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import ImageZoom from 'react-native-image-pan-zoom'
 import { Circle } from 'react-native-progress'
-import Long from 'long'
+import Icon from '@textile/react-native-icon'
 
 import Message, { Props as MessageProps } from './message'
 import ProgressiveImage from './ProgressiveImage'
@@ -33,7 +33,8 @@ interface Props extends MessageProps, LikeAndCommentProps, CommentsProps {
   photoId: string
   fileIndex: number
   photoWidth: number
-  syncStaus?: GroupStatus
+  syncStatus?: GroupStatus
+  displayError?: (message: string) => () => void
   pinchZoom?: boolean
   pinchHeight?: number
   pinchWidth?: number
@@ -122,10 +123,9 @@ export default class Photo extends React.PureComponent<Props> {
   renderSelection() {
     // Just uses a touchable image, when touched will enable it's own modal in full screen
     let progress: number | undefined
-    if (this.props.syncStaus) {
-      const { sizeComplete, sizeTotal } = this.props.syncStaus
+    if (this.props.syncStatus) {
+      const { sizeComplete, sizeTotal } = this.props.syncStatus
       progress = sizeComplete / sizeTotal
-      console.log('PROGRESS:', progress)
     }
     return (
       <TouchableOpacity
@@ -157,7 +157,7 @@ export default class Photo extends React.PureComponent<Props> {
           }}
         >
           <LikeAndComment {...this.props} />
-          {progress !== undefined && (
+          {this.props.syncStatus && !this.props.syncStatus.error && (
             <Circle
               showsText={false}
               size={size._024}
@@ -165,6 +165,21 @@ export default class Photo extends React.PureComponent<Props> {
               progress={progress}
               color={color.brandBlue}
             />
+          )}
+          {this.props.syncStatus && this.props.syncStatus.error && (
+            <TouchableOpacity
+              onPress={
+                this.props.displayError
+                  ? this.props.displayError(this.props.syncStatus.error.reason)
+                  : undefined
+              }
+            >
+              <Icon
+                name="alert-circle"
+                size={size._024}
+                style={{ color: color.severe_3 }}
+              />
+            </TouchableOpacity>
           )}
         </View>
         <Comments {...this.props} />
