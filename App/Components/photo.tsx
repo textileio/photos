@@ -49,14 +49,16 @@ export default class Photo extends React.PureComponent<Props> {
   progressiveElement(width: number, height: number, minWidth: number) {
     return (
       <TouchableWithoutFeedback onLongPress={this.props.onLongPress}>
-        <ProgressiveImage
-          imageId={this.props.photoId}
-          fileIndex={this.props.fileIndex}
-          showPreview={true}
-          forMinWidth={minWidth}
-          style={{ width, height, overflow: 'hidden' }}
-          resizeMode={'cover'}
-        />
+        <View>
+          <ProgressiveImage
+            imageId={this.props.photoId}
+            fileIndex={this.props.fileIndex}
+            showPreview={true}
+            forMinWidth={minWidth}
+            style={{ width, height, overflow: 'hidden' }}
+            resizeMode={'cover'}
+          />
+        </View>
       </TouchableWithoutFeedback>
     )
   }

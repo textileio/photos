@@ -308,11 +308,11 @@ class Group extends React.PureComponent<Props, State> {
             pinchZoom={true}
             pinchWidth={pinchWidth}
             pinchHeight={pinchHeight}
-            onLongPress={() => {
-              if (canRemove) {
-                this.showBlockActionSheet(item.block)
-              }
-            }}
+            onLongPress={
+              canRemove
+                ? () => this.showBlockActionSheet(item.block)
+                : undefined
+            }
           />
         )
       }
@@ -479,7 +479,9 @@ const mapStateToProps = (
   const selfAddress = accountSelectors.getAddress(state.account) || ''
   const renaming = Object.keys(state.group.renameGroup).indexOf(threadId) > -1
   const liking = Object.keys(state.ui.likingPhotos)
-  const removing = Object.keys(state.group.ignore)
+  const removing = Object.keys(state.group.ignore).filter(key => {
+    return state.group.ignore[key] !== {}
+  })
   return {
     items,
     groupName,

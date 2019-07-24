@@ -205,11 +205,9 @@ const mapStateToProps = (state: RootState): StateProps => {
 
   const comments = viewingPhoto ? viewingPhoto.comments : []
 
-  const removing = viewingPhoto
-    ? Object.keys(state.group.ignore).filter(key => {
-        return state.group.ignore[key] !== {}
-      })
-    : []
+  const removing = Object.keys(state.group.ignore).filter(key => {
+    return state.group.ignore[key] !== {}
+  })
 
   return {
     selfAddress,
