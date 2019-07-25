@@ -7,6 +7,7 @@ import { feedReducer, FeedState } from './feed'
 import { addMessageReducer, AddMessageState } from './add-message'
 import { addPhotoReducer, ProcessingImagesState } from './add-photo'
 import { renameGroupReducer, RenameGroupState } from './rename-group'
+import { ignoreReducer, IgnoreState } from './ignore'
 
 import * as actions from './actions'
 
@@ -15,6 +16,7 @@ export interface GroupState {
   addMessage: AddMessageState
   addPhoto: ProcessingImagesState
   renameGroup: RenameGroupState
+  ignore: IgnoreState
 }
 
 export type GroupAction = ActionType<typeof actions>
@@ -30,7 +32,8 @@ const reducer = combineReducers<GroupState>({
   feed: feedReducer,
   addMessage: addMessageReducer,
   addPhoto: addPhotoReducer,
-  renameGroup: renameGroupReducer
+  renameGroup: renameGroupReducer,
+  ignore: ignoreReducer
 })
 
 export default persistReducer(persistConfig, reducer)

@@ -3,6 +3,7 @@ import {
   View,
   ViewStyle,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Dimensions,
   Modal
 } from 'react-native'
@@ -33,6 +34,7 @@ interface Props extends MessageProps, LikeAndCommentProps, CommentsProps {
   pinchZoom?: boolean
   pinchHeight?: number
   pinchWidth?: number
+  onLongPress?: () => void
 }
 
 export default class Photo extends React.PureComponent<Props> {
@@ -46,14 +48,21 @@ export default class Photo extends React.PureComponent<Props> {
 
   progressiveElement(width: number, height: number, minWidth: number) {
     return (
-      <ProgressiveImage
-        imageId={this.props.photoId}
-        fileIndex={this.props.fileIndex}
-        showPreview={true}
-        forMinWidth={minWidth}
-        style={{ width, height, overflow: 'hidden' }}
-        resizeMode={'cover'}
-      />
+      <TouchableWithoutFeedback
+        onPress={this.toggleSelected}
+        onLongPress={this.props.onLongPress}
+      >
+        <View>
+          <ProgressiveImage
+            imageId={this.props.photoId}
+            fileIndex={this.props.fileIndex}
+            showPreview={true}
+            forMinWidth={minWidth}
+            style={{ width, height, overflow: 'hidden' }}
+            resizeMode={'cover'}
+          />
+        </View>
+      </TouchableWithoutFeedback>
     )
   }
 
@@ -118,11 +127,7 @@ export default class Photo extends React.PureComponent<Props> {
   renderSelection() {
     // Just uses a touchable image, when touched will enable it's own modal in full screen
     return (
-      <TouchableOpacity
-        style={CONTAINER}
-        activeOpacity={1}
-        onPress={this.toggleSelected}
-      >
+      <View style={CONTAINER}>
         <Modal
           animationType={'fade'}
           transparent={false}
@@ -139,7 +144,7 @@ export default class Photo extends React.PureComponent<Props> {
         )}
         <LikeAndComment {...this.props} />
         <Comments {...this.props} />
-      </TouchableOpacity>
+      </View>
     )
   }
 

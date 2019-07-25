@@ -3,6 +3,7 @@ import {
   View,
   ViewStyle,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Text,
   TextStyle
 } from 'react-native'
@@ -26,6 +27,7 @@ export interface CommentData {
   username: string
   body: string
   date?: string
+  onLongPress?: () => void
 }
 
 export interface Props {
@@ -45,11 +47,15 @@ const Comments = (props: Props) => {
     .slice(index, index + displayCount)
     .map(commentData => {
       return (
-        <KeyValueText
+        <TouchableWithoutFeedback
           key={commentData.id}
-          keyString={commentData.username}
-          value={commentData.body}
-        />
+          onLongPress={commentData.onLongPress}
+        >
+          <KeyValueText
+            keyString={commentData.username}
+            value={commentData.body}
+          />
+        </TouchableWithoutFeedback>
       )
     })
   return (

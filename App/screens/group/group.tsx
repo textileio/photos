@@ -6,7 +6,8 @@ import {
   FlatList,
   ListRenderItemInfo,
   Dimensions,
-  Alert
+  TouchableWithoutFeedback,
+  View
 } from 'react-native'
 import { NavigationScreenProps, SafeAreaView } from 'react-navigation'
 import uuid from 'uuid/v4'
@@ -55,6 +56,7 @@ interface StateProps {
   renaming: boolean
   canInvite: boolean
   liking: ReadonlyArray<string>
+  removing: ReadonlyArray<string>
 }
 
 interface DispatchProps {
@@ -66,12 +68,13 @@ interface DispatchProps {
   leaveThread: () => void
   retryShare: (key: string) => void
   cancelShare: (key: string) => void
+  remove: (blockId: string) => void
 }
 
 interface NavProps {
   threadId: string
   groupName: string
-  showActionSheet: () => void
+  showThreadActionSheet: () => void
 }
 
 type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
@@ -79,6 +82,8 @@ type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 interface State {
   showInviteContactModal: boolean
   showRenameGroupModal: boolean
+  // The current selected block (message/photo). For use in the block action sheet
+  selectedBlockId?: string
 }
 
 class Group extends React.PureComponent<Props, State> {
@@ -88,7 +93,7 @@ class Group extends React.PureComponent<Props, State> {
     // const openDrawer = navigation.getParam('openDrawer')
     // const addContact = navigation.getParam('addContact')
     const groupName = navigation.getParam('groupName')
-    const showActionSheet = navigation.getParam('showActionSheet')
+    const showThreadActionSheet = navigation.getParam('showThreadActionSheet')
     const back = () => navigation.goBack()
     const headerLeft = (
       <TextileHeaderButtons left={true}>
@@ -104,7 +109,7 @@ class Group extends React.PureComponent<Props, State> {
         <TextileHeaderButtonsItem
           title="More"
           iconName="more-vertical"
-          onPress={showActionSheet}
+          onPress={showThreadActionSheet}
         />
       </TextileHeaderButtons>
     )
@@ -115,7 +120,10 @@ class Group extends React.PureComponent<Props, State> {
     }
   }
 
-  actionSheet: any
+  // Action sheet to handle thread options like renaming the thread
+  threadActionSheet: any
+  // Action sheet to handle block options like removing (ignoring) a message
+  blockActionSheet: any
 
   constructor(props: Props) {
     super(props)
@@ -129,13 +137,14 @@ class Group extends React.PureComponent<Props, State> {
     this.props.navigation.addListener('willFocus', this.onFocus)
     this.props.navigation.setParams({
       groupName: this.props.groupName,
-      showActionSheet: this.showActionSheet
+      showThreadActionSheet: this.showThreadActionSheet
     })
   }
 
   render() {
     const threadId = this.props.navigation.getParam('threadId')
-    const options = [
+    // Thread action sheet
+    const threadActionSheetOptions = [
       ...(this.props.canInvite ? ['Invite Others'] : []),
       ...(this.props.selfAddress === this.props.initiator
         ? ['Rename Group']
@@ -143,7 +152,10 @@ class Group extends React.PureComponent<Props, State> {
       'Leave Group',
       'Cancel'
     ]
-    const cancelButtonIndex = options.indexOf('Cancel')
+    const threadCancelButtonIndex = threadActionSheetOptions.indexOf('Cancel')
+    // Block action sheet
+    const blockActionSheetOptions = ['Remove', 'Cancel']
+    const blockCancelButtonIndex = blockActionSheetOptions.indexOf('Cancel')
     return (
       <SafeAreaView style={{ flex: 1, flexGrow: 1 }}>
         <KeyboardResponsiveContainer>
@@ -171,12 +183,21 @@ class Group extends React.PureComponent<Props, State> {
           />
           <ActionSheet
             ref={(o: any) => {
-              this.actionSheet = o
+              this.threadActionSheet = o
             }}
             title={this.props.groupName + ' options'}
-            options={options}
-            cancelButtonIndex={cancelButtonIndex}
-            onPress={this.handleActionSheetResponse}
+            options={threadActionSheetOptions}
+            cancelButtonIndex={threadCancelButtonIndex}
+            onPress={this.handleThreadActionSheetResponse}
+          />
+          <ActionSheet
+            ref={(o: any) => {
+              this.blockActionSheet = o
+            }}
+            title={'Options'}
+            options={blockActionSheetOptions}
+            cancelButtonIndex={blockCancelButtonIndex}
+            onPress={this.handleBlockActionSheetResponse}
           />
           <RenameGroupModal
             isVisible={this.state.showRenameGroupModal}
@@ -228,16 +249,25 @@ class Group extends React.PureComponent<Props, State> {
           comments,
           block
         } = item.value
+        const isOwnPhoto = user.address === this.props.selfAddress
+        const canRemove = isOwnPhoto && !this.removing(item.block)
         const hasLiked =
           likes.findIndex(
             likeInfo => likeInfo.user.address === this.props.selfAddress
           ) > -1 || this.liking(block)
         const commentsData: ReadonlyArray<CommentData> = comments.map(
           comment => {
+            const isOwnComment = user.address === comment.user.address
+            const isRemovingComment =
+              this.props.removing.indexOf(comment.id) !== -1
+            const canRemoveComment = isOwnComment && !isRemovingComment
             return {
               id: comment.id,
               username: comment.user.name || '?',
-              body: comment.body
+              body: comment.body,
+              onLongPress: canRemoveComment
+                ? () => this.showBlockActionSheet(comment.id)
+                : undefined
             }
           }
         )
@@ -278,6 +308,11 @@ class Group extends React.PureComponent<Props, State> {
             pinchZoom={true}
             pinchWidth={pinchWidth}
             pinchHeight={pinchHeight}
+            onLongPress={
+              canRemove
+                ? () => this.showBlockActionSheet(item.block)
+                : undefined
+            }
           />
         )
       }
@@ -299,19 +334,28 @@ class Group extends React.PureComponent<Props, State> {
       case FeedItemType.Text: {
         const { user, body, date } = item.value
         const isSameUser = this.sameUserAgain(user, this.props.items[index + 1])
+        const isOwnMessage = user.address === this.props.selfAddress
+        const canRemove = isOwnMessage && !this.removing(item.block)
         const avatar = isSameUser ? undefined : user.avatar
         return (
-          <Message
-            avatar={avatar}
-            username={user.name || 'unknown'}
-            message={body}
-            // TODO: deal with pb Timestamp to JS Date!
-            time={moment(Textile.util.timestampToDate(date)).calendar(
-              undefined,
-              momentSpec
-            )}
-            isSameUser={isSameUser}
-          />
+          <TouchableWithoutFeedback
+            disabled={!canRemove}
+            onLongPress={() => this.showBlockActionSheet(item.block)}
+          >
+            <View>
+              <Message
+                avatar={avatar}
+                username={user.name || 'unknown'}
+                message={body}
+                // TODO: deal with pb Timestamp to JS Date!
+                time={moment(Textile.util.timestampToDate(date)).calendar(
+                  undefined,
+                  momentSpec
+                )}
+                isSameUser={isSameUser}
+              />
+            </View>
+          </TouchableWithoutFeedback>
         )
       }
       case FeedItemType.Leave:
@@ -349,17 +393,35 @@ class Group extends React.PureComponent<Props, State> {
     return () => this.props.navigateToComments(target)
   }
 
-  showActionSheet = () => {
-    this.actionSheet.show()
+  showThreadActionSheet = () => {
+    this.threadActionSheet.show()
   }
 
-  handleActionSheetResponse = (index: number) => {
+  showBlockActionSheet = (blockId: string) => {
+    this.setState({
+      selectedBlockId: blockId
+    })
+    this.blockActionSheet.show()
+  }
+
+  handleThreadActionSheetResponse = (index: number) => {
     const actions = [
       ...(this.props.canInvite ? [this.showInviteModal] : []),
       ...(this.props.selfAddress === this.props.initiator
         ? [this.showRenameGroupModal]
         : []),
       this.props.leaveThread
+    ]
+    if (index < actions.length) {
+      actions[index]()
+    }
+  }
+
+  handleBlockActionSheetResponse = (index: number) => {
+    const actions = [
+      () =>
+        this.state.selectedBlockId &&
+        this.props.remove(this.state.selectedBlockId)
     ]
     if (index < actions.length) {
       actions[index]()
@@ -397,6 +459,10 @@ class Group extends React.PureComponent<Props, State> {
   liking = (blockId: string) => {
     return this.props.liking.indexOf(blockId) !== -1
   }
+
+  removing = (blockId: string) => {
+    return this.props.removing.indexOf(blockId) !== -1
+  }
 }
 
 const mapStateToProps = (
@@ -413,6 +479,9 @@ const mapStateToProps = (
   const selfAddress = accountSelectors.getAddress(state.account) || ''
   const renaming = Object.keys(state.group.renameGroup).indexOf(threadId) > -1
   const liking = Object.keys(state.ui.likingPhotos)
+  const removing = Object.keys(state.group.ignore).filter(key => {
+    return state.group.ignore[key] !== {}
+  })
   return {
     items,
     groupName,
@@ -420,7 +489,8 @@ const mapStateToProps = (
     selfAddress,
     renaming,
     canInvite,
-    liking
+    liking,
+    removing
   }
 }
 
@@ -455,6 +525,9 @@ const mapDispatchToProps = (
     },
     cancelShare: (key: string) => {
       dispatch(groupActions.addPhoto.cancelRequest(key))
+    },
+    remove: (blockId: string) => {
+      dispatch(groupActions.ignore.ignore.request(blockId))
     }
   }
 }
