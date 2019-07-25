@@ -12,6 +12,7 @@ import {
 import { NavigationScreenProps, SafeAreaView } from 'react-navigation'
 import uuid from 'uuid/v4'
 import ActionSheet from 'react-native-actionsheet'
+import Toast from 'react-native-easy-toast'
 import Textile, { IUser, Thread, FeedItemType } from '@textile/react-native-sdk'
 import moment from 'moment'
 
@@ -125,6 +126,8 @@ class Group extends React.PureComponent<Props, State> {
   // Action sheet to handle block options like removing (ignoring) a message
   blockActionSheet: any
 
+  toast?: Toast
+
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -207,6 +210,12 @@ class Group extends React.PureComponent<Props, State> {
             complete={this.completeRenameGroup}
           />
         </KeyboardResponsiveContainer>
+        <Toast
+          ref={toast => {
+            this.toast = toast ? toast : undefined
+          }}
+          position="center"
+        />
       </SafeAreaView>
     )
   }
@@ -238,19 +247,10 @@ class Group extends React.PureComponent<Props, State> {
   renderRow = ({ item, index }: ListRenderItemInfo<Item>) => {
     switch (item.type) {
       case FeedItemType.Files: {
-        const {
-          user,
-          caption,
-          date,
-          data,
-          target,
-          files,
-          likes,
-          comments,
-          block
-        } = item.value
+        const { value, syncStatus, block } = item
+        const { user, caption, date, data, files, likes, comments } = value
         const isOwnPhoto = user.address === this.props.selfAddress
-        const canRemove = isOwnPhoto && !this.removing(item.block)
+        const canRemove = isOwnPhoto && !this.removing(block)
         const hasLiked =
           likes.findIndex(
             likeInfo => likeInfo.user.address === this.props.selfAddress
@@ -296,6 +296,8 @@ class Group extends React.PureComponent<Props, State> {
             )}
             photoId={data}
             fileIndex={fileIndex}
+            syncStatus={syncStatus}
+            displayError={this.showToastWithMessage}
             photoWidth={screenWidth}
             hasLiked={hasLiked}
             numberLikes={likes.length}
@@ -458,6 +460,14 @@ class Group extends React.PureComponent<Props, State> {
 
   liking = (blockId: string) => {
     return this.props.liking.indexOf(blockId) !== -1
+  }
+
+  showToastWithMessage = (message: string) => {
+    return () => {
+      if (this.toast) {
+        this.toast.show(message, 3000)
+      }
+    }
   }
 
   removing = (blockId: string) => {

@@ -21,7 +21,6 @@ import { reducer as textileEventsReducer } from './TextileEventsRedux'
 import { groupReducer } from '../features/group'
 import { photosReducer } from '../features/photos'
 import { cafesReducer } from '../features/cafes'
-import { fileSyncReducer } from '../features/file-sync'
 
 const migrations: MigrationManifest = {
   0: persistedState => {
@@ -360,14 +359,19 @@ const migrations: MigrationManifest = {
     const state = persistedState as any
     const { cafeSessions, ...rest } = state.account
     return { ...state, account: rest }
+  },
+  23: persistedState => {
+    const state = persistedState as any
+    const { fileSync, ...rest } = state
+    return rest
   }
 }
 
 const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,
-  version: 22,
-  whitelist: ['account', 'preferences', 'deviceLogs', 'fileSync'],
+  version: 23,
+  whitelist: ['account', 'preferences', 'deviceLogs'],
   migrate: createMigrate(migrations, { debug: false }),
   debug: false
 }
@@ -386,8 +390,7 @@ const rootReducer = combineReducers({
   textile: textileEventsReducer,
   group: groupReducer,
   photos: photosReducer,
-  cafes: cafesReducer,
-  fileSync: fileSyncReducer
+  cafes: cafesReducer
 })
 
 export default persistReducer(persistConfig, rootReducer)
