@@ -48,7 +48,10 @@ export default class Photo extends React.PureComponent<Props> {
 
   progressiveElement(width: number, height: number, minWidth: number) {
     return (
-      <TouchableWithoutFeedback onLongPress={this.props.onLongPress}>
+      <TouchableWithoutFeedback
+        onPress={this.toggleSelected}
+        onLongPress={this.props.onLongPress}
+      >
         <View>
           <ProgressiveImage
             imageId={this.props.photoId}
@@ -124,11 +127,7 @@ export default class Photo extends React.PureComponent<Props> {
   renderSelection() {
     // Just uses a touchable image, when touched will enable it's own modal in full screen
     return (
-      <TouchableOpacity
-        style={CONTAINER}
-        activeOpacity={1}
-        onPress={this.toggleSelected}
-      >
+      <View style={CONTAINER}>
         <Modal
           animationType={'fade'}
           transparent={false}
@@ -145,7 +144,7 @@ export default class Photo extends React.PureComponent<Props> {
         )}
         <LikeAndComment {...this.props} />
         <Comments {...this.props} />
-      </TouchableOpacity>
+      </View>
     )
   }
 
