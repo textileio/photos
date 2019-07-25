@@ -11,12 +11,6 @@ import Icon from '@textile/react-native-icon'
 
 import { color, spacing, textStyle } from '../styles'
 
-const CONTAINER: ViewStyle = {
-  paddingLeft: spacing.screenEdge,
-  paddingRight: spacing.screenEdge,
-  paddingTop: spacing.screenEdge
-}
-
 const ICONS: ViewStyle = {
   flexDirection: 'row'
 }
@@ -56,7 +50,7 @@ const LikeAndComment = (props: Props) => {
     (!hasLiked && numberLikes > 0) || (hasLiked && numberLikes > 1)
   const displayCommentsCount = numberComments > 0
   return (
-    <View style={[CONTAINER, likesAndCommentsContainerStyle]}>
+    <View style={likesAndCommentsContainerStyle}>
       <View style={ICONS}>
         {hasLiked && (
           <Icon

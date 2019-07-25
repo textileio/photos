@@ -5,9 +5,9 @@ import { ActionType, getType } from 'typesafe-actions'
 import RNPushNotification from 'react-native-push-notification'
 import Textile, {
   EventSubscription,
-  FeedItemType,
-  ICafeSyncGroupStatus
+  FeedItemType
 } from '@textile/react-native-sdk'
+import Long from 'long'
 
 import { toTypedNotification } from '../Services/Notifications'
 import { logNewEvent } from './DeviceLogs'
@@ -27,7 +27,6 @@ import PhotoViewingActions, {
 import { contactsActions, ContactsAction } from '../features/contacts'
 import DeviceLogsActions, { DeviceLogsAction } from '../Redux/DeviceLogsRedux'
 import { groupActions, GroupAction } from '../features/group'
-import { fileSyncActions, FileSyncAction } from '../features/file-sync'
 import AppConfig from '../Config/app-config'
 
 function displayNotification(message: string, title?: string) {
@@ -48,7 +47,6 @@ function nodeEvents() {
     | DeviceLogsAction
     | NotificationsAction
     | TextileEventsAction
-    | FileSyncAction
   >(emitter => {
     const subscriptions: EventSubscription[] = []
     subscriptions.push(
@@ -160,17 +158,34 @@ function nodeEvents() {
     )
     subscriptions.push(
       Textile.events.addSyncUpdateListener(status => {
-        emitter(fileSyncActions.syncUpdate(status))
+        const sizeComplete = Long.fromValue(status.sizeComplete).toNumber()
+        const sizeTotal = Long.fromValue(status.sizeTotal).toNumber()
+        const groupSizeComplete = Long.fromValue(
+          status.groupsSizeComplete
+        ).toNumber()
+        const groupSizeTotal = Long.fromValue(status.groupsSizeTotal).toNumber()
+        const total = Math.max(sizeTotal, groupSizeTotal)
+        const { id, numComplete, numTotal } = status
+        emitter(
+          groupActions.fileSync.syncUpdate(
+            id,
+            numComplete,
+            numTotal,
+            groupSizeComplete,
+            total
+          )
+        )
       })
     )
     subscriptions.push(
       Textile.events.addSyncCompleteListener(status => {
-        emitter(fileSyncActions.syncComplete(status))
+        emitter(groupActions.fileSync.syncComplete(status.id))
       })
     )
     subscriptions.push(
       Textile.events.addSyncFailedListener(status => {
-        emitter(fileSyncActions.syncFailed(status))
+        const { id, errorId, error } = status
+        emitter(groupActions.fileSync.syncFailed(id, errorId, error))
       })
     )
     return () => {

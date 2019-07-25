@@ -2,6 +2,7 @@ platform :ios, '10.0'
 
 target 'Textile' do
   pod 'React', :path => '../node_modules/react-native', :subspecs => [
+	'ART',
     'Core',
     'CxxBridge',
     'DevSupport',

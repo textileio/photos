@@ -3,18 +3,22 @@ import {
   View,
   ViewStyle,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Dimensions,
   Modal
 } from 'react-native'
+import ImageZoom from 'react-native-image-pan-zoom'
+import { Circle } from 'react-native-progress'
+import Icon from '@textile/react-native-icon'
 
 import Message, { Props as MessageProps } from './message'
 import ProgressiveImage from './ProgressiveImage'
 import LikeAndComment, {
   Props as LikeAndCommentProps
 } from './like-and-comment'
-import { spacing } from '../styles'
+import { spacing, size, color, textStyle } from '../styles'
 import Comments, { Props as CommentsProps } from './comments'
-import ImageZoom from 'react-native-image-pan-zoom'
+import { GroupStatus } from '../features/group/file-sync/models'
 
 const CONTAINER: ViewStyle = {
   paddingTop: spacing._016,
@@ -30,9 +34,12 @@ interface Props extends MessageProps, LikeAndCommentProps, CommentsProps {
   photoId: string
   fileIndex: number
   photoWidth: number
+  syncStatus?: GroupStatus
+  displayError?: (message: string) => () => void
   pinchZoom?: boolean
   pinchHeight?: number
   pinchWidth?: number
+  onLongPress?: () => void
 }
 
 export default class Photo extends React.PureComponent<Props> {
@@ -46,14 +53,21 @@ export default class Photo extends React.PureComponent<Props> {
 
   progressiveElement(width: number, height: number, minWidth: number) {
     return (
-      <ProgressiveImage
-        imageId={this.props.photoId}
-        fileIndex={this.props.fileIndex}
-        showPreview={true}
-        forMinWidth={minWidth}
-        style={{ width, height, overflow: 'hidden' }}
-        resizeMode={'cover'}
-      />
+      <TouchableWithoutFeedback
+        onPress={this.toggleSelected}
+        onLongPress={this.props.onLongPress}
+      >
+        <View>
+          <ProgressiveImage
+            imageId={this.props.photoId}
+            fileIndex={this.props.fileIndex}
+            showPreview={true}
+            forMinWidth={minWidth}
+            style={{ width, height, overflow: 'hidden' }}
+            resizeMode={'cover'}
+          />
+        </View>
+      </TouchableWithoutFeedback>
     )
   }
 
@@ -117,12 +131,13 @@ export default class Photo extends React.PureComponent<Props> {
 
   renderSelection() {
     // Just uses a touchable image, when touched will enable it's own modal in full screen
+    let progress: number | undefined
+    if (this.props.syncStatus) {
+      const { sizeComplete, sizeTotal } = this.props.syncStatus
+      progress = sizeComplete / sizeTotal
+    }
     return (
-      <TouchableOpacity
-        style={CONTAINER}
-        activeOpacity={1}
-        onPress={this.toggleSelected}
-      >
+      <View style={CONTAINER}>
         <Modal
           animationType={'fade'}
           transparent={false}
@@ -137,9 +152,43 @@ export default class Photo extends React.PureComponent<Props> {
           this.props.photoWidth,
           this.props.photoWidth
         )}
-        <LikeAndComment {...this.props} />
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingLeft: spacing.screenEdge,
+            paddingRight: spacing.screenEdge,
+            paddingTop: spacing.screenEdge
+          }}
+        >
+          <LikeAndComment {...this.props} />
+          {this.props.syncStatus && !this.props.syncStatus.error && (
+            <Circle
+              showsText={false}
+              size={size._024}
+              thickness={2}
+              progress={progress}
+              color={color.brandBlue}
+            />
+          )}
+          {this.props.syncStatus && this.props.syncStatus.error && (
+            <TouchableOpacity
+              onPress={
+                this.props.displayError
+                  ? this.props.displayError(this.props.syncStatus.error.reason)
+                  : undefined
+              }
+            >
+              <Icon
+                name="alert-circle"
+                size={size._024}
+                style={{ color: color.severe_3 }}
+              />
+            </TouchableOpacity>
+          )}
+        </View>
         <Comments {...this.props} />
-      </TouchableOpacity>
+      </View>
     )
   }
 

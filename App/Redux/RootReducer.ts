@@ -21,7 +21,6 @@ import { reducer as textileEventsReducer } from './TextileEventsRedux'
 import { groupReducer } from '../features/group'
 import { photosReducer } from '../features/photos'
 import { cafesReducer } from '../features/cafes'
-import { fileSyncReducer } from '../features/file-sync'
 import { initializationReducer } from '../features/initialization'
 
 const migrations: MigrationManifest = {
@@ -363,6 +362,11 @@ const migrations: MigrationManifest = {
     return { ...state, account: rest }
   },
   23: persistedState => {
+    const state = persistedState as any
+    const { fileSync, ...rest } = state
+    return rest
+  },
+  24: persistedState => {
     // Move onboarded from preferences to initialization
     const state = persistedState as any
     const { onboarded, ...restPreferences } = state.preferences
@@ -384,13 +388,7 @@ const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,
   version: 23,
-  whitelist: [
-    'account',
-    'preferences',
-    'deviceLogs',
-    'fileSync',
-    'initialization'
-  ],
+  whitelist: ['account', 'preferences', 'deviceLogs', 'initialization'],
   migrate: createMigrate(migrations, { debug: false }),
   debug: false
 }
@@ -410,7 +408,6 @@ const rootReducer = combineReducers({
   group: groupReducer,
   photos: photosReducer,
   cafes: cafesReducer,
-  fileSync: fileSyncReducer,
   initialization: initializationReducer
 })
 

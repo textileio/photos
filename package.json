@@ -11,7 +11,7 @@
   "dependencies": {
     "@textile/react-native-camera-roll": "1.1.6",
     "@textile/react-native-icon": "^1.0.0",
-    "@textile/react-native-sdk": "3.0.2",
+    "@textile/react-native-sdk": "3.0.4",
     "@textile/redux-saga-wait-for": "1.0.1",
     "apisauce": "^1.0.2",
     "moment": "^2.22.2",
@@ -32,6 +32,7 @@
     "react-native-image-pan-zoom": "^2.1.11",
     "react-native-image-picker": "^0.28.1",
     "react-native-modal": "^6.5.0",
+    "react-native-progress": "^3.6.0",
     "react-native-push-notification": "^3.1.1",
     "react-native-qrcode": "^0.2.7",
     "react-native-reanimated": "1.0.1",

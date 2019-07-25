@@ -280,6 +280,9 @@
 
 // skipped method Textile.AddFileIndex with unsupported parameter or return types
 
+/**
+ * AddInvite creates an invite for each of the target address's peers
+ */
 - (BOOL)addInvite:(NSString* _Nullable)threadId address:(NSString* _Nullable)address error:(NSError* _Nullable* _Nullable)error;
 // skipped method Textile.AddNodeFromDirs with unsupported parameter or return types
 
@@ -376,6 +379,9 @@ and stores (unless `store` is false) a bcrypt hashed version for later compariso
 
 // skipped method Textile.GetMillMedia with unsupported parameter or return types
 
+/**
+ * IgnoreInvite deletes the invite and removes the associated notification.
+ */
 - (BOOL)ignoreInvite:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
 /**
  * IgnoreInviteViaNotification uses an invite notification to ignore an invite to a thread
@@ -425,6 +431,10 @@ and stores (unless `store` is false) a bcrypt hashed version for later compariso
 
 // skipped method Textile.Profile with unsupported parameter or return types
 
+/**
+ * Publish sends 'data' to 'topic'
+ */
+- (BOOL)publish:(NSData* _Nullable)payload topic:(NSString* _Nullable)topic error:(NSError* _Nullable* _Nullable)error;
 /**
  * ReadAllNotifications marks all notification as read
  */

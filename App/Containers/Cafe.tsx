@@ -23,12 +23,7 @@ import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 import Button from '../Components/LargeButton'
 import RowSeparator from '../Components/RowSeparator'
 
-import {
-  color,
-  textStyle,
-  spacing,
-  size
-} from '../styles'
+import { color, textStyle, spacing, size } from '../styles'
 
 const Container: ViewStyle = {
   flexDirection: 'column',
@@ -136,13 +131,10 @@ class Cafe extends Component<Props> {
     const { cafe, exp } = this.props.session.session
     const { peer, url } = cafe
     const date = Textile.util.timestampToDate(exp)
-    const expirationDate = moment(date).format(
-      'MMMM Do YYYY [at] h:mm a'
-    )
+    const expirationDate = moment(date).format('MMMM Do YYYY [at] h:mm a')
     const refreshButtonDisabled = this.props.session.processing
     const cafeProcessing = this.props.cafe.state === 'deregistering'
-    const deregisterButtonDisabled =
-      !this.props.cafe.error && cafeProcessing
+    const deregisterButtonDisabled = !this.props.cafe.error && cafeProcessing
     return (
       <SafeAreaView style={Container}>
         <Text style={URL}>{url}</Text>
