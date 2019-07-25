@@ -8,6 +8,7 @@ import { addMessageReducer, AddMessageState } from './add-message'
 import { addPhotoReducer, ProcessingImagesState } from './add-photo'
 import { renameGroupReducer, RenameGroupState } from './rename-group'
 import { fileSyncReducer, FileSyncState } from './file-sync'
+import { ignoreReducer, IgnoreState } from './ignore'
 
 import * as actions from './actions'
 
@@ -17,6 +18,7 @@ export interface GroupState {
   addPhoto: ProcessingImagesState
   renameGroup: RenameGroupState
   fileSync: FileSyncState
+  ignore: IgnoreState
 }
 
 export type GroupAction = ActionType<typeof actions>
@@ -33,7 +35,8 @@ const reducer = combineReducers<GroupState>({
   addMessage: addMessageReducer,
   addPhoto: addPhotoReducer,
   renameGroup: renameGroupReducer,
-  fileSync: fileSyncReducer
+  fileSync: fileSyncReducer,
+  ignore: ignoreReducer
 })
 
 export default persistReducer(persistConfig, reducer)

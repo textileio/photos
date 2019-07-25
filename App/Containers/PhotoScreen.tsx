@@ -36,10 +36,12 @@ interface StateProps {
   selfAddress: string
   threadName?: string
   threadId?: string
+  removing: boolean
 }
 
 interface DispatchProps {
   addLike: (block: string) => void
+  remove: () => void
 }
 
 type Props = StateProps & DispatchProps & NavigationScreenProps<{}>
@@ -81,6 +83,8 @@ class PhotoScreen extends React.Component<Props> {
       likes.findIndex(
         likeInfo => likeInfo.user.address === this.props.selfAddress
       ) > -1
+    const isOwnPhoto = this.props.selfAddress === user.address
+    const canRemove = isOwnPhoto && !this.props.removing
     const commentsData: ReadonlyArray<CommentData> = comments.map(comment => {
       return {
         id: comment.id,
@@ -128,6 +132,7 @@ class PhotoScreen extends React.Component<Props> {
             pinchZoom={true}
             pinchWidth={pinchWidth}
             pinchHeight={pinchHeight}
+            onLongPress={canRemove ? this.props.remove : undefined}
           />
         )}
       </ScrollView>
@@ -142,12 +147,21 @@ const mapStateToProps = (state: RootState): StateProps => {
     const threadData = threadDataByThreadId(state, threadId)
     threadName = threadData ? threadData.name : undefined
   }
+  const photo = state.photoViewing.viewingPhoto
   const selfAddress = accountSelectors.getAddress(state.account) || ''
+  const removing = photo
+    ? Object.keys(state.group.ignore)
+        .filter(key => {
+          return state.group.ignore[key] !== {}
+        })
+        .indexOf(photo.block) !== -1
+    : false
   return {
-    photo: state.photoViewing.viewingPhoto,
+    photo,
     threadName,
     threadId,
-    selfAddress
+    selfAddress,
+    removing
   }
 }
 
@@ -157,7 +171,8 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
       UIActions.addLike.request({
         blockId: block
       })
-    )
+    ),
+  remove: () => {}
 })
 
 export default connect(

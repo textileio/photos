@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, TouchableWithoutFeedback } from 'react-native'
 
 import moment from 'moment'
 import Avatar from '../../../Components/Avatar'
@@ -12,13 +12,17 @@ export interface Props {
   comment: string
   date: Date
   isCaption: boolean
+  onLongPress?: () => void
 }
 
 const CommentCard = (props: Props) => {
   const { username, avatar, comment, date, isCaption } = props
   const dateString = moment.utc(date).fromNow()
   return (
-    <View style={[styles.container, isCaption ? styles.withDivider : {}]}>
+    <TouchableWithoutFeedback
+      style={[styles.container, isCaption ? styles.withDivider : {}]}
+      onLongPress={props.onLongPress}
+    >
       <View style={styles.content}>
         <Avatar
           style={{ marginRight: 11, width: 38, height: 38 }}
@@ -32,7 +36,7 @@ const CommentCard = (props: Props) => {
           <Text style={styles.commentDate}>{dateString}</Text>
         </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   )
 }
 

@@ -138,9 +138,9 @@ class AddCaptionScreen extends React.Component<Props> {
   }
 
   _shareToNewThread(withPhoto: IFiles, withThreadName: string) {
-    if (withPhoto.target) {
+    if (withPhoto.block) {
       this.props.shareNewThread(
-        withPhoto.target,
+        withPhoto.block,
         withThreadName,
         this.props.comment
       )
