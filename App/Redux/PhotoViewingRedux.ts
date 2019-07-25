@@ -305,7 +305,7 @@ export function reducer(
       if (state.viewingThreadId === threadId && state.viewingPhoto) {
         const currentViewingPhoto = state.viewingPhoto
         viewingPhoto = photos.find(
-          photo => currentViewingPhoto.target === photo.target
+          photo => currentViewingPhoto.block === photo.block
         )
       } else {
         // if update not needed, be sure to maintain whatever current state there is
@@ -350,7 +350,7 @@ export function reducer(
         return state
       }
       const viewingWalletPhoto = defaultThreadData.photos.find(
-        photo => photo.target === photoId
+        photo => photo.block === photoId
       )
       return { ...state, viewingWalletPhoto }
     }
@@ -365,7 +365,7 @@ export function reducer(
       }
       const threadData = state.threads[state.viewingThreadId]
       const photos = threadData ? threadData.photos : []
-      const photo = photos.find(photo => photo.target === photoId)
+      const photo = photos.find(photo => photo.block === photoId)
       return {
         ...state,
         viewingPhoto: photo,
