@@ -7,3 +7,7 @@ export const makeStatusForId = (id: string) => (state: FileSyncState) => {
     return undefined
   }
 }
+
+export const groupStatuses = (state: FileSyncState) => {
+  return Object.keys(state.groups).map(key => state.groups[key])
+}

@@ -125,6 +125,7 @@
       }
     },
     "rules": {
+      "no-sync": 0,
       "no-undefined": 0,
       "default-case": 0,
       "react/no-string-refs": 1,
