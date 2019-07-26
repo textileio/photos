@@ -59,6 +59,7 @@ typedef GPB_ENUM(ThreadEnvelope_FieldNumber) {
   ThreadEnvelope_FieldNumber_Ciphertext = 3,
   ThreadEnvelope_FieldNumber_Sig = 4,
   ThreadEnvelope_FieldNumber_Node = 5,
+  ThreadEnvelope_FieldNumber_Block = 6,
 };
 
 /**
@@ -79,6 +80,9 @@ typedef GPB_ENUM(ThreadEnvelope_FieldNumber) {
 
 /** block node (v2) */
 @property(nonatomic, readwrite, copy, null_resettable) NSData *node;
+
+/** block (v2) */
+@property(nonatomic, readwrite, copy, null_resettable) NSData *block;
 
 @end
 
