@@ -641,6 +641,8 @@ with annotations amongst a group of peers
 
 // skipped method ThreadsService.SendMessage with unsupported parameter or return types
 
+// skipped method ThreadsService.SendPubSubMessage with unsupported parameter or return types
+
 /**
  * Start begins online services
  */
