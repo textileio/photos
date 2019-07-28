@@ -11,13 +11,17 @@ import Modal from 'react-native-modal'
 
 import { Thread } from '@textile/react-native-sdk'
 
-import { RootAction } from '../Redux/Types'
+import { RootState, RootAction } from '../Redux/Types'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PreferencesActions, { TourScreens } from '../Redux/PreferencesRedux'
 import Input from '../SB/components/Input'
 
 // Styles
 import styles from './Styles/ThreadCreateModal'
+
+interface StateProps {
+  alreadyAddingThread: boolean
+}
 
 interface DispatchProps {
   completeScreen: (threadName: string) => void
@@ -45,7 +49,7 @@ interface ScreenProps {
   complete: () => void
 }
 
-type Props = DispatchProps & ScreenProps
+type Props = StateProps & DispatchProps & ScreenProps
 
 interface State {
   value: string
@@ -99,7 +103,8 @@ class CreateThreadComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const submitDisabled = !(this.state.value.length > 0)
+    const submitDisabled =
+      this.props.alreadyAddingThread || !(this.state.value.length > 0)
     return (
       <Modal
         isVisible={this.props.isVisible}
@@ -191,7 +196,13 @@ const mapDispatchToProps = (
   }
 }
 
+const mapStateToProps = (state: RootState): StateProps => {
+  return {
+    alreadyAddingThread: Boolean(state.photoViewing.addingThread)
+  }
+}
+
 export default connect(
-  undefined,
+  mapStateToProps,
   mapDispatchToProps
 )(CreateThreadComponent)
