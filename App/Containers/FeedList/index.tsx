@@ -170,10 +170,11 @@ class Notifications extends React.PureComponent<Props> {
   }
 
   render() {
+    const showNotifications = this.props.notifications.length > 0
     return (
       <View style={styles.container}>
-        {this.props.showOnboarding && this._renderOnboarding()}
-        {!this.props.showOnboarding && this._renderItems()}
+        {!showNotifications && this._renderOnboarding()}
+        {showNotifications && this._renderItems()}
       </View>
     )
   }
