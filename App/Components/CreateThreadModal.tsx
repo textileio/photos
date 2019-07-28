@@ -132,6 +132,7 @@ class CreateThreadComponent extends React.Component<Props, State> {
                   style={styles.inputStyle}
                   value={this.state.value}
                   label={this.state.value === '' ? 'Add title...' : ''}
+                  disabled={this.props.alreadyAddingThread}
                   onChangeText={this.handleNewText}
                 />
               </View>
