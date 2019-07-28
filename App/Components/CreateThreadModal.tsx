@@ -49,15 +49,21 @@ type Props = DispatchProps & ScreenProps
 
 interface State {
   value: string
-  submitted: boolean
 }
 
 class CreateThreadComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      value: props.defaultName ? props.defaultName : '',
-      submitted: false
+      value: props.defaultName ? props.defaultName : ''
+    }
+  }
+
+  componentdidUpdate() {
+    if (this.props.defaultName && this.props.defaultName !== this.state.value) {
+      this.setState({
+        value: this.props.defaultName
+      })
     }
   }
 
@@ -67,10 +73,6 @@ class CreateThreadComponent extends React.Component<Props, State> {
 
   create() {
     return () => {
-      if (this.state.submitted) {
-        return
-      }
-      this.setState({ submitted: true })
       this.props.completeScreen(this.state.value)
       const name = this.state.value
       const type =
@@ -89,6 +91,9 @@ class CreateThreadComponent extends React.Component<Props, State> {
         Boolean(this.props.navigateTo),
         Boolean(this.props.selectToShare)
       )
+      this.setState({
+        value: this.props.defaultName ? this.props.defaultName : ''
+      })
       this.props.complete()
     }
   }
