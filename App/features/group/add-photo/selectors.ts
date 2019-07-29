@@ -1,6 +1,12 @@
 import { ProcessingImagesState } from './reducer'
 import { AddingPhotoItem } from './models'
 
+export const lastQueriedTime = (state: ProcessingImagesState) =>
+  state.queryData.lastQueriedTime
+
+export const pendingPhotos = (state: ProcessingImagesState) =>
+  state.images.filter(image => image.status === 'pending')
+
 export function processingImageByUuidFactory(uuid: string) {
   return (state: ProcessingImagesState) =>
     state.images.find(image => image.uuid === uuid)

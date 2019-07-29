@@ -21,9 +21,10 @@ import {
   TextileHeaderButtons
 } from '../Components/HeaderButtons'
 import { RootAction, RootState } from '../Redux/Types'
-import { photosActions, photosSelectors } from '../features/photos'
-import { Item } from '../features/photos/models'
+import { groupActions, groupSelectors } from '../features/group'
+import { Item } from '../features/group/models'
 import { color } from '../styles'
+import { FeedItemType } from '@textile/react-native-sdk'
 
 const { width } = Dimensions.get('window')
 const itemSize = width / 3
@@ -127,71 +128,29 @@ class Photos extends Component<Props> {
   }
 
   keyExtractor = (item: Item) =>
-    item.type === 'files'
-      ? item.files.target
-      : item.processingPhoto.photo.assetId
+    item.type === 'addingMessage' || item.type === 'addingPhoto'
+      ? item.key
+      : item.block
 
   renderRow = (row: ListRenderItemInfo<Item>) => {
-    if (row.item.type === 'files') {
-      const { files, data } = row.item.files
-      const fileIndex = files.length > 0 && files[0].index ? files[0].index : 0
+    if (row.item.type === 'addingMessage') {
+      return null
+    } else if (row.item.type === 'addingPhoto') {
+      return null
+    } else if (row.item.type === FeedItemType.Files) {
+      const files = row.item.value
+      const data = files.data
       return (
         <TextileImage
           target={data}
-          index={fileIndex}
+          index={0}
           forMinWidth={itemSize}
           resizeMode="cover"
           style={{ width: itemSize, height: itemSize }}
         />
       )
     } else {
-      const { photo, state, error } = row.item.processingPhoto
-      const color = state === 'pending' ? 'white' : 'blue'
-      const uri = `file://${photo.path}`
-      return (
-        <View style={{ width: itemSize, height: itemSize }}>
-          <Image
-            key={photo.assetId}
-            style={{ width: itemSize, height: itemSize }}
-            source={{ uri }}
-          />
-          {error && (
-            <TouchableOpacity
-              onPress={this.showToast(error)}
-              hitSlop={{ top: 20, left: 20, bottom: 20, right: 20 }}
-            >
-              <View
-                style={{
-                  width: 12,
-                  height: 12,
-                  backgroundColor: 'red',
-                  borderColor: 'black',
-                  borderWidth: 1,
-                  borderRadius: 6,
-                  position: 'absolute',
-                  right: 5,
-                  bottom: 5
-                }}
-              />
-            </TouchableOpacity>
-          )}
-          {!error && (
-            <View
-              style={{
-                width: 12,
-                height: 12,
-                backgroundColor: color,
-                borderColor: 'black',
-                borderWidth: 1,
-                borderRadius: 6,
-                position: 'absolute',
-                right: 5,
-                bottom: 5
-              }}
-            />
-          )}
-        </View>
-      )
+      return null
     }
   }
 
@@ -220,15 +179,15 @@ class Photos extends Component<Props> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   return {
-    items: photosSelectors.items(state.photos),
-    refreshing: state.photos.photosData.querying
+    items: groupSelectors.groupItems(state.group, 'camera roll thread id'), // TODO: Get this id from redux
+    refreshing: state.group.addPhoto.queryData.querying
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
-  queryPhotos: () => dispatch(photosActions.queryCameraRoll.request()),
-  refreshPhotos: () => dispatch(photosActions.refreshPhotos.request(undefined)),
-  clearProcessingPhotos: () => dispatch(photosActions.clearProcessingPhotos())
+  queryPhotos: () => dispatch(groupActions.addPhoto.queryCameraRoll.request()),
+  refreshPhotos: () => {}, // TODO: dispatch a group action that loads thread data
+  clearProcessingPhotos: () => {} // TODO: Maybe create this action, but really should use cancel
 })
 
 export default connect(

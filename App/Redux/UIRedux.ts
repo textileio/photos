@@ -12,7 +12,13 @@ const actions = {
   updateSharingPhotoImage: createAction(
     'UPDATE_SHARING_PHOTO_IMAGE',
     resolve => {
-      return (image: SharedImage | IFiles) => resolve({ image })
+      return (image: SharedImage) => resolve({ image })
+    }
+  ),
+  updateSharingPhotoFiles: createAction(
+    'UPDATE_SHARING_PHOTO_FILES',
+    resolve => {
+      return (files: IFiles) => resolve({ files })
     }
   ),
   updateSharingPhotoThread: createAction(
@@ -28,7 +34,7 @@ const actions = {
     }
   ),
   sharePhotoRequest: createAction('SHARE_PHOTO_REQUEST', resolve => {
-    return (image: SharedImage | string, threadId: string, comment?: string) =>
+    return (image: string, threadId: string, comment?: string) =>
       resolve({ image, threadId, comment })
   }),
   cancelSharingPhoto: createAction('CANCEL_SHARING_PHOTO', resolve => {
@@ -104,7 +110,8 @@ export type UIAction = ActionType<typeof actions>
 
 export interface UIState {
   readonly sharingPhoto?: {
-    readonly image?: SharedImage | IFiles
+    readonly image?: SharedImage
+    readonly files?: IFiles
     readonly threadId?: string
     readonly comment?: string
   }
@@ -128,6 +135,10 @@ export function reducer(
     case getType(actions.updateSharingPhotoImage): {
       const { image } = action.payload
       return { ...state, sharingPhoto: { ...state.sharingPhoto, image } }
+    }
+    case getType(actions.updateSharingPhotoFiles): {
+      const { files } = action.payload
+      return { ...state, sharingPhoto: { ...state.sharingPhoto, files } }
     }
     case getType(actions.updateSharingPhotoThread): {
       const { threadId } = action.payload

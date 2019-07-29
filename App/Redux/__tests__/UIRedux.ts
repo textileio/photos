@@ -47,9 +47,9 @@ describe('ui stories', () => {
     it('should update sharing photo via photo hash', () => {
       const state = reducer(
         initialState,
-        actions.updateSharingPhotoImage(sharedPhoto)
+        actions.updateSharingPhotoFiles(sharedPhoto)
       )
-      expect(state.sharingPhoto!.image).toEqual(sharedPhoto)
+      expect(state.sharingPhoto!.files).toEqual(sharedPhoto)
     })
     it('should update sharing thread', () => {
       const state = reducer(
@@ -68,7 +68,7 @@ describe('ui stories', () => {
     it('should cancel sharing', () => {
       const state = reducer(
         initialState,
-        actions.updateSharingPhotoImage(sharedPhoto)
+        actions.updateSharingPhotoImage(sharedImage)
       )
       expect(state.sharingPhoto).toBeDefined()
       const state1 = reducer(state, actions.cancelSharingPhoto())
@@ -77,7 +77,7 @@ describe('ui stories', () => {
     it('sharePhotoRequest should clear sharing state', () => {
       const state0 = reducer(
         initialState,
-        actions.updateSharingPhotoImage(sharedPhoto)
+        actions.updateSharingPhotoImage(sharedImage)
       )
       expect(state0.sharingPhoto).toBeDefined()
       const state1 = reducer(

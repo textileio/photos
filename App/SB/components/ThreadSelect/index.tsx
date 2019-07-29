@@ -77,7 +77,7 @@ export class ThreadSelectComponent extends React.Component<ComponentProps> {
   }
 }
 
-export interface ScreenProps {
+export interface OwnProps {
   createNew: () => void
 }
 
@@ -90,9 +90,9 @@ interface DispatchProps {
   selectThread: (threadId: string) => void
 }
 
-type Props = StateProps & DispatchProps
+type Props = OwnProps & DispatchProps & StateProps
 
-class ThreadSelect extends React.Component<ScreenProps & Props> {
+class ThreadSelect extends React.Component<Props> {
   renderCreateThread = () => {
     return <ThreadCreateCard onSelect={this.props.createNew} />
   }
@@ -129,11 +129,12 @@ const mapStateToProps = (state: RootState): StateProps => {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
-  selectThread: (threadId: string) => {
-    dispatch(UIActions.updateSharingPhotoThread(threadId))
+const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
+  return {
+    selectThread: (threadId: string) =>
+      dispatch(UIActions.updateSharingPhotoThread(threadId))
   }
-})
+}
 
 export default connect(
   mapStateToProps,
