@@ -52,7 +52,14 @@ export function photoAndComment(state: RootState) {
   }
 }
 
-export function getThreads(
+export function cameraRollThread(state: RootState) {
+  const cameraRollThread = Object.keys(state.photoViewing.threads)
+    .map(key => state.photoViewing.threads[key]!)
+    .find(thread => thread.key === Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY)
+  return cameraRollThread
+}
+
+export function getSharedThreads(
   state: RootState,
   sortBy?: 'name' | 'date'
 ): ReadonlyArray<ThreadData> {
@@ -103,7 +110,7 @@ export function getThreadsAndMembers(
   const memberLimit = limit || 8
   const ownAddress = accountSelectors.getAddress(state.account)
   const profile = accountSelectors.getProfile(state.account)
-  const threads = getThreads(state, 'date').map(thread => {
+  const threads = getSharedThreads(state, 'date').map(thread => {
     const selector = contactsSelectors.makeByThreadId(thread.id)
     const allMembers = selector(state.contacts)
 
@@ -138,7 +145,7 @@ export function getSharedPhotos(
   sortBy?: 'date'
 ): SharedPhoto[] {
   const selfAddress = accountSelectors.getAddress(state.account)
-  const photos = getThreads(state)
+  const photos = getSharedThreads(state)
     .map(thread =>
       thread.photos
         .filter(photo => photo.user.address === selfAddress)
@@ -179,7 +186,7 @@ export function getThreadThumbs(
   byAddres: string,
   sortBy?: 'name' | 'date'
 ): ReadonlyArray<ThreadThumbs> {
-  return getThreads(state, sortBy)
+  return getSharedThreads(state, sortBy)
     .filter(thread => thread.photos.some(p => p.user.address === byAddres))
     .map(thread => {
       return {
@@ -207,7 +214,7 @@ function isDirectMessageThread(
 
 // Returns the thread object or undefined if it isn't found
 export function getDirectMessageThread(state: RootState, address: string) {
-  return getThreads(state).find(isDirectMessageThread(address))
+  return getSharedThreads(state).find(isDirectMessageThread(address))
 }
 
 export function shouldNavigateToNewThread(state: RootState) {

@@ -11,7 +11,7 @@ import CreateThreadComponent from './CreateThreadModal'
 import { RootAction, RootState } from '../Redux/Types'
 import PhotoViewingActions, { ThreadData } from '../Redux/PhotoViewingRedux'
 import PreferencesActions, { TourScreens } from '../Redux/PreferencesRedux'
-import { getThreads } from '../Redux/PhotoViewingSelectors'
+import { getSharedThreads } from '../Redux/PhotoViewingSelectors'
 
 import { ThreadSelectComponent } from '../SB/components/ThreadSelect'
 import { ThreadsEditFriendsComponent } from '../SB/views/ThreadsEditFriends'
@@ -192,7 +192,7 @@ interface StateProps {
 
 const mapStateToProps = (state: RootState): StateProps => {
   return {
-    threads: getThreads(state, 'name')
+    threads: getSharedThreads(state, 'name')
   }
 }
 

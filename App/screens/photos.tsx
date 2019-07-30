@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Dispatch } from 'redux'
-import { connect } from 'react-redux'
+import { connect, DispatchProp } from 'react-redux'
 import {
   View,
   FlatList,
@@ -22,6 +22,7 @@ import {
 } from '../Components/HeaderButtons'
 import { RootAction, RootState } from '../Redux/Types'
 import { groupActions, groupSelectors } from '../features/group'
+import { cameraRollThread } from '../Redux/PhotoViewingSelectors'
 import { Item } from '../features/group/models'
 import { color } from '../styles'
 import { FeedItemType } from '@textile/react-native-sdk'
@@ -35,14 +36,17 @@ const CONTAINER: ViewStyle = {
 }
 
 interface StateProps {
+  cameraRollThreadId?: string
   items: ReadonlyArray<Item>
   refreshing: boolean
 }
 
-interface DispatchProps {
+interface DispatchProps extends DispatchProp<RootAction> {
   queryPhotos: () => void
-  refreshPhotos: () => void
   clearProcessingPhotos: () => void
+}
+interface MergeProps {
+  refresh: () => void
 }
 
 interface NavProps {
@@ -50,7 +54,10 @@ interface NavProps {
   showActionSheet: () => void
 }
 
-type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
+type Props = StateProps &
+  DispatchProps &
+  MergeProps &
+  NavigationScreenProps<NavProps>
 
 class Photos extends Component<Props> {
   static navigationOptions = ({
@@ -92,7 +99,7 @@ class Photos extends Component<Props> {
   actionSheet: any
 
   componentDidMount() {
-    this.props.refreshPhotos()
+    this.props.refresh()
     this.props.navigation.setParams({
       openDrawer: this.openDrawer,
       showActionSheet: this.showActionSheet
@@ -106,7 +113,7 @@ class Photos extends Component<Props> {
           data={this.props.items}
           renderItem={this.renderRow}
           keyExtractor={this.keyExtractor}
-          onRefresh={this.props.refreshPhotos}
+          onRefresh={this.props.refresh}
           refreshing={this.props.refreshing}
           numColumns={3}
         />
@@ -178,19 +185,47 @@ class Photos extends Component<Props> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
+  const cameraRoll = cameraRollThread(state)
+  const cameraRollThreadId = cameraRoll ? cameraRoll.id : undefined
+  const items = cameraRoll
+    ? groupSelectors.groupItems(state.group, cameraRoll.id)
+    : []
   return {
-    items: groupSelectors.groupItems(state.group, 'camera roll thread id'), // TODO: Get this id from redux
+    cameraRollThreadId,
+    items,
     refreshing: state.group.addPhoto.queryData.querying
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
   queryPhotos: () => dispatch(groupActions.addPhoto.queryCameraRoll.request()),
-  refreshPhotos: () => {}, // TODO: dispatch a group action that loads thread data
-  clearProcessingPhotos: () => {} // TODO: Maybe create this action, but really should use cancel
+  clearProcessingPhotos: () => {}, // TODO: Maybe create this action, but really should use cancel,
+  dispatch
 })
+
+const mergeProps = (
+  stateProps: StateProps,
+  dispatchProps: DispatchProps,
+  ownProps: NavigationScreenProps<NavProps>
+): Props => {
+  return {
+    ...ownProps,
+    ...stateProps,
+    ...dispatchProps,
+    refresh: () => {
+      if (stateProps.cameraRollThreadId) {
+        dispatchProps.dispatch(
+          groupActions.feed.refreshFeed.request({
+            id: stateProps.cameraRollThreadId
+          })
+        )
+      }
+    }
+  }
+}
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
+  mergeProps
 )(Photos)

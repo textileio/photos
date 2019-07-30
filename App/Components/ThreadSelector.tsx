@@ -6,7 +6,7 @@ import { FlatList, View, Text, TouchableOpacity } from 'react-native'
 
 import { RootAction, RootState } from '../Redux/Types'
 
-import { getThreads } from '../Redux/PhotoViewingSelectors'
+import { getSharedThreads } from '../Redux/PhotoViewingSelectors'
 import { contactsSelectors } from '../features/contacts'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
 import UIActions from '../Redux/UIRedux'
@@ -85,7 +85,7 @@ interface StateProps {
 function mapStateToProps(state: RootState): StateProps {
   const ownAddress = accountSelectors.getAddress(state.account)
   const profile = state.account.profile.value
-  const threads = getThreads(state, 'date').map(thread => {
+  const threads = getSharedThreads(state, 'date').map(thread => {
     const selector = contactsSelectors.makeByThreadId(thread.id)
     const members = selector(state.contacts).filter(
       contact => contact.address !== ownAddress

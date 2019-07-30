@@ -7,7 +7,7 @@ import { View, Text, FlatList, ListRenderItemInfo } from 'react-native'
 import { RootState, RootAction } from '../../../Redux/Types'
 import ThreadSelectCard from './ThreadSelectCard'
 import ThreadCreateCard from './ThreadCreateCard'
-import { getThreads } from '../../../Redux/PhotoViewingSelectors'
+import { getSharedThreads } from '../../../Redux/PhotoViewingSelectors'
 import { ThreadData } from '../../../Redux/PhotoViewingRedux'
 import UIActions from '../../../Redux/UIRedux'
 
@@ -124,7 +124,7 @@ const mapStateToProps = (state: RootState): StateProps => {
     : undefined
 
   return {
-    threads: getThreads(state, 'name'),
+    threads: getSharedThreads(state, 'name'),
     selectedThreadId
   }
 }
