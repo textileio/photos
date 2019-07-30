@@ -102,7 +102,6 @@ function* queryForNewPhotos(addTaskChannel: Channel<{}>) {
         (localPhoto): SharedImagePayload => {
           const sharedImage: SharedImage = {
             canDelete: localPhoto.canDelete,
-            isAvatar: false,
             path: localPhoto.path,
             uri: localPhoto.uri
           }

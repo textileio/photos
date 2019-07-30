@@ -40,7 +40,6 @@ export function* chooseProfilePhoto() {
       CameraRoll.chooseProfilePhoto
     )
     const image: SharedImage = {
-      isAvatar: true,
       origURL: result.image.origURL,
       uri: result.image.uri,
       path: result.image.path,

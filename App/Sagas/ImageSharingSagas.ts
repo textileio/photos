@@ -54,7 +54,6 @@ export function* showImagePicker(
   } else {
     try {
       const image: SharedImage = {
-        isAvatar: false,
         origURL: pickerResponse.origURL,
         uri: pickerResponse.uri,
         path: pickerResponse.path,
