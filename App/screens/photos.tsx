@@ -13,6 +13,8 @@ import {
 import Toast from 'react-native-easy-toast'
 import ActionSheet from 'react-native-actionsheet'
 import { NavigationScreenProps } from 'react-navigation'
+import { Circle } from 'react-native-progress'
+import Icon from '@textile/react-native-icon'
 
 import Avatar from '../Components/Avatar'
 import TextileImage from '../Components/TextileImage'
@@ -24,7 +26,7 @@ import { RootAction, RootState } from '../Redux/Types'
 import { groupActions, groupSelectors } from '../features/group'
 import { cameraRollThread } from '../Redux/PhotoViewingSelectors'
 import { Item } from '../features/group/models'
-import { color } from '../styles'
+import { color, size } from '../styles'
 import { FeedItemType } from '@textile/react-native-sdk'
 
 const { width } = Dimensions.get('window')
@@ -143,18 +145,101 @@ class Photos extends Component<Props> {
     if (row.item.type === 'addingMessage') {
       return null
     } else if (row.item.type === 'addingPhoto') {
-      return null
+      const { id, imageUri, errorMessage } = row.item.data
+      const uri = `file://${imageUri}`
+      return (
+        <View style={{ width: itemSize, height: itemSize }}>
+          <Image
+            key={id}
+            style={{ width: itemSize, height: itemSize }}
+            source={{ uri }}
+          />
+          {errorMessage && (
+            <TouchableOpacity
+              onPress={this.showToast(errorMessage)}
+              hitSlop={{ top: 20, left: 20, bottom: 20, right: 20 }}
+              style={{
+                position: 'absolute',
+                right: 5,
+                bottom: 5
+              }}
+            >
+              <Icon
+                name="alert-circle"
+                size={size._024}
+                style={{ color: color.severe_3 }}
+              />
+            </TouchableOpacity>
+          )}
+          {!errorMessage && (
+            <Circle
+              showsText={false}
+              size={size._024}
+              thickness={2}
+              indeterminate={true}
+              color={color.brandBlue}
+              style={{
+                position: 'absolute',
+                right: 5,
+                bottom: 5
+              }}
+            />
+          )}
+        </View>
+      )
     } else if (row.item.type === FeedItemType.Files) {
       const files = row.item.value
       const data = files.data
+      const fileIndex =
+        files.files.length > 0 && files.files[0].index
+          ? files.files[0].index
+          : 0
+      let progress: number | undefined
+      if (row.item.syncStatus) {
+        const { sizeComplete, sizeTotal } = row.item.syncStatus
+        progress = sizeComplete / sizeTotal
+      }
       return (
-        <TextileImage
-          target={data}
-          index={0}
-          forMinWidth={itemSize}
-          resizeMode="cover"
-          style={{ width: itemSize, height: itemSize }}
-        />
+        <View>
+          <TextileImage
+            target={data}
+            index={fileIndex}
+            forMinWidth={itemSize}
+            resizeMode="cover"
+            style={{ width: itemSize, height: itemSize }}
+          />
+          {row.item.syncStatus && row.item.syncStatus.error && (
+            <TouchableOpacity
+              onPress={this.showToast(row.item.syncStatus.error.reason)}
+              hitSlop={{ top: 20, left: 20, bottom: 20, right: 20 }}
+              style={{
+                position: 'absolute',
+                right: 5,
+                bottom: 5
+              }}
+            >
+              <Icon
+                name="alert-circle"
+                size={size._024}
+                style={{ color: color.severe_3 }}
+              />
+            </TouchableOpacity>
+          )}
+          {row.item.syncStatus && !row.item.syncStatus.error && (
+            <Circle
+              showsText={false}
+              size={size._024}
+              thickness={2}
+              progress={progress}
+              color={color.brandBlue}
+              style={{
+                position: 'absolute',
+                right: 5,
+                bottom: 5
+              }}
+            />
+          )}
+        </View>
       )
     } else {
       return null

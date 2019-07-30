@@ -105,17 +105,12 @@ export default combineReducers<ProcessingImagesState, ProcessingImagesAction>({
         return images
       }
       case getType(actions.error): {
-        const { error } = action.payload
-        const e =
-          (error.underlyingError.message as string) ||
-          (error.underlyingError as string) ||
-          'unknown'
+        const { uuid, error } = action.payload
+        const message =
+          (error.message as string) || (error as string) || 'unknown error'
         const images = state.map(image => {
-          if (image.uuid === error.uuid) {
-            switch (error.type) {
-              case 'general':
-                return { ...image, error: e }
-            }
+          if (image.uuid === uuid) {
+            return { ...image, error: message }
           }
           return image
         })

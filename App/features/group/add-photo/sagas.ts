@@ -182,24 +182,20 @@ function* monitorRetrySharePhoto(addTaskChannel: Channel<{}>) {
 }
 
 function* addPhoto(uuid: string) {
-  try {
-    const selector = (rootState: RootState) =>
-      selectors.processingImageByUuidFactory(uuid)(rootState.group.addPhoto)
-    const processingImage: ProcessingImage | undefined = yield select(selector)
-    if (!processingImage) {
-      throw new Error('no ProcessingImage found')
-    }
-    const blockInfo: IBlock = yield call(
-      Textile.files.addFiles,
-      processingImage.sharedImage.path,
-      processingImage.destinationThreadId,
-      processingImage.comment
-    )
-    yield put(actions.addedToThread(uuid, blockInfo))
-    yield put(actions.complete(uuid))
-  } catch (error) {
-    yield put(actions.error(uuid, error))
+  const selector = (rootState: RootState) =>
+    selectors.processingImageByUuidFactory(uuid)(rootState.group.addPhoto)
+  const processingImage: ProcessingImage | undefined = yield select(selector)
+  if (!processingImage) {
+    throw new Error('no ProcessingImage found')
   }
+  const blockInfo: IBlock = yield call(
+    Textile.files.addFiles,
+    processingImage.sharedImage.path,
+    processingImage.destinationThreadId,
+    processingImage.comment
+  )
+  yield put(actions.addedToThread(uuid, blockInfo))
+  yield put(actions.complete(uuid))
 }
 
 function* cleanup(uuid: string) {
