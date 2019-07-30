@@ -26,7 +26,13 @@ export default combineReducers<FileSyncState, FileSyncAction>({
         } = action.payload
         return {
           ...state,
-          [groupId]: { numberComplete, numberTotal, sizeComplete, sizeTotal }
+          [groupId]: {
+            groupId,
+            numberComplete,
+            numberTotal,
+            sizeComplete,
+            sizeTotal
+          }
         }
       }
       case getType(actions.syncFailed): {

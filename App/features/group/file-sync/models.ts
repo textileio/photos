@@ -1,4 +1,5 @@
 export interface GroupStatus {
+  groupId: string
   numberComplete: number
   numberTotal: number
   sizeComplete: number
