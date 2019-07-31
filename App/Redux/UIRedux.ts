@@ -37,9 +37,8 @@ const actions = {
     return (image: string, threadId: string, comment?: string) =>
       resolve({ image, threadId, comment })
   }),
-  cancelSharingPhoto: createAction('CANCEL_SHARING_PHOTO', resolve => {
-    return () => resolve()
-  }),
+  cancelSharingPhoto: createAction('CANCEL_SHARING_PHOTO'),
+  cleanupComplete: createAction('CLEANUP_COMPLETE'),
   imageSharingError: createAction('IMAGE_SHARING_ERROR', resolve => {
     return (error: Error) => resolve(error)
   }),
@@ -108,13 +107,15 @@ const actions = {
 
 export type UIAction = ActionType<typeof actions>
 
+export interface SharingPhoto {
+  readonly image?: SharedImage
+  readonly files?: IFiles
+  readonly threadId?: string
+  readonly comment?: string
+}
+
 export interface UIState {
-  readonly sharingPhoto?: {
-    readonly image?: SharedImage
-    readonly files?: IFiles
-    readonly threadId?: string
-    readonly comment?: string
-  }
+  readonly sharingPhoto?: SharingPhoto
   readonly likingPhotos: {
     [blockId: string]: {
       error?: string
@@ -149,7 +150,7 @@ export function reducer(
       return { ...state, sharingPhoto: { ...state.sharingPhoto, comment } }
     }
     case getType(actions.sharePhotoRequest):
-    case getType(actions.cancelSharingPhoto):
+    case getType(actions.cleanupComplete):
       return { ...state, sharingPhoto: undefined }
     case getType(actions.newImagePickerError): {
       const msg = action.payload.message || action.payload.error.message

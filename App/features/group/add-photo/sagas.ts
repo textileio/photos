@@ -181,7 +181,7 @@ function* monitorSharedPhotos(addTaskChannel: Channel<{}>) {
 
 function* handleRetrySharePhoto(addTaskChannel: Channel<{}>, uuid: string) {
   try {
-    put(addTaskChannel, { payload: { id: uuid } })
+    yield put(addTaskChannel, { payload: { id: uuid } })
   } catch (e) {
     yield put(actions.error(uuid, e))
   }
@@ -211,7 +211,6 @@ function* addPhoto(uuid: string) {
     processingImage.comment
   )
   yield put(actions.addedToThread(uuid, blockInfo))
-  yield put(actions.complete(uuid))
 }
 
 function* cleanup(uuid: string) {
@@ -234,7 +233,7 @@ function* cleanup(uuid: string) {
 
     // What else? Undo local add, remote pin, remove from wallet?
   } catch (error) {}
-  yield put(actions.cancelComplete(uuid))
+  yield put(actions.cleanupComplete(uuid))
 }
 
 function* photoHandler(payload: { id: string }) {

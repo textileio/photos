@@ -1,10 +1,11 @@
 import { call, put, select } from 'redux-saga/effects'
 import Textile, { IBlock } from '@textile/react-native-sdk'
 import { ActionType } from 'typesafe-actions'
+import FS from 'react-native-fs'
 
 import copyPhoto from '../util/copy-photo'
 import { SharedImage } from '../features/group/add-photo/models'
-import UIActions, { UISelectors } from '../Redux/UIRedux'
+import UIActions, { UISelectors, SharingPhoto } from '../Redux/UIRedux'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
 import NavigationService from '../Services/NavigationService'
 import * as CameraRoll from '../Services/CameraRoll'
@@ -128,4 +129,28 @@ export function* shareWalletImage(
     )
     yield put(UIActions.imageSharingError(error))
   }
+}
+
+export function* handleSharePhotoRequest(
+  action: ActionType<typeof UIActions.sharePhotoRequest>
+) {
+  const { image, threadId, comment } = action.payload
+  yield call(shareWalletImage, image, threadId, comment)
+}
+
+export function* handleCancel(
+  action: ActionType<typeof UIActions.cancelSharingPhoto>
+) {
+  try {
+    const sharingPhoto: SharingPhoto | undefined = yield select(
+      UISelectors.sharingPhoto
+    )
+    if (sharingPhoto && sharingPhoto.image) {
+      const exists: boolean = yield call(FS.exists, sharingPhoto.image.path)
+      if (exists) {
+        yield call(FS.unlink, sharingPhoto.image.path)
+      }
+    }
+  } catch (error) {}
+  yield put(UIActions.cleanupComplete())
 }
