@@ -18,7 +18,6 @@ import {
 import Textile, { IThread, IBlock } from '@textile/react-native-sdk'
 import RNFS from 'react-native-fs'
 
-import AppConfig from '../../../Config/app-config'
 import copyPhoto from '../../../util/copy-photo'
 import * as actions from './actions'
 import * as selectors from './selectors'
@@ -258,6 +257,28 @@ export function* cancelImageShare(
   yield call(cleanup, uuid)
 }
 
+export function* retryFailedAdds(
+  action: ActionType<typeof actions.retryFailedAdds>
+) {
+  const failedItems: ProcessingImage[] = yield select((state: RootState) =>
+    selectors.failedPhotos(state.group.addPhoto)
+  )
+  const retryEffects = failedItems.map(item => put(actions.retry(item.uuid)))
+  yield all(retryEffects)
+}
+
+export function* cancelFailedAdds(
+  action: ActionType<typeof actions.retryFailedAdds>
+) {
+  const failedItems: ProcessingImage[] = yield select((state: RootState) =>
+    selectors.failedPhotos(state.group.addPhoto)
+  )
+  const cancelEffects = failedItems.map(item =>
+    put(actions.cancelRequest(item.uuid))
+  )
+  yield all(cancelEffects)
+}
+
 function* bootstrapPhotoProcessing() {
   const QUEUE_CONCURRENT = 1
   const { watcher, addTaskChannel } = yield createQueue(
@@ -275,6 +296,8 @@ export default function*() {
   yield all([
     takeEvery(getType(PreferencesActions.toggleStorageRequest), toggleStorage),
     takeEvery(getType(actions.cancelRequest), cancelImageShare),
+    takeEvery(getType(actions.retryFailedAdds), retryFailedAdds),
+    takeEvery(getType(actions.cancelFailedAdds), cancelFailedAdds),
     call(bootstrapPhotoProcessing),
     call(triggerCameraRollQuery)
   ])
