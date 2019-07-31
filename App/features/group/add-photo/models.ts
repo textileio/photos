@@ -6,7 +6,6 @@ export interface SharedImage {
   origURL?: string
   uri: string
   path: string
-  canDelete: boolean
 }
 
 export interface SharedImagePayload {

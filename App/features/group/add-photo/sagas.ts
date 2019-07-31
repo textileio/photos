@@ -18,6 +18,8 @@ import {
 import Textile, { IThread, IBlock } from '@textile/react-native-sdk'
 import RNFS from 'react-native-fs'
 
+import AppConfig from '../../../Config/app-config'
+import copyPhoto from '../../../util/copy-photo'
 import * as actions from './actions'
 import * as selectors from './selectors'
 import { createQueue } from './queue'
@@ -98,10 +100,25 @@ function* queryForNewPhotos(addTaskChannel: Channel<{}>) {
       const currentRefresh = new Date().getTime()
       const since = lastRefresh || currentRefresh
       const results: LocalPhotoResult[] = yield call(requestLocalPhotos, since)
-      const payloads = results.map(
+      const copyEffects = results.map(localPhoto => call(copyPhoto, localPhoto))
+      const updatedResults: ReadonlyArray<
+        LocalPhotoResult | undefined
+      > = yield all(copyEffects)
+      const initial: LocalPhotoResult[] = []
+      const reducer = (
+        accum: LocalPhotoResult[],
+        result: LocalPhotoResult | undefined
+      ) => {
+        if (result) {
+          return [...accum, result]
+        } else {
+          return accum
+        }
+      }
+      const updatedDefinedResults = updatedResults.reduce(reducer, initial)
+      const payloads = updatedDefinedResults.map(
         (localPhoto): SharedImagePayload => {
           const sharedImage: SharedImage = {
-            canDelete: localPhoto.canDelete,
             path: localPhoto.path,
             uri: localPhoto.uri
           }
@@ -211,7 +228,7 @@ function* cleanup(uuid: string) {
       RNFS.exists,
       processingImage.sharedImage.path
     )
-    if (exists && processingImage.sharedImage.canDelete) {
+    if (exists) {
       yield call(RNFS.unlink, processingImage.sharedImage.path)
     }
 

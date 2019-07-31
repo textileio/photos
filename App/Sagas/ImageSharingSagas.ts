@@ -1,9 +1,11 @@
 import { call, put, select } from 'redux-saga/effects'
 import Textile, { IBlock } from '@textile/react-native-sdk'
+import { ActionType } from 'typesafe-actions'
+
+import copyPhoto from '../util/copy-photo'
 import { SharedImage } from '../features/group/add-photo/models'
 import UIActions, { UISelectors } from '../Redux/UIRedux'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
-import { ActionType } from 'typesafe-actions'
 import NavigationService from '../Services/NavigationService'
 import * as CameraRoll from '../Services/CameraRoll'
 
@@ -53,11 +55,17 @@ export function* showImagePicker(
     )
   } else {
     try {
+      const updatedImage: CameraRoll.IPickerImage | undefined = yield call(
+        copyPhoto,
+        pickerResponse
+      )
+      if (!updatedImage) {
+        throw new Error('unable to copy image')
+      }
       const image: SharedImage = {
-        origURL: pickerResponse.origURL,
-        uri: pickerResponse.uri,
-        path: pickerResponse.path,
-        canDelete: pickerResponse.canDelete
+        origURL: updatedImage.origURL,
+        uri: updatedImage.uri,
+        path: updatedImage.path
       }
       yield put(UIActions.updateSharingPhotoImage(image))
 

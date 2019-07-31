@@ -2,6 +2,7 @@ import { take, put, call, all, select, takeEvery } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import Textile, { IContact } from '@textile/react-native-sdk'
 
+import copyPhoto from '../../util/copy-photo'
 import * as actions from './actions'
 import { contactsActions } from '../../features/contacts'
 import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
@@ -39,11 +40,17 @@ export function* chooseProfilePhoto() {
     const result: { image: CameraRoll.IPickerImage; data: string } = yield call(
       CameraRoll.chooseProfilePhoto
     )
+    const updatedImage: CameraRoll.IPickerImage | undefined = yield call(
+      copyPhoto,
+      result.image
+    )
+    if (!updatedImage) {
+      throw new Error('unable to copy image')
+    }
     const image: SharedImage = {
-      origURL: result.image.origURL,
-      uri: result.image.uri,
-      path: result.image.path,
-      canDelete: result.image.canDelete
+      origURL: updatedImage.origURL,
+      uri: updatedImage.uri,
+      path: updatedImage.path
     }
     yield put(actions.chooseProfilePhoto.success({ image, data: result.data }))
   } catch (error) {

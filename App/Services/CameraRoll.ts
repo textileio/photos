@@ -113,14 +113,10 @@ export async function launchImageLibrary(): Promise<IPickerImage> {
     const options = {
       title: 'Camera',
       mediaType: 'photo' as 'photo',
-      noData: true,
-      storageOptions: {
-        path: 'test123'
-      }
+      noData: true
     }
 
     ImagePicker.launchImageLibrary(options, response => {
-      console.log('RESP:', response)
       if (response.error) {
         reject(response.error)
       }

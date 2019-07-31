@@ -8,8 +8,7 @@ const comment = 'comment'
 const sharedImage: SharedImage = {
   origURL: 'origURL',
   uri: 'uri',
-  path: '/here',
-  canDelete: false
+  path: '/here'
 }
 
 const sharedPhoto: IFiles = {
