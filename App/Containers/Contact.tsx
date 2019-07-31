@@ -301,7 +301,7 @@ class ContactModal extends React.Component<Props, State> {
           defaultName={name}
           whitelist={[address]}
           type={Thread.Type.OPEN}
-          sharing={Thread.Sharing.NOT_SHARED}
+          sharing={Thread.Sharing.SHARED}
           cancel={this.cancelCreateThread}
           complete={this.completeCreateThread}
         />

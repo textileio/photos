@@ -206,7 +206,8 @@ function isDirectMessageThread(
   return thread => {
     return (
       thread.whitelist.indexOf(address) !== -1 &&
-      thread.sharing === Thread.Sharing.NOT_SHARED &&
+      thread.whitelist.length === 1 &&
+      thread.sharing === Thread.Sharing.SHARED &&
       thread.type === Thread.Type.OPEN
     )
   }
