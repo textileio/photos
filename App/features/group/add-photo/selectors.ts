@@ -7,6 +7,9 @@ export const lastQueriedTime = (state: ProcessingImagesState) =>
 export const pendingPhotos = (state: ProcessingImagesState) =>
   state.images.filter(image => image.status === 'pending')
 
+export const failedPhotos = (state: ProcessingImagesState) =>
+  state.images.filter(image => image.error !== undefined)
+
 export function processingImageByUuidFactory(uuid: string) {
   return (state: ProcessingImagesState) =>
     state.images.find(image => image.uuid === uuid)

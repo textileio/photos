@@ -46,10 +46,6 @@ export const addedToThread = createAction(
   }
 )
 
-export const complete = createAction('addPhoto/COMPLETE', resolve => {
-  return (uuid: string) => resolve({ uuid })
-})
-
 export const retry = createAction('addPhoto/RETRY', resolve => {
   return (uuid: string) => resolve({ uuid })
 })
@@ -58,8 +54,8 @@ export const cancelRequest = createAction('addPhoto/CANCEL', resolve => {
   return (uuid: string) => resolve({ uuid })
 })
 
-export const cancelComplete = createAction(
-  'addPhoto/CANCEL_COMPLETE',
+export const cleanupComplete = createAction(
+  'addPhoto/CLEANUP_COMPLETE',
   resolve => {
     return (uuid: string) => resolve({ uuid })
   }
@@ -68,3 +64,7 @@ export const cancelComplete = createAction(
 export const error = createAction('addPhoto/ERROR', resolve => {
   return (uuid: string, error: any) => resolve({ uuid, error })
 })
+
+export const cancelFailedAdds = createAction('addPhoto/CANCEL_FAILED_ADDS')
+
+export const retryFailedAdds = createAction('addPhoto/RETRY_FAILED_ADDS')

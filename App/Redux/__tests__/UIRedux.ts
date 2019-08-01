@@ -6,11 +6,9 @@ const initialState = reducer(undefined, {} as any)
 const threadId: string = 'threadId' as any
 const comment = 'comment'
 const sharedImage: SharedImage = {
-  isAvatar: false,
   origURL: 'origURL',
   uri: 'uri',
-  path: '/here',
-  canDelete: false
+  path: '/here'
 }
 
 const sharedPhoto: IFiles = {
@@ -65,13 +63,13 @@ describe('ui stories', () => {
       )
       expect(state.sharingPhoto!.comment).toEqual(comment)
     })
-    it('should cancel sharing', () => {
+    it('should clean up after processing a cancel sharing', () => {
       const state = reducer(
         initialState,
         actions.updateSharingPhotoImage(sharedImage)
       )
       expect(state.sharingPhoto).toBeDefined()
-      const state1 = reducer(state, actions.cancelSharingPhoto())
+      const state1 = reducer(state, actions.cleanupComplete())
       expect(state1.sharingPhoto).toBeUndefined()
     })
     it('sharePhotoRequest should clear sharing state', () => {

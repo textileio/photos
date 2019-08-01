@@ -45,7 +45,8 @@ interface StateProps {
 
 interface DispatchProps extends DispatchProp<RootAction> {
   queryPhotos: () => void
-  clearProcessingPhotos: () => void
+  retryFailedAdds: () => void
+  cancelFailedAdds: () => void
 }
 interface MergeProps {
   refresh: () => void
@@ -128,8 +129,8 @@ class Photos extends Component<Props> {
             this.actionSheet = o
           }}
           title={'Options'}
-          options={['Clear processing items', 'Cancel']}
-          cancelButtonIndex={1}
+          options={['Retry failed adds', 'Cancel failed adds', 'Cancel']}
+          cancelButtonIndex={2}
           onPress={this.handleActionSheetResponse}
         />
       </View>
@@ -264,7 +265,9 @@ class Photos extends Component<Props> {
 
   handleActionSheetResponse = (index: number) => {
     if (index === 0) {
-      this.props.clearProcessingPhotos()
+      this.props.retryFailedAdds()
+    } else if (index === 1) {
+      this.props.cancelFailedAdds()
     }
   }
 }
@@ -284,7 +287,8 @@ const mapStateToProps = (state: RootState): StateProps => {
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
   queryPhotos: () => dispatch(groupActions.addPhoto.queryCameraRoll.request()),
-  clearProcessingPhotos: () => {}, // TODO: Maybe create this action, but really should use cancel,
+  retryFailedAdds: () => dispatch(groupActions.addPhoto.retryFailedAdds()),
+  cancelFailedAdds: () => dispatch(groupActions.addPhoto.cancelFailedAdds()),
   dispatch
 })
 

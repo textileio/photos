@@ -31,10 +31,10 @@ import { startup } from './StartupSagas'
 import {
   showImagePicker,
   showWalletPicker,
-  walletPickerSuccess
+  walletPickerSuccess,
+  handleSharePhotoRequest,
+  handleCancel
 } from './ImageSharingSagas'
-
-import { handleSharePhotoRequest } from './ImageSharingTriggers'
 
 import { inviteAfterOnboard, routeDeepLink } from './DeepLinkSagas'
 
@@ -178,8 +178,8 @@ export default function*() {
     takeEvery(getType(UIActions.showImagePicker), showImagePicker),
     takeEvery(getType(UIActions.showWalletPicker), showWalletPicker),
     takeEvery(getType(UIActions.walletPickerSuccess), walletPickerSuccess),
-
     takeEvery(getType(UIActions.sharePhotoRequest), handleSharePhotoRequest),
+    takeEvery(getType(UIActions.cancelSharingPhoto), handleCancel),
 
     // Notifications
     takeEvery(

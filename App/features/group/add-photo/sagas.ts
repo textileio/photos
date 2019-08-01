@@ -18,6 +18,7 @@ import {
 import Textile, { IThread, IBlock } from '@textile/react-native-sdk'
 import RNFS from 'react-native-fs'
 
+import copyPhoto from '../../../util/copy-photo'
 import * as actions from './actions'
 import * as selectors from './selectors'
 import { createQueue } from './queue'
@@ -98,11 +99,25 @@ function* queryForNewPhotos(addTaskChannel: Channel<{}>) {
       const currentRefresh = new Date().getTime()
       const since = lastRefresh || currentRefresh
       const results: LocalPhotoResult[] = yield call(requestLocalPhotos, since)
-      const payloads = results.map(
+      const copyEffects = results.map(localPhoto => call(copyPhoto, localPhoto))
+      const updatedResults: ReadonlyArray<
+        LocalPhotoResult | undefined
+      > = yield all(copyEffects)
+      const initial: LocalPhotoResult[] = []
+      const reducer = (
+        accum: LocalPhotoResult[],
+        result: LocalPhotoResult | undefined
+      ) => {
+        if (result) {
+          return [...accum, result]
+        } else {
+          return accum
+        }
+      }
+      const updatedDefinedResults = updatedResults.reduce(reducer, initial)
+      const payloads = updatedDefinedResults.map(
         (localPhoto): SharedImagePayload => {
           const sharedImage: SharedImage = {
-            canDelete: localPhoto.canDelete,
-            isAvatar: false,
             path: localPhoto.path,
             uri: localPhoto.uri
           }
@@ -165,7 +180,7 @@ function* monitorSharedPhotos(addTaskChannel: Channel<{}>) {
 
 function* handleRetrySharePhoto(addTaskChannel: Channel<{}>, uuid: string) {
   try {
-    put(addTaskChannel, { payload: { id: uuid } })
+    yield put(addTaskChannel, { payload: { id: uuid } })
   } catch (e) {
     yield put(actions.error(uuid, e))
   }
@@ -195,7 +210,6 @@ function* addPhoto(uuid: string) {
     processingImage.comment
   )
   yield put(actions.addedToThread(uuid, blockInfo))
-  yield put(actions.complete(uuid))
 }
 
 function* cleanup(uuid: string) {
@@ -212,13 +226,13 @@ function* cleanup(uuid: string) {
       RNFS.exists,
       processingImage.sharedImage.path
     )
-    if (exists && processingImage.sharedImage.canDelete) {
+    if (exists) {
       yield call(RNFS.unlink, processingImage.sharedImage.path)
     }
 
     // What else? Undo local add, remote pin, remove from wallet?
   } catch (error) {}
-  yield put(actions.cancelComplete(uuid))
+  yield put(actions.cleanupComplete(uuid))
 }
 
 function* photoHandler(payload: { id: string }) {
@@ -243,6 +257,28 @@ export function* cancelImageShare(
   yield call(cleanup, uuid)
 }
 
+export function* retryFailedAdds(
+  action: ActionType<typeof actions.retryFailedAdds>
+) {
+  const failedItems: ProcessingImage[] = yield select((state: RootState) =>
+    selectors.failedPhotos(state.group.addPhoto)
+  )
+  const retryEffects = failedItems.map(item => put(actions.retry(item.uuid)))
+  yield all(retryEffects)
+}
+
+export function* cancelFailedAdds(
+  action: ActionType<typeof actions.retryFailedAdds>
+) {
+  const failedItems: ProcessingImage[] = yield select((state: RootState) =>
+    selectors.failedPhotos(state.group.addPhoto)
+  )
+  const cancelEffects = failedItems.map(item =>
+    put(actions.cancelRequest(item.uuid))
+  )
+  yield all(cancelEffects)
+}
+
 function* bootstrapPhotoProcessing() {
   const QUEUE_CONCURRENT = 1
   const { watcher, addTaskChannel } = yield createQueue(
@@ -260,6 +296,8 @@ export default function*() {
   yield all([
     takeEvery(getType(PreferencesActions.toggleStorageRequest), toggleStorage),
     takeEvery(getType(actions.cancelRequest), cancelImageShare),
+    takeEvery(getType(actions.retryFailedAdds), retryFailedAdds),
+    takeEvery(getType(actions.cancelFailedAdds), cancelFailedAdds),
     call(bootstrapPhotoProcessing),
     call(triggerCameraRollQuery)
   ])

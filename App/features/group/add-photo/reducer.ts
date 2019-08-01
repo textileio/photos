@@ -86,8 +86,7 @@ export default combineReducers<ProcessingImagesState, ProcessingImagesAction>({
         })
         return images
       }
-      case getType(actions.cancelComplete):
-      case getType(actions.complete): {
+      case getType(actions.cleanupComplete): {
         const { uuid } = action.payload
         const images = state.filter(image => {
           return image.uuid !== uuid

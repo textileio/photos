@@ -3,11 +3,9 @@ import { IBlock } from '@textile/react-native-sdk'
 import { IProcessingImageProps } from '../../../Components/ProcessingImage'
 
 export interface SharedImage {
-  isAvatar: boolean
   origURL?: string
   uri: string
   path: string
-  canDelete: boolean
 }
 
 export interface SharedImagePayload {
