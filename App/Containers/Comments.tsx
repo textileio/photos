@@ -40,6 +40,7 @@ interface ComponentState {
   // The current selected block (message/photo). For use in the block action sheet
   selected?: {
     blockId: string
+    canRemove: boolean
     text: string
   }
 }
@@ -115,7 +116,13 @@ class Comments extends Component<Props, ComponentState> {
 
   render() {
     // Block action sheet
-    const blockActionSheetOptions = ['Remove', 'Copy', 'Cancel']
+    const blockActionSheetOptions = [
+      ...(this.state.selected && this.state.selected.canRemove
+        ? ['Remove']
+        : []),
+      'Copy',
+      'Cancel'
+    ]
     const blockCancelButtonIndex = blockActionSheetOptions.indexOf('Cancel')
     const commentCardProps = this.props.comments
       .slice()
@@ -130,9 +137,8 @@ class Comments extends Component<Props, ComponentState> {
           comment: comment.body,
           date: Textile.util.timestampToDate(comment.date),
           isCaption: false,
-          onLongPress: canRemove
-            ? () => this.showBlockActionSheet(comment.id, comment.body)
-            : undefined
+          onLongPress: () =>
+            this.showBlockActionSheet(comment.id, canRemove, comment.body)
         }
         return props
       })
@@ -172,10 +178,15 @@ class Comments extends Component<Props, ComponentState> {
     )
   }
 
-  showBlockActionSheet = (blockId: string, text: string) => {
+  showBlockActionSheet = (
+    blockId: string,
+    canRemove: boolean,
+    text: string
+  ) => {
     this.setState({
       selected: {
         blockId,
+        canRemove,
         text
       }
     })
@@ -184,8 +195,15 @@ class Comments extends Component<Props, ComponentState> {
 
   handleBlockActionSheetResponse = (index: number) => {
     const actions = [
-      () =>
-        this.state.selected && this.props.remove(this.state.selected.blockId),
+      ...(this.state.selected && this.state.selected.canRemove
+        ? [
+            () => {
+              if (this.state.selected) {
+                this.props.remove(this.state.selected.blockId)
+              }
+            }
+          ]
+        : []),
       () => this.state.selected && Clipboard.setString(this.state.selected.text)
     ]
     if (index < actions.length) {

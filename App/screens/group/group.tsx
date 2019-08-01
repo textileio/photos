@@ -87,7 +87,8 @@ interface State {
   // The current selected block (message/photo). For use in the block action sheet
   selected?: {
     blockId: string
-    isCopyable?: boolean
+    isCopyable: boolean
+    canRemove: boolean
     text?: string
   }
 }
@@ -163,7 +164,9 @@ class Group extends React.PureComponent<Props, State> {
     const threadCancelButtonIndex = threadActionSheetOptions.indexOf('Cancel')
     // Block action sheet
     const blockActionSheetOptions = [
-      'Remove',
+      ...(this.state.selected && this.state.selected.canRemove
+        ? ['Remove']
+        : []),
       ...(this.state.selected && this.state.selected.isCopyable
         ? ['Copy']
         : []),
@@ -276,10 +279,13 @@ class Group extends React.PureComponent<Props, State> {
               id: comment.id,
               username: comment.user.name || '?',
               body: comment.body,
-              onLongPress: canRemoveComment
-                ? () =>
-                    this.showBlockActionSheet(comment.id, true, comment.body)
-                : undefined
+              onLongPress: () =>
+                this.showBlockActionSheet(
+                  comment.id,
+                  canRemoveComment,
+                  true,
+                  comment.body
+                )
             }
           }
         )
@@ -324,7 +330,7 @@ class Group extends React.PureComponent<Props, State> {
             pinchHeight={pinchHeight}
             onLongPress={
               canRemove
-                ? () => this.showBlockActionSheet(item.block)
+                ? () => this.showBlockActionSheet(item.block, true, false)
                 : undefined
             }
           />
@@ -353,9 +359,13 @@ class Group extends React.PureComponent<Props, State> {
         const avatar = isSameUser ? undefined : user.avatar
         return (
           <TouchableWithoutFeedback
-            disabled={!canRemove}
             onLongPress={() =>
-              this.showBlockActionSheet(item.block, true, item.value.body)
+              this.showBlockActionSheet(
+                item.block,
+                canRemove,
+                true,
+                item.value.body
+              )
             }
           >
             <View>
@@ -415,12 +425,14 @@ class Group extends React.PureComponent<Props, State> {
 
   showBlockActionSheet = (
     blockId: string,
-    isCopyable?: boolean,
+    canRemove: boolean,
+    isCopyable: boolean,
     text?: string
   ) => {
     this.setState({
       selected: {
         blockId,
+        canRemove,
         isCopyable,
         text
       }
@@ -443,8 +455,13 @@ class Group extends React.PureComponent<Props, State> {
 
   handleBlockActionSheetResponse = (index: number) => {
     const actions = [
-      () =>
-        this.state.selected && this.props.remove(this.state.selected.blockId),
+      ...(this.state.selected && this.state.selected.canRemove
+        ? [
+            () =>
+              this.state.selected &&
+              this.props.remove(this.state.selected.blockId)
+          ]
+        : []),
       ...(this.state.selected && this.state.selected.isCopyable
         ? [
             () => {
