@@ -3,27 +3,20 @@ import { IBlock } from '@textile/react-native-sdk'
 import { IProcessingImageProps } from '../../../Components/ProcessingImage'
 
 export interface SharedImage {
-  isAvatar: boolean
   origURL?: string
   uri: string
   path: string
-  canDelete: boolean
 }
 
-export interface GeneralError {
+export interface SharedImagePayload {
   uuid: string
-  underlyingError: any
-  type: 'general'
+  sharedImage: SharedImage
+  destinationThreadId: string
+  comment?: string
 }
 
-export type ProcessingImageError = GeneralError
-
-export interface ProcessingImage {
-  readonly uuid: string
-  readonly sharedImage: SharedImage
-  readonly status: 'adding' | 'complete'
-  readonly destinationThreadId: string
-  readonly comment?: string
+export interface ProcessingImage extends SharedImagePayload {
+  readonly status: 'pending' | 'adding' | 'complete'
   readonly block?: IBlock
   readonly error?: string
 }

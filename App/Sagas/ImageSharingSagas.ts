@@ -1,46 +1,14 @@
 import { call, put, select } from 'redux-saga/effects'
-import uuid from 'uuid/v4'
-import Textile, { IBlock, IStrings } from '@textile/react-native-sdk'
-import {
-  SharedImage,
-  ProcessingImage
-} from '../features/group/add-photo/models'
-import { groupActions, groupSelectors } from '../features/group'
-import UIActions, { UISelectors } from '../Redux/UIRedux'
+import Textile, { IBlock } from '@textile/react-native-sdk'
+import { ActionType } from 'typesafe-actions'
+import FS from 'react-native-fs'
+
+import copyPhoto from '../util/copy-photo'
+import { SharedImage } from '../features/group/add-photo/models'
+import UIActions, { UISelectors, SharingPhoto } from '../Redux/UIRedux'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
-import { ActionType, getType } from 'typesafe-actions'
 import NavigationService from '../Services/NavigationService'
 import * as CameraRoll from '../Services/CameraRoll'
-import { RootState } from '../Redux/Types'
-
-export function* shareToThread(uuid: string) {
-  try {
-    const selector = (rootState: RootState) =>
-      groupSelectors.addPhotoSelectors.processingImageByUuidFactory(uuid)(
-        rootState.group.addPhoto
-      )
-    const processingImage: ProcessingImage | undefined = yield select(selector)
-    if (!processingImage) {
-      throw new Error('no ProcessingImage found')
-    }
-    const blockInfo: IBlock = yield call(
-      Textile.files.addFiles,
-      processingImage.sharedImage.path,
-      processingImage.destinationThreadId,
-      processingImage.comment
-    )
-    yield put(groupActions.addPhoto.addedToThread(uuid, blockInfo))
-    yield put(groupActions.addPhoto.complete(uuid))
-  } catch (error) {
-    yield put(
-      groupActions.addPhoto.error({
-        uuid,
-        underlyingError: error,
-        type: 'general'
-      })
-    )
-  }
-}
 
 export function* showWalletPicker(
   action: ActionType<typeof UIActions.showWalletPicker>
@@ -88,12 +56,17 @@ export function* showImagePicker(
     )
   } else {
     try {
+      const updatedImage: CameraRoll.IPickerImage | undefined = yield call(
+        copyPhoto,
+        pickerResponse
+      )
+      if (!updatedImage) {
+        throw new Error('unable to copy image')
+      }
       const image: SharedImage = {
-        isAvatar: false,
-        origURL: pickerResponse.origURL,
-        uri: pickerResponse.uri,
-        path: pickerResponse.path,
-        canDelete: pickerResponse.canDelete
+        origURL: updatedImage.origURL,
+        uri: updatedImage.uri,
+        path: updatedImage.path
       }
       yield put(UIActions.updateSharingPhotoImage(image))
 
@@ -123,7 +96,7 @@ export function* showImagePicker(
 export function* walletPickerSuccess(
   action: ActionType<typeof UIActions.walletPickerSuccess>
 ) {
-  yield put(UIActions.updateSharingPhotoImage(action.payload.photo))
+  yield put(UIActions.updateSharingPhotoFiles(action.payload.photo))
   // indicates if request was made from merged main feed or from a specific thread
   const threadId = yield select(UISelectors.sharingPhotoThread)
   if (threadId) {
@@ -158,12 +131,26 @@ export function* shareWalletImage(
   }
 }
 
-export function* insertImage(
-  image: SharedImage,
-  threadId: string,
-  comment?: string
+export function* handleSharePhotoRequest(
+  action: ActionType<typeof UIActions.sharePhotoRequest>
 ) {
-  const id = uuid()
-  yield put(groupActions.addPhoto.insertImage(id, image, threadId, comment))
-  yield call(shareToThread, id)
+  const { image, threadId, comment } = action.payload
+  yield call(shareWalletImage, image, threadId, comment)
+}
+
+export function* handleCancel(
+  action: ActionType<typeof UIActions.cancelSharingPhoto>
+) {
+  try {
+    const sharingPhoto: SharingPhoto | undefined = yield select(
+      UISelectors.sharingPhoto
+    )
+    if (sharingPhoto && sharingPhoto.image) {
+      const exists: boolean = yield call(FS.exists, sharingPhoto.image.path)
+      if (exists) {
+        yield call(FS.unlink, sharingPhoto.image.path)
+      }
+    }
+  } catch (error) {}
+  yield put(UIActions.cleanupComplete())
 }

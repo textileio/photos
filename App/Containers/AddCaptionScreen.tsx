@@ -1,23 +1,25 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { Dispatch } from 'redux'
 import { Image, View } from 'react-native'
+import { NavigationActions, NavigationScreenProps } from 'react-navigation'
+import { IFiles, Thread } from '@textile/react-native-sdk'
+
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 import CreateThreadModal from '../Components/CreateThreadModal'
 import Input from '../SB/components/Input'
-import { NavigationActions, NavigationScreenProps } from 'react-navigation'
 import styles from '../SB/views/ThreadCreate/statics/styles'
 import ThreadSelect from '../SB/components/ThreadSelect'
 import UIActions from '../Redux/UIRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import TextileImage from '../Components/TextileImage'
-
+import { groupActions } from '../features/group'
 import { SharedImage } from '../features/group/add-photo/models'
-import { IFiles, Thread } from '@textile/react-native-sdk'
 import { RootAction, RootState } from '../Redux/Types'
-import { Dispatch } from 'redux'
 
 interface StateProps {
-  image?: SharedImage | IFiles
+  image?: SharedImage
+  files?: IFiles
   threadId?: string
   comment?: string
   selectedThreadId?: string
@@ -27,9 +29,10 @@ interface DispatchProps {
   updateComment: (text: string) => void
   cancelShare: () => void
   share: (
-    image: SharedImage | string,
     threadId: string,
-    comment?: string
+    comment?: string,
+    image?: SharedImage,
+    files?: IFiles
   ) => void
   shareNewThread: (
     imageId: string,
@@ -118,22 +121,13 @@ class AddCaptionScreen extends React.Component<Props> {
   }
 
   share = () => {
-    if (
-      this.props.share &&
-      this.props.image &&
-      (this.props.image as IFiles).data &&
-      this.props.threadId
-    ) {
-      const filesInfo = this.props.image as IFiles
-      this.props.share(filesInfo.data, this.props.threadId, this.props.comment)
-    } else if (
-      this.props.share &&
-      this.props.image &&
-      (this.props.image as SharedImage).uri &&
-      this.props.threadId
-    ) {
-      const sharedImage = this.props.image as SharedImage
-      this.props.share(sharedImage, this.props.threadId, this.props.comment)
+    if (this.props.threadId) {
+      this.props.share(
+        this.props.threadId,
+        this.props.comment,
+        this.props.image,
+        this.props.files
+      )
     }
   }
 
@@ -173,13 +167,10 @@ class AddCaptionScreen extends React.Component<Props> {
   }
 
   _renderImage() {
-    const { image } = this.props
-    if (image && (image as SharedImage).uri) {
-      const sharedImage = image as SharedImage
+    const { image, files } = this.props
+    if (image) {
       const sourceUri =
-        sharedImage.origURL && sharedImage.origURL !== ''
-          ? sharedImage.origURL
-          : sharedImage.uri
+        image.origURL && image.origURL !== '' ? image.origURL : image.uri
       return (
         <Image
           source={{ uri: sourceUri }}
@@ -192,27 +183,26 @@ class AddCaptionScreen extends React.Component<Props> {
           }}
         />
       )
-    } else if (image && (image as IFiles).target) {
-      const filesInfo = image as IFiles
-      if (filesInfo.target) {
-        const files = filesInfo.files
-        const fileIndex =
-          files && files.length > 0 && files[0].index ? files[0].index : 0
-        return (
-          <TextileImage
-            target={filesInfo.data}
-            index={fileIndex}
-            forMinWidth={70}
-            resizeMode={'cover'}
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: 70,
-              height: 70
-            }}
-          />
-        )
-      }
+    } else if (files) {
+      const filesList = files.files
+      const fileIndex =
+        filesList && filesList.length > 0 && filesList[0].index
+          ? filesList[0].index
+          : 0
+      return (
+        <TextileImage
+          target={files.data}
+          index={fileIndex}
+          forMinWidth={70}
+          resizeMode={'cover'}
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: 70,
+            height: 70
+          }}
+        />
+      )
     }
   }
 
@@ -256,6 +246,7 @@ const mapStateToProps = (state: RootState): StateProps => {
   const sharingPhoto = state.ui.sharingPhoto || {}
   return {
     image: sharingPhoto.image,
+    files: sharingPhoto.files,
     threadId: sharingPhoto.threadId,
     comment: sharingPhoto.comment,
     selectedThreadId: state.ui.sharingPhoto
@@ -275,11 +266,18 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
       dispatch(UIActions.updateSharingPhotoComment(text))
     },
     share: (
-      image: SharedImage | string,
       threadId: string,
-      comment?: string
+      comment?: string,
+      image?: SharedImage,
+      files?: IFiles
     ) => {
-      dispatch(UIActions.sharePhotoRequest(image, threadId, comment))
+      if (image) {
+        dispatch(
+          groupActions.addPhoto.sharePhotoRequest(image, threadId, comment)
+        )
+      } else if (files) {
+        dispatch(UIActions.sharePhotoRequest(files.data, threadId, comment))
+      }
     },
     cancelShare: () => {
       dispatch(UIActions.cancelSharingPhoto())

@@ -18,7 +18,6 @@ import { accountActions } from '../features/account'
 import TextileEventsActions, {
   TextileEventsAction
 } from '../Redux/TextileEventsRedux'
-import { photosActions, PhotosAction } from '../features/photos'
 import NotificationActions, {
   NotificationsAction
 } from '../Redux/NotificationsRedux'
@@ -42,7 +41,6 @@ function displayNotification(message: string, title?: string) {
 function nodeEvents() {
   return eventChannel<
     | GroupAction
-    | PhotosAction
     | PhotoViewingAction
     | ContactsAction
     | DeviceLogsAction
@@ -63,9 +61,6 @@ function nodeEvents() {
             feedItemData.type === FeedItemType.Leave
           ) {
             emitter(groupActions.feed.refreshFeed.request({ id: threadId }))
-            // FIXME: This is a hack. We need to examine the thread id and dispatch one or the other.
-            // Or this needs to send the whole Thread or at least the addition of key
-            emitter(photosActions.refreshPhotos.request(undefined))
           }
 
           // TODO: remove this if needed

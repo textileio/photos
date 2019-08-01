@@ -2,6 +2,7 @@ import { delay } from 'redux-saga'
 import { call, put, select, take } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import uuid from 'uuid/v4'
+import Config from 'react-native-config'
 
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import ThreadsActions, { InboundInvite } from '../Redux/ThreadsRedux'
@@ -16,7 +17,6 @@ import {
 } from '../Redux/PhotoViewingSelectors'
 import Textile, {
   IThread,
-  Thread,
   IAddThreadConfig,
   AddThreadConfig,
   IThreadList,
@@ -135,10 +135,12 @@ export function* refreshThreads(
     const threadsResult: IThreadList = yield call(Textile.threads.list)
     for (const thread of threadsResult.items) {
       /**
-       * Filters to only shared threads
+       * Filters to only threads we want to work with
        */
-      const isSharedThread = thread.key.indexOf('textile_photos-shared') === 0
-      if (isSharedThread) {
+      const useIt =
+        thread.key.indexOf('textile_photos-shared') === 0 ||
+        thread.key === Config.RN_TEXTILE_CAMERA_ROLL_THREAD_KEY
+      if (useIt) {
         const valid = thread.headBlocks.length > 0
         const withValid = { ...thread, valid }
         yield put(PhotoViewingActions.insertThread(withValid))

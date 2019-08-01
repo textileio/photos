@@ -24,7 +24,6 @@ import ThreadsActions from '../Redux/ThreadsRedux'
 import { accountSaga } from '../features/account'
 import { contactsSaga } from '../features/contacts'
 import { groupSaga, groupActions } from '../features/group'
-import { photosSaga } from '../features/photos'
 import { cafesSaga } from '../features/cafes'
 
 import { startup } from './StartupSagas'
@@ -32,15 +31,10 @@ import { startup } from './StartupSagas'
 import {
   showImagePicker,
   showWalletPicker,
-  walletPickerSuccess
-} from './ImageSharingSagas'
-
-import {
+  walletPickerSuccess,
   handleSharePhotoRequest,
-  retryImageShare,
-  cancelImageShare,
-  handleImageProcessingError
-} from './ImageSharingTriggers'
+  handleCancel
+} from './ImageSharingSagas'
 
 import { inviteAfterOnboard, routeDeepLink } from './DeepLinkSagas'
 
@@ -109,7 +103,6 @@ export default function*() {
     call(accountSaga),
     call(contactsSaga),
     call(groupSaga),
-    call(photosSaga),
     call(cafesSaga),
 
     call(startSagas),
@@ -118,9 +111,6 @@ export default function*() {
 
     // some sagas only receive an action
     takeLatest(getType(StartupActions.startup), startup),
-
-    // just for logging purposes
-    takeEvery(getType(groupActions.addPhoto.error), handleImageProcessingError),
 
     // permissions request events
     takeLatest(
@@ -188,10 +178,8 @@ export default function*() {
     takeEvery(getType(UIActions.showImagePicker), showImagePicker),
     takeEvery(getType(UIActions.showWalletPicker), showWalletPicker),
     takeEvery(getType(UIActions.walletPickerSuccess), walletPickerSuccess),
-
     takeEvery(getType(UIActions.sharePhotoRequest), handleSharePhotoRequest),
-    takeEvery(getType(groupActions.addPhoto.retry), retryImageShare),
-    takeEvery(getType(groupActions.addPhoto.cancelRequest), cancelImageShare),
+    takeEvery(getType(UIActions.cancelSharingPhoto), handleCancel),
 
     // Notifications
     takeEvery(
