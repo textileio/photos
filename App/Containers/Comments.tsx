@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { View, ScrollView, ViewStyle } from 'react-native'
+import { View, ScrollView, ViewStyle, Clipboard } from 'react-native'
 import { NavigationActions, SafeAreaView } from 'react-navigation'
 import Textile, { IComment } from '@textile/react-native-sdk'
 import ActionSheet from 'react-native-actionsheet'
@@ -38,7 +38,10 @@ interface DispatchProps {
 interface ComponentState {
   submitting: boolean
   // The current selected block (message/photo). For use in the block action sheet
-  selectedBlockId?: string
+  selected?: {
+    blockId: string
+    text: string
+  }
 }
 
 type Props = StateProps & DispatchProps
@@ -112,7 +115,7 @@ class Comments extends Component<Props, ComponentState> {
 
   render() {
     // Block action sheet
-    const blockActionSheetOptions = ['Remove', 'Cancel']
+    const blockActionSheetOptions = ['Remove', 'Copy', 'Cancel']
     const blockCancelButtonIndex = blockActionSheetOptions.indexOf('Cancel')
     const commentCardProps = this.props.comments
       .slice()
@@ -128,7 +131,7 @@ class Comments extends Component<Props, ComponentState> {
           date: Textile.util.timestampToDate(comment.date),
           isCaption: false,
           onLongPress: canRemove
-            ? () => this.showBlockActionSheet(comment.id)
+            ? () => this.showBlockActionSheet(comment.id, comment.body)
             : undefined
         }
         return props
@@ -169,9 +172,12 @@ class Comments extends Component<Props, ComponentState> {
     )
   }
 
-  showBlockActionSheet = (blockId: string) => {
+  showBlockActionSheet = (blockId: string, text: string) => {
     this.setState({
-      selectedBlockId: blockId
+      selected: {
+        blockId,
+        text
+      }
     })
     this.blockActionSheet.show()
   }
@@ -179,8 +185,8 @@ class Comments extends Component<Props, ComponentState> {
   handleBlockActionSheetResponse = (index: number) => {
     const actions = [
       () =>
-        this.state.selectedBlockId &&
-        this.props.remove(this.state.selectedBlockId)
+        this.state.selected && this.props.remove(this.state.selected.blockId),
+      () => this.state.selected && Clipboard.setString(this.state.selected.text)
     ]
     if (index < actions.length) {
       actions[index]()
