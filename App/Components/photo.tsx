@@ -47,8 +47,28 @@ export default class Photo extends React.PureComponent<Props> {
     selected: false
   }
 
+  lastTap?: number
+  toggleSelectedTimeout?: any
+
+  // Code also includes ability to handle a double tap to like
   toggleSelected = () => {
-    this.setState({ selected: !this.state.selected })
+    const now = Date.now()
+    // Two taps within 300 milliseconds counts as a double tap
+    const doublePressDelay = 300
+    // If the photo has already been tapped, and that tap was less than doublePressDelay milliseconds ago
+    if (this.lastTap && now - this.lastTap < doublePressDelay) {
+      // Cancel the timeout representing a single press
+      if (this.toggleSelectedTimeout) {
+        clearTimeout(this.toggleSelectedTimeout)
+      }
+      // Like the photo on double tap
+      this.props.onLike()
+    } else {
+      this.lastTap = now
+      this.toggleSelectedTimeout = setTimeout(() => {
+        this.setState({ selected: !this.state.selected })
+      }, 300)
+    }
   }
 
   progressiveElement(width: number, height: number, minWidth: number) {
