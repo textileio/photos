@@ -11,13 +11,17 @@ import Modal from 'react-native-modal'
 
 import { Thread } from '@textile/react-native-sdk'
 
-import { RootAction } from '../Redux/Types'
+import { RootState, RootAction } from '../Redux/Types'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import PreferencesActions, { TourScreens } from '../Redux/PreferencesRedux'
 import Input from '../SB/components/Input'
 
 // Styles
 import styles from './Styles/ThreadCreateModal'
+
+interface StateProps {
+  alreadyAddingThread: boolean
+}
 
 interface DispatchProps {
   completeScreen: (threadName: string) => void
@@ -45,19 +49,25 @@ interface ScreenProps {
   complete: () => void
 }
 
-type Props = DispatchProps & ScreenProps
+type Props = StateProps & DispatchProps & ScreenProps
 
 interface State {
   value: string
-  submitted: boolean
 }
 
 class CreateThreadComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      value: props.defaultName ? props.defaultName : '',
-      submitted: false
+      value: props.defaultName ? props.defaultName : ''
+    }
+  }
+
+  componentdidUpdate() {
+    if (this.props.defaultName && this.props.defaultName !== this.state.value) {
+      this.setState({
+        value: this.props.defaultName
+      })
     }
   }
 
@@ -67,10 +77,6 @@ class CreateThreadComponent extends React.Component<Props, State> {
 
   create() {
     return () => {
-      if (this.state.submitted) {
-        return
-      }
-      this.setState({ submitted: true })
       this.props.completeScreen(this.state.value)
       const name = this.state.value
       const type =
@@ -89,12 +95,16 @@ class CreateThreadComponent extends React.Component<Props, State> {
         Boolean(this.props.navigateTo),
         Boolean(this.props.selectToShare)
       )
+      this.setState({
+        value: this.props.defaultName ? this.props.defaultName : ''
+      })
       this.props.complete()
     }
   }
 
   render() {
-    const submitDisabled = !(this.state.value.length > 0)
+    const submitDisabled =
+      this.props.alreadyAddingThread || !(this.state.value.length > 0)
     return (
       <Modal
         isVisible={this.props.isVisible}
@@ -122,6 +132,7 @@ class CreateThreadComponent extends React.Component<Props, State> {
                   style={styles.inputStyle}
                   value={this.state.value}
                   label={this.state.value === '' ? 'Add title...' : ''}
+                  disabled={this.props.alreadyAddingThread}
                   onChangeText={this.handleNewText}
                 />
               </View>
@@ -186,7 +197,13 @@ const mapDispatchToProps = (
   }
 }
 
+const mapStateToProps = (state: RootState): StateProps => {
+  return {
+    alreadyAddingThread: Boolean(state.photoViewing.addingThread)
+  }
+}
+
 export default connect(
-  undefined,
+  mapStateToProps,
   mapDispatchToProps
 )(CreateThreadComponent)
