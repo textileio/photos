@@ -26,7 +26,6 @@ import LikeAndComment, {
 import { spacing, size, color, textStyle } from '../styles'
 import Comments, { Props as CommentsProps } from './comments'
 import { GroupStatus } from '../features/group/file-sync/models'
-import { thisExpression, throwStatement } from '@babel/types'
 
 const CONTAINER: ViewStyle = {
   paddingTop: spacing._016,
