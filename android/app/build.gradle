@@ -189,6 +189,7 @@ dependencies {
     implementation project(':react-native-fs')
     implementation project(':react-native-image-picker')
     implementation project(':react-native-config')
+    implementation 'com.google.firebase:firebase-core:16.0.0'
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
         transitive = true;
     }
@@ -204,3 +205,5 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
+
+apply plugin: 'com.google.gms.google-services'

@@ -25,6 +25,7 @@
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		8E44FDACD1EC3A88233594F4 /* libPods-Textile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 889BBA4C976EB19AC5C26E76 /* libPods-Textile.a */; };
 		93247E602278F1C1001C6381 /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93247E5D2278F1B0001C6381 /* libRNGestureHandler.a */; };
+		932986BC22F4B0A6001E4E28 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 932986BB22F4B0A6001E4E28 /* GoogleService-Info.plist */; };
 		932DF5DA2294C58E002683AB /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 932DF5A02294C58E002683AB /* JavaScriptCore.framework */; };
 		934C823A228B644D00EC996D /* libRNCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 934C822F228B640800EC996D /* libRNCameraRoll.a */; };
 		93C00481216B12A1007786A5 /* libRNBackgroundFetch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C00480216B1276007786A5 /* libRNBackgroundFetch.a */; };
@@ -497,6 +498,7 @@
 		889BBA4C976EB19AC5C26E76 /* libPods-Textile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Textile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AF863B7C065E68291276D09 /* Pods-Textile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Textile.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Textile/Pods-Textile.debug.xcconfig"; sourceTree = "<group>"; };
 		93247E572278F1B0001C6381 /* RNGestureHandler.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNGestureHandler.xcodeproj; path = "../node_modules/react-native-gesture-handler/ios/RNGestureHandler.xcodeproj"; sourceTree = "<group>"; };
+		932986BB22F4B0A6001E4E28 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Textile/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		932DF5A02294C58E002683AB /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		934C81F4228B640800EC996D /* RNCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCameraRoll.xcodeproj; path = "../node_modules/@textile/react-native-camera-roll/ios/RNCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		93C00470216B1066007786A5 /* TSBackgroundFetch.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TSBackgroundFetch.framework; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/TSBackgroundFetch.framework"; sourceTree = "<group>"; };
@@ -661,6 +663,7 @@
 		13B07FAE1A68108700A75B9A /* Textile */ = {
 			isa = PBXGroup;
 			children = (
+				932986BB22F4B0A6001E4E28 /* GoogleService-Info.plist */,
 				93C00621216D385B007786A5 /* Textile.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -1586,6 +1589,7 @@
 				93F1805B21FD459700883267 /* Biotif-Regular.ttf in Resources */,
 				93C005F1216C2034007786A5 /* Octicons.ttf in Resources */,
 				93C005FE216C2034007786A5 /* Ionicons.ttf in Resources */,
+				932986BC22F4B0A6001E4E28 /* GoogleService-Info.plist in Resources */,
 				93F1805D21FD49A900883267 /* icomoon.ttf in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				93C005FB216C2034007786A5 /* EvilIcons.ttf in Resources */,

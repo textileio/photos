@@ -28,6 +28,7 @@ target 'Textile' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
 
   # your other libraries will follow here!
+  pod 'Firebase/Analytics'
   pod 'textile-react-native-sdk', :path => '../node_modules/@textile/react-native-sdk'
   pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
 

@@ -154,5 +154,9 @@ sourcemap.js
 .jest/
 coverage/
 
+# Firebase config
+GoogleService-Info.plist
+google-services.json
+
 # =====================================
 # Repository
