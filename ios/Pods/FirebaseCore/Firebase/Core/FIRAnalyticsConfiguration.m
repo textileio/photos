@@ -12,14 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <Foundation/Foundation.h>
+#import "FIRAnalyticsConfiguration.h"
 
-#import "Private/FIRAnalyticsConfiguration.h"
+#import "Private/FIRAnalyticsConfiguration+Internal.h"
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-implementations"
 @implementation FIRAnalyticsConfiguration
-#pragma clang diagnostic pop
 
 + (FIRAnalyticsConfiguration *)sharedInstance {
   static FIRAnalyticsConfiguration *sharedInstance = nil;
@@ -37,6 +34,16 @@
   [[NSNotificationCenter defaultCenter] postNotificationName:name
                                                       object:self
                                                     userInfo:@{name : value}];
+}
+
+- (void)setMinimumSessionInterval:(NSTimeInterval)minimumSessionInterval {
+  [self postNotificationName:kFIRAnalyticsConfigurationSetMinimumSessionIntervalNotification
+                       value:@(minimumSessionInterval)];
+}
+
+- (void)setSessionTimeoutInterval:(NSTimeInterval)sessionTimeoutInterval {
+  [self postNotificationName:kFIRAnalyticsConfigurationSetSessionTimeoutIntervalNotification
+                       value:@(sessionTimeoutInterval)];
 }
 
 - (void)setAnalyticsCollectionEnabled:(BOOL)analyticsCollectionEnabled {

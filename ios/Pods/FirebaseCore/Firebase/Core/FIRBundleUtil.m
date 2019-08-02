@@ -14,8 +14,6 @@
 
 #import "Private/FIRBundleUtil.h"
 
-#import <GoogleUtilities/GULAppEnvironmentUtil.h>
-
 @implementation FIRBundleUtil
 
 + (NSArray *)relevantBundles {
@@ -47,29 +45,13 @@
   return result;
 }
 
-+ (BOOL)hasBundleIdentifierPrefix:(NSString *)bundleIdentifier inBundles:(NSArray *)bundles {
++ (BOOL)hasBundleIdentifier:(NSString *)bundleIdentifier inBundles:(NSArray *)bundles {
   for (NSBundle *bundle in bundles) {
-    // This allows app extensions that have the app's bundle as their prefix to pass this test.
-    NSString *applicationBundleIdentifier =
-        [GULAppEnvironmentUtil isAppExtension]
-            ? [self bundleIdentifierByRemovingLastPartFrom:bundle.bundleIdentifier]
-            : bundle.bundleIdentifier;
-
-    if ([applicationBundleIdentifier isEqualToString:bundleIdentifier]) {
+    if ([bundle.bundleIdentifier isEqualToString:bundleIdentifier]) {
       return YES;
     }
   }
   return NO;
-}
-
-+ (NSString *)bundleIdentifierByRemovingLastPartFrom:(NSString *)bundleIdentifier {
-  NSString *bundleIDComponentsSeparator = @".";
-
-  NSMutableArray<NSString *> *bundleIDComponents =
-      [[bundleIdentifier componentsSeparatedByString:bundleIDComponentsSeparator] mutableCopy];
-  [bundleIDComponents removeLastObject];
-
-  return [bundleIDComponents componentsJoinedByString:bundleIDComponentsSeparator];
 }
 
 @end

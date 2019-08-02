@@ -29,6 +29,10 @@
 
 @implementation FIRInstanceID (Private)
 
+- (FIRInstanceIDCheckinPreferences *)cachedCheckinPreferences {
+  return [self.tokenManager.authService checkinPreferences];
+}
+
 // This method just wraps our pre-configured auth service to make the request.
 // This method is only needed by first-party users, like Remote Config.
 - (void)fetchCheckinInfoWithHandler:(FIRInstanceIDDeviceCheckinCompletion)handler {

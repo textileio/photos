@@ -16,6 +16,7 @@
 
 #import "FIRInstanceIDCheckinService.h"
 
+#import <FirebaseCore/FIRAppInternal.h>
 #import "FIRInstanceIDCheckinPreferences+Internal.h"
 #import "FIRInstanceIDCheckinPreferences_Private.h"
 #import "FIRInstanceIDDefines.h"
@@ -34,6 +35,7 @@ NSString *const kFIRInstanceIDLastCheckinTimeKey = @"GMSInstanceIDLastCheckinTim
 NSString *const kFIRInstanceIDVersionInfoStringKey = @"GMSInstanceIDVersionInfo";
 NSString *const kFIRInstanceIDGServicesDictionaryKey = @"GMSInstanceIDGServicesData";
 NSString *const kFIRInstanceIDDeviceDataVersionKey = @"GMSInstanceIDDeviceDataVersion";
+NSString *const kFIRInstanceIDFirebaseUserAgentKey = @"X-firebase-client";
 
 static NSUInteger const kCheckinType = 2;  // DeviceType IOS in l/w/a/_checkin.proto
 static NSUInteger const kCheckinVersion = 2;
@@ -70,20 +72,24 @@ static FIRInstanceIDURLRequestTestBlock testBlock;
 
 - (void)checkinWithExistingCheckin:(FIRInstanceIDCheckinPreferences *)existingCheckin
                         completion:(FIRInstanceIDDeviceCheckinCompletion)completion {
+  _FIRInstanceIDDevAssert(completion != nil, @"completion required");
+
   if (self.session == nil) {
-    FIRInstanceIDLoggerError(kFIRInstanceIDInvalidNetworkSession,
+    FIRInstanceIDLoggerError(kFIRIntsanceIDInvalidNetworkSession,
                              @"Inconsistent state: NSURLSession has been invalidated");
     NSError *error =
         [NSError errorWithFIRInstanceIDErrorCode:kFIRInstanceIDErrorCodeRegistrarFailedToCheckIn];
-    if (completion) {
-      completion(nil, error);
-    }
+    completion(nil, error);
     return;
   }
 
   NSURL *url = [NSURL URLWithString:kDeviceCheckinURL];
   NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+
   [request setValue:@"application/json" forHTTPHeaderField:@"content-type"];
+  [request setValue:[FIRApp firebaseUserAgent]
+      forHTTPHeaderField:kFIRInstanceIDFirebaseUserAgentKey];
+
   NSDictionary *checkinParameters = [self checkinParametersWithExistingCheckin:existingCheckin];
   NSData *checkinData = [NSJSONSerialization dataWithJSONObject:checkinParameters
                                                         options:0
@@ -97,9 +103,7 @@ static FIRInstanceIDURLRequestTestBlock testBlock;
           FIRInstanceIDLoggerDebug(kFIRInstanceIDMessageCodeService000,
                                    @"Device checkin HTTP fetch error. Error Code: %ld",
                                    (long)error.code);
-          if (completion) {
-            completion(nil, error);
-          }
+          completion(nil, error);
           return;
         }
 
@@ -111,9 +115,7 @@ static FIRInstanceIDURLRequestTestBlock testBlock;
           FIRInstanceIDLoggerDebug(kFIRInstanceIDMessageCodeService001,
                                    @"Error serializing json object. Error Code: %ld",
                                    _FIRInstanceID_L(serializationError.code));
-          if (completion) {
-            completion(nil, serializationError);
-          }
+          completion(nil, serializationError);
           return;
         }
 
@@ -122,9 +124,7 @@ static FIRInstanceIDURLRequestTestBlock testBlock;
         if ([deviceAuthID length] == 0) {
           NSError *error =
               [NSError errorWithFIRInstanceIDErrorCode:kFIRInstanceIDErrorCodeInvalidRequest];
-          if (completion) {
-            completion(nil, error);
-          }
+          completion(nil, error);
           return;
         }
 
@@ -157,9 +157,8 @@ static FIRInstanceIDURLRequestTestBlock testBlock;
           if (dict[@"name"] && dict[@"value"]) {
             gservicesData[dict[@"name"]] = dict[@"value"];
           } else {
-            FIRInstanceIDLoggerDebug(kFIRInstanceIDInvalidSettingResponse,
-                                     @"Invalid setting in checkin response: (%@: %@)",
-                                     dict[@"name"], dict[@"value"]);
+            _FIRInstanceIDDevAssert(NO, @"Invalid setting in checkin response: (%@: %@)",
+                                    dict[@"name"], dict[@"value"]);
           }
         }
 
@@ -174,9 +173,7 @@ static FIRInstanceIDURLRequestTestBlock testBlock;
           kFIRInstanceIDDeviceDataVersionKey : deviceDataVersionInfo,
         };
         [checkinPreferences updateWithCheckinPlistContents:preferences];
-        if (completion) {
-          completion(checkinPreferences, nil);
-        }
+        completion(checkinPreferences, nil);
       };
   // Test block
   if (testBlock) {
@@ -226,7 +223,7 @@ static FIRInstanceIDURLRequestTestBlock testBlock;
     @"locale" : locale,
     @"version" : @(kCheckinVersion),
     @"digest" : checkinPreferences.digest ?: @"",
-    @"time_zone" : timeZone,
+    @"timezone" : timeZone,
     @"user_serial_number" : @(userSerialNumber),
     @"id" : @([checkinPreferences.deviceID longLongValue]),
     @"security_token" : @([checkinPreferences.secretToken longLongValue]),

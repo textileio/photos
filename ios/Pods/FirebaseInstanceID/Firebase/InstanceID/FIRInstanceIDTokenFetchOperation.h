@@ -17,9 +17,6 @@
 #import "FIRInstanceIDTokenOperation.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-FOUNDATION_EXPORT NSString *const kFIRInstanceIDFirebaseUserAgentKey;
-
 @interface FIRInstanceIDTokenFetchOperation : FIRInstanceIDTokenOperation
 
 - (instancetype)initWithAuthorizedEntity:(NSString *)authorizedEntity

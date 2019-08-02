@@ -16,7 +16,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FirebaseCore/FIRLoggerLevel.h>
+#import "FIRLoggerLevel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -29,11 +29,19 @@ extern FIRLoggerService kFIRLoggerABTesting;
 extern FIRLoggerService kFIRLoggerAdMob;
 extern FIRLoggerService kFIRLoggerAnalytics;
 extern FIRLoggerService kFIRLoggerAuth;
-extern FIRLoggerService kFIRLoggerCrash;
 extern FIRLoggerService kFIRLoggerCore;
+extern FIRLoggerService kFIRLoggerCrash;
+extern FIRLoggerService kFIRLoggerDatabase;
+extern FIRLoggerService kFIRLoggerDynamicLinks;
+extern FIRLoggerService kFIRLoggerFirestore;
+extern FIRLoggerService kFIRLoggerInstanceID;
+extern FIRLoggerService kFIRLoggerInvites;
 extern FIRLoggerService kFIRLoggerMLKit;
+extern FIRLoggerService kFIRLoggerMessaging;
 extern FIRLoggerService kFIRLoggerPerf;
 extern FIRLoggerService kFIRLoggerRemoteConfig;
+extern FIRLoggerService kFIRLoggerStorage;
+extern FIRLoggerService kFIRLoggerSwizzler;
 
 /**
  * The key used to store the logger's error count.
