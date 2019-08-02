@@ -10,6 +10,13 @@ import {
 import ImageZoom from 'react-native-image-pan-zoom'
 import { Circle } from 'react-native-progress'
 import Icon from '@textile/react-native-icon'
+import {
+  State,
+  LongPressGestureHandler,
+  TapGestureHandler,
+  TapGestureHandlerStateChangeEvent,
+  LongPressGestureHandlerStateChangeEvent
+} from 'react-native-gesture-handler'
 
 import Message, { Props as MessageProps } from './message'
 import ProgressiveImage from './ProgressiveImage'
@@ -19,6 +26,7 @@ import LikeAndComment, {
 import { spacing, size, color, textStyle } from '../styles'
 import Comments, { Props as CommentsProps } from './comments'
 import { GroupStatus } from '../features/group/file-sync/models'
+import { thisExpression, throwStatement } from '@babel/types'
 
 const CONTAINER: ViewStyle = {
   paddingTop: spacing._016,
@@ -47,47 +55,58 @@ export default class Photo extends React.PureComponent<Props> {
     selected: false
   }
 
-  lastTap?: number
-  toggleSelectedTimeout?: any
+  doubleTapRef: any = React.createRef()
 
-  // Code also includes ability to handle a double tap to like
+  onLongPress = (event: LongPressGestureHandlerStateChangeEvent) => {
+    if (event.nativeEvent.state === State.ACTIVE && this.props.onLongPress) {
+      this.props.onLongPress()
+    }
+  }
+
   toggleSelected = () => {
-    const now = Date.now()
-    // Two taps within 300 milliseconds counts as a double tap
-    const doublePressDelay = 300
-    // If the photo has already been tapped, and that tap was less than doublePressDelay milliseconds ago
-    if (this.lastTap && now - this.lastTap < doublePressDelay) {
-      // Cancel the timeout representing a single press
-      if (this.toggleSelectedTimeout) {
-        clearTimeout(this.toggleSelectedTimeout)
-      }
-      // Like the photo on double tap
+    this.setState({ selected: !this.state.selected })
+  }
+
+  onSingleTap = (event: TapGestureHandlerStateChangeEvent) => {
+    if (event.nativeEvent.state === State.ACTIVE) {
+      this.toggleSelected()
+    }
+  }
+
+  onDoubleTap = (event: TapGestureHandlerStateChangeEvent) => {
+    if (event.nativeEvent.state === State.ACTIVE) {
       this.props.onLike()
-    } else {
-      this.lastTap = now
-      this.toggleSelectedTimeout = setTimeout(() => {
-        this.setState({ selected: !this.state.selected })
-      }, 300)
     }
   }
 
   progressiveElement(width: number, height: number, minWidth: number) {
     return (
-      <TouchableWithoutFeedback
-        onPress={this.toggleSelected}
-        onLongPress={this.props.onLongPress}
+      <LongPressGestureHandler
+        onHandlerStateChange={this.onLongPress}
+        minDurationMs={600}
       >
-        <View>
-          <ProgressiveImage
-            imageId={this.props.photoId}
-            fileIndex={this.props.fileIndex}
-            showPreview={true}
-            forMinWidth={minWidth}
-            style={{ width, height, overflow: 'hidden' }}
-            resizeMode={'cover'}
-          />
-        </View>
-      </TouchableWithoutFeedback>
+        <TapGestureHandler
+          onHandlerStateChange={this.onSingleTap}
+          waitFor={this.doubleTapRef}
+        >
+          <TapGestureHandler
+            ref={this.doubleTapRef}
+            onHandlerStateChange={this.onDoubleTap}
+            numberOfTaps={2}
+          >
+            <View>
+              <ProgressiveImage
+                imageId={this.props.photoId}
+                fileIndex={this.props.fileIndex}
+                showPreview={true}
+                forMinWidth={minWidth}
+                style={{ width, height, overflow: 'hidden' }}
+                resizeMode={'cover'}
+              />
+            </View>
+          </TapGestureHandler>
+        </TapGestureHandler>
+      </LongPressGestureHandler>
     )
   }
 
@@ -116,9 +135,9 @@ export default class Photo extends React.PureComponent<Props> {
         imageWidth={finalWidth}
         imageHeight={finalHeight}
         minScale={0.9}
-        maxScale={2.5}
+		  maxScale={2.5}
+		  onClick={this.toggleSelected}
         enableCenterFocus={false}
-        onClick={this.toggleSelected}
         clickDistance={1}
       >
         <View
