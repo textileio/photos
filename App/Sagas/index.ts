@@ -105,7 +105,7 @@ function* logFirebase(event: string) {
   yield call([Firebase.analytics(), 'logEvent'], event)
 }
 
-function* subscrbeActions() {
+function* subscribeActions() {
   while (true) {
     const action: RootAction = yield take('*')
     if (action.type === getType(TextileEventsActions.nodeStarted)) {
@@ -117,7 +117,7 @@ function* subscrbeActions() {
 export default function*() {
   yield call(waitForRehydrate)
   yield all([
-    call(subscrbeActions),
+    call(subscribeActions),
     call(accountSaga),
     call(contactsSaga),
     call(groupSaga),
