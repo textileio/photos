@@ -14,6 +14,7 @@ import { RootState } from '../Redux/Types'
 import Avatar from '../Components/Avatar'
 import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 import { color } from '../styles'
+import { groupPhoto } from '../features/group/selectors';
 
 const CONTAINER: ViewStyle = {
   backgroundColor: color.screen_primary
@@ -97,11 +98,15 @@ class LikesScreen extends React.Component<
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
-  if (!state.groups.viewingPhoto) {
+  if (!state.photoViewing.viewingPhoto) {
     throw Error('No viewing photo')
   }
-  const viewingPhotoLikes = state.groups.viewingPhoto
-    ? state.groups.viewingPhoto.likes
+  if (!state.photoViewing.viewingThreadId) {
+    return {likes: []}
+  }
+  const photo = groupPhoto(state.group, state.photoViewing.viewingThreadId, state.photoViewing.viewingPhoto)
+  const viewingPhotoLikes = photo
+    ? photo.likes
     : []
   const likes = viewingPhotoLikes.map(like => {
     const username: string = like.user.name || 'unknown'

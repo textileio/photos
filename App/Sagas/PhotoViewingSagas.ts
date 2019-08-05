@@ -177,14 +177,14 @@ export function* addPhotoComment(
   action: ActionType<typeof PhotoViewingActions.addCommentRequest>
 ) {
   const result: {
-    photo: IFiles | undefined
+    photo: string | undefined
     comment: string | undefined
   } = yield select(photoAndComment)
   if (!result.photo || !result.comment) {
     return
   }
   try {
-    yield call(Textile.comments.add, result.photo.block, result.comment)
+    yield call(Textile.comments.add, result.photo, result.comment)
     yield put(PhotoViewingActions.addCommentSuccess())
   } catch (error) {
     yield put(

@@ -16,9 +16,11 @@ import CommentBox from '../SB/components/CommentBox/CommentBox'
 
 import styles from './Styles/CommentsStyle'
 import GroupsActions from '../Redux/GroupsRedux'
+import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { RootState, RootAction } from '../Redux/Types'
 import { groupActions } from '../features/group'
 import { accountSelectors } from '../features/account'
+import { groupPhoto } from '../features/group/selectors';
 
 interface StateProps {
   selfAddress: string
@@ -190,20 +192,21 @@ class Comments extends Component<Props, ComponentState> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   const selfAddress = accountSelectors.getAddress(state.account) || ''
-  const { viewingPhoto } = state.groups
+
+  const photo = state.photoViewing.viewingThreadId && state.photoViewing.viewingPhoto ? groupPhoto(state.group, state.photoViewing.viewingThreadId, state.photoViewing.viewingPhoto) : undefined
 
   let captionCommentCardProps: CommentCardProps | undefined
-  if (viewingPhoto && viewingPhoto.caption) {
+  if (photo && photo.caption) {
     captionCommentCardProps = {
-      username: viewingPhoto.user.name || viewingPhoto.user.address,
-      avatar: viewingPhoto.user.avatar,
-      comment: viewingPhoto.caption,
-      date: Textile.util.timestampToDate(viewingPhoto.date),
+      username: photo.user.name || photo.user.address,
+      avatar: photo.user.avatar,
+      comment: photo.caption,
+      date: Textile.util.timestampToDate(photo.date),
       isCaption: true
     }
   }
 
-  const comments = viewingPhoto ? viewingPhoto.comments : []
+  const comments = photo ? photo.comments : []
 
   const removing = Object.keys(state.group.ignore).filter(key => {
     return state.group.ignore[key] !== {}
@@ -214,8 +217,8 @@ const mapStateToProps = (state: RootState): StateProps => {
     captionCommentCardProps,
     comments,
     removing,
-    commentValue: state.groups.authoringComment,
-    commentError: state.groups.authoringCommentError
+    commentValue: state.photoViewing.authoringComment,
+    commentError: state.photoViewing.authoringCommentError
   }
 }
 
@@ -224,8 +227,8 @@ const mapDispatchToProps = (
   ownProps: Props
 ): DispatchProps => ({
   updateComment: (comment: string) =>
-    dispatch(GroupsActions.updateComment(comment)),
-  submitComment: () => dispatch(GroupsActions.addCommentRequest()),
+    dispatch(PhotoViewingActions.updateComment(comment)),
+  submitComment: () => dispatch(PhotoViewingActions.addCommentRequest()),
   remove: (id: string) => dispatch(groupActions.ignore.ignore.request(id))
 })
 
