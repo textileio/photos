@@ -31,6 +31,7 @@ target 'Textile' do
   pod 'Firebase/Analytics', '5.18.0'
   pod 'textile-react-native-sdk', :path => '../node_modules/@textile/react-native-sdk'
   pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
+  pod 'RNFirebase', :path => '../node_modules/react-native-firebase/ios'
 
 end
 
