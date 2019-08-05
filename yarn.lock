@@ -877,10 +877,10 @@
   dependencies:
     react-native-vector-icons "^6.2.0"
 
-"@textile/react-native-sdk@3.0.5":
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-3.0.5.tgz#dbbd90e41fd44df5eb3dde6c5ff3d03b829040e6"
-  integrity sha512-tvMBZNRCZwmhXsd5PleWj+z9suoE2812MtCY+fmz9MoBnrWnGUnqStLHzVFUqJonEnzMFLNlb+l97dDWVTCnDw==
+"@textile/react-native-sdk@3.0.6":
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/@textile/react-native-sdk/-/react-native-sdk-3.0.6.tgz#cad877be185fff19f5073ca56e4fdc14c3f7cf11"
+  integrity sha512-cfjPBq6LhQB+PXuOC8qqs4VPpTb3En+ebAH3mMg3Ov5E5RnSFizeStNcK3FuSNQX3e97c6XfIsJDYV0oeMF1fw==
   dependencies:
     "@textile/js-types" "0.6.2"
     buffer "^5.2.1"

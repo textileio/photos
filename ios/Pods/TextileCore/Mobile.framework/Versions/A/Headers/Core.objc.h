@@ -118,7 +118,7 @@
 /**
  * CafeOutbox queues and processes outbound cafe requests
  */
-@interface CoreCafeOutbox : NSObject <goSeqRefInterface, CoreCafeOutboxHandler> {
+@interface CoreCafeOutbox : NSObject <goSeqRefInterface> {
 }
 @property(strong, readonly) _Nonnull id _ref;
 
@@ -132,7 +132,7 @@
 /**
  * Flush processes pending requests
  */
-- (void)flush;
+- (void)flush:(BOOL)skipBlocks;
 @end
 
 /**
@@ -375,6 +375,14 @@ and stores (unless `store` is false) a bcrypt hashed version for later compariso
  * FlushCafes flushes the cafe request outbox
  */
 - (void)flushCafes;
+/**
+ * FlushLock locks the flush lock
+ */
+- (void)flushLock;
+/**
+ * FlushUnlock unlocks the flush lock
+ */
+- (void)flushUnlock;
 // skipped method Textile.GetMedia with unsupported parameter or return types
 
 // skipped method Textile.GetMillMedia with unsupported parameter or return types
@@ -399,6 +407,10 @@ and stores (unless `store` is false) a bcrypt hashed version for later compariso
 
 // skipped method Textile.LinksAtPath with unsupported parameter or return types
 
+/**
+ * Lock locks the main textile lock
+ */
+- (void)lock;
 // skipped method Textile.Message with unsupported parameter or return types
 
 // skipped method Textile.Messages with unsupported parameter or return types
@@ -522,6 +534,10 @@ Note: Only thread initiators can update the thread's name
 
 // skipped method Textile.Threads with unsupported parameter or return types
 
+/**
+ * Unlock unlocks the main textile lock
+ */
+- (void)unlock;
 // skipped method Textile.UpdateCh with unsupported parameter or return types
 
 /**
