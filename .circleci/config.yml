@@ -570,7 +570,6 @@ workflows:
               ignore:
                 - master
       - android:
-          context: textile-mobile-dev
           requires:
             - lint
             - tests
@@ -579,7 +578,6 @@ workflows:
               ignore:
                 - master
       - ios:
-          context: textile-mobile-dev
           requires:
             - lint
             - tests
