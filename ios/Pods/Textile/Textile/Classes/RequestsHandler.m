@@ -45,8 +45,10 @@ dispatch_queue_t flushQueue;
 - (void)flush {
   // We don't know what thread we're being called on here, so dispatch to our
   // serial queue to make sure only one call to flush can be processed at a time
+  [self.node flushLock];
   dispatch_async(flushQueue, ^{
     [self processQueue];
+    [self.node flushUnlock];
   });
 }
 
