@@ -7,6 +7,7 @@ import copyPhoto from '../util/copy-photo'
 import { SharedImage } from '../features/group/add-photo/models'
 import UIActions, { UISelectors, SharingPhoto } from '../Redux/UIRedux'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
+import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import NavigationService from '../Services/NavigationService'
 import * as CameraRoll from '../Services/CameraRoll'
 
@@ -18,6 +19,11 @@ export function* showWalletPicker(
     // only set if shared directly to a thread
     yield put(UIActions.updateSharingPhotoThread(threadId))
   }
+  const recentPhotos = yield call(Textile.files.list, '', '', 40)
+  yield put(
+    PhotoViewingActions.getRecentPhotosSuccess(recentPhotos.items)
+  )
+  
   yield call(NavigationService.navigate, 'WalletPicker')
 }
 
@@ -96,6 +102,9 @@ export function* showImagePicker(
 export function* walletPickerSuccess(
   action: ActionType<typeof UIActions.walletPickerSuccess>
 ) {
+  console.log('action.payload.photo')
+  console.log(action.payload.photo)
+  console.log('')
   yield put(UIActions.updateSharingPhotoFiles(action.payload.photo))
   // indicates if request was made from merged main feed or from a specific thread
   const threadId = yield select(UISelectors.sharingPhotoThread)

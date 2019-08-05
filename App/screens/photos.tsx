@@ -24,7 +24,7 @@ import {
 } from '../Components/HeaderButtons'
 import { RootAction, RootState } from '../Redux/Types'
 import { groupActions, groupSelectors } from '../features/group'
-import { cameraRollThread } from '../Redux/PhotoViewingSelectors'
+import { cameraRollThread } from '../Redux/GroupsSelectors'
 import { Item } from '../features/group/models'
 import { color, size } from '../styles'
 import { FeedItemType } from '@textile/react-native-sdk'

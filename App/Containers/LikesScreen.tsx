@@ -97,11 +97,11 @@ class LikesScreen extends React.Component<
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
-  if (!state.photoViewing.viewingPhoto) {
+  if (!state.groups.viewingPhoto) {
     throw Error('No viewing photo')
   }
-  const viewingPhotoLikes = state.photoViewing.viewingPhoto
-    ? state.photoViewing.viewingPhoto.likes
+  const viewingPhotoLikes = state.groups.viewingPhoto
+    ? state.groups.viewingPhoto.likes
     : []
   const likes = viewingPhotoLikes.map(like => {
     const username: string = like.user.name || 'unknown'

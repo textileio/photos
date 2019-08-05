@@ -4,7 +4,7 @@ import { View, TouchableOpacity } from 'react-native'
 
 import { RootState } from '../../../Redux/Types'
 
-import { ThreadData } from '../../../Redux/PhotoViewingRedux'
+import { ThreadData } from '../../../Redux/GroupsRedux'
 import { IFiles } from '@textile/react-native-sdk'
 import PhotoWithTextBox from '../PhotoWithTextBox'
 import RadioButton from '../../components/RadioButton'
@@ -12,7 +12,7 @@ import RadioButton from '../../components/RadioButton'
 import styles from './statics/styles'
 
 interface StateProps {
-  thumb?: IFiles
+  // thumb?: string
 }
 
 interface ScreenProps {
@@ -39,7 +39,7 @@ class ThreadSelectCard extends Component<Props> {
       >
         <PhotoWithTextBox
           text={this.props.thread.name}
-          photo={this.props.thumb}
+          hash={this.props.thread.thumb}
         />
         <View style={styles.threadSelectRadio}>
           <RadioButton
@@ -56,15 +56,13 @@ const mapStateToProps = (
   state: RootState,
   ownProps: ScreenProps
 ): StateProps => {
-  const t = ownProps.thread.id
-  const thread = state.photoViewing.threads[t]
-  const thumb =
-    thread && thread.photos && thread.photos.length > 0
-      ? thread.photos[0]
-      : undefined
-  return {
-    thumb
-  }
+  // const t = ownProps.thread.id
+  // const thread = state.groups.threads[t]
+  // const thumb = thread ? thread.thumb : undefined
+  // return {
+  //   thumb
+  // }
+  return {}
 }
 
 export default connect(

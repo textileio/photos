@@ -10,7 +10,7 @@ import { RootState, RootAction } from '../Redux/Types'
 
 import UIActions from '../Redux/UIRedux'
 import Photo from '../Components/photo'
-import { threadDataByThreadId } from '../Redux/PhotoViewingSelectors'
+import { threadDataByThreadId } from '../Redux/GroupsSelectors'
 
 import { color } from '../styles'
 import { CommentData } from '../Components/comments'
@@ -141,13 +141,13 @@ class PhotoScreen extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
-  const threadId = state.photoViewing.viewingThreadId
+  const threadId = state.groups.viewingThreadId
   let threadName: string | undefined
   if (threadId) {
     const threadData = threadDataByThreadId(state, threadId)
     threadName = threadData ? threadData.name : undefined
   }
-  const photo = state.photoViewing.viewingPhoto
+  const photo = state.groups.viewingPhoto
   const selfAddress = accountSelectors.getAddress(state.account) || ''
   const removing = photo
     ? Object.keys(state.group.ignore)

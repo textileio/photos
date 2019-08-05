@@ -1,4 +1,4 @@
-import actions, { reducer } from '../PhotoViewingRedux'
+import actions, { reducer } from '../GroupsRedux'
 import { IFiles, Thread } from '@textile/react-native-sdk'
 
 const initialState = reducer(undefined, {} as any)

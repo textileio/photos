@@ -9,9 +9,9 @@ import ModalButtons from './ModalButtons'
 import CreateThreadComponent from './CreateThreadModal'
 
 import { RootAction, RootState } from '../Redux/Types'
-import PhotoViewingActions, { ThreadData } from '../Redux/PhotoViewingRedux'
+import GroupsActions, { ThreadData } from '../Redux/GroupsRedux'
 import PreferencesActions, { TourScreens } from '../Redux/PreferencesRedux'
-import { getSharedThreads } from '../Redux/PhotoViewingSelectors'
+import { getSharedThreads } from '../Redux/GroupsSelectors'
 
 import { ThreadSelectComponent } from '../SB/components/ThreadSelect'
 import { ThreadsEditFriendsComponent } from '../SB/views/ThreadsEditFriends'
@@ -210,7 +210,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
     },
     submit: (name, navigate, selectToShare) => {
       dispatch(
-        PhotoViewingActions.addThreadRequest(
+        GroupsActions.addThreadRequest(
           { ...threadConfig, name },
           { navigate, selectToShare }
         )

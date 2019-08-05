@@ -21,9 +21,9 @@ import TextileEventsActions, {
 import NotificationActions, {
   NotificationsAction
 } from '../Redux/NotificationsRedux'
-import PhotoViewingActions, {
-  PhotoViewingAction
-} from '../Redux/PhotoViewingRedux'
+import GroupsActions, {
+  GroupsAction
+} from '../Redux/GroupsRedux'
 import { contactsActions, ContactsAction } from '../features/contacts'
 import DeviceLogsActions, { DeviceLogsAction } from '../Redux/DeviceLogsRedux'
 import { groupActions, GroupAction } from '../features/group'
@@ -41,7 +41,7 @@ function displayNotification(message: string, title?: string) {
 function nodeEvents() {
   return eventChannel<
     | GroupAction
-    | PhotoViewingAction
+    | GroupsAction
     | ContactsAction
     | DeviceLogsAction
     | NotificationsAction
@@ -71,7 +71,7 @@ function nodeEvents() {
             feedItemData.type === FeedItemType.Ignore ||
             feedItemData.type === FeedItemType.Join
           ) {
-            emitter(PhotoViewingActions.refreshThreadRequest(threadId))
+            emitter(GroupsActions.refreshThreadRequest(threadId))
           }
 
           if (
@@ -82,7 +82,7 @@ function nodeEvents() {
             // Enhancement: compare the joiner id with known ids and skip the refresh if known.
             emitter(contactsActions.getContactsRequest())
             // Temporary: to ensure that our UI udpates after a self-join or a self-leave
-            emitter(PhotoViewingActions.refreshThreadRequest(threadId))
+            emitter(GroupsActions.refreshThreadRequest(threadId))
           }
 
           // create a local log line for the threadUpdate event
@@ -100,12 +100,12 @@ function nodeEvents() {
     )
     subscriptions.push(
       Textile.events.addThreadAddedListener(threadId => {
-        emitter(PhotoViewingActions.threadAddedNotification(threadId))
+        emitter(GroupsActions.threadAddedNotification(threadId))
       })
     )
     subscriptions.push(
       Textile.events.addThreadRemovedListener(threadId => {
-        emitter(PhotoViewingActions.threadRemoved(threadId))
+        emitter(GroupsActions.threadRemoved(threadId))
       })
     )
     subscriptions.push(

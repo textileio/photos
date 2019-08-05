@@ -4,12 +4,14 @@ import { TextileHeaderButtons, Item } from '../Components/HeaderButtons'
 import PhotoGrid from '../Components/PhotoGrid'
 import { connect } from 'react-redux'
 import PreferencesActions from '../Redux/PreferencesRedux'
-import PhotoViewingActions from '../Redux/PhotoViewingRedux'
+import GroupsActions from '../Redux/GroupsRedux'
 import UIActions from '../Redux/UIRedux'
 import style from './Styles/TextilePhotosStyle'
 import { NavigationActions, NavigationScreenProps } from 'react-navigation'
 import {
-  defaultThreadData,
+  defaultThreadData
+} from '../Redux/GroupsSelectors'
+import {
   getSharedPhotos,
   SharedPhoto
 } from '../Redux/PhotoViewingSelectors'
@@ -150,7 +152,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
     dispatch(UIActions.cancelSharingPhoto())
   },
   refresh: threadId => {
-    dispatch(PhotoViewingActions.refreshThreadRequest(threadId))
+    dispatch(GroupsActions.refreshThreadRequest(threadId))
   },
   showImagePicker: type => {
     dispatch(UIActions.showImagePicker(type))

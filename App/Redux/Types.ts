@@ -6,7 +6,7 @@ import { AccountAction } from '../features/account'
 import { AuthAction } from './AuthRedux'
 import { ContactsAction } from '../features/contacts'
 import { DeviceLogsAction } from './DeviceLogsRedux'
-import { PhotoViewingAction } from './PhotoViewingRedux'
+import { GroupsAction } from './GroupsRedux'
 import { PreferencesAction } from './PreferencesRedux'
 import { NotificationsAction } from './NotificationsRedux'
 import { ThreadsAction } from './ThreadsRedux'
@@ -23,7 +23,7 @@ export type RootAction =
   | AuthAction
   | ContactsAction
   | DeviceLogsAction
-  | PhotoViewingAction
+  | GroupsAction
   | PreferencesAction
   | NotificationsAction
   | ThreadsAction

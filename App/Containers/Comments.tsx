@@ -15,7 +15,7 @@ import CommentCard, {
 import CommentBox from '../SB/components/CommentBox/CommentBox'
 
 import styles from './Styles/CommentsStyle'
-import PhotoViewingActions from '../Redux/PhotoViewingRedux'
+import GroupsActions from '../Redux/GroupsRedux'
 import { RootState, RootAction } from '../Redux/Types'
 import { groupActions } from '../features/group'
 import { accountSelectors } from '../features/account'
@@ -190,7 +190,7 @@ class Comments extends Component<Props, ComponentState> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   const selfAddress = accountSelectors.getAddress(state.account) || ''
-  const { viewingPhoto } = state.photoViewing
+  const { viewingPhoto } = state.groups
 
   let captionCommentCardProps: CommentCardProps | undefined
   if (viewingPhoto && viewingPhoto.caption) {
@@ -214,8 +214,8 @@ const mapStateToProps = (state: RootState): StateProps => {
     captionCommentCardProps,
     comments,
     removing,
-    commentValue: state.photoViewing.authoringComment,
-    commentError: state.photoViewing.authoringCommentError
+    commentValue: state.groups.authoringComment,
+    commentError: state.groups.authoringCommentError
   }
 }
 
@@ -224,8 +224,8 @@ const mapDispatchToProps = (
   ownProps: Props
 ): DispatchProps => ({
   updateComment: (comment: string) =>
-    dispatch(PhotoViewingActions.updateComment(comment)),
-  submitComment: () => dispatch(PhotoViewingActions.addCommentRequest()),
+    dispatch(GroupsActions.updateComment(comment)),
+  submitComment: () => dispatch(GroupsActions.addCommentRequest()),
   remove: (id: string) => dispatch(groupActions.ignore.ignore.request(id))
 })
 

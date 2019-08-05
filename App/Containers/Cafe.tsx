@@ -133,7 +133,7 @@ class Cafe extends Component<Props> {
     const date = Textile.util.timestampToDate(exp)
     const expirationDate = moment(date).format('MMMM Do YYYY [at] h:mm a')
     const refreshButtonDisabled = this.props.session.processing
-    const cafeProcessing = this.props.cafe.state === 'deregistering'
+    const cafeProcessing = this.props.cafe && this.props.cafe.state === 'deregistering'
     const deregisterButtonDisabled = !this.props.cafe.error && cafeProcessing
     return (
       <SafeAreaView style={Container}>

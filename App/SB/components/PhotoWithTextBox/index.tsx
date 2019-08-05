@@ -9,38 +9,62 @@ import { IFiles } from '@textile/react-native-sdk'
 interface PhotoWithTextBoxProps {
   text: string
   photo?: IFiles
+  hash?: string
   style?: ViewStyle
 }
 
 const PhotoWithTextBox = (props: PhotoWithTextBoxProps) => {
-  const { photo, text, style } = props
+  const { photo, hash, text, style } = props
 
-  return (
-    <View style={[styles.itemContainer, style]}>
-      {photo && (
+  if (photo) {
+    return (
+      <View style={[styles.itemContainer, style]}>
         <View style={styles.item}>
           <View style={styles.itemBackgroundContainer}>
-            {photo && (
-              <TextileImage
-                target={photo.data}
-                index={photo.files[0].index}
-                forMinWidth={70}
-                style={{ width: 70, height: 50 }}
-                resizeMode={'cover'}
-                capInsets={'true'}
-              />
-            )}
+            <TextileImage
+              target={photo.data}
+              index={photo.files[0].index}
+              forMinWidth={70}
+              style={{ width: 70, height: 50 }}
+              resizeMode={'cover'}
+              capInsets={'true'}
+            />
           </View>
         </View>
-      )}
-      {!photo && (
-        <View style={styles.itemBox}>
-          <Image
-            style={styles.itemBoxPlus}
-            source={require('../PhotoBoxEmpty/statics/icon-big-plus.png')}
-          />
+        <Text numberOfLines={1} style={styles.itemText}>
+          {text}
+        </Text>
+      </View>
+    )
+  } else if (hash) {
+    return (
+      <View style={[styles.itemContainer, style]}>
+        <View style={styles.item}>
+          <View style={styles.itemBackgroundContainer}>
+            <TextileImage
+              target={hash}
+              index={0}
+              forMinWidth={70}
+              style={{ width: 70, height: 50 }}
+              resizeMode={'cover'}
+              capInsets={'true'}
+            />
+          </View>
         </View>
-      )}
+        <Text numberOfLines={1} style={styles.itemText}>
+          {text}
+        </Text>
+      </View>
+    )
+  }
+  return (
+    <View style={[styles.itemContainer, style]}>
+      <View style={styles.itemBox}>
+        <Image
+          style={styles.itemBoxPlus}
+          source={require('../PhotoBoxEmpty/statics/icon-big-plus.png')}
+        />
+      </View>
       <Text numberOfLines={1} style={styles.itemText}>
         {text}
       </Text>

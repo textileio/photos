@@ -11,7 +11,7 @@ import Input from '../SB/components/Input'
 import styles from '../SB/views/ThreadCreate/statics/styles'
 import ThreadSelect from '../SB/components/ThreadSelect'
 import UIActions from '../Redux/UIRedux'
-import PhotoViewingActions from '../Redux/PhotoViewingRedux'
+import GroupsActions from '../Redux/GroupsRedux'
 import TextileImage from '../Components/TextileImage'
 import { groupActions } from '../features/group'
 import { SharedImage } from '../features/group/add-photo/models'
@@ -284,7 +284,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
     },
     shareNewThread: (imageId: string, threadName: string, comment?: string) => {
       dispatch(
-        PhotoViewingActions.addThreadRequest(
+        GroupsActions.addThreadRequest(
           { ...threadConfig, name: threadName },
           { sharePhoto: { imageId, comment } }
         )

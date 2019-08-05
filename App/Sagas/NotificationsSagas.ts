@@ -10,11 +10,12 @@ import Textile, {
 import NavigationService from '../Services/NavigationService'
 
 import ThreadsActions from '../Redux/ThreadsRedux'
-import PhotoViewingAction, { ThreadData } from '../Redux/PhotoViewingRedux'
+import GroupsActions, { ThreadData } from '../Redux/GroupsRedux'
 import {
   threadDataByThreadId,
   allThreadIds
-} from '../Redux/PhotoViewingSelectors'
+} from '../Redux/GroupsSelectors'
+import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { PreferencesSelectors, ServiceType } from '../Redux/PreferencesRedux'
 import NotificationsActions, {
   NotificationsSelectors
@@ -125,8 +126,8 @@ export function* notificationView(
           notification.threadId
         )
         if (threadData) {
-          yield put(PhotoViewingAction.viewThread(threadData.id))
-          yield put(PhotoViewingAction.viewPhoto(notification.target))
+          yield put(PhotoViewingActions.viewThread(threadData.id))
+          yield put(PhotoViewingActions.viewPhoto(notification.target))
           yield call(NavigationService.navigate, 'PhotoScreen')
         }
         break
@@ -138,8 +139,8 @@ export function* notificationView(
           notification.threadId
         )
         if (threadData) {
-          yield put(PhotoViewingAction.viewThread(threadData.id))
-          yield put(PhotoViewingAction.viewPhoto(notification.target))
+          yield put(PhotoViewingActions.viewThread(threadData.id))
+          yield put(PhotoViewingActions.viewPhoto(notification.target))
           yield call(NavigationService.navigate, 'PhotoScreen')
         }
         break
@@ -152,7 +153,7 @@ export function* notificationView(
           notification.threadId
         )
         if (threadData) {
-          yield put(PhotoViewingAction.viewThread(threadData.id))
+          yield put(PhotoViewingActions.viewThread(threadData.id))
           yield call(NavigationService.navigate, 'ViewThread', {
             threadId: threadData.id
           })

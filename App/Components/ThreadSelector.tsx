@@ -6,7 +6,7 @@ import { FlatList, View, Text, TouchableOpacity } from 'react-native'
 
 import { RootAction, RootState } from '../Redux/Types'
 
-import { getSharedThreads } from '../Redux/PhotoViewingSelectors'
+import { getSharedThreads } from '../Redux/GroupsSelectors'
 import { contactsSelectors } from '../features/contacts'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
 import UIActions from '../Redux/UIRedux'

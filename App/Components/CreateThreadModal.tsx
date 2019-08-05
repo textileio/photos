@@ -12,7 +12,7 @@ import Modal from 'react-native-modal'
 import { Thread } from '@textile/react-native-sdk'
 
 import { RootState, RootAction } from '../Redux/Types'
-import PhotoViewingActions from '../Redux/PhotoViewingRedux'
+import GroupsActions from '../Redux/GroupsRedux'
 import PreferencesActions, { TourScreens } from '../Redux/PreferencesRedux'
 import Input from '../SB/components/Input'
 
@@ -179,7 +179,7 @@ const mapDispatchToProps = (
     },
     submit: (name, type, sharing, whitelist, navigate, selectToShare) => {
       dispatch(
-        PhotoViewingActions.addThreadRequest(
+        GroupsActions.addThreadRequest(
           {
             name,
             type,
@@ -199,7 +199,7 @@ const mapDispatchToProps = (
 
 const mapStateToProps = (state: RootState): StateProps => {
   return {
-    alreadyAddingThread: Boolean(state.photoViewing.addingThread)
+    alreadyAddingThread: Boolean(state.groups.addingThread)
   }
 }
 

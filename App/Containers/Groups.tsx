@@ -19,7 +19,7 @@ import { InboundInvite } from '../Redux/ThreadsRedux'
 import {
   getThreadsAndMembers,
   GroupAuthors
-} from '../Redux/PhotoViewingSelectors'
+} from '../Redux/GroupsSelectors'
 import UIActions from '../Redux/UIRedux'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
 import PreferencesActions, {

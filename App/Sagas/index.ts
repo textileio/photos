@@ -15,6 +15,7 @@ import StartupActions from '../Redux/StartupRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import NotificationsActions from '../Redux/NotificationsRedux'
 import UIActions from '../Redux/UIRedux'
+import GroupsActions from '../Redux/GroupsRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import AuthActions from '../Redux/AuthRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
@@ -133,17 +134,17 @@ export default function*() {
     takeEvery(getType(UIActions.navigateToLikesRequest), navigateToLikes),
     takeEvery(getType(UIActions.addLike.request), addPhotoLike),
 
-    takeEvery(getType(PhotoViewingActions.addThreadRequest), addThread),
+    takeEvery(getType(GroupsActions.addThreadRequest), addThread),
     takeEvery(
-      getType(PhotoViewingActions.threadAddedNotification),
+      getType(GroupsActions.threadAddedNotification),
       monitorThreadAddedNotifications
     ),
-    takeEvery(getType(PhotoViewingActions.removeThreadRequest), removeThread),
+    takeEvery(getType(GroupsActions.removeThreadRequest), removeThread),
     takeEvery(
-      getType(PhotoViewingActions.refreshThreadsRequest),
+      getType(GroupsActions.refreshThreadsRequest),
       refreshThreads
     ),
-    takeEvery(getType(PhotoViewingActions.refreshThreadRequest), refreshThread),
+    takeEvery(getType(GroupsActions.refreshThreadRequest), refreshThread),
     takeEvery(getType(PhotoViewingActions.addCommentRequest), addPhotoComment),
 
     // takeEvery(getType(UploadingImagesActions.imageUploadComplete), removePayloadFile),
