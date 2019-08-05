@@ -84,7 +84,6 @@ export interface ThreadData {
   readonly key: string
   readonly name: string
   readonly querying: boolean
-  // readonly photos: ReadonlyArray<string>
   readonly type: Thread.Type
   readonly sharing: Thread.Sharing
   readonly whitelist: ReadonlyArray<string>
