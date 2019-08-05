@@ -187,6 +187,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy, nullable) void (^backgroundCompletionHandler)(void);
 
+@property (nonatomic, strong) MobileMobile *node;
+
 /**
  * @return The version of the Textile node running locally
  */

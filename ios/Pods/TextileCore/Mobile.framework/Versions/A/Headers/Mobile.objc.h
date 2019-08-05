@@ -153,6 +153,14 @@ name is the string value of a pb.MobileEvent_Type)
 - (void)fileContent:(NSString* _Nullable)hash cb:(id<MobileDataCallback> _Nullable)cb;
 - (NSData* _Nullable)files:(NSString* _Nullable)threadId offset:(NSString* _Nullable)offset limit:(long)limit error:(NSError* _Nullable* _Nullable)error;
 /**
+ * FlushLock locks the flush lock
+ */
+- (void)flushLock;
+/**
+ * FlushUnlock unlocks the flush lock
+ */
+- (void)flushUnlock;
+/**
  * GitSummary returns common GitSummary
  */
 - (NSString* _Nonnull)gitSummary;
