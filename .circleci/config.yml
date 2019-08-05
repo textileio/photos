@@ -357,6 +357,9 @@ jobs:
             - vendor/bundle
 
       - run:
+          command: bundle install
+
+      - run:
           command: bundle exec fastlane download_config
 
       - run:
