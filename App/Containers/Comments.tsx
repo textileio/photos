@@ -15,7 +15,6 @@ import CommentCard, {
 import CommentBox from '../SB/components/CommentBox/CommentBox'
 
 import styles from './Styles/CommentsStyle'
-import GroupsActions from '../Redux/GroupsRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { RootState, RootAction } from '../Redux/Types'
 import { groupActions } from '../features/group'

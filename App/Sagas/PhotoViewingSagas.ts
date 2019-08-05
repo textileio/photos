@@ -21,7 +21,6 @@ import Textile, {
   IAddThreadConfig,
   AddThreadConfig,
   IThreadList,
-  IFiles,
   IFilesList
 } from '@textile/react-native-sdk'
 import NavigationService from '../Services/NavigationService'
