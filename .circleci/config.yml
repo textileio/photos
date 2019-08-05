@@ -138,6 +138,12 @@ jobs:
           paths:
             - vendor/bundle
 
+      - run:
+          command: bundle install
+
+      - run:
+          command: bundle exec fastlane download_config
+
       - *install-android-tools
 
       - run:
@@ -209,6 +215,9 @@ jobs:
             - vendor/bundle
 
       - run:
+          command: bundle exec fastlane download_config
+
+      - run:
           command: echo $ANDROID_KEYSTORE_BASE64 | base64 --decode >> $ANDROID_KEYSTORE
           working_directory: android
 
@@ -245,6 +254,9 @@ jobs:
 
       - run:
           command: bundle install
+
+      - run:
+          command: bundle exec fastlane download_config
 
       - run:
           command: bundle exec fastlane prep_release
@@ -437,6 +449,9 @@ jobs:
           command: bundle install
 
       - run:
+          command: bundle exec fastlane download_config
+
+      - run:
           command: bundle exec fastlane prep_release
 
       - restore_cache:
@@ -508,6 +523,9 @@ jobs:
 
       - run:
           command: bundle install
+
+      - run:
+          command: bundle exec fastlane download_config
 
       - run:
           command: bundle exec fastlane prep_release
