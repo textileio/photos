@@ -15,6 +15,7 @@ import { threadDataByThreadId } from '../Redux/GroupsSelectors'
 import { color } from '../styles'
 import { CommentData } from '../Components/comments'
 import { accountSelectors } from '../features/account'
+import { groupPhoto } from '../features/group/selectors';
 
 const screenWidth = Dimensions.get('screen').width
 
@@ -141,13 +142,14 @@ class PhotoScreen extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
-  const threadId = state.groups.viewingThreadId
+  const threadId = state.photoViewing.viewingThreadId
   let threadName: string | undefined
   if (threadId) {
     const threadData = threadDataByThreadId(state, threadId)
     threadName = threadData ? threadData.name : undefined
   }
-  const photo = state.groups.viewingPhoto
+  const photoId = state.photoViewing.viewingPhoto
+  const photo = threadId && photoId ? groupPhoto(state.group, threadId, photoId) : undefined
   const selfAddress = accountSelectors.getAddress(state.account) || ''
   const removing = photo
     ? Object.keys(state.group.ignore)

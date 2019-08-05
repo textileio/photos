@@ -11,7 +11,7 @@ import { contactsSelectors } from '../features/contacts'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
 import UIActions from '../Redux/UIRedux'
 
-import { IContact, IFiles } from '@textile/react-native-sdk'
+import { IContact } from '@textile/react-native-sdk'
 
 import GroupCard from './GroupCard'
 import styles from './Styles/ThreadSelectorStyles'
@@ -74,7 +74,7 @@ interface GroupAuthors {
   readonly name: string
   readonly size: number
   readonly members: IContact[]
-  readonly thumb?: IFiles
+  readonly thumb?: string
   readonly valid: boolean
 }
 
@@ -93,14 +93,13 @@ function mapStateToProps(state: RootState): StateProps {
     if (profile && members.length < 8) {
       members.unshift(profile)
     }
-    const thumb = thread.photos.length ? thread.photos[0] : undefined
     return {
       id: thread.id,
       name: thread.name,
       // total number of images in the thread
-      size: thread.photos.length,
+      size: thread.size,
       members,
-      thumb,
+      thumb: thread.thumb,
       valid: thread.valid
     }
   })
