@@ -3,23 +3,18 @@ import { Item } from './models'
 import { feedSelectors } from './feed'
 import { addPhotoSelectors } from './add-photo'
 import { fileSyncSelectors } from './file-sync'
-import { FeedItemType, IFiles } from '@textile/react-native-sdk';
+import { FeedItemType, IFiles } from '@textile/react-native-sdk'
 
-const groupFeed = (
-  state: GroupState,
-  groupId: string
-): ReadonlyArray<Item> => {
-  return feedSelectors
-    .feedItems(state.feed, groupId)
-    .map(feedItemData => {
-      const syncStatus = fileSyncSelectors.makeStatusForId(feedItemData.block)(
-        state.fileSync
-      )
-      return {
-        ...feedItemData,
-        syncStatus
-      }
-    })
+const groupFeed = (state: GroupState, groupId: string): ReadonlyArray<Item> => {
+  return feedSelectors.feedItems(state.feed, groupId).map(feedItemData => {
+    const syncStatus = fileSyncSelectors.makeStatusForId(feedItemData.block)(
+      state.fileSync
+    )
+    return {
+      ...feedItemData,
+      syncStatus
+    }
+  })
 }
 export const groupItems = (
   state: GroupState,
@@ -40,18 +35,18 @@ export const groupPhoto = (
   state: GroupState,
   groupId: string,
   block: string
-): (IFiles | undefined) => {
+): IFiles | undefined => {
   return groupFeed(state, groupId)
-          .map((item) => {
-            switch(item.type) {
-              case FeedItemType.Files: {
-                return item.value
-              }
-              default:
-                return undefined
-            }
-          })
-          .find((item) => item && item.block === block)
+    .map(item => {
+      switch (item.type) {
+        case FeedItemType.Files: {
+          return item.value
+        }
+        default:
+          return undefined
+      }
+    })
+    .find(item => item && item.block === block)
 }
 
 export { feedSelectors, addPhotoSelectors, fileSyncSelectors }

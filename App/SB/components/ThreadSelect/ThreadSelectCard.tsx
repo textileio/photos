@@ -15,7 +15,7 @@ interface ScreenProps {
   onSelect?: (threadId: string) => void
 }
 
-type Props =  ScreenProps
+type Props = ScreenProps
 
 class ThreadSelectCard extends Component<Props> {
   render() {

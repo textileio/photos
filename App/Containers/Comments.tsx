@@ -20,7 +20,7 @@ import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { RootState, RootAction } from '../Redux/Types'
 import { groupActions } from '../features/group'
 import { accountSelectors } from '../features/account'
-import { groupPhoto } from '../features/group/selectors';
+import { groupPhoto } from '../features/group/selectors'
 
 interface StateProps {
   selfAddress: string
@@ -193,7 +193,14 @@ class Comments extends Component<Props, ComponentState> {
 const mapStateToProps = (state: RootState): StateProps => {
   const selfAddress = accountSelectors.getAddress(state.account) || ''
 
-  const photo = state.photoViewing.viewingThreadId && state.photoViewing.viewingPhoto ? groupPhoto(state.group, state.photoViewing.viewingThreadId, state.photoViewing.viewingPhoto) : undefined
+  const photo =
+    state.photoViewing.viewingThreadId && state.photoViewing.viewingPhoto
+      ? groupPhoto(
+          state.group,
+          state.photoViewing.viewingThreadId,
+          state.photoViewing.viewingPhoto
+        )
+      : undefined
 
   let captionCommentCardProps: CommentCardProps | undefined
   if (photo && photo.caption) {

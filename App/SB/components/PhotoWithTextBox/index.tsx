@@ -16,9 +16,9 @@ interface PhotoWithTextBoxProps {
 const PhotoWithTextBox = (props: PhotoWithTextBoxProps) => {
   const { photo, hash, text, style } = props
 
-  if (photo) {
-    return (
-      <View style={[styles.itemContainer, style]}>
+  const chooseContainer = () => {
+    if (photo) {
+      return (
         <View style={styles.item}>
           <View style={styles.itemBackgroundContainer}>
             <TextileImage
@@ -31,14 +31,9 @@ const PhotoWithTextBox = (props: PhotoWithTextBoxProps) => {
             />
           </View>
         </View>
-        <Text numberOfLines={1} style={styles.itemText}>
-          {text}
-        </Text>
-      </View>
-    )
-  } else if (hash) {
-    return (
-      <View style={[styles.itemContainer, style]}>
+      )
+    } else if (hash) {
+      return (
         <View style={styles.item}>
           <View style={styles.itemBackgroundContainer}>
             <TextileImage
@@ -51,20 +46,20 @@ const PhotoWithTextBox = (props: PhotoWithTextBoxProps) => {
             />
           </View>
         </View>
-        <Text numberOfLines={1} style={styles.itemText}>
-          {text}
-        </Text>
-      </View>
-    )
-  }
-  return (
-    <View style={[styles.itemContainer, style]}>
+      )
+    }
+    return (
       <View style={styles.itemBox}>
         <Image
           style={styles.itemBoxPlus}
           source={require('../PhotoBoxEmpty/statics/icon-big-plus.png')}
         />
       </View>
+    )
+  }
+  return (
+    <View style={[styles.itemContainer, style]}>
+      {chooseContainer()}
       <Text numberOfLines={1} style={styles.itemText}>
         {text}
       </Text>
