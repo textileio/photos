@@ -3,7 +3,7 @@ project_name = 'Textile'
 
 desc "Downloads configuration files"
 lane :download_config do
-	sh("../scripts/download-config.sh")
+	sh('../scripts/download-config.sh `dirname $PWD`')
 end
 
 # NOTE: This is meant to be run on CI where it changes everything before building the app.
