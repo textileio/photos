@@ -1,7 +1,6 @@
 import { createAction, ActionType, getType } from 'typesafe-actions'
-import Config from 'react-native-config'
 
-import Textile, { IFiles, Thread } from '@textile/react-native-sdk'
+import { IFiles, Thread } from '@textile/react-native-sdk'
 
 interface ThreadConfig {
   name: string
@@ -276,11 +275,20 @@ export function reducer(
         // We should always have threadData before a refreshThreadSuccess, but just make sure.
         return state
       }
-      const updated = photos.length > 0 ? Textile.util.timestampToDate(photos[0].date).getTime() : undefined
+      const updated =
+        photos.length > 0
+          ? photos[0].date.nanos
+          : undefined
 
       const thumb = photos.length > 0 ? photos[0].data : undefined
 
-      const obj: ThreadData = { ...threadData, querying: false, size: photos.length, thumb, updated }
+      const obj: ThreadData = {
+        ...threadData,
+        querying: false,
+        size: photos.length,
+        thumb,
+        updated
+      }
 
       const threads: ThreadMap = { ...state.threads, [threadId]: obj }
 

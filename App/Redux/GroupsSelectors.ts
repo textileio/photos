@@ -91,7 +91,7 @@ export function getThreadsAndMembers(
   const ownAddress = accountSelectors.getAddress(state.account)
   const profile = accountSelectors.getProfile(state.account)
   const threads = getSharedThreads(state, 'date').map(thread => {
-    // TODO: This method should probably just become a query to the node. 
+    // TODO: This method should probably just become a query to the node.
     // Along the lines of, select contacts from thread where thread_id = {id} order by active date limit 8"
     const selector = contactsSelectors.makeByThreadId(thread.id)
     const allMembers = selector(state.contacts)

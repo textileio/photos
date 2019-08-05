@@ -8,13 +8,8 @@ import GroupsActions from '../Redux/GroupsRedux'
 import UIActions from '../Redux/UIRedux'
 import style from './Styles/TextilePhotosStyle'
 import { NavigationActions, NavigationScreenProps } from 'react-navigation'
-import {
-  defaultThreadData
-} from '../Redux/GroupsSelectors'
-import {
-  getSharedPhotos,
-  SharedPhoto
-} from '../Redux/PhotoViewingSelectors'
+import { defaultThreadData } from '../Redux/GroupsSelectors'
+import { getSharedPhotos, SharedPhoto } from '../Redux/PhotoViewingSelectors'
 import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
 import { RootState, RootAction } from '../Redux/Types'
 import { Dispatch } from 'redux'

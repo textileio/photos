@@ -10,7 +10,6 @@ export interface SharedPhoto {
   original: string
 }
 
-
 export function photoAndComment(state: RootState) {
   return {
     photo: state.photoViewing.viewingPhoto,
@@ -26,12 +25,17 @@ export function getSharedPhotos(
   const photos = state.photoViewing.recentPhotos
     .filter(photo => photo.user.address === selfAddress)
     // quickest way to filter out non-cameraroll schema
-    .filter(photo => !!photo.files[0].links.thumb)
+    .filter(photo => Boolean(photo.files[0].links.thumb))
     .map(
       (photo): SharedPhoto => {
         const file = photo.files[0]
         const thumb = file.links.thumb
-        return { type: 'photo', photo, id: photo.block, original: thumb.checksum }
+        return {
+          type: 'photo',
+          photo,
+          id: photo.block,
+          original: thumb.checksum
+        }
       }
     )
   const filtered = photos.filter((s1, pos, arr) => {

@@ -6,8 +6,7 @@ const actions = {
   addCommentSuccess: createAction('ADD_COMMENT_SUCCESS'),
   addCommentError: createAction('ADD_COMMENT_ERROR'),
   getRecentPhotosSuccess: createAction('GET_RECENT_PHOTOS_SUCCESS', resolve => {
-    return (photos: ReadonlyArray<IFiles>) =>
-      resolve({ photos })
+    return (photos: ReadonlyArray<IFiles>) => resolve({ photos })
   }),
   updateComment: createAction('UPDATE_COMMENT', resolve => {
     return (comment: string) => resolve({ comment })
@@ -26,7 +25,7 @@ const actions = {
 export type PhotoViewingAction = ActionType<typeof actions>
 
 interface Fake {
-  readonly [key: string]: {key: string}
+  readonly [key: string]: { key: string }
 }
 
 interface PhotoViewingState {

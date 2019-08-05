@@ -21,9 +21,7 @@ import TextileEventsActions, {
 import NotificationActions, {
   NotificationsAction
 } from '../Redux/NotificationsRedux'
-import GroupsActions, {
-  GroupsAction
-} from '../Redux/GroupsRedux'
+import GroupsActions, { GroupsAction } from '../Redux/GroupsRedux'
 import { contactsActions, ContactsAction } from '../features/contacts'
 import DeviceLogsActions, { DeviceLogsAction } from '../Redux/DeviceLogsRedux'
 import { groupActions, GroupAction } from '../features/group'

@@ -16,10 +16,7 @@ import { RootAction, RootState } from '../Redux/Types'
 
 import { inboundInvites } from '../Redux/ThreadsSelectors'
 import { InboundInvite } from '../Redux/ThreadsRedux'
-import {
-  getThreadsAndMembers,
-  GroupAuthors
-} from '../Redux/GroupsSelectors'
+import { getThreadsAndMembers, GroupAuthors } from '../Redux/GroupsSelectors'
 import UIActions from '../Redux/UIRedux'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
 import PreferencesActions, {

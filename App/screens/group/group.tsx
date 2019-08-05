@@ -528,8 +528,7 @@ const mapDispatchToProps = (
       dispatch(UIActions.addLike.request({ blockId: block })),
     navigateToComments: (id: string) =>
       dispatch(UIActions.navigateToCommentsRequest(id, threadId)),
-    leaveThread: () =>
-      dispatch(GroupsActions.removeThreadRequest(threadId)),
+    leaveThread: () => dispatch(GroupsActions.removeThreadRequest(threadId)),
     retryShare: (key: string) => {
       dispatch(groupActions.addPhoto.retry(key))
     },

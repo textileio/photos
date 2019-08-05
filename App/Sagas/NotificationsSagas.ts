@@ -11,10 +11,7 @@ import NavigationService from '../Services/NavigationService'
 
 import ThreadsActions from '../Redux/ThreadsRedux'
 import GroupsActions, { ThreadData } from '../Redux/GroupsRedux'
-import {
-  threadDataByThreadId,
-  allThreadIds
-} from '../Redux/GroupsSelectors'
+import { threadDataByThreadId, allThreadIds } from '../Redux/GroupsSelectors'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { PreferencesSelectors, ServiceType } from '../Redux/PreferencesRedux'
 import NotificationsActions, {

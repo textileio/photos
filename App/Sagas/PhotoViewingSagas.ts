@@ -10,9 +10,7 @@ import ThreadsActions, { InboundInvite } from '../Redux/ThreadsRedux'
 import { inboundInviteByThreadName } from '../Redux/ThreadsSelectors'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
 import UIActions from '../Redux/UIRedux'
-import {
-  photoAndComment
-} from '../Redux/PhotoViewingSelectors'
+import { photoAndComment } from '../Redux/PhotoViewingSelectors'
 import {
   shouldNavigateToNewThread,
   shouldSelectNewThread,
@@ -31,9 +29,9 @@ import { shareWalletImage } from './ImageSharingSagas'
 
 export function* monitorNewThreadActions() {
   while (true) {
-    const action: ActionType<
-      typeof GroupsActions.threadAdded
-    > = yield take(getType(GroupsActions.threadAdded))
+    const action: ActionType<typeof GroupsActions.threadAdded> = yield take(
+      getType(GroupsActions.threadAdded)
+    )
     const { id, name } = action.payload
     const photoToShare:
       | { threadName: string; imageId: string; comment?: string }
@@ -169,9 +167,7 @@ export function* refreshThread(
       '',
       -1
     )
-    yield put(
-      GroupsActions.refreshThreadSuccess(threadId, photosResult.items)
-    )
+    yield put(GroupsActions.refreshThreadSuccess(threadId, photosResult.items))
   } catch (error) {
     yield put(GroupsActions.refreshThreadError(threadId, error))
   }

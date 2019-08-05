@@ -34,9 +34,7 @@ import { color, spacing, fontFamily, fontSize } from '../styles'
 
 // Redux
 import { RootState, RootAction } from '../Redux/Types'
-import {
-  ThreadData
-} from '../Redux/GroupsRedux'
+import { ThreadData } from '../Redux/GroupsRedux'
 import {
   getSharedThreads,
   getDirectMessageThread
@@ -359,10 +357,11 @@ const mapStateToProps = (
   const adding =
     Object.keys(state.contacts.addingContacts).indexOf(address) > -1
   const directMessageThread = getDirectMessageThread(state, address)
-  const threads = getSharedThreads(state, 'name')
-    .filter((thread) => contact.threads.indexOf(thread.id) > -1)
+  const threads = getSharedThreads(state, 'name').filter(
+    thread => contact.threads.indexOf(thread.id) > -1
+  )
   return {
-    threads: threads,
+    threads,
     isContact,
     removing,
     adding,

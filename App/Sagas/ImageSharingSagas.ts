@@ -20,10 +20,8 @@ export function* showWalletPicker(
     yield put(UIActions.updateSharingPhotoThread(threadId))
   }
   const recentPhotos = yield call(Textile.files.list, '', '', 40)
-  yield put(
-    PhotoViewingActions.getRecentPhotosSuccess(recentPhotos.items)
-  )
-  
+  yield put(PhotoViewingActions.getRecentPhotosSuccess(recentPhotos.items))
+
   yield call(NavigationService.navigate, 'WalletPicker')
 }
 
@@ -102,9 +100,6 @@ export function* showImagePicker(
 export function* walletPickerSuccess(
   action: ActionType<typeof UIActions.walletPickerSuccess>
 ) {
-  console.log('action.payload.photo')
-  console.log(action.payload.photo)
-  console.log('')
   yield put(UIActions.updateSharingPhotoFiles(action.payload.photo))
   // indicates if request was made from merged main feed or from a specific thread
   const threadId = yield select(UISelectors.sharingPhotoThread)

@@ -140,10 +140,7 @@ export default function*() {
       monitorThreadAddedNotifications
     ),
     takeEvery(getType(GroupsActions.removeThreadRequest), removeThread),
-    takeEvery(
-      getType(GroupsActions.refreshThreadsRequest),
-      refreshThreads
-    ),
+    takeEvery(getType(GroupsActions.refreshThreadsRequest), refreshThreads),
     takeEvery(getType(GroupsActions.refreshThreadRequest), refreshThread),
     takeEvery(getType(PhotoViewingActions.addCommentRequest), addPhotoComment),
 
