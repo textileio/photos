@@ -1,6 +1,11 @@
 # this should be the folder name under `ios` for your project
 project_name = 'Textile'
 
+desc "Downloads configuration files"
+lane :download_config do
+	sh("git", "clone", "git@github.com:textileio/meta-private.git" "/tmp/meta-private")
+end
+
 # NOTE: This is meant to be run on CI where it changes everything before building the app.
 # Usage:
 #   `RN_RELEASE_TYPE=beta fastlane prep_release` (on CI these ENV variables should be set via the UI)
