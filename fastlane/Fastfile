@@ -3,7 +3,7 @@ project_name = 'Textile'
 
 desc "Downloads configuration files"
 lane :download_config do
-	sh("git", "clone", "git@github.com:textileio/meta-private.git" "/tmp/meta-private")
+	sh("git clone git@github.com:textileio/meta-private.git /tmp/meta-private")
 end
 
 # NOTE: This is meant to be run on CI where it changes everything before building the app.
