@@ -17,8 +17,6 @@ NSString *const TEXTILE_BACKGROUND_SESSION_ID = @"textile";
 
 @property (nonatomic, strong) Messenger *messenger;
 
-@property (nonatomic, strong) MobileMobile *node;
-
 @property (nonatomic, strong) AccountApi *account;
 @property (nonatomic, strong) CafesApi *cafes;
 @property (nonatomic, strong) CommentsApi *comments;
