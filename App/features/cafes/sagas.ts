@@ -118,10 +118,8 @@ function* refreshCafeSession(
 function* refreshExpiredSessions() {
   while (yield take([getType(TextileEventsActions.nodeOnline)])) {
     try {
-      const sessionsList: ICafeSession[] = yield select((state: RootState) =>
-        sessions(state.cafes)
-      )
-      for (const session of sessionsList) {
+      const sessionsList: ICafeSessionList = yield call(Textile.cafes.sessions)
+      for (const session of sessionsList.items) {
         const now = new Date()
         const exp = Textile.util.timestampToDate(session.exp)
         if (exp <= now) {
