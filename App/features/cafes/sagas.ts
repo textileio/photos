@@ -134,6 +134,34 @@ function* refreshExpiredSessions() {
   }
 }
 
+function* migrateUSW(
+  action: ActionType<typeof actions.getCafeSessions.success>
+) {
+  // Old us-west
+  const usw = '12D3KooWSsM117bNw6yu1auMfNqeu59578Bct5V4S9fWxavogrsw'
+  // New us-west
+  const repl = '12D3KooWSdGmRz5JQidqrtmiPGVHkStXpbSAMnbCcW8abq6zuiDP'
+  const { sessions } = action.payload
+  const cafePeers = sessions.map(session => session.cafe.peer)
+  if (cafePeers.indexOf(usw) > -1) {
+    try {
+      // Use the existing route to deregister the usw cafe
+      yield put(actions.deregisterCafe.request({ peerId: usw }))
+      // Only replace it if there wasn't an existing secondary
+      if (cafePeers.length < 2) {
+        const cafe = cafesMap[repl]
+        if (cafe) {
+          yield put(
+            actions.registerCafe.request({ peerId: repl, token: cafe.token })
+          )
+        }
+      }
+    } catch (error) {
+      // no error handling
+    }
+  }
+}
+
 export default function*() {
   yield all([
     call(onNodeStarted),
@@ -141,6 +169,7 @@ export default function*() {
     takeEvery(getType(actions.deregisterCafe.request), deregisterCafe),
     call(getCafeSessions),
     call(refreshExpiredSessions),
-    takeEvery(getType(actions.refreshCafeSession.request), refreshCafeSession)
+    takeEvery(getType(actions.refreshCafeSession.request), refreshCafeSession),
+    takeEvery(getType(actions.getCafeSessions.success), migrateUSW)
   ])
 }
