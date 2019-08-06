@@ -23,7 +23,6 @@
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
-		8E44FDACD1EC3A88233594F4 /* libPods-Textile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 889BBA4C976EB19AC5C26E76 /* libPods-Textile.a */; };
 		93247E602278F1C1001C6381 /* libRNGestureHandler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93247E5D2278F1B0001C6381 /* libRNGestureHandler.a */; };
 		932986BC22F4B0A6001E4E28 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 932986BB22F4B0A6001E4E28 /* GoogleService-Info.plist */; };
 		932DF5DA2294C58E002683AB /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 932DF5A02294C58E002683AB /* JavaScriptCore.framework */; };
@@ -58,6 +57,7 @@
 		93F1805A21FD459700883267 /* Biotif-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93F1805721FD459700883267 /* Biotif-Medium.ttf */; };
 		93F1805B21FD459700883267 /* Biotif-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93F1805821FD459700883267 /* Biotif-Regular.ttf */; };
 		93F1805D21FD49A900883267 /* icomoon.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93F1805C21FD49A900883267 /* icomoon.ttf */; };
+		96657E2897F1DFEBE711C60F /* libPods-Textile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BB60315B2781D0C941B9B52 /* libPods-Textile.a */; };
 		A2588A0F21F3F7A1007A1B62 /* TextileImageViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A2588A0B21F3F7A0007A1B62 /* TextileImageViewManager.m */; };
 		A2588A1021F3F7A1007A1B62 /* TextileImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = A2588A0C21F3F7A0007A1B62 /* TextileImageView.m */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
@@ -490,13 +490,12 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Textile/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Textile/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
-		49EE1F092DEC53DDF831811A /* Pods-Textile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Textile.release.xcconfig"; path = "Pods/Target Support Files/Pods-Textile/Pods-Textile.release.xcconfig"; sourceTree = "<group>"; };
+		18DD715C527981AC0ECEE20C /* Pods-Textile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Textile.release.xcconfig"; path = "Target Support Files/Pods-Textile/Pods-Textile.release.xcconfig"; sourceTree = "<group>"; };
+		1BB60315B2781D0C941B9B52 /* libPods-Textile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Textile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A9217D62E59A2D55D4E7041 /* Pods-Textile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Textile.debug.xcconfig"; path = "Target Support Files/Pods-Textile/Pods-Textile.debug.xcconfig"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
-		6693AB6E05B41B65F2F6D712 /* Pods-Textile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Textile.release.xcconfig"; path = "Target Support Files/Pods-Textile/Pods-Textile.release.xcconfig"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
-		889BBA4C976EB19AC5C26E76 /* libPods-Textile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Textile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		8AF863B7C065E68291276D09 /* Pods-Textile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Textile.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Textile/Pods-Textile.debug.xcconfig"; sourceTree = "<group>"; };
 		93247E572278F1B0001C6381 /* RNGestureHandler.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNGestureHandler.xcodeproj; path = "../node_modules/react-native-gesture-handler/ios/RNGestureHandler.xcodeproj"; sourceTree = "<group>"; };
 		932986BB22F4B0A6001E4E28 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Textile/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		932DF5A02294C58E002683AB /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -538,7 +537,6 @@
 		A2588A0D21F3F7A0007A1B62 /* TextileImageViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileImageViewManager.h; sourceTree = "<group>"; };
 		A2588A0E21F3F7A0007A1B62 /* TextileImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileImageView.h; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
-		EAD6563C03CBE718FB42E49A /* Pods-Textile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Textile.debug.xcconfig"; path = "Target Support Files/Pods-Textile/Pods-Textile.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -582,7 +580,7 @@
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
-				8E44FDACD1EC3A88233594F4 /* libPods-Textile.a in Frameworks */,
+				96657E2897F1DFEBE711C60F /* libPods-Textile.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -706,7 +704,7 @@
 				93C00532216BB8F2007786A5 /* Crashlytics.framework */,
 				93C00533216BB8F2007786A5 /* Fabric.framework */,
 				93C00470216B1066007786A5 /* TSBackgroundFetch.framework */,
-				889BBA4C976EB19AC5C26E76 /* libPods-Textile.a */,
+				1BB60315B2781D0C941B9B52 /* libPods-Textile.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -961,10 +959,8 @@
 		D84C083F428393E157D45432 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				EAD6563C03CBE718FB42E49A /* Pods-Textile.debug.xcconfig */,
-				6693AB6E05B41B65F2F6D712 /* Pods-Textile.release.xcconfig */,
-				8AF863B7C065E68291276D09 /* Pods-Textile.debug.xcconfig */,
-				49EE1F092DEC53DDF831811A /* Pods-Textile.release.xcconfig */,
+				3A9217D62E59A2D55D4E7041 /* Pods-Textile.debug.xcconfig */,
+				18DD715C527981AC0ECEE20C /* Pods-Textile.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -994,7 +990,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Textile" */;
 			buildPhases = (
-				EA5E8F87EE74FC87570037A3 /* [CP] Check Pods Manifest.lock */,
+				42841810805D08558FD96171 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
@@ -1607,7 +1603,7 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
-		EA5E8F87EE74FC87570037A3 /* [CP] Check Pods Manifest.lock */ = {
+		42841810805D08558FD96171 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1745,7 +1741,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EAD6563C03CBE718FB42E49A /* Pods-Textile.debug.xcconfig */;
+			baseConfigurationReference = 3A9217D62E59A2D55D4E7041 /* Pods-Textile.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Textile/Textile.entitlements;
@@ -1783,7 +1779,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6693AB6E05B41B65F2F6D712 /* Pods-Textile.release.xcconfig */;
+			baseConfigurationReference = 18DD715C527981AC0ECEE20C /* Pods-Textile.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Textile/Textile.entitlements;
