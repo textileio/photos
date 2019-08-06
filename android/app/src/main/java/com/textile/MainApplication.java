@@ -3,6 +3,8 @@ package com.textile;
 import android.support.multidex.MultiDexApplication;
 
 import com.facebook.react.ReactApplication;
+import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
 import com.swmansion.reanimated.ReanimatedPackage;
 import io.textile.cameraroll.RNCameraRollPackage;
 import com.facebook.react.ReactNativeHost;
@@ -40,8 +42,10 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
     protected List<ReactPackage> getPackages() {
       return Arrays.asList(
           new MainReactPackage(),
-            new ReanimatedPackage(),
-            new RNCameraRollPackage(),
+		  new RNFirebasePackage(),
+              new RNFirebaseAnalyticsPackage(),
+		  new ReanimatedPackage(),
+		  new RNCameraRollPackage(),
           new RNTextilePackage(),
           new RNBackgroundFetchPackage(),
           new ReactNativePushNotificationPackage(),

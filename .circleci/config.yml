@@ -138,6 +138,12 @@ jobs:
           paths:
             - vendor/bundle
 
+      - run:
+          command: bundle install
+
+      - run:
+          command: bundle exec fastlane download_config
+
       - *install-android-tools
 
       - run:
@@ -209,6 +215,9 @@ jobs:
             - vendor/bundle
 
       - run:
+          command: bundle exec fastlane download_config
+
+      - run:
           command: echo $ANDROID_KEYSTORE_BASE64 | base64 --decode >> $ANDROID_KEYSTORE
           working_directory: android
 
@@ -245,6 +254,9 @@ jobs:
 
       - run:
           command: bundle install
+
+      - run:
+          command: bundle exec fastlane download_config
 
       - run:
           command: bundle exec fastlane prep_release
@@ -299,36 +311,18 @@ jobs:
       LANG: en_US.UTF-8
     working_directory: ~/textile-mobile
 
-    # use a --login shell so our "set Ruby version" command gets picked up for later steps
-    shell: /bin/bash --login -o pipefail
-
     steps:
-      - restore_cache: # If any cache exists, it'll way speedup these checkouts
-          keys:
-            - source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-            - source-v2-{{ arch }}-{{ .Branch }}-
-            - source-v2-{{ arch }}-
-
       - checkout
-
-      - save_cache:
-          key: source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-          paths:
-            - '.git'
-
-      - run:
-          name: set Ruby version
-          command: echo "ruby-2.4" > ~/.ruby-version
 
       - restore_cache:
           key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
 
       - restore_cache:
-          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+          key: node-v1-{{ checksum "yarn.lock" }}-{{ arch }}
 
       # not using a workspace here as Node and Yarn versions
       # differ between our macOS executor image and the Docker containers above
-      - run: yarn install --ignore-engines
+      - run: yarn install
 
       - save_cache:
           key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
@@ -336,7 +330,7 @@ jobs:
             - ~/.cache/yarn
 
       - save_cache:
-          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+          key: node-v1-{{ checksum "yarn.lock" }}-{{ arch }}
           paths:
             - node_modules
 
@@ -355,6 +349,12 @@ jobs:
           key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
           paths:
             - vendor/bundle
+
+      - run:
+          command: bundle install
+
+      - run:
+          command: bundle exec fastlane download_config
 
       - run:
           command: bundle exec fastlane test
@@ -382,36 +382,18 @@ jobs:
       LANG: en_US.UTF-8
     working_directory: ~/textile-mobile
 
-    # use a --login shell so our "set Ruby version" command gets picked up for later steps
-    shell: /bin/bash --login -o pipefail
-
     steps:
-      - run:
-          name: set Ruby version
-          command: echo "ruby-2.4" > ~/.ruby-version
-
-      - restore_cache: # If any cache exists, it'll way speedup these checkouts
-          keys:
-            - source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-            - source-v2-{{ arch }}-{{ .Branch }}-
-            - source-v2-{{ arch }}-
-
       - checkout
-
-      - save_cache:
-          key: source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-          paths:
-            - '.git'
 
       - restore_cache:
           key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
 
       - restore_cache:
-          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+          key: node-v1-{{ checksum "yarn.lock" }}-{{ arch }}
 
       # not using a workspace here as Node and Yarn versions
       # differ between our macOS executor image and the Docker containers above
-      - run: yarn install --ignore-engines
+      - run: yarn install
 
       - save_cache:
           key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
@@ -419,7 +401,7 @@ jobs:
             - ~/.cache/yarn
 
       - save_cache:
-          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+          key: node-v1-{{ checksum "yarn.lock" }}-{{ arch }}
           paths:
             - node_modules
 
@@ -429,6 +411,9 @@ jobs:
 
       - run:
           command: bundle install
+
+      - run:
+          command: bundle exec fastlane download_config
 
       - run:
           command: bundle exec fastlane prep_release
@@ -466,21 +451,14 @@ jobs:
       LANG: en_US.UTF-8
     working_directory: ~/textile-mobile
 
-    # use a --login shell so our "set Ruby version" command gets picked up for later steps
-    shell: /bin/bash --login -o pipefail
-
     steps:
-      - run:
-          name: set Ruby version
-          command: echo "ruby-2.4" > ~/.ruby-version
-
       - checkout
 
       - restore_cache:
           key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
 
       - restore_cache:
-          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+          key: node-v1-{{ checksum "yarn.lock" }}-{{ arch }}
 
       # not using a workspace here as Node and Yarn versions
       # differ between our macOS executor image and the Docker containers above
@@ -492,7 +470,7 @@ jobs:
             - ~/.cache/yarn
 
       - save_cache:
-          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+          key: node-v1-{{ checksum "yarn.lock" }}-{{ arch }}
           paths:
             - node_modules
 
@@ -502,6 +480,9 @@ jobs:
 
       - run:
           command: bundle install
+
+      - run:
+          command: bundle exec fastlane download_config
 
       - run:
           command: bundle exec fastlane prep_release

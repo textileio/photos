@@ -15,11 +15,16 @@ Install _fastlane_ using
 or alternatively using `brew cask install fastlane`
 
 # Available Actions
+### download_config
+```
+fastlane download_config
+```
+Downloads configuration files
 ### prep_release
 ```
 fastlane prep_release
 ```
-Updates the app identifier, display name for dev, adhoc, and production releases
+Updates the app identifier, display name for dev, adhoc, and prod releases
 
 ----
 

@@ -81,7 +81,6 @@ __pycache__
 # Mobile
 **/*.aar
 **/*.jar
-**/*.framework
 
 # Keys
 **/*.pem
@@ -153,6 +152,10 @@ sourcemap.js
 # Jest
 .jest/
 coverage/
+
+# Firebase config
+GoogleService-Info.plist
+google-services.json
 
 # =====================================
 # Repository

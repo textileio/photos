@@ -4,10 +4,12 @@ import {
   takeEvery,
   all,
   call,
+  fork,
   select
 } from 'redux-saga/effects'
 import { PersistedState } from 'redux-persist'
 import { getType } from 'typesafe-actions'
+import Firebase from 'react-native-firebase'
 
 /* ------------- Types ------------- */
 
@@ -79,6 +81,8 @@ import {
 } from './TextileSagas'
 
 import { startSagas } from './TextileEventsSagas'
+import TextileEventsActions from '../Redux/TextileEventsRedux'
+import { RootAction } from '../Redux/Types'
 
 /* ------------- Connect Types To Sagas ------------- */
 
@@ -97,9 +101,23 @@ function* waitForRehydrate() {
   }
 }
 
+function* logFirebase(event: string) {
+  yield call([Firebase.analytics(), 'logEvent'], event)
+}
+
+function* subscribeActions() {
+  while (true) {
+    const action: RootAction = yield take('*')
+    if (action.type === getType(TextileEventsActions.nodeStarted)) {
+      yield fork(logFirebase, 'tex_node_started')
+    }
+  }
+}
+
 export default function*() {
   yield call(waitForRehydrate)
   yield all([
+    call(subscribeActions),
     call(accountSaga),
     call(contactsSaga),
     call(groupSaga),
