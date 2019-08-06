@@ -315,42 +315,31 @@ jobs:
     shell: /bin/bash --login -o pipefail
 
     steps:
-      # - restore_cache: # If any cache exists, it'll way speedup these checkouts
-      #     keys:
-      #       - source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-      #       - source-v2-{{ arch }}-{{ .Branch }}-
-      #       - source-v2-{{ arch }}-
-
       - checkout
-
-      # - save_cache:
-      #     key: source-v2-{{ arch }}-{{ .Branch }}-{{ .Revision }}
-      #     paths:
-      #       - '.git'
 
       - run:
           name: set Ruby version
           command: echo "ruby-2.4" > ~/.ruby-version
 
-      # - restore_cache:
-      #     key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+      - restore_cache:
+          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
 
-      # - restore_cache:
-      #     key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+      - restore_cache:
+          key: node-v1-{{ checksum "yarn.lock" }}-{{ arch }}
 
       # not using a workspace here as Node and Yarn versions
       # differ between our macOS executor image and the Docker containers above
-      - run: yarn install --ignore-engines
+      - run: yarn install
 
-      # - save_cache:
-      #     key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
-      #     paths:
-      #       - ~/.cache/yarn
+      - save_cache:
+          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+          paths:
+            - ~/.cache/yarn
 
-      # - save_cache:
-      #     key: node-v1-{{ checksum "package.json" }}-{{ arch }}
-      #     paths:
-      #       - node_modules
+      - save_cache:
+          key: node-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+          paths:
+            - node_modules
 
       - run:
           name: Write .env
