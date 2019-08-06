@@ -62,6 +62,10 @@ Firebase services work as intended."
     #import <FirebaseMLNLLanguageID/FirebaseMLNLLanguageID.h>
   #endif
 
+  #if __has_include(<FirebaseMLNLSmartReply/FirebaseMLNLSmartReply.h>)
+    #import <FirebaseMLNLSmartReply/FirebaseMLNLSmartReply.h>
+  #endif
+
   #if __has_include(<FirebaseMLNaturalLanguage/FirebaseMLNaturalLanguage.h>)
     #import <FirebaseMLNaturalLanguage/FirebaseMLNaturalLanguage.h>
   #endif
