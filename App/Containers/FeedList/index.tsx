@@ -30,6 +30,7 @@ import { Notification } from '../../Models/Notifications'
 
 import styles from './statics/styles'
 import onboardingStyles from '../Styles/OnboardingStyle'
+import AlertRow from '../../SB/components/AlertRow'
 
 interface NavProps {
   openDrawer: () => void
@@ -150,6 +151,9 @@ class Notifications extends React.Component<Props, State> {
     this.props.navigation.openDrawer()
   }
 
+  registerCafe = () => {
+    this.props.navigation.navigate('RegisterCafe')
+  }
   _renderItem = ({ item }: ListRenderItemInfo<Notification>) => {
     return <FeedItem notification={item} onClick={this._onClick} />
   }
@@ -174,6 +178,18 @@ class Notifications extends React.Component<Props, State> {
     )
   }
 
+  _renderAlert() {
+    if (!this.props.alert) {
+      return
+    }
+
+    return (
+      <AlertRow
+        message={this.props.alert}
+        onClick={this.registerCafe}
+      />
+    )
+  }
   _renderItems() {
     return (
       <View style={styles.contentContainer}>
@@ -184,6 +200,7 @@ class Notifications extends React.Component<Props, State> {
           refreshing={false}
           onRefresh={this.props.refreshMessages}
           initialNumToRender={20}
+          ListHeaderComponent={this._renderAlert()}
         />
       </View>
     )
@@ -194,7 +211,7 @@ class Notifications extends React.Component<Props, State> {
     // the initial refresh has completed and returned 0 results. This is to avoid the art
     // flickering for a second and then disappearing, which is ugly.
     const showNotifications =
-      this.state.focusRefreshInProgress || this.props.notifications.length > 0
+      this.state.focusRefreshInProgress || this.props.notifications.length > 0 || this.props.alert
     return (
       <View style={styles.container}>
         {!showNotifications && this._renderOnboarding()}
@@ -205,9 +222,10 @@ class Notifications extends React.Component<Props, State> {
 }
 
 interface StateProps {
+  alert?: string
   notifications: Notification[]
-  showOnboarding: boolean
   refreshing: boolean
+  showOnboarding: boolean
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
@@ -215,10 +233,13 @@ const mapStateToProps = (state: RootState): StateProps => {
   const showOnboarding = state.preferences.tourScreens.feed === true
   const refreshing = state.notifications.refreshing
 
+  const alert = Object.keys(state.cafes.cafes).length > 0 ? undefined : 'Improve app performance by choosing an account cafe now.'
+
   return {
+    alert,
     notifications,
-    showOnboarding,
-    refreshing
+    refreshing,
+    showOnboarding
   }
 }
 
