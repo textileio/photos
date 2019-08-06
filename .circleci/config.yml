@@ -338,17 +338,17 @@ jobs:
           name: Write .env
           command: ./scripts/create-rn-env.sh
 
-      # - restore_cache:
-      #     key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
+      - restore_cache:
+          key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
 
       - run:
           command: bundle install
           working_directory: ios
 
-      # - save_cache:
-      #     key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
-      #     paths:
-      #       - vendor/bundle
+      - save_cache:
+          key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
+          paths:
+            - vendor/bundle
 
       - run:
           command: bundle install
