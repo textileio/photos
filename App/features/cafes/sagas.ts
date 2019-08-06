@@ -9,7 +9,7 @@ import { RootState } from '../../Redux/Types'
 import PreferencesActions from '../../Redux/PreferencesRedux'
 import * as actions from './actions'
 import { sessions, makeCafeForPeerId } from './selectors'
-import { Cafe } from './models'
+import { Cafe, Cafes } from './models'
 import TextileEventsActions from '../../Redux/TextileEventsRedux'
 import { cafesMap } from '../../Models/cafes'
 import { logNewEvent } from '../../Sagas/DeviceLogs'
@@ -134,21 +134,20 @@ function* refreshExpiredSessions() {
   }
 }
 
-function* migrateUSW(
-  action: ActionType<typeof actions.getCafeSessions.success>
-) {
+function* migrateUSW() {
   // Old us-west
   const usw = '12D3KooWSsM117bNw6yu1auMfNqeu59578Bct5V4S9fWxavogrsw'
   // New us-west
   const repl = '12D3KooWSdGmRz5JQidqrtmiPGVHkStXpbSAMnbCcW8abq6zuiDP'
-  const { sessions } = action.payload
-  const cafePeers = sessions.map(session => session.cafe.peer)
-  if (cafePeers.indexOf(usw) > -1) {
+  const cafes: Cafes = yield select((state: RootState) => state.cafes.cafes)
+  const peerIDs = Object.keys(cafes)
+
+  if (peerIDs.indexOf(usw) > -1) {
     try {
       // Use the existing route to deregister the usw cafe
       yield put(actions.deregisterCafe.request({ peerId: usw }))
       // Only replace it if there wasn't an existing secondary
-      if (cafePeers.length < 2) {
+      if (peerIDs.length < 2) {
         const cafe = cafesMap[repl]
         if (cafe) {
           yield put(
@@ -170,6 +169,6 @@ export default function*() {
     call(getCafeSessions),
     call(refreshExpiredSessions),
     takeEvery(getType(actions.refreshCafeSession.request), refreshCafeSession),
-    takeEvery(getType(actions.getCafeSessions.success), migrateUSW)
+    takeEvery(getType(actions.getCafeSessions.request), migrateUSW)
   ])
 }
