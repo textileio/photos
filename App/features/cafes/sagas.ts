@@ -141,8 +141,9 @@ function* migrateUSW() {
       const usw = '12D3KooWSsM117bNw6yu1auMfNqeu59578Bct5V4S9fWxavogrsw'
       // New us-west
       const repl = '12D3KooWSdGmRz5JQidqrtmiPGVHkStXpbSAMnbCcW8abq6zuiDP'
-      const cafes: Cafes = yield select((state: RootState) => state.cafes.cafes)
-      const peerIDs = Object.keys(cafes)
+
+      const list: ICafeSessionList = yield call(Textile.cafes.sessions)
+      const peerIDs = list.items.map((session) => session.cafe.peer)
     
       if (peerIDs.indexOf(usw) > -1) {
         // Use the existing route to deregister the usw cafe
