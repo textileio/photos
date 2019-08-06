@@ -134,8 +134,8 @@ export default class Photo extends React.PureComponent<Props> {
         imageWidth={finalWidth}
         imageHeight={finalHeight}
         minScale={0.9}
-		  maxScale={2.5}
-		  onClick={this.toggleSelected}
+        maxScale={2.5}
+        onClick={this.toggleSelected}
         enableCenterFocus={false}
         clickDistance={1}
       >
