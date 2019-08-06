@@ -311,15 +311,8 @@ jobs:
       LANG: en_US.UTF-8
     working_directory: ~/textile-mobile
 
-    # use a --login shell so our "set Ruby version" command gets picked up for later steps
-    shell: /bin/bash --login -o pipefail
-
     steps:
       - checkout
-
-      - run:
-          name: set Ruby version
-          command: echo "ruby-2.4" > ~/.ruby-version
 
       - restore_cache:
           key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
@@ -389,14 +382,7 @@ jobs:
       LANG: en_US.UTF-8
     working_directory: ~/textile-mobile
 
-    # use a --login shell so our "set Ruby version" command gets picked up for later steps
-    shell: /bin/bash --login -o pipefail
-
     steps:
-      - run:
-          name: set Ruby version
-          command: echo "ruby-2.4" > ~/.ruby-version
-
       - checkout
 
       - restore_cache:
@@ -465,14 +451,7 @@ jobs:
       LANG: en_US.UTF-8
     working_directory: ~/textile-mobile
 
-    # use a --login shell so our "set Ruby version" command gets picked up for later steps
-    shell: /bin/bash --login -o pipefail
-
     steps:
-      - run:
-          name: set Ruby version
-          command: echo "ruby-2.4" > ~/.ruby-version
-
       - checkout
 
       - restore_cache:
