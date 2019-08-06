@@ -135,15 +135,15 @@ function* refreshExpiredSessions() {
 }
 
 function* migrateUSW() {
-  // Old us-west
-  const usw = '12D3KooWSsM117bNw6yu1auMfNqeu59578Bct5V4S9fWxavogrsw'
-  // New us-west
-  const repl = '12D3KooWSdGmRz5JQidqrtmiPGVHkStXpbSAMnbCcW8abq6zuiDP'
-  const cafes: Cafes = yield select((state: RootState) => state.cafes.cafes)
-  const peerIDs = Object.keys(cafes)
-
-  if (peerIDs.indexOf(usw) > -1) {
-    try {
+  try {
+    // Old us-west
+    const usw = '12D3KooWSsM117bNw6yu1auMfNqeu59578Bct5V4S9fWxavogrsw'
+    // New us-west
+    const repl = '12D3KooWSdGmRz5JQidqrtmiPGVHkStXpbSAMnbCcW8abq6zuiDP'
+    const cafes: Cafes = yield select((state: RootState) => state.cafes.cafes)
+    const peerIDs = Object.keys(cafes)
+  
+    if (peerIDs.indexOf(usw) > -1) {
       // Use the existing route to deregister the usw cafe
       yield put(actions.deregisterCafe.request({ peerId: usw }))
       // Only replace it if there wasn't an existing secondary
@@ -155,9 +155,9 @@ function* migrateUSW() {
           )
         }
       }
-    } catch (error) {
-      // no error handling
     }
+  } catch (error) {
+    // no error handling
   }
 }
 
