@@ -81,7 +81,6 @@ __pycache__
 # Mobile
 **/*.aar
 **/*.jar
-**/*.framework
 
 # Keys
 **/*.pem
