@@ -161,16 +161,14 @@ static NSMutableDictionary *sLibraryVersions;
       if (!((character >= 'a' && character <= 'z') || (character >= 'A' && character <= 'Z') ||
             (character >= '0' && character <= '9') || character == '_' || character == '-')) {
         [NSException raise:kFirebaseCoreErrorDomain
-                    format:@"App name can only contain alphanumeric (A-Z,a-z,0-9), "
-                           @"hyphen (-), and underscore (_) characters"];
+                    format:@"App name should only contain Letters, "
+                           @"Numbers, Underscores, and Dashes."];
       }
     }
 
-    @synchronized(self) {
-      if (sAllApps && sAllApps[name]) {
-        [NSException raise:kFirebaseCoreErrorDomain
-                    format:@"App named %@ has already been configured.", name];
-      }
+    if (sAllApps && sAllApps[name]) {
+      [NSException raise:kFirebaseCoreErrorDomain
+                  format:@"App named %@ has already been configured.", name];
     }
 
     FIRLogDebug(kFIRLoggerCore, @"I-COR000002", @"Configuring app named %@", name);
@@ -216,19 +214,18 @@ static NSMutableDictionary *sLibraryVersions;
     if (!sAllApps) {
       FIRLogError(kFIRLoggerCore, @"I-COR000005", @"No app has been configured yet.");
     }
-    return [sAllApps copy];
+    NSDictionary *dict = [NSDictionary dictionaryWithDictionary:sAllApps];
+    return dict;
   }
 }
 
 // Public only for tests
 + (void)resetApps {
-  @synchronized(self) {
-    sDefaultApp = nil;
-    [sAllApps removeAllObjects];
-    sAllApps = nil;
-    [sLibraryVersions removeAllObjects];
-    sLibraryVersions = nil;
-  }
+  sDefaultApp = nil;
+  [sAllApps removeAllObjects];
+  sAllApps = nil;
+  [sLibraryVersions removeAllObjects];
+  sLibraryVersions = nil;
 }
 
 - (void)deleteApp:(FIRAppVoidBoolCallback)completion {
@@ -323,7 +320,6 @@ static NSMutableDictionary *sLibraryVersions;
       if ([firAnalyticsClass respondsToSelector:startWithConfigurationSelector]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         [firAnalyticsClass performSelector:startWithConfigurationSelector
                                 withObject:[FIRConfiguration sharedInstance].analyticsConfiguration
                                 withObject:_options];
@@ -364,12 +360,9 @@ static NSMutableDictionary *sLibraryVersions;
   }
 
   // The Analytics flag has not been explicitly set, so update with the value being set.
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   [[FIRAnalyticsConfiguration sharedInstance]
       setAnalyticsCollectionEnabled:dataCollectionDefaultEnabled
                      persistSetting:NO];
-#pragma clang diagnostic pop
 }
 
 - (BOOL)isDataCollectionDefaultEnabled {
@@ -426,10 +419,8 @@ static NSMutableDictionary *sLibraryVersions;
 
   // This is the new way of sending information to SDKs.
   // TODO: Do we want this on a background thread, maybe?
-  @synchronized(self) {
-    for (Class<FIRLibrary> library in sRegisteredAsConfigurable) {
-      [library configureWithApp:app];
-    }
+  for (Class<FIRLibrary> library in sRegisteredAsConfigurable) {
+    [library configureWithApp:app];
   }
 }
 
@@ -481,12 +472,10 @@ static NSMutableDictionary *sLibraryVersions;
   // add the name/version pair to the dictionary.
   if ([name rangeOfCharacterFromSet:disallowedSet].location == NSNotFound &&
       [version rangeOfCharacterFromSet:disallowedSet].location == NSNotFound) {
-    @synchronized(self) {
-      if (!sLibraryVersions) {
-        sLibraryVersions = [[NSMutableDictionary alloc] init];
-      }
-      sLibraryVersions[name] = version;
+    if (!sLibraryVersions) {
+      sLibraryVersions = [[NSMutableDictionary alloc] init];
     }
+    sLibraryVersions[name] = version;
   } else {
     FIRLogError(kFIRLoggerCore, @"I-COR000027",
                 @"The library name (%@) or version number (%@) contain invalid characters. "
@@ -515,24 +504,20 @@ static NSMutableDictionary *sLibraryVersions;
     dispatch_once(&onceToken, ^{
       sRegisteredAsConfigurable = [[NSMutableArray alloc] init];
     });
-    @synchronized(self) {
-      [sRegisteredAsConfigurable addObject:library];
-    }
+    [sRegisteredAsConfigurable addObject:library];
   }
   [self registerLibrary:name withVersion:version];
 }
 
 + (NSString *)firebaseUserAgent {
-  @synchronized(self) {
-    NSMutableArray<NSString *> *libraries =
-        [[NSMutableArray<NSString *> alloc] initWithCapacity:sLibraryVersions.count];
-    for (NSString *libraryName in sLibraryVersions) {
-      [libraries addObject:[NSString stringWithFormat:@"%@/%@", libraryName,
-                                                      sLibraryVersions[libraryName]]];
-    }
-    [libraries sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-    return [libraries componentsJoinedByString:@" "];
+  NSMutableArray<NSString *> *libraries =
+      [[NSMutableArray<NSString *> alloc] initWithCapacity:sLibraryVersions.count];
+  for (NSString *libraryName in sLibraryVersions) {
+    [libraries
+        addObject:[NSString stringWithFormat:@"%@/%@", libraryName, sLibraryVersions[libraryName]]];
   }
+  [libraries sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+  return [libraries componentsJoinedByString:@" "];
 }
 
 - (void)checkExpectedBundleID {
@@ -540,8 +525,8 @@ static NSMutableDictionary *sLibraryVersions;
   NSString *expectedBundleID = [self expectedBundleID];
   // The checking is only done when the bundle ID is provided in the serviceInfo dictionary for
   // backward compatibility.
-  if (expectedBundleID != nil && ![FIRBundleUtil hasBundleIdentifierPrefix:expectedBundleID
-                                                                 inBundles:bundles]) {
+  if (expectedBundleID != nil && ![FIRBundleUtil hasBundleIdentifier:expectedBundleID
+                                                           inBundles:bundles]) {
     FIRLogError(kFIRLoggerCore, @"I-COR000008",
                 @"The project's Bundle ID is inconsistent with "
                 @"either the Bundle ID in '%@.%@', or the Bundle ID in the options if you are "
@@ -586,32 +571,33 @@ static NSMutableDictionary *sLibraryVersions;
     return NO;
   }
 
-  NSScanner *stringScanner = [NSScanner scannerWithString:appID];
-  stringScanner.charactersToBeSkipped = nil;
-
-  NSString *appIDVersion;
-  if (![stringScanner scanCharactersFromSet:[NSCharacterSet decimalDigitCharacterSet]
-                                 intoString:&appIDVersion]) {
+  // All app IDs must start with at least "<version number>:".
+  NSString *const versionPattern = @"^\\d+:";
+  NSRegularExpression *versionRegex =
+      [NSRegularExpression regularExpressionWithPattern:versionPattern options:0 error:NULL];
+  if (!versionRegex) {
     return NO;
   }
 
-  if (![stringScanner scanString:@":" intoString:NULL]) {
-    // appIDVersion must be separated by ":"
+  NSRange appIDRange = NSMakeRange(0, appID.length);
+  NSArray *versionMatches = [versionRegex matchesInString:appID options:0 range:appIDRange];
+  if (versionMatches.count != 1) {
     return NO;
   }
 
-  NSArray *knownVersions = @[ @"1" ];
+  NSRange versionRange = [(NSTextCheckingResult *)versionMatches.firstObject range];
+  NSString *appIDVersion = [appID substringWithRange:versionRange];
+  NSArray *knownVersions = @[ @"1:" ];
   if (![knownVersions containsObject:appIDVersion]) {
     // Permit unknown yet properly formatted app ID versions.
-    FIRLogInfo(kFIRLoggerCore, @"I-COR000010", @"Unknown GOOGLE_APP_ID version: %@", appIDVersion);
     return YES;
   }
 
-  if (![self validateAppIDFormat:appID withVersion:appIDVersion]) {
+  if (![FIRApp validateAppIDFormat:appID withVersion:appIDVersion]) {
     return NO;
   }
 
-  if (![self validateAppIDFingerprint:appID withVersion:appIDVersion]) {
+  if (![FIRApp validateAppIDFingerprint:appID withVersion:appIDVersion]) {
     return NO;
   }
 
@@ -641,76 +627,33 @@ static NSMutableDictionary *sLibraryVersions;
     return NO;
   }
 
-  NSScanner *stringScanner = [NSScanner scannerWithString:appID];
-  stringScanner.charactersToBeSkipped = nil;
-
-  // Skip version part
-  // '*<version #>*:<project number>:ios:<fingerprint of bundle id>'
-  if (![stringScanner scanString:version intoString:NULL]) {
-    // The version part is missing or mismatched
+  if (![version hasSuffix:@":"]) {
     return NO;
   }
 
-  // Validate version part (see part between '*' symbols below)
-  // '<version #>*:*<project number>:ios:<fingerprint of bundle id>'
-  if (![stringScanner scanString:@":" intoString:NULL]) {
-    // appIDVersion must be separated by ":"
+  if (![appID hasPrefix:version]) {
     return NO;
   }
 
-  // Validate version part (see part between '*' symbols below)
-  // '<version #>:*<project number>*:ios:<fingerprint of bundle id>'.
-  NSInteger projectNumber = NSNotFound;
-  if (![stringScanner scanInteger:&projectNumber]) {
-    // NO project number found.
+  NSString *const pattern = @"^\\d+:ios:[a-f0-9]+$";
+  NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern
+                                                                         options:0
+                                                                           error:NULL];
+  if (!regex) {
     return NO;
   }
 
-  // Validate version part (see part between '*' symbols below)
-  // '<version #>:<project number>*:*ios:<fingerprint of bundle id>'.
-  if (![stringScanner scanString:@":" intoString:NULL]) {
-    // The project number must be separated by ":"
+  NSRange localRange = NSMakeRange(version.length, appID.length - version.length);
+  NSUInteger numberOfMatches = [regex numberOfMatchesInString:appID options:0 range:localRange];
+  if (numberOfMatches != 1) {
     return NO;
   }
-
-  // Validate version part (see part between '*' symbols below)
-  // '<version #>:<project number>:*ios*:<fingerprint of bundle id>'.
-  NSString *platform;
-  if (![stringScanner scanUpToString:@":" intoString:&platform]) {
-    return NO;
-  }
-
-  if (![platform isEqualToString:@"ios"]) {
-    // The platform must be @"ios"
-    return NO;
-  }
-
-  // Validate version part (see part between '*' symbols below)
-  // '<version #>:<project number>:ios*:*<fingerprint of bundle id>'.
-  if (![stringScanner scanString:@":" intoString:NULL]) {
-    // The platform must be separated by ":"
-    return NO;
-  }
-
-  // Validate version part (see part between '*' symbols below)
-  // '<version #>:<project number>:ios:*<fingerprint of bundle id>*'.
-  unsigned long long fingerprint = NSNotFound;
-  if (![stringScanner scanHexLongLong:&fingerprint]) {
-    // Fingerprint part is missing
-    return NO;
-  }
-
-  if (!stringScanner.isAtEnd) {
-    // There are not allowed characters in the fingerprint part
-    return NO;
-  }
-
   return YES;
 }
 
 /**
  * Validates that the fingerprint of the app ID string is what is expected based on the supplied
- * version.
+ * version. The version must end in ":".
  *
  * Note that the v1 hash algorithm is not permitted on the client and cannot be fully validated.
  *
@@ -720,6 +663,18 @@ static NSMutableDictionary *sLibraryVersions;
  *         otherwise.
  */
 + (BOOL)validateAppIDFingerprint:(NSString *)appID withVersion:(NSString *)version {
+  if (!appID.length || !version.length) {
+    return NO;
+  }
+
+  if (![version hasSuffix:@":"]) {
+    return NO;
+  }
+
+  if (![appID hasPrefix:version]) {
+    return NO;
+  }
+
   // Extract the supplied fingerprint from the supplied app ID.
   // This assumes the app ID format is the same for all known versions below. If the app ID format
   // changes in future versions, the tokenizing of the app ID format will need to take into account
@@ -740,7 +695,7 @@ static NSMutableDictionary *sLibraryVersions;
     return NO;
   }
 
-  if ([version isEqual:@"1"]) {
+  if ([version isEqual:@"1:"]) {
     // The v1 hash algorithm is not permitted on the client so the actual hash cannot be validated.
     return YES;
   }
