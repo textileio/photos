@@ -23,8 +23,7 @@ platform :ios do
   desc "Runs all the tests"
   lane :test do
     scan(
-      scheme: "Textile",
-      xcargs: "-UseModernBuildSystem=NO"
+      scheme: "Textile"
     )
   end
 
@@ -83,7 +82,7 @@ platform :ios do
       build_number: newBuildNumber,
       xcodeproj: "Textile.xcodeproj"
     )
-    gym(workspace: "Textile.xcworkspace", scheme: "Textile", xcargs: "-UseModernBuildSystem=NO")
+    gym(workspace: "Textile.xcworkspace", scheme: "Textile")
     # changelog_from_git_commits
     upload_to_testflight(skip_waiting_for_build_processing: true)
     upload_symbols_to_crashlytics(dsym_path: "./Textile.app.dSYM.zip", api_token: ENV['FABRIC_API_TOKEN'])

@@ -14,12 +14,14 @@
 
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
+#import <Firebase/Firebase.h>
 #import <Textile/TextileApi.h>
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [FIRApp configure];
   [Fabric with:@[[Crashlytics class]]];
 
   NSURL *jsCodeLocation;

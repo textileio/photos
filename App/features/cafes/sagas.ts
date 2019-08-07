@@ -118,10 +118,8 @@ function* refreshCafeSession(
 function* refreshExpiredSessions() {
   while (yield take([getType(TextileEventsActions.nodeOnline)])) {
     try {
-      const sessionsList: ICafeSession[] = yield select((state: RootState) =>
-        sessions(state.cafes)
-      )
-      for (const session of sessionsList) {
+      const sessionsList: ICafeSessionList = yield call(Textile.cafes.sessions)
+      for (const session of sessionsList.items) {
         const now = new Date()
         const exp = Textile.util.timestampToDate(session.exp)
         if (exp <= now) {
@@ -135,29 +133,32 @@ function* refreshExpiredSessions() {
 }
 
 function* migrateUSW() {
-  try {
-    // Old us-west
-    const usw = '12D3KooWSsM117bNw6yu1auMfNqeu59578Bct5V4S9fWxavogrsw'
-    // New us-west
-    const repl = '12D3KooWSdGmRz5JQidqrtmiPGVHkStXpbSAMnbCcW8abq6zuiDP'
-    const cafes: Cafes = yield select((state: RootState) => state.cafes.cafes)
-    const peerIDs = Object.keys(cafes)
-  
-    if (peerIDs.indexOf(usw) > -1) {
-      // Use the existing route to deregister the usw cafe
-      yield put(actions.deregisterCafe.request({ peerId: usw }))
-      // Only replace it if there wasn't an existing secondary
-      if (peerIDs.length < 2) {
-        const cafe = cafesMap[repl]
-        if (cafe) {
-          yield put(
-            actions.registerCafe.request({ peerId: repl, token: cafe.token })
-          )
+  while (yield take([getType(TextileEventsActions.nodeOnline)])) {
+    try {
+      // Old us-west
+      const usw = '12D3KooWSsM117bNw6yu1auMfNqeu59578Bct5V4S9fWxavogrsw'
+      // New us-west
+      const repl = '12D3KooWSdGmRz5JQidqrtmiPGVHkStXpbSAMnbCcW8abq6zuiDP'
+
+      const list: ICafeSessionList = yield call(Textile.cafes.sessions)
+      const peerIDs = list.items.map((session) => session.cafe.peer)
+    
+      if (peerIDs.indexOf(usw) > -1) {
+        // Use the existing route to deregister the usw cafe
+        yield put(actions.deregisterCafe.request({ peerId: usw }))
+        // Only replace it if there wasn't an existing secondary
+        if (peerIDs.length < 2) {
+          const cafe = cafesMap[repl]
+          if (cafe) {
+            yield put(
+              actions.registerCafe.request({ peerId: repl, token: cafe.token })
+            )
+          }
         }
       }
+    } catch (error) {
+      // no error handling
     }
-  } catch (error) {
-    // no error handling
   }
 }
 
@@ -169,6 +170,6 @@ export default function*() {
     call(getCafeSessions),
     call(refreshExpiredSessions),
     takeEvery(getType(actions.refreshCafeSession.request), refreshCafeSession),
-    takeEvery(getType(actions.getCafeSessions.request), migrateUSW)
+    call(migrateUSW)
   ])
 }

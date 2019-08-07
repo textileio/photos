@@ -3,6 +3,9 @@ package com.textile;
 import android.support.multidex.MultiDexApplication;
 
 import com.facebook.react.ReactApplication;
+import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
+import io.invertase.firebase.fabric.crashlytics.RNFirebaseCrashlyticsPackage;
 import com.swmansion.reanimated.ReanimatedPackage;
 import io.textile.cameraroll.RNCameraRollPackage;
 import com.facebook.react.ReactNativeHost;
@@ -22,7 +25,6 @@ import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.ocetnik.timer.BackgroundTimerPackage;
 import com.rnfs.RNFSPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
-import com.smixx.fabric.FabricPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
 import io.textile.rnmobile.RNTextilePackage;
@@ -40,15 +42,17 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
     protected List<ReactPackage> getPackages() {
       return Arrays.asList(
           new MainReactPackage(),
-            new ReanimatedPackage(),
-            new RNCameraRollPackage(),
+		  new RNFirebasePackage(),
+          new RNFirebaseAnalyticsPackage(),
+		  new RNFirebaseCrashlyticsPackage(),
+		  new ReanimatedPackage(),
+		  new RNCameraRollPackage(),
           new RNTextilePackage(),
           new RNBackgroundFetchPackage(),
           new ReactNativePushNotificationPackage(),
           new RNFSPackage(),
           new ImagePickerPackage(),
           new ReactNativeConfigPackage(),
-          new FabricPackage(),
           new BackgroundTimerPackage(),
           new RNVersionNumberPackage(),
           new RNGestureHandlerPackage(),
