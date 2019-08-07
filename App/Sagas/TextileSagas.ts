@@ -22,6 +22,7 @@ import PreferencesActions, {
 } from '../Redux/PreferencesRedux'
 import UIActions from '../Redux/UIRedux'
 import { ActionType } from 'typesafe-actions'
+import GroupsActions from '../Redux/GroupsRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { logNewEvent } from './DeviceLogs'
 

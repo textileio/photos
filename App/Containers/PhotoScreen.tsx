@@ -10,11 +10,12 @@ import { RootState, RootAction } from '../Redux/Types'
 
 import UIActions from '../Redux/UIRedux'
 import Photo from '../Components/photo'
-import { threadDataByThreadId } from '../Redux/PhotoViewingSelectors'
+import { threadDataByThreadId } from '../Redux/GroupsSelectors'
 
 import { color } from '../styles'
 import { CommentData } from '../Components/comments'
 import { accountSelectors } from '../features/account'
+import { groupPhoto } from '../features/group/selectors';
 
 const screenWidth = Dimensions.get('screen').width
 
@@ -147,7 +148,8 @@ const mapStateToProps = (state: RootState): StateProps => {
     const threadData = threadDataByThreadId(state, threadId)
     threadName = threadData ? threadData.name : undefined
   }
-  const photo = state.photoViewing.viewingPhoto
+  const photoId = state.photoViewing.viewingPhoto
+  const photo = threadId && photoId ? groupPhoto(state.group, threadId, photoId) : undefined
   const selfAddress = accountSelectors.getAddress(state.account) || ''
   const removing = photo
     ? Object.keys(state.group.ignore)

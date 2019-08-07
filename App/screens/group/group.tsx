@@ -33,7 +33,7 @@ import { RootState, RootAction } from '../../Redux/Types'
 import { groupItems } from '../../features/group/selectors'
 import { groupActions } from '../../features/group'
 import UIActions from '../../Redux/UIRedux'
-import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
+import GroupsActions from '../../Redux/GroupsRedux'
 import { CommentData } from '../../Components/comments'
 import { color } from '../../styles'
 import { accountSelectors } from '../../features/account'
@@ -531,7 +531,7 @@ const mapStateToProps = (
 ): StateProps => {
   const threadId = ownProps.navigation.getParam('threadId')
   const items = groupItems(state.group, threadId)
-  const threadData = state.photoViewing.threads[threadId]
+  const threadData = state.groups.threads[threadId]
   const initiator = threadData ? threadData.initiator : ''
   const sharing = threadData ? threadData.sharing : Thread.Sharing.NOT_SHARED
   const canInvite = sharing !== Thread.Sharing.NOT_SHARED
@@ -578,8 +578,7 @@ const mapDispatchToProps = (
       dispatch(UIActions.addLike.request({ blockId: block })),
     navigateToComments: (id: string) =>
       dispatch(UIActions.navigateToCommentsRequest(id, threadId)),
-    leaveThread: () =>
-      dispatch(PhotoViewingActions.removeThreadRequest(threadId)),
+    leaveThread: () => dispatch(GroupsActions.removeThreadRequest(threadId)),
     retryShare: (key: string) => {
       dispatch(groupActions.addPhoto.retry(key))
     },

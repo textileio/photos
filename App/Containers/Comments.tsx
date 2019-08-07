@@ -19,6 +19,7 @@ import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { RootState, RootAction } from '../Redux/Types'
 import { groupActions } from '../features/group'
 import { accountSelectors } from '../features/account'
+import { groupPhoto } from '../features/group/selectors'
 
 interface StateProps {
   selfAddress: string
@@ -214,20 +215,28 @@ class Comments extends Component<Props, ComponentState> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   const selfAddress = accountSelectors.getAddress(state.account) || ''
-  const { viewingPhoto } = state.photoViewing
+
+  const photo =
+    state.photoViewing.viewingThreadId && state.photoViewing.viewingPhoto
+      ? groupPhoto(
+          state.group,
+          state.photoViewing.viewingThreadId,
+          state.photoViewing.viewingPhoto
+        )
+      : undefined
 
   let captionCommentCardProps: CommentCardProps | undefined
-  if (viewingPhoto && viewingPhoto.caption) {
+  if (photo && photo.caption) {
     captionCommentCardProps = {
-      username: viewingPhoto.user.name || viewingPhoto.user.address,
-      avatar: viewingPhoto.user.avatar,
-      comment: viewingPhoto.caption,
-      date: Textile.util.timestampToDate(viewingPhoto.date),
+      username: photo.user.name || photo.user.address,
+      avatar: photo.user.avatar,
+      comment: photo.caption,
+      date: Textile.util.timestampToDate(photo.date),
       isCaption: true
     }
   }
 
-  const comments = viewingPhoto ? viewingPhoto.comments : []
+  const comments = photo ? photo.comments : []
 
   const removing = Object.keys(state.group.ignore).filter(key => {
     return state.group.ignore[key] !== {}

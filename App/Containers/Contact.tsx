@@ -34,14 +34,11 @@ import { color, spacing, fontFamily, fontSize } from '../styles'
 
 // Redux
 import { RootState, RootAction } from '../Redux/Types'
-import PhotoViewingActions, {
-  ThreadThumbs,
-  ThreadData
-} from '../Redux/PhotoViewingRedux'
+import { ThreadData } from '../Redux/GroupsRedux'
 import {
-  getThreadThumbs,
+  getSharedThreads,
   getDirectMessageThread
-} from '../Redux/PhotoViewingSelectors'
+} from '../Redux/GroupsSelectors'
 import { contactsActions } from '../features/contacts'
 import { cafes } from '../features/contacts/selectors'
 
@@ -136,7 +133,7 @@ interface NavProps {
 }
 
 interface StateProps {
-  threadThumbs: ReadonlyArray<ThreadThumbs>
+  threads: ReadonlyArray<ThreadData>
   isContact: boolean
   removing: boolean
   adding: boolean
@@ -214,13 +211,13 @@ class ContactModal extends React.Component<Props, State> {
     const ThreadsScreen = (
       <ScrollView style={styles.threadsList}>
         <Text style={styles.threadsTitle}>
-          {this.props.threadThumbs.length > 0
+          {this.props.threads.length > 0
             ? 'Sharing in Groups:'
             : 'Not part of any shared groups'}
         </Text>
-        {this.props.threadThumbs.map((thread, i) => (
+        {this.props.threads.map((thread, i) => (
           <TouchableOpacity key={i} onPress={this.navigateToThread(thread.id)}>
-            <PhotoWithTextBox key={i} text={thread.name} photo={thread.thumb} />
+            <PhotoWithTextBox key={i} text={thread.name} hash={thread.thumb} />
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -360,8 +357,11 @@ const mapStateToProps = (
   const adding =
     Object.keys(state.contacts.addingContacts).indexOf(address) > -1
   const directMessageThread = getDirectMessageThread(state, address)
+  const threads = getSharedThreads(state, 'name').filter(
+    thread => contact.threads.indexOf(thread.id) > -1
+  )
   return {
-    threadThumbs: getThreadThumbs(state, address, 'name'),
+    threads,
     isContact,
     removing,
     adding,

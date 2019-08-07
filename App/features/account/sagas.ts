@@ -5,7 +5,7 @@ import Textile, { IContact } from '@textile/react-native-sdk'
 import copyPhoto from '../../util/copy-photo'
 import * as actions from './actions'
 import { contactsActions } from '../../features/contacts'
-import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
+import GroupsActions from '../../Redux/GroupsRedux'
 import PreferencesActions from '../../Redux/PreferencesRedux'
 import TextileEventsActions, {
   TextileEventsSelectors
@@ -28,7 +28,7 @@ function* onNodeStarted() {
       yield put(actions.refreshAddressRequest())
       yield put(actions.refreshAccountSeed.request())
       yield put(contactsActions.getContactsRequest())
-      yield put(PhotoViewingActions.refreshThreadsRequest())
+      yield put(GroupsActions.refreshThreadsRequest())
     } catch (error) {
       // nothing to do here for now
     }

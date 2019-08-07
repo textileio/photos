@@ -12,7 +12,7 @@ import Textile, {
   Thread
 } from '@textile/react-native-sdk'
 import DeepLink from '../Services/DeepLink'
-import PhotoViewingActions from '../Redux/PhotoViewingRedux'
+import GroupsActions from '../Redux/GroupsRedux'
 import NavigationService from '../Services/NavigationService'
 import UIActions from '../Redux/UIRedux'
 import Config from 'react-native-config'
@@ -25,7 +25,7 @@ function* joinInternalOnFork(notificationId: string, threadName?: string) {
       Textile.notifications.acceptInvite,
       notificationId
     )
-    yield put(PhotoViewingActions.refreshThreadsRequest())
+    yield put(GroupsActions.refreshThreadsRequest())
     yield put(ThreadsActions.acceptInviteSuccess(notificationId, threadId))
     // nice with a bit of delay so the app can grab some blocks
     yield call(delay, 500)
@@ -43,7 +43,7 @@ function* joinOnFork(inviteId: string, key: string) {
     const joinId = yield call(Textile.invites.acceptExternal, inviteId, key)
     // if success, trigger complete and update ui
     yield put(ThreadsActions.acceptInviteSuccess(inviteId, joinId))
-    yield put(PhotoViewingActions.refreshThreadsRequest())
+    yield put(GroupsActions.refreshThreadsRequest())
   } catch (error) {
     yield put(ThreadsActions.acceptInviteError(inviteId, error))
   }
@@ -98,7 +98,7 @@ export function* acceptInvite(
     // After delay, we'll assume we are walking back through the thread... enhancement later
     yield put(ThreadsActions.acceptInviteScanning(notificationId))
     // Refresh in case the head is available
-    yield put(PhotoViewingActions.refreshThreadsRequest())
+    yield put(GroupsActions.refreshThreadsRequest())
     yield call(NavigationService.navigate, 'Groups')
   } catch (error) {
     yield put(ThreadsActions.acceptInviteError(notificationId, error))
@@ -118,7 +118,7 @@ export function* acceptExternalInvite(
     // After delay, we'll assume we are walking back through the thread... enhancement later
     yield put(ThreadsActions.acceptInviteScanning(inviteId))
     // Refresh in case the head is available
-    yield put(PhotoViewingActions.refreshThreadsRequest())
+    yield put(GroupsActions.refreshThreadsRequest())
   } catch (error) {
     yield put(ThreadsActions.acceptInviteError(inviteId, error))
   }

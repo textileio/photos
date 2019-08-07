@@ -14,7 +14,7 @@ import Modal from 'react-native-modal'
 import { Thread } from '@textile/react-native-sdk'
 
 import { RootAction } from '../Redux/Types'
-import PhotoViewingActions from '../Redux/PhotoViewingRedux'
+import GroupsActions from '../Redux/GroupsRedux'
 import PreferencesActions, { TourScreens } from '../Redux/PreferencesRedux'
 
 // Styles
@@ -103,7 +103,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
     },
     submit: (name, navigate, selectToShare) => {
       dispatch(
-        PhotoViewingActions.addThreadRequest(
+        GroupsActions.addThreadRequest(
           { ...threadConfig, name },
           { navigate, selectToShare }
         )

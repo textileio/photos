@@ -4,23 +4,23 @@ import { ActionType, getType } from 'typesafe-actions'
 import uuid from 'uuid/v4'
 import Config from 'react-native-config'
 
+import GroupsActions from '../Redux/GroupsRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import ThreadsActions, { InboundInvite } from '../Redux/ThreadsRedux'
 import { inboundInviteByThreadName } from '../Redux/ThreadsSelectors'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
 import UIActions from '../Redux/UIRedux'
+import { photoAndComment } from '../Redux/PhotoViewingSelectors'
 import {
-  photoAndComment,
   shouldNavigateToNewThread,
   shouldSelectNewThread,
   photoToShareToNewThread
-} from '../Redux/PhotoViewingSelectors'
+} from '../Redux/GroupsSelectors'
 import Textile, {
   IThread,
   IAddThreadConfig,
   AddThreadConfig,
   IThreadList,
-  IFiles,
   IFilesList
 } from '@textile/react-native-sdk'
 import NavigationService from '../Services/NavigationService'
@@ -28,9 +28,9 @@ import { shareWalletImage } from './ImageSharingSagas'
 
 export function* monitorNewThreadActions() {
   while (true) {
-    const action: ActionType<
-      typeof PhotoViewingActions.threadAdded
-    > = yield take(getType(PhotoViewingActions.threadAdded))
+    const action: ActionType<typeof GroupsActions.threadAdded> = yield take(
+      getType(GroupsActions.threadAdded)
+    )
     const { id, name } = action.payload
     const photoToShare:
       | { threadName: string; imageId: string; comment?: string }
@@ -42,7 +42,7 @@ export function* monitorNewThreadActions() {
       name
     )
 
-    yield put(PhotoViewingActions.clearNewThreadActions())
+    yield put(GroupsActions.clearNewThreadActions())
 
     if (photoToShare && photoToShare.threadName === name) {
       const { imageId, comment } = photoToShare
@@ -63,14 +63,14 @@ export function* monitorNewThreadActions() {
 }
 
 export function* monitorThreadAddedNotifications(
-  action: ActionType<typeof PhotoViewingActions.threadAddedNotification>
+  action: ActionType<typeof GroupsActions.threadAddedNotification>
 ) {
   try {
     // We need this one because the callback we get from the node doesn't include key. This queries for the thread and gets
     // all the required data for threadAdded()
     const thread: IThread = yield call(Textile.threads.get, action.payload.id)
     const withValid = { ...thread, valid: true }
-    yield put(PhotoViewingActions.threadAdded(withValid))
+    yield put(GroupsActions.threadAdded(withValid))
   } catch (error) {
     yield put(
       TextileEventsActions.newErrorMessage(
@@ -78,12 +78,12 @@ export function* monitorThreadAddedNotifications(
         error.message
       )
     )
-    yield put(PhotoViewingActions.addThreadError(error))
+    yield put(GroupsActions.addThreadError(error))
   }
 }
 
 export function* addThread(
-  action: ActionType<typeof PhotoViewingActions.addThreadRequest>
+  action: ActionType<typeof GroupsActions.addThreadRequest>
 ) {
   const { name, whitelist, type, sharing } = action.payload
   const { invites } = action.meta
@@ -109,12 +109,12 @@ export function* addThread(
     }
   } catch (error) {
     yield put(TextileEventsActions.newErrorMessage('addThread', error.message))
-    yield put(PhotoViewingActions.addThreadError(error))
+    yield put(GroupsActions.addThreadError(error))
   }
 }
 
 export function* removeThread(
-  action: ActionType<typeof PhotoViewingActions.removeThreadRequest>
+  action: ActionType<typeof GroupsActions.removeThreadRequest>
 ) {
   const { id } = action.payload
   try {
@@ -124,12 +124,12 @@ export function* removeThread(
     yield put(
       TextileEventsActions.newErrorMessage('removeThread', error.message)
     )
-    yield put(PhotoViewingActions.removeThreadError(error))
+    yield put(GroupsActions.removeThreadError(error))
   }
 }
 
 export function* refreshThreads(
-  action: ActionType<typeof PhotoViewingActions.refreshThreadsRequest>
+  action: ActionType<typeof GroupsActions.refreshThreadsRequest>
 ) {
   try {
     const threadsResult: IThreadList = yield call(Textile.threads.list)
@@ -143,20 +143,20 @@ export function* refreshThreads(
       if (useIt) {
         const valid = thread.headBlocks.length > 0
         const withValid = { ...thread, valid }
-        yield put(PhotoViewingActions.insertThread(withValid))
-        yield put(PhotoViewingActions.refreshThreadRequest(thread.id))
+        yield put(GroupsActions.insertThread(withValid))
+        yield put(GroupsActions.refreshThreadRequest(thread.id))
       }
     }
   } catch (error) {
     yield put(
       TextileEventsActions.newErrorMessage('refreshThreads', error.message)
     )
-    yield put(PhotoViewingActions.refreshThreadsError(error))
+    yield put(GroupsActions.refreshThreadsError(error))
   }
 }
 
 export function* refreshThread(
-  action: ActionType<typeof PhotoViewingActions.refreshThreadRequest>
+  action: ActionType<typeof GroupsActions.refreshThreadRequest>
 ) {
   const { threadId } = action.payload
   try {
@@ -166,11 +166,9 @@ export function* refreshThread(
       '',
       -1
     )
-    yield put(
-      PhotoViewingActions.refreshThreadSuccess(threadId, photosResult.items)
-    )
+    yield put(GroupsActions.refreshThreadSuccess(threadId, photosResult.items))
   } catch (error) {
-    yield put(PhotoViewingActions.refreshThreadError(threadId, error))
+    yield put(GroupsActions.refreshThreadError(threadId, error))
   }
 }
 
@@ -178,14 +176,14 @@ export function* addPhotoComment(
   action: ActionType<typeof PhotoViewingActions.addCommentRequest>
 ) {
   const result: {
-    photo: IFiles | undefined
+    photo: string | undefined
     comment: string | undefined
   } = yield select(photoAndComment)
   if (!result.photo || !result.comment) {
     return
   }
   try {
-    yield call(Textile.comments.add, result.photo.block, result.comment)
+    yield call(Textile.comments.add, result.photo, result.comment)
     yield put(PhotoViewingActions.addCommentSuccess())
   } catch (error) {
     yield put(
