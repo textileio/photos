@@ -191,11 +191,10 @@ dependencies {
     implementation project(':react-native-image-picker')
     implementation project(':react-native-config')
     implementation "com.google.android.gms:play-services-base:16.1.0"
-    implementation 'com.google.firebase:firebase-core:16.0.0'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
-        transitive = true;
-    }
-    implementation project(':react-native-fabric')
+    implementation "com.google.firebase:firebase-core:16.0.9"
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.9@aar') {
+    	transitive = true
+  	}
     implementation project(':react-native-background-timer')
     implementation project(':react-native-version-number')
     implementation project(':react-native-gesture-handler')

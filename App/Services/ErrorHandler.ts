@@ -1,6 +1,6 @@
 import { Platform } from 'react-native'
 import StackTrace from 'stacktrace-js'
-import { Crashlytics } from 'react-native-fabric'
+import Firebase from 'react-native-firebase'
 
 const originalHandler = ErrorUtils.getGlobalHandler()
 
@@ -32,7 +32,8 @@ export function errorHandler(error: any, isFatal?: boolean) {
       fileName: `${row.fileName}:${row.lineNumber || 0}:${row.columnNumber ||
         0}`
     }))
-    Crashlytics.recordCustomExceptionName(e.message, e.message, updatedFrames)
+    Firebase.crashlytics().recordError(0, e.message)
+    // Crashlytics.recordCustomExceptionName(e.message, e.message, updatedFrames)
   })
   if (originalHandler) {
     if (Platform.OS === 'ios') {
