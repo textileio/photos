@@ -166,7 +166,7 @@ jobs:
     working_directory: ~/textile-mobile
     docker:
       - image: circleci/android:api-28-node8-alpha
-    resource_class: xlarge
+    resource_class: large
     steps:
       - restore_cache: # If any cache exists, it'll way speedup these checkouts
           keys:
