@@ -166,7 +166,7 @@ jobs:
     working_directory: ~/textile-mobile
     docker:
       - image: circleci/android:api-28-node8-alpha
-    resource_class: large
+    resource_class: xlarge
     steps:
       - restore_cache: # If any cache exists, it'll way speedup these checkouts
           keys:
@@ -224,6 +224,8 @@ jobs:
       - run:
           command: bundle exec fastlane adhoc
           working_directory: android
+          environment:
+            GRADLE_OPTS: -Xmx6g
 
       - store_artifacts:
           path: ./android/sourcemap.js
