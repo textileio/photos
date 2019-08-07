@@ -13,6 +13,9 @@ buildscript {
     repositories {
         google()
         jcenter()
+		maven {
+           url 'https://maven.fabric.io/public'
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
@@ -22,6 +25,7 @@ buildscript {
 
         // per Firebase docs, this goes here
         classpath 'com.google.gms:google-services:4.2.0'
+		classpath 'io.fabric.tools:gradle:1.28.1'
     }
 }
 

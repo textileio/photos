@@ -36,7 +36,6 @@
 		93C00531216BB281007786A5 /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C0052B216BB273007786A5 /* libReactNativeConfig.a */; };
 		93C00534216BB8F2007786A5 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C00532216BB8F2007786A5 /* Crashlytics.framework */; };
 		93C00535216BB8F2007786A5 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C00533216BB8F2007786A5 /* Fabric.framework */; };
-		93C00540216BD9B6007786A5 /* libSMXCrashlytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C0053D216BD99A007786A5 /* libSMXCrashlytics.a */; };
 		93C005D7216C15F7007786A5 /* libRNBackgroundTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C005CE216C15E9007786A5 /* libRNBackgroundTimer.a */; };
 		93C005F1216C2034007786A5 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93C005E2216C2033007786A5 /* Octicons.ttf */; };
 		93C005F2216C2034007786A5 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93C005E3216C2033007786A5 /* Zocial.ttf */; };
@@ -386,20 +385,6 @@
 			remoteGlobalIDString = EB2648DF1C7BE17A00B8F155;
 			remoteInfo = ReactNativeConfig;
 		};
-		93C0053C216BD99A007786A5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 93C00537216BD99A007786A5 /* SMXCrashlytics.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D8D9DB831C6D03DB009FBC0E;
-			remoteInfo = SMXCrashlytics;
-		};
-		93C0053E216BD99A007786A5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 93C00537216BD99A007786A5 /* SMXCrashlytics.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 6463C84C1EBA12A60095B8CD;
-			remoteInfo = "SMXCrashlytics-tvOS";
-		};
 		93C005CD216C15E9007786A5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 93C0059F216C15E9007786A5 /* RNBackgroundTimer.xcodeproj */;
@@ -508,7 +493,6 @@
 		93C004FF216BB273007786A5 /* ReactNativeConfig.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeConfig.xcodeproj; path = "../node_modules/react-native-config/ios/ReactNativeConfig.xcodeproj"; sourceTree = "<group>"; };
 		93C00532216BB8F2007786A5 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		93C00533216BB8F2007786A5 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
-		93C00537216BD99A007786A5 /* SMXCrashlytics.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SMXCrashlytics.xcodeproj; path = "../node_modules/react-native-fabric/ios/SMXCrashlytics.xcodeproj"; sourceTree = "<group>"; };
 		93C0059F216C15E9007786A5 /* RNBackgroundTimer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundTimer.xcodeproj; path = "../node_modules/react-native-background-timer/ios/RNBackgroundTimer.xcodeproj"; sourceTree = "<group>"; };
 		93C005E2216C2033007786A5 /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Octicons.ttf; path = "../../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		93C005E3216C2033007786A5 /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Zocial.ttf; path = "../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
@@ -560,7 +544,6 @@
 				93C00620216D3334007786A5 /* libRCTCameraRoll.a in Frameworks */,
 				93C00609216C3873007786A5 /* libRNVersionNumber.a in Frameworks */,
 				93C005D7216C15F7007786A5 /* libRNBackgroundTimer.a in Frameworks */,
-				93C00540216BD9B6007786A5 /* libSMXCrashlytics.a in Frameworks */,
 				93C00531216BB281007786A5 /* libReactNativeConfig.a in Frameworks */,
 				93C004A9216BAD16007786A5 /* libRNImagePicker.a in Frameworks */,
 				93C004A2216B2680007786A5 /* libRNFS.a in Frameworks */,
@@ -737,7 +720,6 @@
 				93C0061A216D325C007786A5 /* RCTCameraRoll.xcodeproj */,
 				93C00600216C385D007786A5 /* RNVersionNumber.xcodeproj */,
 				93C0059F216C15E9007786A5 /* RNBackgroundTimer.xcodeproj */,
-				93C00537216BD99A007786A5 /* SMXCrashlytics.xcodeproj */,
 				93C004FF216BB273007786A5 /* ReactNativeConfig.xcodeproj */,
 				93C004A3216BAD0C007786A5 /* RNImagePicker.xcodeproj */,
 				93C00499216B2666007786A5 /* RNFS.xcodeproj */,
@@ -850,15 +832,6 @@
 			children = (
 				93C0052B216BB273007786A5 /* libReactNativeConfig.a */,
 				A27552BD21F28BEC00C603F5 /* libReactNativeConfig-tvOS.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		93C00538216BD99A007786A5 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				93C0053D216BD99A007786A5 /* libSMXCrashlytics.a */,
-				93C0053F216BD99A007786A5 /* libSMXCrashlytics.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1138,10 +1111,6 @@
 				{
 					ProductGroup = 93C00601216C385D007786A5 /* Products */;
 					ProjectRef = 93C00600216C385D007786A5 /* RNVersionNumber.xcodeproj */;
-				},
-				{
-					ProductGroup = 93C00538216BD99A007786A5 /* Products */;
-					ProjectRef = 93C00537216BD99A007786A5 /* SMXCrashlytics.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -1466,20 +1435,6 @@
 			fileType = archive.ar;
 			path = libReactNativeConfig.a;
 			remoteRef = 93C0052A216BB273007786A5 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		93C0053D216BD99A007786A5 /* libSMXCrashlytics.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libSMXCrashlytics.a;
-			remoteRef = 93C0053C216BD99A007786A5 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		93C0053F216BD99A007786A5 /* libSMXCrashlytics.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libSMXCrashlytics.a;
-			remoteRef = 93C0053E216BD99A007786A5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		93C005CE216C15E9007786A5 /* libRNBackgroundTimer.a */ = {
