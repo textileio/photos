@@ -101,7 +101,7 @@ class Component extends React.Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <View style={{ flex: 1, zIndex: 10 }}>
+        <View style={{ flex: 1, zIndex: 1000 }}>
           <ContactSelect
             /* tslint:disable-next-line jsx-no-bind */
             displayQRCode={this._displayThreadQRCode.bind(this)}
