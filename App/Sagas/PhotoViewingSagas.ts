@@ -25,6 +25,7 @@ import Textile, {
 } from '@textile/react-native-sdk'
 import NavigationService from '../Services/NavigationService'
 import { shareWalletImage } from './ImageSharingSagas'
+import { displayLeaveAlert } from '../Services/Notifications';
 
 export function* monitorNewThreadActions() {
   while (true) {
@@ -116,9 +117,17 @@ export function* removeThread(
 ) {
   const { id } = action.payload
   try {
+    yield call(displayLeaveAlert)
+  } catch (error) {
+    // pass, user cancelled
+    return
+  }
+
+  try {
     yield call(Textile.threads.remove, id)
     yield call(NavigationService.navigate, 'Groups')
   } catch (error) {
+    console.log(error.message)
     yield put(
       TextileEventsActions.newErrorMessage('removeThread', error.message)
     )
