@@ -109,14 +109,12 @@ export function* handleEngagement(
   }
 }
 
-function *requestAndNavigateTo(threadId: string, photoBlock?: string) {
+function* requestAndNavigateTo(threadId: string, photoBlock?: string) {
   // Cache our thread data in redux
-  yield put(
-    groupActions.feed.loadFeedItems.request({ id: threadId })
-  )
+  yield put(groupActions.feed.loadFeedItems.request({ id: threadId }))
   // Select the thread
   yield put(PhotoViewingActions.viewThread(threadId))
-  
+
   if (photoBlock) {
     // if photo supplied, select and navigate to it
     yield put(PhotoViewingActions.viewPhoto(photoBlock))

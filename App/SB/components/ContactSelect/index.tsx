@@ -149,9 +149,7 @@ export class ContactSelectComponent extends React.Component<
   renderFooter = () => {
     // Provides a quick fix until this layout is replaces.
     // Without it the bottom two rows are sometimes not selectable.
-    return (
-      <View style={{...styles.contactItem, minHeight: 120}}/>
-    )
+    return <View style={{ ...styles.contactItem, minHeight: 120 }} />
   }
 
   renderRow = (contact: ListRenderItemInfo<IncludedContact>) => {
