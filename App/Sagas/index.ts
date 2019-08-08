@@ -102,23 +102,9 @@ function* waitForRehydrate() {
   }
 }
 
-function* logFirebase(event: string) {
-  yield call([Firebase.analytics(), 'logEvent'], event)
-}
-
-function* subscribeActions() {
-  while (true) {
-    const action: RootAction = yield take('*')
-    if (action.type === getType(TextileEventsActions.nodeStarted)) {
-      yield fork(logFirebase, 'tex_node_started')
-    }
-  }
-}
-
 export default function*() {
   yield call(waitForRehydrate)
   yield all([
-    call(subscribeActions),
     call(accountSaga),
     call(contactsSaga),
     call(groupSaga),
