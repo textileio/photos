@@ -284,6 +284,8 @@ jobs:
       - run:
           command: bundle exec fastlane release
           working_directory: android
+          environment:
+            GRADLE_OPTS: -Xmx6g
 
       - store_artifacts:
           path: ./android/sourcemap.js
