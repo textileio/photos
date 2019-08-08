@@ -109,6 +109,24 @@ export function* handleEngagement(
   }
 }
 
+function *requestAndNavigateTo(threadId: string, photoBlock?: string) {
+  // Cache our thread data in redux
+  yield put(
+    groupActions.feed.loadFeedItems.request({ id: threadId })
+  )
+  // Select the thread
+  yield put(PhotoViewingActions.viewThread(threadId))
+  
+  if (photoBlock) {
+    // if photo supplied, select and navigate to it
+    yield put(PhotoViewingActions.viewPhoto(photoBlock))
+    yield call(NavigationService.navigate, 'PhotoScreen')
+  } else {
+    // if no photo, navigate to the thread only
+    yield call(NavigationService.navigate, 'ViewThread', { threadId })
+  }
+}
+
 export function* notificationView(
   action: ActionType<typeof NotificationsActions.notificationSuccess>
 ) {
@@ -124,12 +142,7 @@ export function* notificationView(
           notification.threadId
         )
         if (threadData) {
-          yield put(
-            groupActions.feed.loadFeedItems.request({ id: threadData.id })
-          )
-          yield put(PhotoViewingActions.viewThread(threadData.id))
-          yield put(PhotoViewingActions.viewPhoto(notification.target))
-          yield call(NavigationService.navigate, 'PhotoScreen')
+          yield call(requestAndNavigateTo, threadData.id, notification.target)
         }
         break
       }
@@ -140,12 +153,7 @@ export function* notificationView(
           notification.threadId
         )
         if (threadData) {
-          yield put(
-            groupActions.feed.loadFeedItems.request({ id: threadData.id })
-          )
-          yield put(PhotoViewingActions.viewThread(threadData.id))
-          yield put(PhotoViewingActions.viewPhoto(notification.block))
-          yield call(NavigationService.navigate, 'PhotoScreen')
+          yield call(requestAndNavigateTo, threadData.id, notification.block)
         }
         break
       }
@@ -157,13 +165,7 @@ export function* notificationView(
           notification.threadId
         )
         if (threadData) {
-          yield put(
-            groupActions.feed.loadFeedItems.request({ id: threadData.id })
-          )
-          yield put(PhotoViewingActions.viewThread(threadData.id))
-          yield call(NavigationService.navigate, 'ViewThread', {
-            threadId: threadData.id
-          })
+          yield call(requestAndNavigateTo, threadData.id)
         }
         break
       }
