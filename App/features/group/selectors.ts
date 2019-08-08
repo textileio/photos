@@ -46,7 +46,7 @@ export const groupPhoto = (
           return undefined
       }
     })
-    .find(item => item && item.block === block || false)
+    .find(item => (item && item.block === block) || false)
 }
 
 export { feedSelectors, addPhotoSelectors, fileSyncSelectors }

@@ -19,13 +19,13 @@ class AlertRow extends React.PureComponent<AlertRowProps> {
     const dateText = 'now'
 
     const readStyle: ViewStyle = {
-          width: 29,
-          height: 29,
-          borderRadius: 16,
-          borderWidth: 0,
-          borderColor: 'rgba(255, 28, 63, 0.2)',
-          backgroundColor: 'rgba(255, 28, 63, 0.2)'
-        }
+      width: 29,
+      height: 29,
+      borderRadius: 16,
+      borderWidth: 0,
+      borderColor: 'rgba(255, 28, 63, 0.2)',
+      backgroundColor: 'rgba(255, 28, 63, 0.2)'
+    }
 
     return (
       <TouchableOpacity
@@ -42,18 +42,14 @@ class AlertRow extends React.PureComponent<AlertRowProps> {
                 alignItems: 'center',
                 alignContent: 'center'
               }}
-            >
-            </View>
+            />
           </View>
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.text}>{message}</Text>
-          <Text style={[styles.timestamp, styles.unread]}>
-            {dateText}
-          </Text>
+          <Text style={[styles.timestamp, styles.unread]}>{dateText}</Text>
         </View>
-        <View style={{ width: 40, height: 40, overflow: 'hidden' }}>
-        </View>
+        <View style={{ width: 40, height: 40, overflow: 'hidden' }} />
       </TouchableOpacity>
     )
   }

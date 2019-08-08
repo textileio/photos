@@ -183,12 +183,7 @@ class Notifications extends React.Component<Props, State> {
       return
     }
 
-    return (
-      <AlertRow
-        message={this.props.alert}
-        onClick={this.registerCafe}
-      />
-    )
+    return <AlertRow message={this.props.alert} onClick={this.registerCafe} />
   }
   _renderItems() {
     return (
@@ -211,7 +206,9 @@ class Notifications extends React.Component<Props, State> {
     // the initial refresh has completed and returned 0 results. This is to avoid the art
     // flickering for a second and then disappearing, which is ugly.
     const showNotifications =
-      this.state.focusRefreshInProgress || this.props.notifications.length > 0 || this.props.alert
+      this.state.focusRefreshInProgress ||
+      this.props.notifications.length > 0 ||
+      this.props.alert
     return (
       <View style={styles.container}>
         {!showNotifications && this._renderOnboarding()}
@@ -233,7 +230,10 @@ const mapStateToProps = (state: RootState): StateProps => {
   const showOnboarding = state.preferences.tourScreens.feed === true
   const refreshing = state.notifications.refreshing
 
-  const alert = Object.keys(state.cafes.cafes).length > 0 ? undefined : 'Improve app performance by choosing an account cafe now.'
+  const alert =
+    Object.keys(state.cafes.cafes).length > 0
+      ? undefined
+      : 'Improve app performance by choosing an account cafe now.'
 
   return {
     alert,

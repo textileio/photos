@@ -135,11 +135,17 @@ export function reducer(
   switch (action.type) {
     case getType(actions.updateSharingPhotoImage): {
       const { image } = action.payload
-      return { ...state, sharingPhoto: { ...state.sharingPhoto, image } }
+      return {
+        ...state,
+        sharingPhoto: { ...state.sharingPhoto, image, files: undefined }
+      }
     }
     case getType(actions.updateSharingPhotoFiles): {
       const { files } = action.payload
-      return { ...state, sharingPhoto: { ...state.sharingPhoto, files } }
+      return {
+        ...state,
+        sharingPhoto: { ...state.sharingPhoto, files, image: undefined }
+      }
     }
     case getType(actions.updateSharingPhotoThread): {
       const { threadId } = action.payload

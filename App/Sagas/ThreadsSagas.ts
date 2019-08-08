@@ -88,7 +88,7 @@ export function* presentShareInterface(
 export function* acceptInvite(
   action: ActionType<typeof ThreadsActions.acceptInviteRequest>
 ) {
-  const { notificationId, threadName } = action.payload
+  const { notificationId, threadName, goBack } = action.payload
   try {
     // don't wait for the join event here...
     yield call(waitUntilOnline, 5000)
@@ -99,7 +99,9 @@ export function* acceptInvite(
     yield put(ThreadsActions.acceptInviteScanning(notificationId))
     // Refresh in case the head is available
     yield put(GroupsActions.refreshThreadsRequest())
-    yield call(NavigationService.navigate, 'Groups')
+    if (goBack) {
+      yield call(NavigationService.navigate, 'Groups')
+    }
   } catch (error) {
     yield put(ThreadsActions.acceptInviteError(notificationId, error))
   }

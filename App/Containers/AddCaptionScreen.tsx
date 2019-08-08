@@ -50,6 +50,9 @@ class AddCaptionScreen extends React.Component<Props> {
 
   static navigationOptions = ({ navigation }: NavigationScreenProps) => {
     const params = navigation.state.params || {}
+    // I can't explain why yet, but the two callbacks remain null for 500ms after page loads
+    // if you click and these are null, nothing happens.
+    const unavailable = !params.shareToNewThread
     return {
       headerTitle: 'Share Photo',
       headerLeft: (
@@ -70,11 +73,11 @@ class AddCaptionScreen extends React.Component<Props> {
       headerRight: (
         <TextileHeaderButtons>
           <Item
-            color={params.disableShare ? '#99c0ef' : 'blue'}
+            color={unavailable || params.disableShare ? '#99c0ef' : 'blue'}
             title="Share"
             /* tslint:disable-next-line */
             onPress={() => {
-              if (params.disableShare) {
+              if (unavailable || params.disableShare) {
                 return
               }
               if (params.withPhoto && params.withThreadName) {
@@ -99,7 +102,7 @@ class AddCaptionScreen extends React.Component<Props> {
     this.props.updateComment(text)
   }
 
-  componentWillMount() {
+  componentDidMount() {
     // TODO: Investigate why share would ever be null? https://github.com/textileio/textile-mobile/issues/888
     this.props.navigation.setParams({
       disableShare:

@@ -141,8 +141,8 @@ function* migrateUSW() {
       const repl = '12D3KooWSdGmRz5JQidqrtmiPGVHkStXpbSAMnbCcW8abq6zuiDP'
 
       const list: ICafeSessionList = yield call(Textile.cafes.sessions)
-      const peerIDs = list.items.map((session) => session.cafe.peer)
-    
+      const peerIDs = list.items.map(session => session.cafe.peer)
+
       if (peerIDs.indexOf(usw) > -1) {
         // Use the existing route to deregister the usw cafe
         yield put(actions.deregisterCafe.request({ peerId: usw }))
