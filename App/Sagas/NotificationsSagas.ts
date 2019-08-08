@@ -136,23 +136,25 @@ export function* notificationView(
   try {
     yield call(Textile.notifications.read, notification.id)
     switch (notification.type) {
+      case Notification.Type.LIKE_ADDED:
       case Notification.Type.COMMENT_ADDED: {
         const threadData: ThreadData | undefined = yield select(
           threadDataByThreadId,
           notification.threadId
         )
         if (threadData) {
+          // notification.target of a COMMENT_ADDED / LIKE_ADDED is the photo block, so where we want to navigate
           yield call(requestAndNavigateTo, threadData.id, notification.target)
         }
         break
       }
-      case Notification.Type.LIKE_ADDED:
       case Notification.Type.FILES_ADDED: {
         const threadData: ThreadData | undefined = yield select(
           threadDataByThreadId,
           notification.threadId
         )
         if (threadData) {
+          // notification.block of a FILES_ADDED is the photo block, so where we want to navigate
           yield call(requestAndNavigateTo, threadData.id, notification.block)
         }
         break
