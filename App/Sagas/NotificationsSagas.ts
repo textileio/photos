@@ -9,6 +9,7 @@ import Textile, {
 } from '@textile/react-native-sdk'
 import NavigationService from '../Services/NavigationService'
 
+import { groupActions } from '../features/group'
 import ThreadsActions from '../Redux/ThreadsRedux'
 import GroupsActions, { ThreadData } from '../Redux/GroupsRedux'
 import { threadDataByThreadId, allThreadIds } from '../Redux/GroupsSelectors'
@@ -123,6 +124,9 @@ export function* notificationView(
           notification.threadId
         )
         if (threadData) {
+          yield put(
+            groupActions.feed.loadFeedItems.request({ id: threadData.id })
+          )
           yield put(PhotoViewingActions.viewThread(threadData.id))
           yield put(PhotoViewingActions.viewPhoto(notification.target))
           yield call(NavigationService.navigate, 'PhotoScreen')
@@ -136,8 +140,11 @@ export function* notificationView(
           notification.threadId
         )
         if (threadData) {
+          yield put(
+            groupActions.feed.loadFeedItems.request({ id: threadData.id })
+          )
           yield put(PhotoViewingActions.viewThread(threadData.id))
-          yield put(PhotoViewingActions.viewPhoto(notification.target))
+          yield put(PhotoViewingActions.viewPhoto(notification.block))
           yield call(NavigationService.navigate, 'PhotoScreen')
         }
         break
@@ -150,6 +157,9 @@ export function* notificationView(
           notification.threadId
         )
         if (threadData) {
+          yield put(
+            groupActions.feed.loadFeedItems.request({ id: threadData.id })
+          )
           yield put(PhotoViewingActions.viewThread(threadData.id))
           yield call(NavigationService.navigate, 'ViewThread', {
             threadId: threadData.id

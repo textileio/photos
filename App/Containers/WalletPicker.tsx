@@ -30,13 +30,13 @@ class TextileWalletPicker extends React.PureComponent<Props> {
     const showImagePicker = navigation.getParam('showImagePicker')
 
     const cameraRoll = () => {
-      if (!showImagePicker) { 
+      if (!showImagePicker) {
         return
       }
       showImagePicker('camera-roll')
     }
     const camera = () => {
-      if (!showImagePicker) { 
+      if (!showImagePicker) {
         return
       }
       showImagePicker('camera')

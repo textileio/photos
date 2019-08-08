@@ -149,6 +149,8 @@ const mapStateToProps = (state: RootState): StateProps => {
     threadName = threadData ? threadData.name : undefined
   }
   const photoId = state.photoViewing.viewingPhoto
+  console.log(threadId, photoId)
+  console.log(state.group)
   const photo =
     threadId && photoId ? groupPhoto(state.group, threadId, photoId) : undefined
   const selfAddress = accountSelectors.getAddress(state.account) || ''
