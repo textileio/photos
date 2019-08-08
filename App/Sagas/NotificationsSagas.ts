@@ -224,7 +224,8 @@ export function* reviewThreadInvite(
     yield put(
       ThreadsActions.acceptInviteRequest(
         notification.id,
-        notification.threadName
+        notification.threadName,
+        false
       )
     )
   } catch (error) {

@@ -279,7 +279,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
       )
     },
     retryInternal: (inviteId: string, threadName?: string) => {
-      dispatch(ThreadsActions.acceptInviteRequest(inviteId, threadName))
+      dispatch(ThreadsActions.acceptInviteRequest(inviteId, threadName, true))
     },
     dismiss: (inviteId: string) => {
       dispatch(ThreadsActions.acceptInviteDismiss(inviteId))

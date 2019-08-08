@@ -71,8 +71,8 @@ const actions = {
   acceptInviteRequest: createAction(
     'ACCEPT_THREAD_NOTIFICATION_INVITE',
     resolve => {
-      return (notificationId: string, threadName?: string) =>
-        resolve({ notificationId, threadName })
+      return (notificationId: string, threadName?: string, goBack?: boolean) =>
+        resolve({ notificationId, threadName, goBack })
     }
   ),
   addInternalInvitesRequest: createAction(

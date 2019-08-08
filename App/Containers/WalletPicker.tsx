@@ -30,9 +30,15 @@ class TextileWalletPicker extends React.PureComponent<Props> {
     const showImagePicker = navigation.getParam('showImagePicker')
 
     const cameraRoll = () => {
+      if (!showImagePicker) { 
+        return
+      }
       showImagePicker('camera-roll')
     }
     const camera = () => {
+      if (!showImagePicker) { 
+        return
+      }
       showImagePicker('camera')
     }
     const onPress = () => {
@@ -46,12 +52,32 @@ class TextileWalletPicker extends React.PureComponent<Props> {
       </TextileHeaderButtons>
     )
     const headerTitle = 'Recent Photos'
+
+    /**
+     * Android note.
+     * I can't explain why yet, but the two callbacks remain null for 500ms after page loads.
+     * So now if you click them early nothing will happen (also grey'd out)
+     * This is related to changing the launchMode="singleInstance" to
+     * launchMode="singleTop"
+     */
+    const imagePickerProps = !showImagePicker ? { color: '#a9a9a9' } : {}
     const headerRight = (
       <TextileHeaderButtons>
-        <Item title="camera" iconName="camera-create" onPress={camera} />
-        <Item title="camera roll" iconName="image" onPress={cameraRoll} />
+        <Item
+          title="camera"
+          iconName="camera-create"
+          onPress={camera}
+          {...imagePickerProps}
+        />
+        <Item
+          title="camera roll"
+          iconName="image"
+          onPress={cameraRoll}
+          {...imagePickerProps}
+        />
       </TextileHeaderButtons>
     )
+
     return {
       headerTitle,
       headerLeft,
