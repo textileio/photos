@@ -35,6 +35,7 @@ import {
   showImagePicker,
   showWalletPicker,
   walletPickerSuccess,
+  initShareRequest,
   handleSharePhotoRequest,
   handleCancel
 } from './ImageSharingSagas'
@@ -180,6 +181,7 @@ export default function*() {
     takeEvery(getType(UIActions.showImagePicker), showImagePicker),
     takeEvery(getType(UIActions.showWalletPicker), showWalletPicker),
     takeEvery(getType(UIActions.walletPickerSuccess), walletPickerSuccess),
+    takeEvery(getType(UIActions.initShareRequest), initShareRequest),
     takeEvery(getType(UIActions.sharePhotoRequest), handleSharePhotoRequest),
     takeEvery(getType(UIActions.cancelSharingPhoto), handleCancel),
 

@@ -14,7 +14,12 @@ import { NavigationScreenProps, SafeAreaView } from 'react-navigation'
 import uuid from 'uuid/v4'
 import ActionSheet from 'react-native-actionsheet'
 import Toast from 'react-native-easy-toast'
-import Textile, { IUser, Thread, FeedItemType } from '@textile/react-native-sdk'
+import Textile, {
+  IFiles,
+  IUser,
+  Thread,
+  FeedItemType
+} from '@textile/react-native-sdk'
 import moment from 'moment'
 
 import {
@@ -38,6 +43,7 @@ import { CommentData } from '../../Components/comments'
 import { color } from '../../styles'
 import { accountSelectors } from '../../features/account'
 import RenameGroupModal from '../../Containers/RenameGroupModal'
+import { SharedImage } from '../../features/group/add-photo/models'
 
 const momentSpec: moment.CalendarSpec = {
   sameDay: 'LT',
@@ -51,6 +57,7 @@ const momentSpec: moment.CalendarSpec = {
 const screenWidth = Dimensions.get('screen').width
 
 interface StateProps {
+  threadId: string
   items: ReadonlyArray<Item>
   groupName: string
   initiator: string
@@ -59,12 +66,16 @@ interface StateProps {
   canInvite: boolean
   liking: ReadonlyArray<string>
   removing: ReadonlyArray<string>
+  sharingImage?: SharedImage
+  sharingFiles?: IFiles
 }
 
 interface DispatchProps {
   refresh: () => void
   sendMessage: (message: string) => void
   showWalletPicker: () => void
+  cancelSharingPhoto: () => void
+  sharePhoto: (threadId: string, comment?: string) => void
   addPhotoLike: (block: string) => void
   navigateToComments: (photoId: string) => void
   leaveThread: () => void
@@ -190,7 +201,9 @@ class Group extends React.PureComponent<Props, State> {
           <AuthoringInput
             containerStyle={{}}
             onSendMessage={this.submit}
-            onSharePhoto={this.props.showWalletPicker}
+            onSharePhoto={this.onSharePhoto}
+            sharingFiles={this.props.sharingFiles}
+            sharingImage={this.props.sharingImage}
           />
           <InviteContactModal
             isVisible={this.state.showInviteContactModal}
@@ -405,7 +418,22 @@ class Group extends React.PureComponent<Props, State> {
     }
   }
 
-  submit = (message: string) => this.props.sendMessage(message)
+  onSharePhoto = () => {
+    if (this.props.sharingFiles || this.props.sharingImage) {
+      // If a user re-clicks their added photo, it will remove the photo
+      this.props.cancelSharingPhoto()
+    } else {
+      this.props.showWalletPicker()
+    }
+  }
+  submit = (message?: string) => {
+    if (this.props.sharingImage || this.props.sharingFiles) {
+      this.props.sharePhoto(this.props.threadId, message)
+    } else if (message !== undefined) {
+      // Just a normal message
+      this.props.sendMessage(message)
+    }
+  }
 
   onFocus = () => {
     this.props.refresh()
@@ -542,7 +570,17 @@ const mapStateToProps = (
   const removing = Object.keys(state.group.ignore).filter(key => {
     return state.group.ignore[key] !== {}
   })
+
+  let sharingImage
+  let sharingFiles
+  const { sharingPhoto } = state.ui
+  if (sharingPhoto && sharingPhoto.threadId === threadId) {
+    sharingImage = sharingPhoto.image
+    sharingFiles = sharingPhoto.files
+  }
+
   return {
+    threadId,
     items,
     groupName,
     initiator,
@@ -550,7 +588,9 @@ const mapStateToProps = (
     renaming,
     canInvite,
     liking,
-    removing
+    removing,
+    sharingImage,
+    sharingFiles
   }
 }
 
@@ -573,6 +613,19 @@ const mapDispatchToProps = (
     // TODO: look at just doing direct navigation for this
     showWalletPicker: () => {
       dispatch(UIActions.showWalletPicker(threadId))
+    },
+    cancelSharingPhoto: () => {
+      dispatch(UIActions.cancelSharingPhoto())
+    },
+    sharePhoto: (threadId: string, comment?: string) => {
+      dispatch(UIActions.initShareRequest(threadId, comment))
+      // if (image) {
+      //   dispatch(
+      //     groupActions.addPhoto.sharePhotoRequest(image, threadId, comment)
+      //   )
+      // } else if (files) {
+      //   dispatch(UIActions.sharePhotoRequest(files.data, threadId, comment))
+      // }
     },
     addPhotoLike: (block: string) =>
       dispatch(UIActions.addLike.request({ blockId: block })),

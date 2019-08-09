@@ -5,15 +5,19 @@ import {
   ViewStyle,
   TextStyle,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  Image,
+  ImageStyle
 } from 'react-native'
 import Icon from '@textile/react-native-icon'
 
 import Button from './SmallButton'
 import { color, textStyle, spacing } from '../styles'
+import { SharedImage } from '../features/group/add-photo/models'
+import { IFiles } from '@textile/react-native-sdk'
+import TextileImage from './TextileImage'
 
 const CONTAINER: ViewStyle = {
-  justifyContent: 'space-between',
   borderStyle: 'solid',
   borderTopWidth: Dimensions.get('screen').scale > 1 ? 0.5 : 1,
   borderColor: color.grey_5,
@@ -39,9 +43,26 @@ const BUTTON_TEXT: TextStyle = {
   color: color.grey_7
 }
 
+const IMAGE_WRAPPER: ViewStyle = {
+  ...ITEM,
+  alignContent: 'flex-end',
+  justifyContent: 'flex-end',
+  width: 40,
+  height: 40
+}
+
+const IMAGE: ImageStyle = {
+  resizeMode: 'cover',
+  width: 40,
+  height: 40,
+  borderRadius: 6
+}
+
 interface Props {
   containerStyle?: ViewStyle
   value?: string
+  sharingImage?: SharedImage
+  sharingFiles?: IFiles
   onMessageUpdate?: (text: string) => void
   onSendMessage?: (text: string) => void
   onSharePhoto?: () => void
@@ -49,6 +70,7 @@ interface Props {
 
 interface State {
   textValue?: string
+  sharing: boolean
   disabled: boolean
 }
 
@@ -57,8 +79,73 @@ class AuthoringInput extends Component<Props, State> {
     super(props)
     this.state = {
       textValue: props.value,
-      disabled: (props.value || '').length < 1
+      sharing:
+        props.sharingFiles !== undefined || props.sharingImage !== undefined,
+      disabled:
+        props.sharingFiles === undefined &&
+        props.sharingImage === undefined &&
+        (props.value || '').length < 1
     }
+  }
+
+  isSubmitDisabled = (text?: string) => {
+    return (
+      this.props.sharingFiles === undefined &&
+      this.props.sharingImage === undefined &&
+      (text || '').length < 1
+    )
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    // If an image has been selected, we want to enable the send button
+    if (
+      prevProps.sharingFiles !== this.props.sharingFiles ||
+      prevProps.sharingImage !== this.props.sharingImage
+    ) {
+      this.setState({
+        sharing:
+          this.props.sharingFiles !== undefined ||
+          this.props.sharingImage !== undefined,
+        disabled: this.isSubmitDisabled(this.state.textValue)
+      })
+    }
+  }
+
+  imageThumbnail() {
+    const { sharingImage, sharingFiles } = this.props
+    if (sharingImage) {
+      const sourceUri =
+        sharingImage.origURL && sharingImage.origURL !== ''
+          ? sharingImage.origURL
+          : sharingImage.uri
+      return (
+        <View style={IMAGE_WRAPPER}>
+          <Image
+            source={{ uri: sourceUri }}
+            resizeMode={'cover'}
+            style={IMAGE}
+          />
+        </View>
+      )
+    } else if (sharingFiles) {
+      const filesList = sharingFiles.files
+      const fileIndex =
+        filesList && filesList.length > 0 && filesList[0].index
+          ? filesList[0].index
+          : 0
+      return (
+        <View style={IMAGE_WRAPPER}>
+          <TextileImage
+            target={sharingFiles.data}
+            index={fileIndex}
+            forMinWidth={70}
+            resizeMode={'cover'}
+            style={IMAGE}
+          />
+        </View>
+      )
+    }
+    return <Icon name="image" color={color.action_4} size={24} />
   }
 
   render() {
@@ -67,7 +154,9 @@ class AuthoringInput extends Component<Props, State> {
         <TextInput
           style={INPUT}
           multiline={true}
-          placeholder="Write a message..."
+          placeholder={
+            this.state.sharing ? 'Add a message...' : 'Write a message...'
+          }
           placeholderTextColor={color.grey_3}
           onChangeText={this.updateText}
           value={this.state.textValue}
@@ -76,11 +165,12 @@ class AuthoringInput extends Component<Props, State> {
           style={{
             flexDirection: 'row',
             justifyContent: 'flex-end',
-            alignItems: 'center'
+            alignItems: 'flex-end',
+            minHeight: 40
           }}
         >
           <TouchableOpacity style={ITEM} onPress={this.props.onSharePhoto}>
-            <Icon name="image" color={color.grey_4} size={24} />
+            {this.imageThumbnail()}
           </TouchableOpacity>
           <Button
             style={BUTTON}
@@ -97,7 +187,7 @@ class AuthoringInput extends Component<Props, State> {
   updateText = (text: string) => {
     this.setState({
       textValue: text,
-      disabled: text.length < 1
+      disabled: this.isSubmitDisabled(text)
     })
     if (this.props.onMessageUpdate) {
       this.props.onMessageUpdate(text)

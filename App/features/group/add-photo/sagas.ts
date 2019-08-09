@@ -25,6 +25,7 @@ import { createQueue } from './queue'
 import TextileEventsActions, {
   TextileEventsSelectors
 } from '../../../Redux/TextileEventsRedux'
+import { shareFileComplete } from '../../../Redux/UIRedux'
 import PreferencesActions, {
   PreferencesSelectors,
   Service

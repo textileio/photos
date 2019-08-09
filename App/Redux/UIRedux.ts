@@ -33,6 +33,10 @@ const actions = {
       return (comment: string) => resolve({ comment })
     }
   ),
+  initShareRequest: createAction('INIT_SHARE_PHOTO_REQUEST', resolve => {
+    return (threadId: string, comment?: string) =>
+      resolve({ threadId, comment })
+  }),
   sharePhotoRequest: createAction('SHARE_PHOTO_REQUEST', resolve => {
     return (image: string, threadId: string, comment?: string) =>
       resolve({ image, threadId, comment })
