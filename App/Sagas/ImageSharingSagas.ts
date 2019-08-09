@@ -8,6 +8,7 @@ import { SharedImage } from '../features/group/add-photo/models'
 import UIActions, { UISelectors, SharingPhoto } from '../Redux/UIRedux'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
+import { groupActions } from '../features/group'
 import NavigationService from '../Services/NavigationService'
 import * as CameraRoll from '../Services/CameraRoll'
 
@@ -77,14 +78,8 @@ export function* showImagePicker(
       if (threadId) {
         // only set if shared directly to a thread
         yield put(UIActions.updateSharingPhotoThread(threadId))
-        yield call(NavigationService.navigate, 'ThreadSharePhoto', {
-          backTo: 'ViewThread'
-        })
-      } else {
-        yield call(NavigationService.navigate, 'ThreadSharePhoto', {
-          backTo: 'Groups'
-        })
       }
+      yield call(NavigationService.navigate, 'ViewThread')
     } catch (error) {
       yield put(
         UIActions.newImagePickerError(
@@ -103,15 +98,7 @@ export function* walletPickerSuccess(
   yield put(UIActions.updateSharingPhotoFiles(action.payload.photo))
   // indicates if request was made from merged main feed or from a specific thread
   const threadId = yield select(UISelectors.sharingPhotoThread)
-  if (threadId) {
-    yield call(NavigationService.navigate, 'ThreadSharePhoto', {
-      backTo: 'ViewThread'
-    })
-  } else {
-    yield call(NavigationService.navigate, 'ThreadSharePhoto', {
-      backTo: 'Groups'
-    })
-  }
+  yield call(NavigationService.navigate, 'ViewThread')
 }
 
 export function* shareWalletImage(
@@ -132,6 +119,36 @@ export function* shareWalletImage(
       TextileEventsActions.newErrorMessage('shareWalletImage', error.message)
     )
     yield put(UIActions.imageSharingError(error))
+  }
+}
+
+export function* initShareRequest(
+  action: ActionType<typeof UIActions.initShareRequest>
+) {
+  const { threadId, comment } = action.payload
+  const sharingPhoto: SharingPhoto = yield select(UISelectors.sharingPhoto)
+  if (
+    !sharingPhoto ||
+    !sharingPhoto.threadId ||
+    sharingPhoto.threadId !== threadId
+  ) {
+    return
+  }
+  if (sharingPhoto.image) {
+    yield put(
+      groupActions.addPhoto.sharePhotoRequest(
+        sharingPhoto.image,
+        threadId,
+        comment
+      )
+    )
+    // Group doesn't clean up the UI after like the files method below, so do it now.
+    yield put(UIActions.cleanupComplete())
+  }
+  if (sharingPhoto.files) {
+    yield put(
+      UIActions.sharePhotoRequest(sharingPhoto.files.data, threadId, comment)
+    )
   }
 }
 

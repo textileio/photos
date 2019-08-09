@@ -12,7 +12,6 @@ import Group from '../../../../screens/group'
 import PhotoScreen from '../../../../Containers/PhotoScreen'
 import Comments from '../../../../Containers/Comments'
 import LikesScreen from '../../../../Containers/LikesScreen'
-import AddCaptionScreen from '../../../../Containers/AddCaptionScreen'
 import WalletPicker from '../../../../Containers/WalletPicker'
 
 import AcceptInviteScreen from '../../../../Containers/AcceptInviteScreen'
@@ -32,7 +31,6 @@ const nav = createStackNavigator(
     PhotoScreen,
     Comments,
     LikesScreen,
-    ThreadSharePhoto: AddCaptionScreen,
     WalletPicker,
 
     ThreadInvite: AcceptInviteScreen,

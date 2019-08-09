@@ -150,7 +150,7 @@ class Cafe extends Component<Props> {
         this.props.cafe && this.props.cafe.state === 'deregistering'
       deregisterButtonDisabled = !this.props.cafe.error && cafeProcessing
     }
-    
+
     return (
       <SafeAreaView style={Container}>
         <Text style={URL}>{url}</Text>
