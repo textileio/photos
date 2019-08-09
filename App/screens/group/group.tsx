@@ -619,13 +619,6 @@ const mapDispatchToProps = (
     },
     sharePhoto: (threadId: string, comment?: string) => {
       dispatch(UIActions.initShareRequest(threadId, comment))
-      // if (image) {
-      //   dispatch(
-      //     groupActions.addPhoto.sharePhotoRequest(image, threadId, comment)
-      //   )
-      // } else if (files) {
-      //   dispatch(UIActions.sharePhotoRequest(files.data, threadId, comment))
-      // }
     },
     addPhotoLike: (block: string) =>
       dispatch(UIActions.addLike.request({ blockId: block })),
