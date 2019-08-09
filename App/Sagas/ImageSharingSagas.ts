@@ -1,5 +1,5 @@
 import { call, put, select } from 'redux-saga/effects'
-import Textile, { IBlock } from '@textile/react-native-sdk'
+import Textile, { IBlock, IFilesList } from '@textile/react-native-sdk'
 import { ActionType } from 'typesafe-actions'
 import FS from 'react-native-fs'
 
@@ -20,8 +20,12 @@ export function* showWalletPicker(
     // only set if shared directly to a thread
     yield put(UIActions.updateSharingPhotoThread(threadId))
   }
-  const recentPhotos = yield call(Textile.files.list, '', '', 40)
-  yield put(PhotoViewingActions.getRecentPhotosSuccess(recentPhotos.items))
+  const recentPhotos: IFilesList = yield call(Textile.files.list, '', '', 100)
+  // Sharing from the wallet picker depends on shared image schema, not camera roll
+  // this is a temp fix to limit what's shown there.
+  // TODO: Remove this restriction when camera roll sharing is completed
+  const nonCameraRollPhotos = recentPhotos.items.filter((photo) => !!photo.files[0].links.large)
+  yield put(PhotoViewingActions.getRecentPhotosSuccess(nonCameraRollPhotos))
 
   yield call(NavigationService.navigate, 'WalletPicker')
 }
