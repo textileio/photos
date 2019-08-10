@@ -23,7 +23,6 @@ export type GalleryDoubles = GalleryPhoto[]
 interface ScreenProps {
   threadId: string
   photoPairs: GalleryDoubles[]
-  selected?: SharingPhoto
   selectPhoto: (block: string) => void
   showImagePicker: (type: string) => void
 }
@@ -59,10 +58,6 @@ class HorizontalGrid extends React.Component<ScreenProps, State> {
     const callback = () => {
       this.props.selectPhoto(photo.block)
     }
-    const selected =
-      this.props.selected &&
-      this.props.selected.files &&
-      this.props.selected.files.block === photo.block
 
     const width = (this.state.componentHeight - 1) / 2 - 2
     const height = width
@@ -72,20 +67,6 @@ class HorizontalGrid extends React.Component<ScreenProps, State> {
         onPress={callback}
         activeOpacity={0.85}
       >
-        {selected && (
-          <View
-            style={{
-              position: 'absolute',
-              bottom: 6,
-              left: 4,
-              zIndex: 100,
-              height: 14,
-              width: 14,
-              borderRadius: 7,
-              backgroundColor: color.brandPink
-            }}
-          />
-        )}
         <View style={styles.itemBackgroundContainer}>
           <TextileImage
             target={photo.data}

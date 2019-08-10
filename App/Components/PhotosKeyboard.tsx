@@ -5,11 +5,11 @@ import { RootState, RootAction } from '../Redux/Types'
 import { Platform, Keyboard } from 'react-native'
 import uuid from 'uuid/v4'
 
-// @ts-ignore
 import {
   KeyboardRegistry,
   KeyboardAccessoryView,
   KeyboardUtils
+  // @ts-ignore
 } from 'react-native-keyboard-input'
 import AuthoringInput from './authoring-input'
 import { SharedImage } from '../features/group/add-photo/models'
@@ -43,7 +43,6 @@ interface DispatchProps {
 interface GalleryProps {
   threadId: string
   photoPairs: GalleryDoubles[]
-  selected?: SharingPhoto
 }
 
 const IsIOS = Platform.OS === 'ios'
@@ -112,7 +111,6 @@ class PhotosKeyboard extends React.PureComponent<Props, State> {
         component: 'PhotosKeyboardGrid',
         initialProps: {
           threadId: this.props.threadId,
-          selected: this.props.selected,
           photoPairs: this.props.photoPairs
         }
       }
@@ -310,7 +308,6 @@ class PhotosKeyboardGrid extends React.Component<GalleryProps> {
         selectPhoto={this.selectPhoto}
         showImagePicker={this.showImagePicker}
         threadId={this.props.threadId}
-        selected={this.props.selected}
         photoPairs={this.props.photoPairs}
       />
     )
