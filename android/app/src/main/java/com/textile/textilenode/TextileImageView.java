@@ -1,7 +1,5 @@
 package com.textile.textilenode;
 
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.support.v7.widget.AppCompatImageView;
 
 import com.facebook.react.bridge.ReactContext;

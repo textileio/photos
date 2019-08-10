@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.util.Base64;
 import android.widget.ImageView;
 
 import com.facebook.react.bridge.Arguments;
@@ -48,6 +47,7 @@ public class TextileImageTask extends AsyncTask<Void, Void, Bitmap> {
 
                 @Override
                 public void onError(final Exception e) {
+
                     futureData.completeExceptionally(e);
                 }
             };
