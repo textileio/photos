@@ -2,6 +2,7 @@ package com.textile.textilenode;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Base64;
 import android.widget.ImageView;
@@ -60,7 +61,10 @@ public class TextileImageTask extends AsyncTask<Void, Void, Bitmap> {
             return BitmapFactory.decodeByteArray(data, 0, data.length);
         } catch (Exception e) {
             this.e = e;
-            return Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888);
+            Bitmap image = Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888);
+            image.eraseColor(Color.LTGRAY);
+            // White image issues in RN are hard to debug. Adding color here to visually detect errors.
+            return image;
         }
     }
 

@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   Dimensions,
   Image,
-  ImageStyle
+  ImageStyle,
+  TouchableWithoutFeedback
 } from 'react-native'
 import Icon from '@textile/react-native-icon'
 
@@ -16,12 +17,14 @@ import { color, textStyle, spacing } from '../styles'
 import { SharedImage } from '../features/group/add-photo/models'
 import { IFiles } from '@textile/react-native-sdk'
 import TextileImage from './TextileImage'
+import colors from '../Themes/Colors'
 
 const CONTAINER: ViewStyle = {
   borderStyle: 'solid',
   borderTopWidth: Dimensions.get('screen').scale > 1 ? 0.5 : 1,
   borderColor: color.grey_5,
-  padding: spacing.screenEdge
+  padding: spacing.screenEdge,
+  backgroundColor: 'white'
 }
 
 const INPUT: TextStyle = {
@@ -43,12 +46,20 @@ const BUTTON_TEXT: TextStyle = {
   color: color.grey_7
 }
 
-const IMAGE_WRAPPER: ViewStyle = {
+const IMAGE_SELECTION: ViewStyle = {
   ...ITEM,
-  alignContent: 'flex-end',
-  justifyContent: 'flex-end',
+  alignSelf: 'flex-start',
+  alignContent: 'center',
+  justifyContent: 'center',
   width: 40,
   height: 40
+}
+
+const IMAGE_WRAPPER: ViewStyle = {
+  width: 40,
+  height: 40,
+  borderRadius: 6,
+  overflow: 'hidden'
 }
 
 const IMAGE: ImageStyle = {
@@ -59,6 +70,7 @@ const IMAGE: ImageStyle = {
 }
 
 interface Props {
+  activeGalleryButton?: boolean
   containerStyle?: ViewStyle
   value?: string
   sharingImage?: SharedImage
@@ -66,6 +78,7 @@ interface Props {
   onMessageUpdate?: (text: string) => void
   onSendMessage?: (text: string) => void
   onSharePhoto?: () => void
+  cancelShare?: () => void
 }
 
 interface State {
@@ -75,6 +88,7 @@ interface State {
 }
 
 class AuthoringInput extends Component<Props, State> {
+  textInput?: TextInput = undefined
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -111,7 +125,28 @@ class AuthoringInput extends Component<Props, State> {
     }
   }
 
-  imageThumbnail() {
+  cancelButton() {
+    return (
+      <View
+        style={{
+          position: 'absolute',
+          right: -6,
+          top: -6,
+          zIndex: 10,
+          alignContent: 'center',
+          justifyContent: 'center',
+          padding: 3,
+          backgroundColor: 'black',
+          width: 16,
+          height: 16,
+          borderRadius: 8
+        }}
+      >
+        <Icon name="x_16" color={'white'} size={10} />
+      </View>
+    )
+  }
+  sharingThumbnail() {
     const { sharingImage, sharingFiles } = this.props
     if (sharingImage) {
       const sourceUri =
@@ -119,13 +154,21 @@ class AuthoringInput extends Component<Props, State> {
           ? sharingImage.origURL
           : sharingImage.uri
       return (
-        <View style={IMAGE_WRAPPER}>
-          <Image
-            source={{ uri: sourceUri }}
-            resizeMode={'cover'}
-            style={IMAGE}
-          />
-        </View>
+        <TouchableWithoutFeedback
+          style={IMAGE_WRAPPER}
+          onPress={this.props.cancelShare}
+        >
+          <View style={IMAGE_SELECTION}>
+            {this.cancelButton()}
+            <View style={IMAGE_WRAPPER}>
+              <Image
+                source={{ uri: sourceUri }}
+                resizeMode={'cover'}
+                style={IMAGE}
+              />
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
       )
     } else if (sharingFiles) {
       const filesList = sharingFiles.files
@@ -134,24 +177,38 @@ class AuthoringInput extends Component<Props, State> {
           ? filesList[0].index
           : 0
       return (
-        <View style={IMAGE_WRAPPER}>
-          <TextileImage
-            target={sharingFiles.data}
-            index={fileIndex}
-            forMinWidth={70}
-            resizeMode={'cover'}
-            style={IMAGE}
-          />
-        </View>
+        <TouchableWithoutFeedback onPress={this.props.cancelShare}>
+          <View style={IMAGE_SELECTION}>
+            {this.cancelButton()}
+            <View style={IMAGE_WRAPPER}>
+              <TextileImage
+                target={sharingFiles.data}
+                index={fileIndex}
+                forMinWidth={70}
+                resizeMode={'cover'}
+                style={{
+                  width: 40,
+                  height: 4,
+                  flex: 1,
+                  flexDirection: 'column'
+                }}
+              />
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
       )
     }
-    return <Icon name="image" color={color.action_4} size={24} />
+    return <View />
   }
-
+  imageThumbnail() {
+    const c = this.props.activeGalleryButton ? color.action_4 : color.grey_5
+    return <Icon name="image" color={c} size={24} />
+  }
   render() {
     return (
       <View style={[this.props.containerStyle, CONTAINER]}>
         <TextInput
+          ref={input => (this.textInput = input ? input : undefined)}
           style={INPUT}
           multiline={true}
           placeholder={
@@ -164,21 +221,30 @@ class AuthoringInput extends Component<Props, State> {
         <View
           style={{
             flexDirection: 'row',
-            justifyContent: 'flex-end',
+            justifyContent: 'space-between',
             alignItems: 'flex-end',
             minHeight: 40
           }}
         >
-          <TouchableOpacity style={ITEM} onPress={this.props.onSharePhoto}>
-            {this.imageThumbnail()}
-          </TouchableOpacity>
-          <Button
-            style={BUTTON}
-            textStyle={BUTTON_TEXT}
-            disabled={this.state.disabled}
-            text={'send'}
-            onPress={this.submit}
-          />
+          {this.sharingThumbnail()}
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+              alignItems: 'flex-end'
+            }}
+          >
+            <TouchableOpacity style={ITEM} onPress={this.props.onSharePhoto}>
+              {this.imageThumbnail()}
+            </TouchableOpacity>
+            <Button
+              style={BUTTON}
+              textStyle={BUTTON_TEXT}
+              disabled={this.state.disabled}
+              text={'send'}
+              onPress={this.submit}
+            />
+          </View>
         </View>
       </View>
     )
@@ -209,6 +275,12 @@ class AuthoringInput extends Component<Props, State> {
       textValue: undefined,
       disabled: true
     })
+  }
+
+  public focus() {
+    if (this.textInput) {
+      this.textInput.focus()
+    }
   }
 }
 

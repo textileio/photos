@@ -5,12 +5,13 @@ import { color } from '../../styles'
 const { width, height } = Dimensions.get('window')
 
 // orientation must fixed
+// TODO: Not sure how to update this based on real keyboard height
 export const SCREEN_WIDTH = width < height ? width : height
 
 export const isSmallDevice = SCREEN_WIDTH <= 414
 export const numColumns = isSmallDevice ? 3 : 4
 
-export const PRODUCT_ITEM_OFFSET = 0.5
+export const PRODUCT_ITEM_OFFSET = 1
 export const PRODUCT_ITEM_MARGIN = PRODUCT_ITEM_OFFSET
 const ITEM_WIDTH =
   (SCREEN_WIDTH - PRODUCT_ITEM_MARGIN) / numColumns - PRODUCT_ITEM_MARGIN
@@ -48,7 +49,7 @@ export default StyleSheet.create({
     margin: PRODUCT_ITEM_OFFSET,
     overflow: 'hidden',
     width: ITEM_WIDTH,
-    height: PRODUCT_ITEM_HEIGHT,
+    height: ITEM_WIDTH,
     alignItems: 'center',
     backgroundColor: Colors.snow
   },
@@ -67,7 +68,7 @@ export default StyleSheet.create({
   },
   itemImage: {
     width: ITEM_WIDTH,
-    height: PRODUCT_ITEM_HEIGHT,
+    height: ITEM_WIDTH,
     // justifyContent: 'center',
     // alignItems: 'center',
     flex: 1,

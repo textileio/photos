@@ -179,6 +179,7 @@ android {
 }
 
 dependencies {
+    implementation project(":reactnativekeyboardinput")
     implementation project(':react-native-firebase')
     implementation project(':react-native-reanimated')
     implementation 'com.android.support:multidex:1.0.3'

@@ -27,8 +27,10 @@ import com.rnfs.RNFSPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
+import com.wix.reactnativekeyboardinput.KeyboardInputPackage;
 import io.textile.rnmobile.RNTextilePackage;
 import com.textile.textilenode.TextilePackage;
+
 
 public class MainApplication extends MultiDexApplication implements ReactApplication {
 
@@ -41,23 +43,25 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.asList(
-          new MainReactPackage(),
-		  new RNFirebasePackage(),
-          new RNFirebaseAnalyticsPackage(),
-		  new RNFirebaseCrashlyticsPackage(),
-		  new ReanimatedPackage(),
-		  new RNCameraRollPackage(),
-          new RNTextilePackage(),
-          new RNBackgroundFetchPackage(),
-          new ReactNativePushNotificationPackage(),
-          new RNFSPackage(),
-          new ImagePickerPackage(),
-          new ReactNativeConfigPackage(),
-          new BackgroundTimerPackage(),
-          new RNVersionNumberPackage(),
-          new RNGestureHandlerPackage(),
-          new ReactNativeContacts(),
-          new TextilePackage()
+        new MainReactPackage(),
+        new RNFirebasePackage(),
+        new RNFirebaseAnalyticsPackage(),
+        new RNFirebaseCrashlyticsPackage(),
+        new ReanimatedPackage(),
+        new RNCameraRollPackage(),
+        new RNTextilePackage(),
+        new RNBackgroundFetchPackage(),
+        new ReactNativePushNotificationPackage(),
+        new RNFSPackage(),
+        new ImagePickerPackage(),
+        new ReactNativeConfigPackage(),
+        new BackgroundTimerPackage(),
+        new RNVersionNumberPackage(),
+        new RNGestureHandlerPackage(),
+        new ReactNativeContacts(),
+        // KeyboardInputPackage is different than install instructions, based on https://github.com/wix/react-native-keyboard-input/issues/77
+        new KeyboardInputPackage(this.getApplication()),
+        new TextilePackage()
       );
     }
 
