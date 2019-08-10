@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactType } from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import {
@@ -186,13 +186,12 @@ class Group extends React.PureComponent<Props, State> {
     const blockCancelButtonIndex = blockActionSheetOptions.indexOf('Cancel')
 
     // The rn-keyboard module caused some issues with Android vs iOS, this fixes it
-    const ContView = Platform.OS === 'ios' ? View : KeyboardResponsiveContainer
     const contStyle =
       Platform.OS === 'ios' ? { flex: 1, paddingBottom: 40 } : {}
 
     return (
       <View style={{ flex: 1, flexGrow: 1 }}>
-        <ContView style={contStyle}>
+        <KeyboardResponsiveContainer style={contStyle} ios={false}>
           <FlatList
             style={{ flex: 1, backgroundColor: color.screen_primary }}
             inverted={true}
@@ -235,7 +234,7 @@ class Group extends React.PureComponent<Props, State> {
             cancel={this.cancelRenameGroup}
             complete={this.completeRenameGroup}
           />
-        </ContView>
+        </KeyboardResponsiveContainer>
         {!this.state.destroyKeyboard && (
           <PhotosKeyboard threadId={this.props.threadId} />
         )}

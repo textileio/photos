@@ -21,7 +21,7 @@ class TextileImageView extends AppCompatImageView {
     private int forMinWidth;
     private ScaleType scaleType;
     private boolean needsRenderScaleType = false;
-    private boolean needsRenderImage = false;
+    private boolean needsRenderImage = true;
 
     public TextileImageView(ThemedReactContext context) {
         super(context);
