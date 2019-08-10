@@ -130,8 +130,8 @@ class AuthoringInput extends Component<Props, State> {
       <View
         style={{
           position: 'absolute',
-          right: -6,
-          top: -6,
+          right: -5,
+          top: -3,
           zIndex: 10,
           alignContent: 'center',
           justifyContent: 'center',
