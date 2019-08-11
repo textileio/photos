@@ -53,7 +53,7 @@ const actions = {
   showImagePicker: createAction('SHOW_IMAGE_PICKER', resolve => {
     return (pickerType?: string) => resolve({ pickerType })
   }),
-  refreshGalleryImages: createAction('SHOW_WALLET_PICKER', resolve => {
+  refreshGalleryImages: createAction('REFRESH_GALLERY_IMAGEs', resolve => {
     return (threadId?: string) => resolve({ threadId })
   }),
   newImagePickerSelection: createAction(

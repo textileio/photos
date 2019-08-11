@@ -199,7 +199,6 @@ dependencies {
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.9@aar') {
     	transitive = true
   	}
-    implementation project(':react-native-background-timer')
     implementation project(':react-native-version-number')
     implementation project(':react-native-gesture-handler')
 }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import {
   View,
   Text,
@@ -34,6 +34,8 @@ class HorizontalGrid extends React.Component<ScreenProps, State> {
   // How many items should be kept im memory as we scroll?
   oneScreensWorth = 40
 
+  // how many images are required to split them into two rows per column
+  wrapCount = 4 // since doubles this is 0.5 of the photo count
   state = {
     componentHeight: 220
   }
@@ -58,8 +60,8 @@ class HorizontalGrid extends React.Component<ScreenProps, State> {
     const callback = () => {
       this.props.selectPhoto(photo.block)
     }
-
-    const width = (this.state.componentHeight - 1) / 2 - 2
+    const rows =  this.props.photoPairs.length < this.wrapCount ? 1 : 2
+    const width = (this.state.componentHeight - 1) / rows - 2
     const height = width
     return (
       <TouchableOpacity
@@ -79,7 +81,21 @@ class HorizontalGrid extends React.Component<ScreenProps, State> {
       </TouchableOpacity>
     )
   }
-  renderRow = (row: ListRenderItemInfo<GalleryDoubles>) => {
+  renderSingle = (row: ListRenderItemInfo<GalleryPhoto>) => {
+    const { item } = row
+    return (
+      <View
+        style={{
+          display: 'flex',
+          flexDirection: 'column'
+        }}
+      >
+        {this.renderCell(item)}
+      </View>
+    )
+
+  }
+  renderDouble = (row: ListRenderItemInfo<GalleryDoubles>) => {
     const { item } = row
     return (
       <View
@@ -146,27 +162,49 @@ class HorizontalGrid extends React.Component<ScreenProps, State> {
     }
   }
 
+  renderFlatList = () => {
+    if (this.props.photoPairs.length < this.wrapCount) {
+      const flattened = ([] as GalleryPhoto[]).concat(...this.props.photoPairs)
+      return (
+        <FlatList
+          ListHeaderComponent={this.renderHeader}
+          horizontal={true}
+          style={styles.listContainer}
+          data={flattened}
+          /* tslint:disable-next-line */
+          renderItem={this.renderSingle}
+          windowSize={this.oneScreensWorth}
+          initialNumToRender={this.oneScreensWorth}
+          onEndReachedThreshold={0.55}
+          extraData={this.state.componentHeight}
+        />
+      )
+    } else {
+      return (
+        <FlatList
+          ListHeaderComponent={this.renderHeader}
+          horizontal={true}
+          style={styles.listContainer}
+          data={this.props.photoPairs}
+          /* tslint:disable-next-line */
+          renderItem={this.renderDouble}
+          windowSize={this.oneScreensWorth}
+          initialNumToRender={this.oneScreensWorth}
+          onEndReachedThreshold={0.55}
+          extraData={this.state.componentHeight}
+        />
+      )
+    }
+  }
   render() {
     return (
       <View style={{ ...styles.container }} onLayout={this.onLayout}>
-        {this.props.photoPairs.length ? (
-          <FlatList
-            ListHeaderComponent={this.renderHeader}
-            horizontal={true}
-            style={styles.listContainer}
-            data={this.props.photoPairs}
-            /* tslint:disable-next-line */
-            renderItem={this.renderRow}
-            windowSize={this.oneScreensWorth}
-            initialNumToRender={this.oneScreensWorth}
-            onEndReachedThreshold={0.55}
-            extraData={this.state.componentHeight}
-          />
-        ) : (
+        {this.renderFlatList()}
+        {!this.props.photoPairs.length &&
           <View style={styles.emptyListStyle}>
             <Text style={styles.noPhotos}>{'no images'}</Text>
           </View>
-        )}
+        }
       </View>
     )
   }

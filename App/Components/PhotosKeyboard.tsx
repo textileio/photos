@@ -18,12 +18,14 @@ import { groupActions } from '../features/group'
 import { IFiles } from '@textile/react-native-sdk'
 import { getSharedPhotos, SharedPhoto } from '../Redux/PhotoViewingSelectors'
 import HorizontalGrid, { GalleryDoubles } from './HorizontalGrid'
+import { groupItems } from '../features/group/selectors';
 
 interface ScreenProps {
   threadId: string
 }
 interface StateProps {
   items: SharedPhoto[]
+  shares: number,
   sharingImage?: SharedImage
   sharingFiles?: IFiles
   photoPairs: GalleryDoubles[]
@@ -66,6 +68,11 @@ class PhotosKeyboard extends React.PureComponent<Props, State> {
   }
   componentDidMount() {
     this.props.updateImages()
+  }
+  componentDidUpdate(prevProps: Props) {
+    if (this.props.shares < prevProps.shares) {
+      this.props.updateImages()
+    }
   }
   resetKeyboardView = () => {
     this.setState({ customKeyboard: undefined })
@@ -211,8 +218,19 @@ const mapStateToProps = (
   state: RootState,
   ownProps: ScreenProps
 ): StateProps => {
-  const items = getSharedPhotos(state, 'date')
+
   const { threadId } = ownProps
+
+  /**
+   * Photo processing is significantly decoupled, as a temporary measure
+   * until this all comes right from the camera roll thread, i use 
+   * shares here to dete4ct newly available photos and update the keyboard
+   * gallery (which can't read right from redux state)
+   */ 
+  const shares = groupItems(state.group, threadId)
+                  .filter((g) => g.type === 'addingPhoto').length
+
+  const items = getSharedPhotos(state, 'date')
   let sharingImage
   let sharingFiles
   const { sharingPhoto } = state.ui
@@ -236,6 +254,7 @@ const mapStateToProps = (
 
   return {
     items,
+    shares,
     sharingImage,
     sharingFiles,
     selected: sharingPhoto,

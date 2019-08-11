@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302C01ABCB91800DB3ED1 /* libRCTImage.a */; };
@@ -36,7 +35,6 @@
 		93C00531216BB281007786A5 /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C0052B216BB273007786A5 /* libReactNativeConfig.a */; };
 		93C00534216BB8F2007786A5 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C00532216BB8F2007786A5 /* Crashlytics.framework */; };
 		93C00535216BB8F2007786A5 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C00533216BB8F2007786A5 /* Fabric.framework */; };
-		93C005D7216C15F7007786A5 /* libRNBackgroundTimer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93C005CE216C15E9007786A5 /* libRNBackgroundTimer.a */; };
 		93C005F1216C2034007786A5 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93C005E2216C2033007786A5 /* Octicons.ttf */; };
 		93C005F2216C2034007786A5 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93C005E3216C2033007786A5 /* Zocial.ttf */; };
 		93C005F4216C2034007786A5 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 93C005E5216C2033007786A5 /* MaterialIcons.ttf */; };
@@ -387,20 +385,6 @@
 			remoteGlobalIDString = EB2648DF1C7BE17A00B8F155;
 			remoteInfo = ReactNativeConfig;
 		};
-		93C005CD216C15E9007786A5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 93C0059F216C15E9007786A5 /* RNBackgroundTimer.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 134814201AA4EA6300B7C361;
-			remoteInfo = RNBackgroundTimer;
-		};
-		93C005CF216C15E9007786A5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 93C0059F216C15E9007786A5 /* RNBackgroundTimer.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 641926921ECB4257009CF731;
-			remoteInfo = "RNBackgroundTimer-tvOS";
-		};
 		93C00605216C385D007786A5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 93C00600216C385D007786A5 /* RNVersionNumber.xcodeproj */;
@@ -509,7 +493,6 @@
 		93C004FF216BB273007786A5 /* ReactNativeConfig.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeConfig.xcodeproj; path = "../node_modules/react-native-config/ios/ReactNativeConfig.xcodeproj"; sourceTree = "<group>"; };
 		93C00532216BB8F2007786A5 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		93C00533216BB8F2007786A5 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
-		93C0059F216C15E9007786A5 /* RNBackgroundTimer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundTimer.xcodeproj; path = "../node_modules/react-native-background-timer/ios/RNBackgroundTimer.xcodeproj"; sourceTree = "<group>"; };
 		93C005E2216C2033007786A5 /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Octicons.ttf; path = "../../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		93C005E3216C2033007786A5 /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Zocial.ttf; path = "../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		93C005E5216C2033007786A5 /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialIcons.ttf; path = "../../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
@@ -563,7 +546,6 @@
 				93CCA014220135C700639B38 /* libRCTContacts.a in Frameworks */,
 				93C00620216D3334007786A5 /* libRCTCameraRoll.a in Frameworks */,
 				93C00609216C3873007786A5 /* libRNVersionNumber.a in Frameworks */,
-				93C005D7216C15F7007786A5 /* libRNBackgroundTimer.a in Frameworks */,
 				93C00531216BB281007786A5 /* libReactNativeConfig.a in Frameworks */,
 				93C004A9216BAD16007786A5 /* libRNImagePicker.a in Frameworks */,
 				93C004A2216B2680007786A5 /* libRNFS.a in Frameworks */,
@@ -741,7 +723,6 @@
 				93CC9FD5220135A300639B38 /* RCTContacts.xcodeproj */,
 				93C0061A216D325C007786A5 /* RCTCameraRoll.xcodeproj */,
 				93C00600216C385D007786A5 /* RNVersionNumber.xcodeproj */,
-				93C0059F216C15E9007786A5 /* RNBackgroundTimer.xcodeproj */,
 				93C004FF216BB273007786A5 /* ReactNativeConfig.xcodeproj */,
 				93C004A3216BAD0C007786A5 /* RNImagePicker.xcodeproj */,
 				93C00499216B2666007786A5 /* RNFS.xcodeproj */,
@@ -854,15 +835,6 @@
 			children = (
 				93C0052B216BB273007786A5 /* libReactNativeConfig.a */,
 				A27552BD21F28BEC00C603F5 /* libReactNativeConfig-tvOS.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		93C005A0216C15E9007786A5 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				93C005CE216C15E9007786A5 /* libRNBackgroundTimer.a */,
-				93C005D0216C15E9007786A5 /* libRNBackgroundTimer.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1133,10 +1105,6 @@
 				{
 					ProductGroup = 93C0047C216B1276007786A5 /* Products */;
 					ProjectRef = 93C0047B216B1276007786A5 /* RNBackgroundFetch.xcodeproj */;
-				},
-				{
-					ProductGroup = 93C005A0216C15E9007786A5 /* Products */;
-					ProjectRef = 93C0059F216C15E9007786A5 /* RNBackgroundTimer.xcodeproj */;
 				},
 				{
 					ProductGroup = 934C81F5228B640800EC996D /* Products */;
@@ -1483,20 +1451,6 @@
 			remoteRef = 93C0052A216BB273007786A5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		93C005CE216C15E9007786A5 /* libRNBackgroundTimer.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNBackgroundTimer.a;
-			remoteRef = 93C005CD216C15E9007786A5 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		93C005D0216C15E9007786A5 /* libRNBackgroundTimer.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNBackgroundTimer.a;
-			remoteRef = 93C005CF216C15E9007786A5 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		93C00606216C385D007786A5 /* libRNVersionNumber.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1708,8 +1662,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1740,8 +1692,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
