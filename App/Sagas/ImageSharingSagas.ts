@@ -1,4 +1,4 @@
-import { call, put, select } from 'redux-saga/effects'
+import { call, put, select, fork } from 'redux-saga/effects'
 import Textile, { IBlock, IFilesList } from '@textile/react-native-sdk'
 import { ActionType } from 'typesafe-actions'
 import FS from 'react-native-fs'
@@ -12,22 +12,22 @@ import { groupActions } from '../features/group'
 import NavigationService from '../Services/NavigationService'
 import * as CameraRoll from '../Services/CameraRoll'
 
-export function* showWalletPicker(
-  action: ActionType<typeof UIActions.showWalletPicker>
-) {
-  const { threadId } = action.payload
-  if (threadId) {
-    // only set if shared directly to a thread
-    yield put(UIActions.updateSharingPhotoThread(threadId))
-  }
+function* reqeustGalleryImages() {
   const recentPhotos: IFilesList = yield call(Textile.files.list, '', '', 100)
   // Sharing from the wallet picker depends on shared image schema, not camera roll
   // this is a temp fix to limit what's shown there.
   // TODO: Remove this restriction when camera roll sharing is completed
-  const nonCameraRollPhotos = recentPhotos.items.filter((photo) => !!photo.files[0].links.large)
+  const nonCameraRollPhotos = recentPhotos.items.filter(photo =>
+    Boolean(photo.files[0].links.large)
+  )
   yield put(PhotoViewingActions.getRecentPhotosSuccess(nonCameraRollPhotos))
+}
 
-  yield call(NavigationService.navigate, 'WalletPicker')
+export function* refreshGalleryImages(
+  action: ActionType<typeof UIActions.refreshGalleryImages>
+) {
+  // no need to wait
+  yield fork(reqeustGalleryImages)
 }
 
 // Called whenever someone clicks the share button
@@ -77,13 +77,14 @@ export function* showImagePicker(
         uri: updatedImage.uri,
         path: updatedImage.path
       }
-      yield put(UIActions.updateSharingPhotoImage(image))
 
       if (threadId) {
         // only set if shared directly to a thread
         yield put(UIActions.updateSharingPhotoThread(threadId))
       }
-      yield call(NavigationService.navigate, 'ViewThread')
+
+      yield put(UIActions.updateSharingPhotoImage(image))
+      // yield call(NavigationService.navigate, 'ViewThread')
     } catch (error) {
       yield put(
         UIActions.newImagePickerError(
@@ -93,16 +94,6 @@ export function* showImagePicker(
       )
     }
   }
-}
-
-// Called whenever someone selects to share from the wallet and then picks a photo
-export function* walletPickerSuccess(
-  action: ActionType<typeof UIActions.walletPickerSuccess>
-) {
-  yield put(UIActions.updateSharingPhotoFiles(action.payload.photo))
-  // indicates if request was made from merged main feed or from a specific thread
-  const threadId = yield select(UISelectors.sharingPhotoThread)
-  yield call(NavigationService.navigate, 'ViewThread')
 }
 
 export function* shareWalletImage(

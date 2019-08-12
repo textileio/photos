@@ -179,6 +179,7 @@ android {
 }
 
 dependencies {
+    implementation project(":reactnativekeyboardinput")
     implementation project(':react-native-firebase')
     implementation project(':react-native-reanimated')
     implementation 'com.android.support:multidex:1.0.3'
@@ -198,7 +199,6 @@ dependencies {
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.9@aar') {
     	transitive = true
   	}
-    implementation project(':react-native-background-timer')
     implementation project(':react-native-version-number')
     implementation project(':react-native-gesture-handler')
 }
