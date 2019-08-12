@@ -84,6 +84,10 @@ class UserProfile extends React.PureComponent<Props> {
     this.props.navigation.navigate('Storage')
   }
 
+  _fileSync = () => {
+    this.props.navigation.navigate('FileSync')
+  }
+
   _deviceLogs = () => {
     this.props.navigation.navigate('DeviceLogs')
   }
@@ -191,6 +195,11 @@ class UserProfile extends React.PureComponent<Props> {
           {this.props.verboseUi && (
             <TouchableOpacity style={styles.listItem} onPress={this._storage}>
               <Text style={styles.listText}>Storage</Text>
+            </TouchableOpacity>
+          )}
+          {this.props.verboseUi && (
+            <TouchableOpacity style={styles.listItem} onPress={this._fileSync}>
+              <Text style={styles.listText}>File Sync</Text>
             </TouchableOpacity>
           )}
           {this.props.verboseUi && (

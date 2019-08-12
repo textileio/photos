@@ -9,12 +9,11 @@ import Textile, {
 } from '@textile/react-native-sdk'
 import NavigationService from '../Services/NavigationService'
 
+import { groupActions } from '../features/group'
 import ThreadsActions from '../Redux/ThreadsRedux'
-import PhotoViewingAction, { ThreadData } from '../Redux/PhotoViewingRedux'
-import {
-  threadDataByThreadId,
-  allThreadIds
-} from '../Redux/PhotoViewingSelectors'
+import GroupsActions, { ThreadData } from '../Redux/GroupsRedux'
+import { threadDataByThreadId, allThreadIds } from '../Redux/GroupsSelectors'
+import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { PreferencesSelectors, ServiceType } from '../Redux/PreferencesRedux'
 import NotificationsActions, {
   NotificationsSelectors
@@ -110,6 +109,22 @@ export function* handleEngagement(
   }
 }
 
+function* requestAndNavigateTo(threadId: string, photoBlock?: string) {
+  // Cache our thread data in redux
+  yield put(groupActions.feed.loadFeedItems.request({ id: threadId }))
+  // Select the thread
+  yield put(PhotoViewingActions.viewThread(threadId))
+
+  if (photoBlock) {
+    // if photo supplied, select and navigate to it
+    yield put(PhotoViewingActions.viewPhoto(photoBlock))
+    yield call(NavigationService.navigate, 'PhotoScreen')
+  } else {
+    // if no photo, navigate to the thread only
+    yield call(NavigationService.navigate, 'ViewThread', { threadId })
+  }
+}
+
 export function* notificationView(
   action: ActionType<typeof NotificationsActions.notificationSuccess>
 ) {
@@ -119,28 +134,26 @@ export function* notificationView(
   try {
     yield call(Textile.notifications.read, notification.id)
     switch (notification.type) {
+      case Notification.Type.LIKE_ADDED:
       case Notification.Type.COMMENT_ADDED: {
         const threadData: ThreadData | undefined = yield select(
           threadDataByThreadId,
           notification.threadId
         )
         if (threadData) {
-          yield put(PhotoViewingAction.viewThread(threadData.id))
-          yield put(PhotoViewingAction.viewPhoto(notification.target))
-          yield call(NavigationService.navigate, 'PhotoScreen')
+          // notification.target of a COMMENT_ADDED / LIKE_ADDED is the photo block, so where we want to navigate
+          yield call(requestAndNavigateTo, threadData.id, notification.target)
         }
         break
       }
-      case Notification.Type.LIKE_ADDED:
       case Notification.Type.FILES_ADDED: {
         const threadData: ThreadData | undefined = yield select(
           threadDataByThreadId,
           notification.threadId
         )
         if (threadData) {
-          yield put(PhotoViewingAction.viewThread(threadData.id))
-          yield put(PhotoViewingAction.viewPhoto(notification.target))
-          yield call(NavigationService.navigate, 'PhotoScreen')
+          // notification.block of a FILES_ADDED is the photo block, so where we want to navigate
+          yield call(requestAndNavigateTo, threadData.id, notification.block)
         }
         break
       }
@@ -152,10 +165,7 @@ export function* notificationView(
           notification.threadId
         )
         if (threadData) {
-          yield put(PhotoViewingAction.viewThread(threadData.id))
-          yield call(NavigationService.navigate, 'ViewThread', {
-            threadId: threadData.id
-          })
+          yield call(requestAndNavigateTo, threadData.id)
         }
         break
       }
@@ -226,7 +236,8 @@ export function* reviewThreadInvite(
     yield put(
       ThreadsActions.acceptInviteRequest(
         notification.id,
-        notification.threadName
+        notification.threadName,
+        false
       )
     )
   } catch (error) {

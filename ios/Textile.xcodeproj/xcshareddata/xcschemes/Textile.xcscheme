@@ -28,6 +28,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "D834CED71CC64F2400FA5668"
+               BuildableName = "libKeyboardTrackingView.a"
+               BlueprintName = "KeyboardTrackingView"
+               ReferencedContainer = "container:../node_modules/react-native-keyboard-tracking-view/lib/KeyboardTrackingView.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
                BuildableName = "Textile.app"
                BlueprintName = "Textile"

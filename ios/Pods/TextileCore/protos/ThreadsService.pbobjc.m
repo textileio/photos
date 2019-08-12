@@ -52,6 +52,7 @@ static GPBFileDescriptor *ThreadsServiceRoot_FileDescriptor(void) {
 @dynamic ciphertext;
 @dynamic sig;
 @dynamic node;
+@dynamic block;
 
 typedef struct ThreadEnvelope__storage_ {
   uint32_t _has_storage_[1];
@@ -60,6 +61,7 @@ typedef struct ThreadEnvelope__storage_ {
   NSData *ciphertext;
   NSData *sig;
   NSData *node;
+  NSData *block;
 } ThreadEnvelope__storage_;
 
 // This method is threadsafe because it is initially called
@@ -110,6 +112,15 @@ typedef struct ThreadEnvelope__storage_ {
         .number = ThreadEnvelope_FieldNumber_Node,
         .hasIndex = 4,
         .offset = (uint32_t)offsetof(ThreadEnvelope__storage_, node),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeBytes,
+      },
+      {
+        .name = "block",
+        .dataTypeSpecific.className = NULL,
+        .number = ThreadEnvelope_FieldNumber_Block,
+        .hasIndex = 5,
+        .offset = (uint32_t)offsetof(ThreadEnvelope__storage_, block),
         .flags = GPBFieldOptional,
         .dataType = GPBDataTypeBytes,
       },

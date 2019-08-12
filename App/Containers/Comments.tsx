@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { View, ScrollView, ViewStyle } from 'react-native'
+import { View, ScrollView, ViewStyle, Clipboard } from 'react-native'
 import { NavigationActions, SafeAreaView } from 'react-navigation'
 import Textile, { IComment } from '@textile/react-native-sdk'
 import ActionSheet from 'react-native-actionsheet'
@@ -19,6 +19,7 @@ import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { RootState, RootAction } from '../Redux/Types'
 import { groupActions } from '../features/group'
 import { accountSelectors } from '../features/account'
+import { groupPhoto } from '../features/group/selectors'
 
 interface StateProps {
   selfAddress: string
@@ -38,7 +39,11 @@ interface DispatchProps {
 interface ComponentState {
   submitting: boolean
   // The current selected block (message/photo). For use in the block action sheet
-  selectedBlockId?: string
+  selected?: {
+    blockId: string
+    canRemove: boolean
+    text: string
+  }
 }
 
 type Props = StateProps & DispatchProps
@@ -112,7 +117,13 @@ class Comments extends Component<Props, ComponentState> {
 
   render() {
     // Block action sheet
-    const blockActionSheetOptions = ['Remove', 'Cancel']
+    const blockActionSheetOptions = [
+      ...(this.state.selected && this.state.selected.canRemove
+        ? ['Remove']
+        : []),
+      'Copy',
+      'Cancel'
+    ]
     const blockCancelButtonIndex = blockActionSheetOptions.indexOf('Cancel')
     const commentCardProps = this.props.comments
       .slice()
@@ -127,9 +138,8 @@ class Comments extends Component<Props, ComponentState> {
           comment: comment.body,
           date: Textile.util.timestampToDate(comment.date),
           isCaption: false,
-          onLongPress: canRemove
-            ? () => this.showBlockActionSheet(comment.id)
-            : undefined
+          onLongPress: () =>
+            this.showBlockActionSheet(comment.id, canRemove, comment.body)
         }
         return props
       })
@@ -169,18 +179,33 @@ class Comments extends Component<Props, ComponentState> {
     )
   }
 
-  showBlockActionSheet = (blockId: string) => {
+  showBlockActionSheet = (
+    blockId: string,
+    canRemove: boolean,
+    text: string
+  ) => {
     this.setState({
-      selectedBlockId: blockId
+      selected: {
+        blockId,
+        canRemove,
+        text
+      }
     })
     this.blockActionSheet.show()
   }
 
   handleBlockActionSheetResponse = (index: number) => {
     const actions = [
-      () =>
-        this.state.selectedBlockId &&
-        this.props.remove(this.state.selectedBlockId)
+      ...(this.state.selected && this.state.selected.canRemove
+        ? [
+            () => {
+              if (this.state.selected) {
+                this.props.remove(this.state.selected.blockId)
+              }
+            }
+          ]
+        : []),
+      () => this.state.selected && Clipboard.setString(this.state.selected.text)
     ]
     if (index < actions.length) {
       actions[index]()
@@ -190,20 +215,28 @@ class Comments extends Component<Props, ComponentState> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   const selfAddress = accountSelectors.getAddress(state.account) || ''
-  const { viewingPhoto } = state.photoViewing
+
+  const photo =
+    state.photoViewing.viewingThreadId && state.photoViewing.viewingPhoto
+      ? groupPhoto(
+          state.group,
+          state.photoViewing.viewingThreadId,
+          state.photoViewing.viewingPhoto
+        )
+      : undefined
 
   let captionCommentCardProps: CommentCardProps | undefined
-  if (viewingPhoto && viewingPhoto.caption) {
+  if (photo && photo.caption) {
     captionCommentCardProps = {
-      username: viewingPhoto.user.name || viewingPhoto.user.address,
-      avatar: viewingPhoto.user.avatar,
-      comment: viewingPhoto.caption,
-      date: Textile.util.timestampToDate(viewingPhoto.date),
+      username: photo.user.name || photo.user.address,
+      avatar: photo.user.avatar,
+      comment: photo.caption,
+      date: Textile.util.timestampToDate(photo.date),
       isCaption: true
     }
   }
 
-  const comments = viewingPhoto ? viewingPhoto.comments : []
+  const comments = photo ? photo.comments : []
 
   const removing = Object.keys(state.group.ignore).filter(key => {
     return state.group.ignore[key] !== {}

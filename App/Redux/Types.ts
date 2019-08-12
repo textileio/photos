@@ -6,6 +6,7 @@ import { AccountAction } from '../features/account'
 import { AuthAction } from './AuthRedux'
 import { ContactsAction } from '../features/contacts'
 import { DeviceLogsAction } from './DeviceLogsRedux'
+import { GroupsAction } from './GroupsRedux'
 import { PhotoViewingAction } from './PhotoViewingRedux'
 import { PreferencesAction } from './PreferencesRedux'
 import { NotificationsAction } from './NotificationsRedux'
@@ -15,7 +16,6 @@ import { UIAction } from './UIRedux'
 import { StartupAction } from './StartupRedux'
 import { TextileEventsAction } from './TextileEventsRedux'
 import { GroupAction } from '../features/group'
-import { PhotosAction } from '../features/photos'
 import { CafesAction } from '../features/cafes'
 import { InitializationAction } from '../features/initialization'
 
@@ -25,6 +25,7 @@ export type RootAction =
   | AuthAction
   | ContactsAction
   | DeviceLogsAction
+  | GroupsAction
   | PhotoViewingAction
   | PreferencesAction
   | NotificationsAction
@@ -34,6 +35,5 @@ export type RootAction =
   | StartupAction
   | TextileEventsAction
   | GroupAction
-  | PhotosAction
   | CafesAction
   | InitializationAction

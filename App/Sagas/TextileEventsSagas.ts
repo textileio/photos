@@ -17,13 +17,10 @@ import { RootAction } from '../Redux/Types'
 import TextileEventsActions, {
   TextileEventsAction
 } from '../Redux/TextileEventsRedux'
-import { photosActions, PhotosAction } from '../features/photos'
 import NotificationActions, {
   NotificationsAction
 } from '../Redux/NotificationsRedux'
-import PhotoViewingActions, {
-  PhotoViewingAction
-} from '../Redux/PhotoViewingRedux'
+import GroupsActions, { GroupsAction } from '../Redux/GroupsRedux'
 import { contactsActions, ContactsAction } from '../features/contacts'
 import DeviceLogsActions, { DeviceLogsAction } from '../Redux/DeviceLogsRedux'
 import { groupActions, GroupAction } from '../features/group'
@@ -41,8 +38,7 @@ function displayNotification(message: string, title?: string) {
 function nodeEvents() {
   return eventChannel<
     | GroupAction
-    | PhotosAction
-    | PhotoViewingAction
+    | GroupsAction
     | ContactsAction
     | DeviceLogsAction
     | NotificationsAction
@@ -62,9 +58,6 @@ function nodeEvents() {
             feedItemData.type === FeedItemType.Leave
           ) {
             emitter(groupActions.feed.refreshFeed.request({ id: threadId }))
-            // FIXME: This is a hack. We need to examine the thread id and dispatch one or the other.
-            // Or this needs to send the whole Thread or at least the addition of key
-            emitter(photosActions.refreshPhotos.request(undefined))
           }
 
           // TODO: remove this if needed
@@ -75,7 +68,7 @@ function nodeEvents() {
             feedItemData.type === FeedItemType.Ignore ||
             feedItemData.type === FeedItemType.Join
           ) {
-            emitter(PhotoViewingActions.refreshThreadRequest(threadId))
+            emitter(GroupsActions.refreshThreadRequest(threadId))
           }
 
           if (
@@ -86,7 +79,7 @@ function nodeEvents() {
             // Enhancement: compare the joiner id with known ids and skip the refresh if known.
             emitter(contactsActions.getContactsRequest())
             // Temporary: to ensure that our UI udpates after a self-join or a self-leave
-            emitter(PhotoViewingActions.refreshThreadRequest(threadId))
+            emitter(GroupsActions.refreshThreadRequest(threadId))
           }
 
           // create a local log line for the threadUpdate event
@@ -104,12 +97,12 @@ function nodeEvents() {
     )
     subscriptions.push(
       Textile.events.addThreadAddedListener(threadId => {
-        emitter(PhotoViewingActions.threadAddedNotification(threadId))
+        emitter(GroupsActions.threadAddedNotification(threadId))
       })
     )
     subscriptions.push(
       Textile.events.addThreadRemovedListener(threadId => {
-        emitter(PhotoViewingActions.threadRemoved(threadId))
+        emitter(GroupsActions.threadRemoved(threadId))
       })
     )
     subscriptions.push(

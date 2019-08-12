@@ -7,6 +7,7 @@ import AccountSeed from '../../../Containers/AccountSeed'
 import RegisterCafe from '../../../Containers/RegisterCafe'
 import Cafe from '../../../Containers/Cafe'
 import Storage from '../../../SB/views/Storage'
+import FileSync from '../../../screens/file-sync'
 import DeviceLogs from '../../../SB/views/DeviceLogs'
 import NodeLogsScreen from '../../../Components/NodeLogsScreen'
 import RecoveryPhrase from '../../../SB/views/UserProfile/RecoveryPhrase'
@@ -23,6 +24,7 @@ const nav = createStackNavigator(
     RegisterCafe,
     Cafe,
     Storage,
+    FileSync,
     RecoveryPhrase,
     ChangeAvatar: SetAvatar,
     DeviceLogs,

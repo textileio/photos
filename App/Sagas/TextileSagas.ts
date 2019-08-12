@@ -11,6 +11,7 @@
  *************************************************************/
 import { Share, PermissionsAndroid, Platform } from 'react-native'
 import { call, put, select } from 'redux-saga/effects'
+import { delay } from 'redux-saga'
 import Config from 'react-native-config'
 import Textile, { ILogLevel, LogLevel } from '@textile/react-native-sdk'
 
@@ -21,13 +22,19 @@ import PreferencesActions, {
   PreferencesSelectors
 } from '../Redux/PreferencesRedux'
 import UIActions from '../Redux/UIRedux'
+import GroupsActions from '../Redux/GroupsRedux'
 import { ActionType } from 'typesafe-actions'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { logNewEvent } from './DeviceLogs'
+import { threadDataByThreadId } from '../Redux/GroupsSelectors'
 
 export function* navigateToThread(
   action: ActionType<typeof UIActions.navigateToThreadRequest>
 ) {
+  const data = yield select(threadDataByThreadId, action.payload.threadId)
+  if (!data) {
+    return
+  }
   yield put(PhotoViewingActions.viewThread(action.payload.threadId))
   yield call(NavigationService.navigate, 'ViewThread', {
     threadId: action.payload.threadId

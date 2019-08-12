@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactType } from 'react'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import {
@@ -7,10 +7,11 @@ import {
   ListRenderItemInfo,
   Dimensions,
   TouchableWithoutFeedback,
-  View
+  View,
+  Clipboard,
+  Platform
 } from 'react-native'
 import { NavigationScreenProps, SafeAreaView } from 'react-navigation'
-import uuid from 'uuid/v4'
 import ActionSheet from 'react-native-actionsheet'
 import Toast from 'react-native-easy-toast'
 import Textile, { IUser, Thread, FeedItemType } from '@textile/react-native-sdk'
@@ -21,7 +22,6 @@ import {
   Item as TextileHeaderButtonsItem
 } from '../../Components/HeaderButtons'
 import KeyboardResponsiveContainer from '../../Components/KeyboardResponsiveContainer'
-import AuthoringInput from '../../Components/authoring-input'
 import InviteContactModal from '../../Components/InviteContactModal'
 import Photo from '../../Components/photo'
 import ProcessingImage from '../../Components/ProcessingImage'
@@ -32,11 +32,13 @@ import { RootState, RootAction } from '../../Redux/Types'
 import { groupItems } from '../../features/group/selectors'
 import { groupActions } from '../../features/group'
 import UIActions from '../../Redux/UIRedux'
-import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
+import GroupsActions from '../../Redux/GroupsRedux'
 import { CommentData } from '../../Components/comments'
 import { color } from '../../styles'
 import { accountSelectors } from '../../features/account'
 import RenameGroupModal from '../../Containers/RenameGroupModal'
+
+import PhotosKeyboard from '../../Components/PhotosKeyboard'
 
 const momentSpec: moment.CalendarSpec = {
   sameDay: 'LT',
@@ -50,6 +52,7 @@ const momentSpec: moment.CalendarSpec = {
 const screenWidth = Dimensions.get('screen').width
 
 interface StateProps {
+  threadId: string
   items: ReadonlyArray<Item>
   groupName: string
   initiator: string
@@ -62,8 +65,6 @@ interface StateProps {
 
 interface DispatchProps {
   refresh: () => void
-  sendMessage: (message: string) => void
-  showWalletPicker: () => void
   addPhotoLike: (block: string) => void
   navigateToComments: (photoId: string) => void
   leaveThread: () => void
@@ -76,6 +77,8 @@ interface NavProps {
   threadId: string
   groupName: string
   showThreadActionSheet: () => void
+  // Needed to ensure the gallery closes before back navigation
+  destroyKeyboard: () => void
 }
 
 type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
@@ -84,7 +87,13 @@ interface State {
   showInviteContactModal: boolean
   showRenameGroupModal: boolean
   // The current selected block (message/photo). For use in the block action sheet
-  selectedBlockId?: string
+  selected?: {
+    blockId: string
+    isCopyable: boolean
+    canRemove: boolean
+    text?: string
+  }
+  destroyKeyboard: boolean
 }
 
 class Group extends React.PureComponent<Props, State> {
@@ -95,7 +104,13 @@ class Group extends React.PureComponent<Props, State> {
     // const addContact = navigation.getParam('addContact')
     const groupName = navigation.getParam('groupName')
     const showThreadActionSheet = navigation.getParam('showThreadActionSheet')
-    const back = () => navigation.goBack()
+    const back = () => {
+      const destroyKeyboard = navigation.getParam('destroyKeyboard')
+      if (destroyKeyboard) {
+        destroyKeyboard()
+      }
+      navigation.goBack()
+    }
     const headerLeft = (
       <TextileHeaderButtons left={true}>
         <TextileHeaderButtonsItem
@@ -132,7 +147,8 @@ class Group extends React.PureComponent<Props, State> {
     super(props)
     this.state = {
       showInviteContactModal: false,
-      showRenameGroupModal: false
+      showRenameGroupModal: false,
+      destroyKeyboard: false
     }
   }
 
@@ -140,7 +156,8 @@ class Group extends React.PureComponent<Props, State> {
     this.props.navigation.addListener('willFocus', this.onFocus)
     this.props.navigation.setParams({
       groupName: this.props.groupName,
-      showThreadActionSheet: this.showThreadActionSheet
+      showThreadActionSheet: this.showThreadActionSheet,
+      destroyKeyboard: this.destroyGalleryKeyboard
     })
   }
 
@@ -157,11 +174,24 @@ class Group extends React.PureComponent<Props, State> {
     ]
     const threadCancelButtonIndex = threadActionSheetOptions.indexOf('Cancel')
     // Block action sheet
-    const blockActionSheetOptions = ['Remove', 'Cancel']
+    const blockActionSheetOptions = [
+      ...(this.state.selected && this.state.selected.canRemove
+        ? ['Remove']
+        : []),
+      ...(this.state.selected && this.state.selected.isCopyable
+        ? ['Copy']
+        : []),
+      'Cancel'
+    ]
     const blockCancelButtonIndex = blockActionSheetOptions.indexOf('Cancel')
+
+    // The rn-keyboard module caused some issues with Android vs iOS, this fixes it
+    const contStyle =
+      Platform.OS === 'ios' ? { flex: 1, paddingBottom: 40 } : {}
+
     return (
-      <SafeAreaView style={{ flex: 1, flexGrow: 1 }}>
-        <KeyboardResponsiveContainer>
+      <View style={{ flex: 1, flexGrow: 1 }}>
+        <KeyboardResponsiveContainer style={contStyle} ios={false}>
           <FlatList
             style={{ flex: 1, backgroundColor: color.screen_primary }}
             inverted={true}
@@ -172,11 +202,6 @@ class Group extends React.PureComponent<Props, State> {
             windowSize={5}
             onEndReachedThreshold={5}
             maxToRenderPerBatch={5}
-          />
-          <AuthoringInput
-            containerStyle={{}}
-            onSendMessage={this.submit}
-            onSharePhoto={this.props.showWalletPicker}
           />
           <InviteContactModal
             isVisible={this.state.showInviteContactModal}
@@ -210,16 +235,24 @@ class Group extends React.PureComponent<Props, State> {
             complete={this.completeRenameGroup}
           />
         </KeyboardResponsiveContainer>
+        {!this.state.destroyKeyboard && (
+          <PhotosKeyboard threadId={this.props.threadId} />
+        )}
         <Toast
           ref={toast => {
             this.toast = toast ? toast : undefined
           }}
           position="center"
         />
-      </SafeAreaView>
+      </View>
     )
   }
 
+  destroyGalleryKeyboard = () => {
+    this.setState({
+      destroyKeyboard: true
+    })
+  }
   sameUserAgain = (user: IUser, previous?: Item): boolean => {
     if (!previous) {
       return false
@@ -265,9 +298,13 @@ class Group extends React.PureComponent<Props, State> {
               id: comment.id,
               username: comment.user.name || '?',
               body: comment.body,
-              onLongPress: canRemoveComment
-                ? () => this.showBlockActionSheet(comment.id)
-                : undefined
+              onLongPress: () =>
+                this.showBlockActionSheet(
+                  comment.id,
+                  canRemoveComment,
+                  true,
+                  comment.body
+                )
             }
           }
         )
@@ -312,7 +349,7 @@ class Group extends React.PureComponent<Props, State> {
             pinchHeight={pinchHeight}
             onLongPress={
               canRemove
-                ? () => this.showBlockActionSheet(item.block)
+                ? () => this.showBlockActionSheet(item.block, true, false)
                 : undefined
             }
           />
@@ -341,8 +378,14 @@ class Group extends React.PureComponent<Props, State> {
         const avatar = isSameUser ? undefined : user.avatar
         return (
           <TouchableWithoutFeedback
-            disabled={!canRemove}
-            onLongPress={() => this.showBlockActionSheet(item.block)}
+            onLongPress={() =>
+              this.showBlockActionSheet(
+                item.block,
+                canRemove,
+                true,
+                item.value.body
+              )
+            }
           >
             <View>
               <Message
@@ -381,8 +424,6 @@ class Group extends React.PureComponent<Props, State> {
     }
   }
 
-  submit = (message: string) => this.props.sendMessage(message)
-
   onFocus = () => {
     this.props.refresh()
   }
@@ -399,9 +440,19 @@ class Group extends React.PureComponent<Props, State> {
     this.threadActionSheet.show()
   }
 
-  showBlockActionSheet = (blockId: string) => {
+  showBlockActionSheet = (
+    blockId: string,
+    canRemove: boolean,
+    isCopyable: boolean,
+    text?: string
+  ) => {
     this.setState({
-      selectedBlockId: blockId
+      selected: {
+        blockId,
+        canRemove,
+        isCopyable,
+        text
+      }
     })
     this.blockActionSheet.show()
   }
@@ -421,9 +472,25 @@ class Group extends React.PureComponent<Props, State> {
 
   handleBlockActionSheetResponse = (index: number) => {
     const actions = [
-      () =>
-        this.state.selectedBlockId &&
-        this.props.remove(this.state.selectedBlockId)
+      ...(this.state.selected && this.state.selected.canRemove
+        ? [
+            () =>
+              this.state.selected &&
+              this.props.remove(this.state.selected.blockId)
+          ]
+        : []),
+      ...(this.state.selected && this.state.selected.isCopyable
+        ? [
+            () => {
+              if (
+                this.state.selected &&
+                this.state.selected.text !== undefined
+              ) {
+                Clipboard.setString(this.state.selected.text)
+              }
+            }
+          ]
+        : [])
     ]
     if (index < actions.length) {
       actions[index]()
@@ -481,7 +548,7 @@ const mapStateToProps = (
 ): StateProps => {
   const threadId = ownProps.navigation.getParam('threadId')
   const items = groupItems(state.group, threadId)
-  const threadData = state.photoViewing.threads[threadId]
+  const threadData = state.groups.threads[threadId]
   const initiator = threadData ? threadData.initiator : ''
   const sharing = threadData ? threadData.sharing : Thread.Sharing.NOT_SHARED
   const canInvite = sharing !== Thread.Sharing.NOT_SHARED
@@ -492,7 +559,9 @@ const mapStateToProps = (
   const removing = Object.keys(state.group.ignore).filter(key => {
     return state.group.ignore[key] !== {}
   })
+
   return {
+    threadId,
     items,
     groupName,
     initiator,
@@ -512,24 +581,11 @@ const mapDispatchToProps = (
   return {
     refresh: () =>
       dispatch(groupActions.feed.refreshFeed.request({ id: threadId })),
-    sendMessage: (message: string) =>
-      dispatch(
-        groupActions.addMessage.addMessage.request({
-          id: uuid(),
-          groupId: threadId,
-          body: message
-        })
-      ),
-    // TODO: look at just doing direct navigation for this
-    showWalletPicker: () => {
-      dispatch(UIActions.showWalletPicker(threadId))
-    },
     addPhotoLike: (block: string) =>
       dispatch(UIActions.addLike.request({ blockId: block })),
     navigateToComments: (id: string) =>
       dispatch(UIActions.navigateToCommentsRequest(id, threadId)),
-    leaveThread: () =>
-      dispatch(PhotoViewingActions.removeThreadRequest(threadId)),
+    leaveThread: () => dispatch(GroupsActions.removeThreadRequest(threadId)),
     retryShare: (key: string) => {
       dispatch(groupActions.addPhoto.retry(key))
     },

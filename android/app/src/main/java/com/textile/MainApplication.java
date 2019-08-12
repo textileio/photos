@@ -3,6 +3,9 @@ package com.textile;
 import android.support.multidex.MultiDexApplication;
 
 import com.facebook.react.ReactApplication;
+import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
+import io.invertase.firebase.fabric.crashlytics.RNFirebaseCrashlyticsPackage;
 import com.swmansion.reanimated.ReanimatedPackage;
 import io.textile.cameraroll.RNCameraRollPackage;
 import com.facebook.react.ReactNativeHost;
@@ -19,14 +22,14 @@ import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import io.fabric.sdk.android.Fabric;
 import com.imagepicker.ImagePickerPackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
-import com.ocetnik.timer.BackgroundTimerPackage;
 import com.rnfs.RNFSPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
-import com.smixx.fabric.FabricPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.transistorsoft.rnbackgroundfetch.RNBackgroundFetchPackage;
+import com.wix.reactnativekeyboardinput.KeyboardInputPackage;
 import io.textile.rnmobile.RNTextilePackage;
 import com.textile.textilenode.TextilePackage;
+
 
 public class MainApplication extends MultiDexApplication implements ReactApplication {
 
@@ -39,21 +42,24 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.asList(
-          new MainReactPackage(),
-            new ReanimatedPackage(),
-            new RNCameraRollPackage(),
-          new RNTextilePackage(),
-          new RNBackgroundFetchPackage(),
-          new ReactNativePushNotificationPackage(),
-          new RNFSPackage(),
-          new ImagePickerPackage(),
-          new ReactNativeConfigPackage(),
-          new FabricPackage(),
-          new BackgroundTimerPackage(),
-          new RNVersionNumberPackage(),
-          new RNGestureHandlerPackage(),
-          new ReactNativeContacts(),
-          new TextilePackage()
+        new MainReactPackage(),
+        new RNFirebasePackage(),
+        new RNFirebaseAnalyticsPackage(),
+        new RNFirebaseCrashlyticsPackage(),
+        new ReanimatedPackage(),
+        new RNCameraRollPackage(),
+        new RNTextilePackage(),
+        new RNBackgroundFetchPackage(),
+        new ReactNativePushNotificationPackage(),
+        new RNFSPackage(),
+        new ImagePickerPackage(),
+        new ReactNativeConfigPackage(),
+        new RNVersionNumberPackage(),
+        new RNGestureHandlerPackage(),
+        new ReactNativeContacts(),
+        // KeyboardInputPackage is different than install instructions, based on https://github.com/wix/react-native-keyboard-input/issues/77
+        new KeyboardInputPackage(this.getApplication()),
+        new TextilePackage()
       );
     }
 

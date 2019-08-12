@@ -4,10 +4,12 @@ import {
   takeEvery,
   all,
   call,
+  fork,
   select
 } from 'redux-saga/effects'
 import { PersistedState } from 'redux-persist'
 import { getType } from 'typesafe-actions'
+import Firebase from 'react-native-firebase'
 
 /* ------------- Types ------------- */
 
@@ -15,6 +17,7 @@ import StartupActions from '../Redux/StartupRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
 import NotificationsActions from '../Redux/NotificationsRedux'
 import UIActions from '../Redux/UIRedux'
+import GroupsActions from '../Redux/GroupsRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import AuthActions from '../Redux/AuthRedux'
 import ThreadsActions from '../Redux/ThreadsRedux'
@@ -24,7 +27,6 @@ import ThreadsActions from '../Redux/ThreadsRedux'
 import { accountSaga } from '../features/account'
 import { contactsSaga } from '../features/contacts'
 import { groupSaga, groupActions } from '../features/group'
-import { photosSaga } from '../features/photos'
 import { cafesSaga } from '../features/cafes'
 import {
   initializationSaga,
@@ -35,16 +37,11 @@ import { startup } from './StartupSagas'
 
 import {
   showImagePicker,
-  showWalletPicker,
-  walletPickerSuccess
-} from './ImageSharingSagas'
-
-import {
+  refreshGalleryImages,
+  initShareRequest,
   handleSharePhotoRequest,
-  retryImageShare,
-  cancelImageShare,
-  handleImageProcessingError
-} from './ImageSharingTriggers'
+  handleCancel
+} from './ImageSharingSagas'
 
 import { inviteAfterOnboard, routeDeepLink } from './DeepLinkSagas'
 
@@ -89,6 +86,8 @@ import {
 } from './TextileSagas'
 
 import { startSagas } from './TextileEventsSagas'
+import TextileEventsActions from '../Redux/TextileEventsRedux'
+import { RootAction } from '../Redux/Types'
 
 /* ------------- Connect Types To Sagas ------------- */
 
@@ -113,7 +112,6 @@ export default function*() {
     call(accountSaga),
     call(contactsSaga),
     call(groupSaga),
-    call(photosSaga),
     call(cafesSaga),
 
     call(startSagas),
@@ -124,9 +122,6 @@ export default function*() {
 
     // some sagas only receive an action
     takeLatest(getType(StartupActions.startup), startup),
-
-    // just for logging purposes
-    takeEvery(getType(groupActions.addPhoto.error), handleImageProcessingError),
 
     // permissions request events
     takeLatest(
@@ -149,17 +144,14 @@ export default function*() {
     takeEvery(getType(UIActions.navigateToLikesRequest), navigateToLikes),
     takeEvery(getType(UIActions.addLike.request), addPhotoLike),
 
-    takeEvery(getType(PhotoViewingActions.addThreadRequest), addThread),
+    takeEvery(getType(GroupsActions.addThreadRequest), addThread),
     takeEvery(
-      getType(PhotoViewingActions.threadAddedNotification),
+      getType(GroupsActions.threadAddedNotification),
       monitorThreadAddedNotifications
     ),
-    takeEvery(getType(PhotoViewingActions.removeThreadRequest), removeThread),
-    takeEvery(
-      getType(PhotoViewingActions.refreshThreadsRequest),
-      refreshThreads
-    ),
-    takeEvery(getType(PhotoViewingActions.refreshThreadRequest), refreshThread),
+    takeEvery(getType(GroupsActions.removeThreadRequest), removeThread),
+    takeEvery(getType(GroupsActions.refreshThreadsRequest), refreshThreads),
+    takeEvery(getType(GroupsActions.refreshThreadRequest), refreshThread),
     takeEvery(getType(PhotoViewingActions.addCommentRequest), addPhotoComment),
 
     // takeEvery(getType(UploadingImagesActions.imageUploadComplete), removePayloadFile),
@@ -192,12 +184,10 @@ export default function*() {
     takeEvery(getType(UIActions.shareByLink), presentPublicLinkInterface),
 
     takeEvery(getType(UIActions.showImagePicker), showImagePicker),
-    takeEvery(getType(UIActions.showWalletPicker), showWalletPicker),
-    takeEvery(getType(UIActions.walletPickerSuccess), walletPickerSuccess),
-
+    takeEvery(getType(UIActions.refreshGalleryImages), refreshGalleryImages),
+    takeEvery(getType(UIActions.initShareRequest), initShareRequest),
     takeEvery(getType(UIActions.sharePhotoRequest), handleSharePhotoRequest),
-    takeEvery(getType(groupActions.addPhoto.retry), retryImageShare),
-    takeEvery(getType(groupActions.addPhoto.cancelRequest), cancelImageShare),
+    takeEvery(getType(UIActions.cancelSharingPhoto), handleCancel),
 
     // Notifications
     takeEvery(

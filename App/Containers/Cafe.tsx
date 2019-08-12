@@ -12,7 +12,7 @@ import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { NavigationScreenProps } from 'react-navigation'
 import { Cafe as CafeModel, CafeSessionData } from '../features/cafes/models'
-import Textile from '@textile/react-native-sdk'
+import Textile, { ICafe } from '@textile/react-native-sdk'
 import moment from 'moment'
 
 import { RootState, RootAction } from '../Redux/Types'
@@ -94,8 +94,8 @@ const Error: TextStyle = {
 }
 
 interface StateProps {
-  cafe: CafeModel
-  session: CafeSessionData
+  cafe?: CafeModel
+  session?: CafeSessionData
 }
 
 interface DispatchProps {
@@ -128,13 +128,29 @@ class Cafe extends Component<Props> {
   render() {
     // Hardcoded placeholder for services UI
     const services = ['Backup', 'Inboxing']
-    const { cafe, exp } = this.props.session.session
-    const { peer, url } = cafe
-    const date = Textile.util.timestampToDate(exp)
-    const expirationDate = moment(date).format('MMMM Do YYYY [at] h:mm a')
-    const refreshButtonDisabled = this.props.session.processing
-    const cafeProcessing = this.props.cafe.state === 'deregistering'
-    const deregisterButtonDisabled = !this.props.cafe.error && cafeProcessing
+    let cafe: ICafe
+    // const exp = this.props.session &&  this.props.session.session.exp
+
+    let expirationDate = ''
+    let peer = ''
+    let url = ''
+    let refreshButtonDisabled = true
+    let deregisterButtonDisabled = true
+    if (this.props.session) {
+      const { exp } = this.props.session.session
+      const date = Textile.util.timestampToDate(exp)
+      expirationDate = moment(date).format('MMMM Do YYYY [at] h:mm a')
+      refreshButtonDisabled = this.props.session.processing
+      cafe = this.props.session.session.cafe
+      peer = cafe.peer
+      url = cafe.url
+    }
+    if (this.props.cafe) {
+      const cafeProcessing =
+        this.props.cafe && this.props.cafe.state === 'deregistering'
+      deregisterButtonDisabled = !this.props.cafe.error && cafeProcessing
+    }
+
     return (
       <SafeAreaView style={Container}>
         <Text style={URL}>{url}</Text>
@@ -151,17 +167,19 @@ class Cafe extends Component<Props> {
           )}
           ItemSeparatorComponent={RowSeparator}
         />
-        {this.props.cafe.error && (
+        {this.props.cafe && this.props.cafe.error && (
           <Text style={Error}>Cafe error: {this.props.cafe.error}</Text>
         )}
-        {this.props.session.error && (
+        {this.props.session && this.props.session.error && (
           <Text style={Error}>
             Cafe session error: {this.props.session.error}
           </Text>
         )}
-        <Text style={ExpirationDate}>
-          Your session expires on {expirationDate}
-        </Text>
+        {expirationDate !== '' && (
+          <Text style={ExpirationDate}>
+            Your session expires on {expirationDate}
+          </Text>
+        )}
         <View style={ButtonsContainer}>
           <Button
             text="Refresh"

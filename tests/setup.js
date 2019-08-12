@@ -28,7 +28,6 @@ jest.mock('CameraRoll', () => {
   }
 })
 /* tslint:disable:no-empty */
-jest.mock('react-native-background-timer', () => {})
 jest.mock('react-native-background-fetch', () => {})
 
 jest.mock('react-native-fs', () => {

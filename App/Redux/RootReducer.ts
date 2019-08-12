@@ -10,8 +10,9 @@ import {
 import { accountReducer } from '../features/account'
 import { reducer as authReducer } from './AuthRedux'
 import { contactsReducer } from '../features/contacts'
-import { reducer as photoViewingReducer } from './PhotoViewingRedux'
+import { reducer as groupsReducer } from './GroupsRedux'
 import { reducer as prefrencesReducer } from './PreferencesRedux'
+import { reducer as photoViewingReducer } from './PhotoViewingRedux'
 import { reducer as notificationsReducer } from './NotificationsRedux'
 import { reducer as threadsReducer } from './ThreadsRedux'
 import { reducer as uiReducer } from './UIRedux'
@@ -19,7 +20,6 @@ import { reducer as startupReducer } from './StartupRedux'
 import { reducer as deviceLogsReducer } from './DeviceLogsRedux'
 import { reducer as textileEventsReducer } from './TextileEventsRedux'
 import { groupReducer } from '../features/group'
-import { photosReducer } from '../features/photos'
 import { cafesReducer } from '../features/cafes'
 import { initializationReducer } from '../features/initialization'
 
@@ -388,7 +388,13 @@ const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,
   version: 23,
-  whitelist: ['account', 'preferences', 'deviceLogs', 'initialization'],
+  whitelist: [
+    'account',
+    'preferences',
+    'deviceLogs',
+    'initialization',
+    'groups'
+  ],
   migrate: createMigrate(migrations, { debug: false }),
   debug: false
 }
@@ -396,8 +402,9 @@ const persistConfig: PersistConfig = {
 const rootReducer = combineReducers({
   auth: authReducer,
   contacts: contactsReducer,
-  photoViewing: photoViewingReducer,
+  groups: groupsReducer,
   preferences: prefrencesReducer,
+  photoViewing: photoViewingReducer,
   notifications: notificationsReducer,
   threads: threadsReducer,
   ui: uiReducer,
@@ -406,7 +413,6 @@ const rootReducer = combineReducers({
   account: accountReducer,
   textile: textileEventsReducer,
   group: groupReducer,
-  photos: photosReducer,
   cafes: cafesReducer,
   initialization: initializationReducer
 })

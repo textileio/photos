@@ -10,6 +10,13 @@ import {
 import ImageZoom from 'react-native-image-pan-zoom'
 import { Circle } from 'react-native-progress'
 import Icon from '@textile/react-native-icon'
+import {
+  State,
+  LongPressGestureHandler,
+  TapGestureHandler,
+  TapGestureHandlerStateChangeEvent,
+  LongPressGestureHandlerStateChangeEvent
+} from 'react-native-gesture-handler'
 
 import Message, { Props as MessageProps } from './message'
 import ProgressiveImage from './ProgressiveImage'
@@ -47,27 +54,58 @@ export default class Photo extends React.PureComponent<Props> {
     selected: false
   }
 
+  doubleTapRef: any = React.createRef()
+
+  onLongPress = (event: LongPressGestureHandlerStateChangeEvent) => {
+    if (event.nativeEvent.state === State.ACTIVE && this.props.onLongPress) {
+      this.props.onLongPress()
+    }
+  }
+
   toggleSelected = () => {
     this.setState({ selected: !this.state.selected })
   }
 
+  onSingleTap = (event: TapGestureHandlerStateChangeEvent) => {
+    if (event.nativeEvent.state === State.ACTIVE) {
+      this.toggleSelected()
+    }
+  }
+
+  onDoubleTap = (event: TapGestureHandlerStateChangeEvent) => {
+    if (event.nativeEvent.state === State.ACTIVE) {
+      this.props.onLike()
+    }
+  }
+
   progressiveElement(width: number, height: number, minWidth: number) {
     return (
-      <TouchableWithoutFeedback
-        onPress={this.toggleSelected}
-        onLongPress={this.props.onLongPress}
+      <LongPressGestureHandler
+        onHandlerStateChange={this.onLongPress}
+        minDurationMs={600}
       >
-        <View>
-          <ProgressiveImage
-            imageId={this.props.photoId}
-            fileIndex={this.props.fileIndex}
-            showPreview={true}
-            forMinWidth={minWidth}
-            style={{ width, height, overflow: 'hidden' }}
-            resizeMode={'cover'}
-          />
-        </View>
-      </TouchableWithoutFeedback>
+        <TapGestureHandler
+          onHandlerStateChange={this.onSingleTap}
+          waitFor={this.doubleTapRef}
+        >
+          <TapGestureHandler
+            ref={this.doubleTapRef}
+            onHandlerStateChange={this.onDoubleTap}
+            numberOfTaps={2}
+          >
+            <View>
+              <ProgressiveImage
+                imageId={this.props.photoId}
+                fileIndex={this.props.fileIndex}
+                showPreview={true}
+                forMinWidth={minWidth}
+                style={{ width, height, overflow: 'hidden' }}
+                resizeMode={'cover'}
+              />
+            </View>
+          </TapGestureHandler>
+        </TapGestureHandler>
+      </LongPressGestureHandler>
     )
   }
 
@@ -97,8 +135,8 @@ export default class Photo extends React.PureComponent<Props> {
         imageHeight={finalHeight}
         minScale={0.9}
         maxScale={2.5}
-        enableCenterFocus={false}
         onClick={this.toggleSelected}
+        enableCenterFocus={false}
         clickDistance={1}
       >
         <View

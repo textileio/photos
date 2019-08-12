@@ -6,12 +6,12 @@ import { FlatList, View, Text, TouchableOpacity } from 'react-native'
 
 import { RootAction, RootState } from '../Redux/Types'
 
-import { getThreads } from '../Redux/PhotoViewingSelectors'
+import { getSharedThreads } from '../Redux/GroupsSelectors'
 import { contactsSelectors } from '../features/contacts'
 import TextileEventsActions from '../Redux/TextileEventsRedux'
 import UIActions from '../Redux/UIRedux'
 
-import { IContact, IFiles } from '@textile/react-native-sdk'
+import { IContact } from '@textile/react-native-sdk'
 
 import GroupCard from './GroupCard'
 import styles from './Styles/ThreadSelectorStyles'
@@ -74,7 +74,7 @@ interface GroupAuthors {
   readonly name: string
   readonly size: number
   readonly members: IContact[]
-  readonly thumb?: IFiles
+  readonly thumb?: string
   readonly valid: boolean
 }
 
@@ -85,7 +85,7 @@ interface StateProps {
 function mapStateToProps(state: RootState): StateProps {
   const ownAddress = accountSelectors.getAddress(state.account)
   const profile = state.account.profile.value
-  const threads = getThreads(state, 'date').map(thread => {
+  const threads = getSharedThreads(state, 'date').map(thread => {
     const selector = contactsSelectors.makeByThreadId(thread.id)
     const members = selector(state.contacts).filter(
       contact => contact.address !== ownAddress
@@ -93,14 +93,13 @@ function mapStateToProps(state: RootState): StateProps {
     if (profile && members.length < 8) {
       members.unshift(profile)
     }
-    const thumb = thread.photos.length ? thread.photos[0] : undefined
     return {
       id: thread.id,
       name: thread.name,
       // total number of images in the thread
-      size: thread.photos.length,
+      size: thread.size,
       members,
-      thumb,
+      thumb: thread.thumb,
       valid: thread.valid
     }
   })

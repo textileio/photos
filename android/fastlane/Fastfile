@@ -21,7 +21,7 @@ platform :android do
   lane :test do
     gradle(
       task: "app:test",
-      flags: "--init-script init.gradle"
+      flags: "--init-script init.gradle  --no-daemon --max-workers=2"
     )
   end
 
@@ -30,7 +30,7 @@ platform :android do
     increment_version_code(app_project_dir: "./app", version_code: ENV['CIRCLE_BUILD_NUM'])
     gradle(
       task: "clean assembleRelease",
-      flags: "--init-script init.gradle"
+      flags: "--init-script init.gradle --no-daemon --max-workers=2"
     )
     crashlytics(
       api_token: ENV['FABRIC_API_TOKEN'],
@@ -46,7 +46,7 @@ platform :android do
     increment_version_code(app_project_dir: "./app",version_code: versionCodes[0] + 1)
     gradle(
       task: "clean assembleRelease",
-      flags: "--init-script init.gradle"
+      flags: "--init-script init.gradle  --no-daemon --max-workers=2"
     )
     # changelog_from_git_commits
     supply(
@@ -72,7 +72,7 @@ platform :android do
     increment_version_code(app_project_dir: "./app", version_code: parts[2])
     gradle(
       task: "clean assembleRelease",
-      flags: "--init-script init.gradle"
+      flags: "--init-script init.gradle  --no-daemon --max-workers=2"
     )
     supply(
       track: "beta",

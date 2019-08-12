@@ -30,19 +30,21 @@ import { Notification } from '../../Models/Notifications'
 
 import styles from './statics/styles'
 import onboardingStyles from '../Styles/OnboardingStyle'
+import AlertRow from '../../SB/components/AlertRow'
 
 interface NavProps {
   openDrawer: () => void
 }
 
-interface ComponentState {
-  willFocus?: NavigationEventSubscription
-  willBlur?: NavigationEventSubscription
-}
-
 type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 
-class Notifications extends React.PureComponent<Props> {
+interface State {
+  willFocus?: NavigationEventSubscription
+  willBlur?: NavigationEventSubscription
+  focusRefreshInProgress: boolean
+}
+
+class Notifications extends React.Component<Props, State> {
   static navigationOptions = ({
     navigation
   }: NavigationScreenProps<NavProps>) => {
@@ -69,12 +71,23 @@ class Notifications extends React.PureComponent<Props> {
       headerRight: <View /> // ensure spacing in android
     }
   }
-  state: ComponentState = {}
+
+  constructor(props: Props) {
+    super(props)
+    // A focus refresh starts on the first entry, so focusRefresInProgress starts off true
+    this.state = {
+      focusRefreshInProgress: true
+    }
+  }
 
   // gets called every time the user enters this tab
   _onFocus = () => {
     // refresh the messages for the user
     this.props.refreshNotifications() // < will get called on the very first entry too
+    // Update the state to reflect that an initial refresh (a refresh on focus) is in progress
+    this.setState({
+      focusRefreshInProgress: true
+    })
   }
 
   // gets called every time the user exists the tab
@@ -108,6 +121,14 @@ class Notifications extends React.PureComponent<Props> {
     ) {
       this.props.completeTourScreen()
     }
+    // If the component state indicates that a focus refresh is in progress and the redux state
+    // indicates that the notifications are not refreshing, then the focus refresh must have
+    // completed, so update the component state to reflect that.
+    if (this.state.focusRefreshInProgress && !this.props.refreshing) {
+      this.setState({
+        focusRefreshInProgress: false
+      })
+    }
   }
 
   componentWillUnmount() {
@@ -130,6 +151,9 @@ class Notifications extends React.PureComponent<Props> {
     this.props.navigation.openDrawer()
   }
 
+  registerCafe = () => {
+    this.props.navigation.navigate('RegisterCafe')
+  }
   _renderItem = ({ item }: ListRenderItemInfo<Notification>) => {
     return <FeedItem notification={item} onClick={this._onClick} />
   }
@@ -154,6 +178,13 @@ class Notifications extends React.PureComponent<Props> {
     )
   }
 
+  _renderAlert() {
+    if (!this.props.alert) {
+      return
+    }
+
+    return <AlertRow message={this.props.alert} onClick={this.registerCafe} />
+  }
   _renderItems() {
     return (
       <View style={styles.contentContainer}>
@@ -164,32 +195,50 @@ class Notifications extends React.PureComponent<Props> {
           refreshing={false}
           onRefresh={this.props.refreshMessages}
           initialNumToRender={20}
+          ListHeaderComponent={this._renderAlert()}
         />
       </View>
     )
   }
 
   render() {
+    // Never show the art during an initial refresh (a refresh on focus), only show it once
+    // the initial refresh has completed and returned 0 results. This is to avoid the art
+    // flickering for a second and then disappearing, which is ugly.
+    const showNotifications =
+      this.state.focusRefreshInProgress ||
+      this.props.notifications.length > 0 ||
+      this.props.alert
     return (
       <View style={styles.container}>
-        {this.props.showOnboarding && this._renderOnboarding()}
-        {!this.props.showOnboarding && this._renderItems()}
+        {!showNotifications && this._renderOnboarding()}
+        {showNotifications && this._renderItems()}
       </View>
     )
   }
 }
 
 interface StateProps {
+  alert?: string
   notifications: Notification[]
+  refreshing: boolean
   showOnboarding: boolean
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
   const notifications = NotificationsSelectors.latestAndUnreadFirst(state)
   const showOnboarding = state.preferences.tourScreens.feed === true
+  const refreshing = state.notifications.refreshing
+
+  const alert =
+    Object.keys(state.cafes.cafes).length > 0
+      ? undefined
+      : 'Improve app performance by choosing an account cafe now.'
 
   return {
+    alert,
     notifications,
+    refreshing,
     showOnboarding
   }
 }

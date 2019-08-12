@@ -13,7 +13,7 @@ interface ScreenProps {
   id: string
   name: string
   members: IContact[]
-  thumb?: IFiles
+  thumb?: string
   valid: boolean
   onPress: (groupCardProps: any) => void
   onPressInvalid?: () => void
@@ -32,7 +32,7 @@ export default function groupCard(props: ScreenProps) {
         <View style={styles.imageContainer}>
           <View style={styles.imageStretch}>
             <TextileImage
-              target={thumb.data}
+              target={thumb}
               index={0}
               forMinWidth={ICON_WIDTH}
               resizeMode={'cover'}

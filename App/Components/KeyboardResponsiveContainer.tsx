@@ -4,11 +4,13 @@ import {
   EmitterSubscription,
   View,
   ViewStyle,
-  LayoutAnimation
+  LayoutAnimation,
+  Platform
 } from 'react-native'
 
 interface Props {
   style?: ViewStyle
+  ios?: boolean
 }
 
 interface State {
@@ -107,6 +109,9 @@ export default class KeyboardResponsiveContainer extends React.Component<
 
   render() {
     const { style } = this.props
+    if (this.props.ios === false && Platform.OS === 'ios') {
+      return <View style={style}>{this.props.children}</View>
+    }
     return (
       <View style={{ flex: 1 }}>
         <View style={[style, { flex: 1 }]}>{this.props.children}</View>
