@@ -64,6 +64,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
     if (data) {
       UIImage *image = [UIImage imageWithData:data scale:1];
       super.image = image;
+      self.needsRenderImage = false;
       if (self.onLoad) {
         self.onLoad(@{});
       }
@@ -98,8 +99,6 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
         [self processData:data error:error];
       }];
     }
-
-    self.needsRenderImage = false;
   }
 }
 
