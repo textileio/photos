@@ -9,6 +9,7 @@ import { RootState } from './Types'
 import { IFiles } from '@textile/react-native-sdk'
 
 const actions = {
+  deselectSharingPhoto: createAction('DESELECT_SHARING_TARGET'),
   updateSharingPhotoImage: createAction(
     'UPDATE_SHARING_PHOTO_IMAGE',
     resolve => {
@@ -33,6 +34,10 @@ const actions = {
       return (comment: string) => resolve({ comment })
     }
   ),
+  initShareRequest: createAction('INIT_SHARE_PHOTO_REQUEST', resolve => {
+    return (threadId: string, comment?: string) =>
+      resolve({ threadId, comment })
+  }),
   sharePhotoRequest: createAction('SHARE_PHOTO_REQUEST', resolve => {
     return (image: string, threadId: string, comment?: string) =>
       resolve({ image, threadId, comment })
@@ -48,11 +53,8 @@ const actions = {
   showImagePicker: createAction('SHOW_IMAGE_PICKER', resolve => {
     return (pickerType?: string) => resolve({ pickerType })
   }),
-  showWalletPicker: createAction('SHOW_WALLET_PICKER', resolve => {
+  refreshGalleryImages: createAction('REFRESH_GALLERY_IMAGEs', resolve => {
     return (threadId?: string) => resolve({ threadId })
-  }),
-  walletPickerSuccess: createAction('WALLET_PICKER_SUCCESS', resolve => {
-    return (photo: IFiles) => resolve({ photo })
   }),
   newImagePickerSelection: createAction(
     'NEW_IMAGE_PICKER_SELECTION',
@@ -133,6 +135,16 @@ export function reducer(
   action: UIAction
 ): UIState {
   switch (action.type) {
+    case getType(actions.deselectSharingPhoto): {
+      return {
+        ...state,
+        sharingPhoto: {
+          ...state.sharingPhoto,
+          image: undefined,
+          files: undefined
+        }
+      }
+    }
     case getType(actions.updateSharingPhotoImage): {
       const { image } = action.payload
       return {
@@ -149,7 +161,16 @@ export function reducer(
     }
     case getType(actions.updateSharingPhotoThread): {
       const { threadId } = action.payload
-      return { ...state, sharingPhoto: { ...state.sharingPhoto, threadId } }
+      // make the two share files undefined to ensure no mistake thread shares
+      return {
+        ...state,
+        sharingPhoto: {
+          ...state.sharingPhoto,
+          threadId,
+          files: undefined,
+          image: undefined
+        }
+      }
     }
     case getType(actions.updateSharingPhotoComment): {
       const { comment } = action.payload

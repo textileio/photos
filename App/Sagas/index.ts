@@ -33,8 +33,8 @@ import { startup } from './StartupSagas'
 
 import {
   showImagePicker,
-  showWalletPicker,
-  walletPickerSuccess,
+  refreshGalleryImages,
+  initShareRequest,
   handleSharePhotoRequest,
   handleCancel
 } from './ImageSharingSagas'
@@ -178,8 +178,8 @@ export default function*() {
     takeEvery(getType(UIActions.shareByLink), presentPublicLinkInterface),
 
     takeEvery(getType(UIActions.showImagePicker), showImagePicker),
-    takeEvery(getType(UIActions.showWalletPicker), showWalletPicker),
-    takeEvery(getType(UIActions.walletPickerSuccess), walletPickerSuccess),
+    takeEvery(getType(UIActions.refreshGalleryImages), refreshGalleryImages),
+    takeEvery(getType(UIActions.initShareRequest), initShareRequest),
     takeEvery(getType(UIActions.sharePhotoRequest), handleSharePhotoRequest),
     takeEvery(getType(UIActions.cancelSharingPhoto), handleCancel),
 

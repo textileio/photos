@@ -274,7 +274,8 @@ export function reducer(
         // We should always have threadData before a refreshThreadSuccess, but just make sure.
         return state
       }
-      const updated = photos.length > 0 ? photos[0].date.nanos : undefined
+
+      const updated = Math.max(...photos.map(o => o.date.seconds as number), 0)
 
       const thumb = photos.length > 0 ? photos[0].data : undefined
 
