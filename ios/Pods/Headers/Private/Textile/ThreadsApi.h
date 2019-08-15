@@ -1,1 +1,1 @@
-../../../Textile/Textile/Classes/ThreadsApi.h
+../../../Textile/Textile/Classes/Public/ThreadsApi.h

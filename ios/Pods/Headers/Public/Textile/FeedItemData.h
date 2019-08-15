@@ -1,1 +1,1 @@
-../../../Textile/Textile/Classes/FeedItemData.h
+../../../Textile/Textile/Classes/Model/FeedItemData.h

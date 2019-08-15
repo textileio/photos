@@ -119,13 +119,13 @@ PODS:
     - React
   - RNReanimated (1.0.1):
     - React
-  - Textile (2.0.5):
+  - Textile (2.0.7):
     - Protobuf (~> 3.7)
-    - TextileCore (= 0.6.9)
-  - textile-react-native-sdk (3.0.6):
+    - TextileCore (= 0.6.11)
+  - textile-react-native-sdk (3.0.7):
     - React
-    - Textile (= 2.0.5)
-  - TextileCore (0.6.9):
+    - Textile (= 2.0.7)
+  - TextileCore (0.6.11):
     - Protobuf (~> 3.7)
   - yoga (0.58.6.React)
 
@@ -204,9 +204,9 @@ SPEC CHECKSUMS:
   React: 130b87b2d5e2baac646954282cab87be986d98fc
   RNFirebase: 0025ab54718dbd3fa76e216be7eda9a37c89772d
   RNReanimated: c8dd490ca98a4edcba229bfa49f2516c95a43afb
-  Textile: aa7d6160ab36e4ead9f9b3105741748d0f9676a5
-  textile-react-native-sdk: b16aa688ee3b95e16064eb123dc2931ae4288fb8
-  TextileCore: bd6b4c2385346fd4520723d4436c98425d8ad165
+  Textile: a1a3f6cb1b4f7389a4c35266a9da8c1c4409b70e
+  textile-react-native-sdk: aa06fe4e32d469ac76aa943e78e4adb835904716
+  TextileCore: 0dd6bde9d910cb23b62549d88ac1439f57849962
   yoga: 32d7ef1081951e9a35a4c72a7be797598b138a48
 
 PODFILE CHECKSUM: 31d662bdb3054b6ac8383fae40334d4e19e8c0e1

@@ -1,1 +1,1 @@
-../../../Textile/Textile/Classes/ProfileApi.h
+../../../Textile/Textile/Classes/Public/ProfileApi.h

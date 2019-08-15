@@ -1,1 +1,1 @@
-../../../Textile/Textile/Classes/CafesApi.h
+../../../Textile/Textile/Classes/Public/CafesApi.h

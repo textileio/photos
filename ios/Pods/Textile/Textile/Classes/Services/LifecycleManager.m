@@ -8,6 +8,7 @@
 
 #import "LifecycleManager.h"
 #import <UIKit/UIKit.h>
+#import "Callback.h"
 
 typedef NS_CLOSED_ENUM(NSInteger, AppState) {
   AppStateNone,
@@ -126,13 +127,12 @@ typedef NS_CLOSED_ENUM(NSInteger, AppState) {
 }
 
 - (void)stopNode {
-  NSError *error;
-  [self.node stop:&error];
-  if(error) {
-    if ([self.delegate respondsToSelector:@selector(nodeFailedToStopWithError:)]) {
-      [self.delegate nodeFailedToStopWithError:error];
+  Callback *cb = [[Callback alloc] initWithCompletion:^(NSError *error) {
+    if(error && [self.delegate respondsToSelector:@selector(nodeFailedToStopWithError:)]) {
+       [self.delegate nodeFailedToStopWithError:error];
     }
-  }
+  }];
+  [self.node stop:cb];
 }
 
 @end

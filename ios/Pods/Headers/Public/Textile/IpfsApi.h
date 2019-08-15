@@ -1,1 +1,1 @@
-../../../Textile/Textile/Classes/IpfsApi.h
+../../../Textile/Textile/Classes/Public/IpfsApi.h
