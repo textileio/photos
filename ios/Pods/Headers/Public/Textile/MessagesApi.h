@@ -1,1 +1,1 @@
-../../../Textile/Textile/Classes/MessagesApi.h
+../../../Textile/Textile/Classes/Public/MessagesApi.h

@@ -10,6 +10,7 @@
 #import "Messenger.h"
 #import "LifecycleManager.h"
 #import "RequestsHandler.h"
+#import "Callback.h"
 
 NSString *const TEXTILE_BACKGROUND_SESSION_ID = @"textile";
 
@@ -40,8 +41,6 @@ NSString *const TEXTILE_BACKGROUND_SESSION_ID = @"textile";
 
 + (BOOL)migrateRepo:(NSString *)repoPath error:(NSError **)error;
 + (MobileMobile *)newTextile:(NSString *)repoPath debug:(BOOL)debug requestsHandler:(RequestsHandler *)requestsHandler messenger:(Messenger *)messenger error:(NSError **)error;
-- (void)start:(NSError **)error;
-- (void)stop:(NSError **)error;
 
 @end
 
@@ -143,33 +142,34 @@ NSString *const TEXTILE_BACKGROUND_SESSION_ID = @"textile";
   return [[Summary alloc] initWithData:data error:error];
 }
 
-- (void)destroy:(NSError * _Nullable __autoreleasing *)error {
-  [self.node stop:error];
-  if (!*error) {
-    self.delegate = nil;
-    self.node = nil;
-    self.messenger = nil;
+- (void)destroy {
+  Callback *cb = [[Callback alloc] initWithCompletion:^(NSError *error) {
+  }];
+  [self.node stop:cb];
+  
+  self.delegate = nil;
+  self.node = nil;
+  self.messenger = nil;
 
-    self.account = nil;
-    self.cafes = nil;
-    self.comments = nil;
-    self.contacts = nil;
-    self.feed = nil;
-    self.files = nil;
-    self.flags = nil;
-    self.ignores = nil;
-    self.invites = nil;
-    self.ipfs = nil;
-    self.likes = nil;
-    self.logs = nil;
-    self.messages = nil;
-    self.notifications = nil;
-    self.profile = nil;
-    self.schemas = nil;
-    self.threads = nil;
+  self.account = nil;
+  self.cafes = nil;
+  self.comments = nil;
+  self.contacts = nil;
+  self.feed = nil;
+  self.files = nil;
+  self.flags = nil;
+  self.ignores = nil;
+  self.invites = nil;
+  self.ipfs = nil;
+  self.likes = nil;
+  self.logs = nil;
+  self.messages = nil;
+  self.notifications = nil;
+  self.profile = nil;
+  self.schemas = nil;
+  self.threads = nil;
 
-    self.lifecycleManager = nil;
-  }
+  self.lifecycleManager = nil;
 }
 
 #pragma mark Private
@@ -186,14 +186,6 @@ NSString *const TEXTILE_BACKGROUND_SESSION_ID = @"textile";
   config.debug = debug;
   config.cafeOutboxHandler = requestsHandler;
   return MobileNewTextile(config, messenger, error);
-}
-
-- (void)start:(NSError *__autoreleasing *)error {
-  [self.node start:error];
-}
-
-- (void)stop:(NSError *__autoreleasing *)error {
-  [self.node stop:error];
 }
 
 - (void)createNodeDependants {

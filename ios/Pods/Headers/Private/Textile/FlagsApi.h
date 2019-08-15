@@ -1,1 +1,1 @@
-../../../Textile/Textile/Classes/FlagsApi.h
+../../../Textile/Textile/Classes/Public/FlagsApi.h

@@ -1,1 +1,1 @@
-../../../Textile/Textile/Classes/FeedApi.h
+../../../Textile/Textile/Classes/Public/FeedApi.h

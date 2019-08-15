@@ -1,1 +1,1 @@
-../../../Textile/Textile/Classes/InvitesApi.h
+../../../Textile/Textile/Classes/Public/InvitesApi.h
