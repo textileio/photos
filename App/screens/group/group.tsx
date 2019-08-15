@@ -51,6 +51,9 @@ const momentSpec: moment.CalendarSpec = {
 
 const screenWidth = Dimensions.get('screen').width
 
+const contStyle =
+      Platform.OS === 'ios' ? { flex: 1, paddingBottom: 40 } : {}
+
 interface StateProps {
   threadId: string
   items: ReadonlyArray<Item>
@@ -161,8 +164,44 @@ class Group extends React.PureComponent<Props, State> {
     })
   }
 
-  render() {
-    const threadId = this.props.navigation.getParam('threadId')
+  componentDidUpdate(prevProps: Props, prevState: State) {
+    if (this.state.selected && prevState.selected !== this.state.selected) {
+      this.blockActionSheet.show()
+    }
+  }
+
+  renderBlockActionSheet = () => {
+    const { selected } = this.state
+    if (!selected) return
+    const { canRemove, isCopyable } = selected
+    if (!canRemove && !isCopyable) return
+
+    // Block action sheet
+    const blockActionSheetOptions = [
+      ...(canRemove
+        ? ['Remove']
+        : []),
+      ...(isCopyable
+        ? ['Copy']
+        : []),
+      'Cancel'
+    ]
+    const blockCancelButtonIndex = blockActionSheetOptions.indexOf('Cancel')
+
+    return (
+      <ActionSheet
+        ref={(o: any) => {
+          this.blockActionSheet = o
+        }}
+        title={'Options'}
+        options={blockActionSheetOptions}
+        cancelButtonIndex={blockCancelButtonIndex}
+        onPress={this.handleBlockActionSheetResponse}
+      />
+    )
+  }
+
+  renderThreadActionSheet = () => {
     // Thread action sheet
     const threadActionSheetOptions = [
       ...(this.props.canInvite ? ['Invite Others'] : []),
@@ -173,22 +212,25 @@ class Group extends React.PureComponent<Props, State> {
       'Cancel'
     ]
     const threadCancelButtonIndex = threadActionSheetOptions.indexOf('Cancel')
-    // Block action sheet
-    const blockActionSheetOptions = [
-      ...(this.state.selected && this.state.selected.canRemove
-        ? ['Remove']
-        : []),
-      ...(this.state.selected && this.state.selected.isCopyable
-        ? ['Copy']
-        : []),
-      'Cancel'
-    ]
-    const blockCancelButtonIndex = blockActionSheetOptions.indexOf('Cancel')
+    return (
+      <ActionSheet
+        ref={(o: any) => {
+          this.threadActionSheet = o
+        }}
+        title={this.props.groupName + ' options'}
+        options={threadActionSheetOptions}
+        cancelButtonIndex={threadCancelButtonIndex}
+        onPress={this.handleThreadActionSheetResponse}
+      />
+    )
+  }
+
+  render() {
+    const threadId = this.props.navigation.getParam('threadId')
 
     // The rn-keyboard module caused some issues with Android vs iOS, this fixes it
-    const contStyle =
-      Platform.OS === 'ios' ? { flex: 1, paddingBottom: 40 } : {}
-
+    
+    
     return (
       <View style={{ flex: 1, flexGrow: 1 }}>
         <KeyboardResponsiveContainer style={contStyle} ios={false}>
@@ -209,24 +251,8 @@ class Group extends React.PureComponent<Props, State> {
             selectedThreadId={threadId}
             selectedThreadName={this.props.groupName}
           />
-          <ActionSheet
-            ref={(o: any) => {
-              this.threadActionSheet = o
-            }}
-            title={this.props.groupName + ' options'}
-            options={threadActionSheetOptions}
-            cancelButtonIndex={threadCancelButtonIndex}
-            onPress={this.handleThreadActionSheetResponse}
-          />
-          <ActionSheet
-            ref={(o: any) => {
-              this.blockActionSheet = o
-            }}
-            title={'Options'}
-            options={blockActionSheetOptions}
-            cancelButtonIndex={blockCancelButtonIndex}
-            onPress={this.handleBlockActionSheetResponse}
-          />
+          {this.renderThreadActionSheet()}
+          {this.renderBlockActionSheet()}
           <RenameGroupModal
             isVisible={this.state.showRenameGroupModal}
             threadId={threadId}
@@ -298,13 +324,12 @@ class Group extends React.PureComponent<Props, State> {
               id: comment.id,
               username: comment.user.name || '?',
               body: comment.body,
-              onLongPress: () =>
-                this.showBlockActionSheet(
-                  comment.id,
-                  canRemoveComment,
-                  true,
-                  comment.body
-                )
+              onLongPress: this.configureBlockActionSheet(
+                comment.id,
+                canRemoveComment,
+                true,
+                comment.body
+              )
             }
           }
         )
@@ -348,9 +373,7 @@ class Group extends React.PureComponent<Props, State> {
             pinchWidth={pinchWidth}
             pinchHeight={pinchHeight}
             onLongPress={
-              canRemove
-                ? () => this.showBlockActionSheet(item.block, true, false)
-                : undefined
+              canRemove ? this.configureBlockActionSheet(item.block, true, false) : undefined
             }
           />
         )
@@ -378,8 +401,8 @@ class Group extends React.PureComponent<Props, State> {
         const avatar = isSameUser ? undefined : user.avatar
         return (
           <TouchableWithoutFeedback
-            onLongPress={() =>
-              this.showBlockActionSheet(
+            onLongPress={
+              this.configureBlockActionSheet(
                 item.block,
                 canRemove,
                 true,
@@ -454,7 +477,17 @@ class Group extends React.PureComponent<Props, State> {
         text
       }
     })
-    this.blockActionSheet.show()
+  }
+
+  configureBlockActionSheet = (
+    blockId: string,
+    canRemove: boolean,
+    isCopyable: boolean,
+    text?: string
+  ) => {
+    return () => {
+      return this.showBlockActionSheet(blockId, canRemove, isCopyable, text)
+    }
   }
 
   handleThreadActionSheetResponse = (index: number) => {
