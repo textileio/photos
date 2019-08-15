@@ -1,1 +1,1 @@
-../../../Textile/Textile/Classes/LikesApi.h
+../../../Textile/Textile/Classes/Public/LikesApi.h

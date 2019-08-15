@@ -153,14 +153,6 @@ name is the string value of a pb.MobileEvent_Type)
 - (void)fileContent:(NSString* _Nullable)hash cb:(id<MobileDataCallback> _Nullable)cb;
 - (NSData* _Nullable)files:(NSString* _Nullable)threadId offset:(NSString* _Nullable)offset limit:(long)limit error:(NSError* _Nullable* _Nullable)error;
 /**
- * FlushLock locks the flush lock
- */
-- (void)flushLock;
-/**
- * FlushUnlock unlocks the flush lock
- */
-- (void)flushUnlock;
-/**
  * GitSummary returns common GitSummary
  */
 - (NSString* _Nonnull)gitSummary;
@@ -235,7 +227,7 @@ name is the string value of a pb.MobileEvent_Type)
 /**
  * Stop the mobile node
  */
-- (BOOL)stop:(NSError* _Nullable* _Nullable)error;
+- (void)stop:(id<MobileCallback> _Nullable)cb;
 /**
  * Summary calls core Summary
  */
@@ -258,6 +250,14 @@ name is the string value of a pb.MobileEvent_Type)
  * Version returns common Version
  */
 - (NSString* _Nonnull)version;
+/**
+ * WaitAdd calls core WaitAdd
+ */
+- (void)waitAdd:(long)delta src:(NSString* _Nullable)src;
+/**
+ * WaitDone marks a wait as done in the stop wait group
+ */
+- (void)waitDone:(NSString* _Nullable)src;
 - (void)writeCafeRequest:(NSString* _Nullable)group cb:(id<MobileProtoCallback> _Nullable)cb;
 @end
 

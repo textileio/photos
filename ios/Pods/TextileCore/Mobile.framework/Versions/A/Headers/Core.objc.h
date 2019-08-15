@@ -375,14 +375,6 @@ and stores (unless `store` is false) a bcrypt hashed version for later compariso
  * FlushCafes flushes the cafe request outbox
  */
 - (void)flushCafes;
-/**
- * FlushLock locks the flush lock
- */
-- (void)flushLock;
-/**
- * FlushUnlock unlocks the flush lock
- */
-- (void)flushUnlock;
 // skipped method Textile.GetMedia with unsupported parameter or return types
 
 // skipped method Textile.GetMillMedia with unsupported parameter or return types
@@ -407,10 +399,6 @@ and stores (unless `store` is false) a bcrypt hashed version for later compariso
 
 // skipped method Textile.LinksAtPath with unsupported parameter or return types
 
-/**
- * Lock locks the main textile lock
- */
-- (void)lock;
 // skipped method Textile.Message with unsupported parameter or return types
 
 // skipped method Textile.Messages with unsupported parameter or return types
@@ -534,10 +522,6 @@ Note: Only thread initiators can update the thread's name
 
 // skipped method Textile.Threads with unsupported parameter or return types
 
-/**
- * Unlock unlocks the main textile lock
- */
-- (void)unlock;
 // skipped method Textile.UpdateCh with unsupported parameter or return types
 
 /**
@@ -546,6 +530,14 @@ bcrypt hashed equivalent
  */
 - (BOOL)validateCafeToken:(NSString* _Nullable)token ret0_:(BOOL* _Nullable)ret0_ error:(NSError* _Nullable* _Nullable)error;
 - (BOOL)verify:(NSData* _Nullable)input sig:(NSData* _Nullable)sig error:(NSError* _Nullable* _Nullable)error;
+/**
+ * WaitAdd add delta wait to the stop wait group
+ */
+- (void)waitAdd:(long)delta src:(NSString* _Nullable)src;
+/**
+ * WaitDone marks a wait as done in the stop wait group
+ */
+- (void)waitDone:(NSString* _Nullable)src;
 // skipped method Textile.Writer with unsupported parameter or return types
 
 @end
