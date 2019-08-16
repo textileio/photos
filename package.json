@@ -28,7 +28,7 @@
     "react-native-hyperlink": "0.0.14",
     "react-native-image-pan-zoom": "^2.1.11",
     "react-native-image-picker": "^0.28.1",
-    "react-native-keyboard-input": "5.3.1",
+    "react-native-keyboard-input": "textileio/react-native-keyboard-input",
     "react-native-modal": "^6.5.0",
     "react-native-progress": "^3.6.0",
     "react-native-push-notification": "^3.1.1",
