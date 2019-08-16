@@ -10,14 +10,16 @@ import {
   TouchableOpacity,
   Insets
 } from 'react-native'
+import { Dispatch } from 'redux'
+import { connect } from 'react-redux'
 import Toast from 'react-native-easy-toast'
 import Config from 'react-native-config'
-import { Buffer } from 'buffer'
+import { wrapOnboarding } from './WrapOnboarding'
 
-import Input from '../SB/components/Input'
-import Button from '../Components/LargeButton'
-import { color, textStyle, fontFamily, spacing } from '../styles'
-import { emailValid } from '../Services/email'
+import Input from '../../SB/components/Input'
+import Button from '../../Components/LargeButton'
+import { color, textStyle, fontFamily, spacing } from '../../styles'
+import { emailValid } from '../../Services/email'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
@@ -81,10 +83,7 @@ interface State {
   buttonText: string
 }
 
-export default class MailListSignupScreen extends React.Component<
-  Props,
-  State
-> {
+class MailListSignupScreen extends React.Component<Props, State> {
   toast?: Toast
 
   constructor(props: Props) {
@@ -199,3 +198,12 @@ export default class MailListSignupScreen extends React.Component<
     }
   }
 }
+
+function isMailingListSignupScreenComplete(props: Props): boolean {
+  return false
+}
+
+export default connect(
+  undefined,
+  undefined
+)(wrapOnboarding(MailListSignupScreen, isMailingListSignupScreenComplete))

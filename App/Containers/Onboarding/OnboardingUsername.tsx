@@ -10,12 +10,13 @@ import {
   TextStyle,
   View
 } from 'react-native'
+import { wrapOnboarding } from './WrapOnboarding'
 
-import Input from '../SB/components/Input'
-import Button from '../Components/LargeButton'
-import { RootAction, RootState } from '../Redux/Types'
-import { accountActions } from '../features/account'
-import { color, textStyle, spacing, fontFamily } from '../styles'
+import Input from '../../SB/components/Input'
+import Button from '../../Components/LargeButton'
+import { RootAction, RootState } from '../../Redux/Types'
+import { accountActions } from '../../features/account'
+import { color, textStyle, spacing, fontFamily } from '../../styles'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
@@ -175,7 +176,11 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
     dispatch(accountActions.setUsernameRequest(username))
 })
 
+function isChooseUsernameComplete(props: Props): boolean {
+  return false
+}
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(OnboardingUsername)
+)(wrapOnboarding(OnboardingUsername, isChooseUsernameComplete))

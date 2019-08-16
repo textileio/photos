@@ -11,7 +11,7 @@ import { accountReducer } from '../features/account'
 import { reducer as authReducer } from './AuthRedux'
 import { contactsReducer } from '../features/contacts'
 import { reducer as groupsReducer } from './GroupsRedux'
-import { reducer as prefrencesReducer } from './PreferencesRedux'
+import { reducer as preferencesReducer } from './PreferencesRedux'
 import { reducer as photoViewingReducer } from './PhotoViewingRedux'
 import { reducer as notificationsReducer } from './NotificationsRedux'
 import { reducer as threadsReducer } from './ThreadsRedux'
@@ -403,7 +403,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   contacts: contactsReducer,
   groups: groupsReducer,
-  preferences: prefrencesReducer,
+  preferences: preferencesReducer,
   photoViewing: photoViewingReducer,
   notifications: notificationsReducer,
   threads: threadsReducer,

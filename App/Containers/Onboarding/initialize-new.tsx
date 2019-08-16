@@ -4,13 +4,15 @@ import { connect } from 'react-redux'
 import { Text, ViewStyle, TextStyle, View } from 'react-native'
 import Icon from '@textile/react-native-icon'
 
-import Loading from '../Components/Loading'
-import { RootAction, RootState } from '../Redux/Types'
+import Loading from '../../Components/Loading'
+import { RootAction, RootState } from '../../Redux/Types'
 import {
   initializationActions,
   initializationSelectors
-} from '../features/initialization'
-import { color, textStyle, spacing, size, fontFamily } from '../styles'
+} from '../../features/initialization'
+import { color, textStyle, spacing, size, fontFamily } from '../../styles'
+
+import { wrapOnboarding } from './WrapOnboarding'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
@@ -145,7 +147,11 @@ function mapDispatchToProps(dispatch: Dispatch<RootAction>): DispatchProps {
   }
 }
 
+function isInitializeNewAccountComplete(props: Props): boolean {
+  return false
+}
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(InitializeNew)
+)(wrapOnboarding(InitializeNew, isInitializeNewAccountComplete))

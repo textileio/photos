@@ -1,13 +1,13 @@
 import { createSwitchNavigator } from 'react-navigation'
 
 import StatusCheck from '../../../Containers/StatusCheck'
-import Initialize from '../../../screens/initialize'
+import Onboarding from '../../../Containers/Onboarding'
 import PrimaryNav from './Primary'
 
 const nav = createSwitchNavigator(
   {
     StatusCheck,
-    Initialize,
+    Onboarding,
     PrimaryNav
   },
   {

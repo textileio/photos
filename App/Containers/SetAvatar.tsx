@@ -113,9 +113,9 @@ interface DispatchProps {
   cancel: () => void
 }
 
-type Props = OwnProps & StateProps & DispatchProps
+export type Props = OwnProps & StateProps & DispatchProps
 
-class SetAvatar extends React.Component<Props> {
+export class SetAvatar extends React.Component<Props> {
   static navigationOptions = ({ navigation }: NavigationScreenProps) => {
     const params = navigation.state.params || {}
     return {
@@ -232,7 +232,7 @@ class SetAvatar extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state: RootState): StateProps => ({
+export const mapStateToProps = (state: RootState): StateProps => ({
   buttonText: state.account.chosenProfilePhoto.image ? 'Save' : 'Choose Photo',
   displaySubButton: state.account.chosenProfilePhoto.image !== undefined,
   image: state.account.chosenProfilePhoto.image,
@@ -242,7 +242,9 @@ const mapStateToProps = (state: RootState): StateProps => ({
     : false
 })
 
-const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
+export const mapDispatchToProps = (
+  dispatch: Dispatch<RootAction>
+): DispatchProps => ({
   displayPhotoChooser: () =>
     dispatch(accountActions.chooseProfilePhoto.request()),
   submitAvatar: (image: SharedImage) =>

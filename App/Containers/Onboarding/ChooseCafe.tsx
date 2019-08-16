@@ -2,18 +2,19 @@ import React, { Component } from 'react'
 import { SafeAreaView, Text, ViewStyle, TextStyle, Alert } from 'react-native'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
+import { wrapOnboarding } from './WrapOnboarding'
 
-import { RootState, RootAction } from '../Redux/Types'
-import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
-import { Cafe } from '../features/cafes/models'
-import { cafesActions, cafesSelectors } from '../features/cafes'
+import { RootState, RootAction } from '../../Redux/Types'
+import { TextileEventsSelectors } from '../../Redux/TextileEventsRedux'
+import { Cafe } from '../../features/cafes/models'
+import { cafesActions, cafesSelectors } from '../../features/cafes'
 
-import CafesList from '../Components/CafesList'
-import Button from '../Components/LargeButton'
-import CafePeerIdModal from '../Components/CafePeerIdModal'
-import Loading from '../Components/Loading'
+import CafesList from '../../Components/CafesList'
+import Button from '../../Components/LargeButton'
+import CafePeerIdModal from '../../Components/CafePeerIdModal'
+import Loading from '../../Components/Loading'
 
-import { spacing, textStyle, color } from '../styles'
+import { spacing, textStyle, color } from '../../styles'
 
 const CONTAINER: ViewStyle = {
   flex: 1
@@ -197,7 +198,11 @@ const mapDispatchToProps = (
   }
 }
 
+function isChooseCafeComplete(props: Props): boolean {
+  return false
+}
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ChooseCafe)
+)(wrapOnboarding(ChooseCafe, isChooseCafeComplete))

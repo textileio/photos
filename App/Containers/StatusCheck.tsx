@@ -12,22 +12,25 @@ import { initializationSelectors } from '../features/initialization'
 import { color } from '../styles'
 
 interface StateProps {
-  initialized: boolean
-  onboarded: boolean
   nodeStarted: boolean
   nodeError?: string
 }
 
 type Props = StateProps & NavigationScreenProps<{}>
 
-class StatusCheck extends React.Component<Props, {}> {
-  static getDerivedStateFromProps(props: Props, state: {}) {
-    if (
-      !props.nodeError &&
-      props.initialized &&
-      props.nodeStarted &&
-      props.onboarded
-    ) {
+interface State {
+  onboardingCompleted: boolean
+}
+
+// This component serves two functions when the application starts
+// 1. It ensures that the Textile Node, if initialized, has started.
+// 2. It ensures that the user has completed onboarding.
+
+class StatusCheck extends React.Component<Props, State> {
+  // This is called on every re-render, whether it is from
+  // a change in the props or from a call to local setState
+  static getDerivedStateFromProps(props: Props, state: State) {
+    if (!props.nodeError && props.nodeStarted && state.onboardingCompleted) {
       props.navigation.navigate('PrimaryNav')
     }
     // tslint:disable-next-line no-null-keyword
@@ -36,12 +39,20 @@ class StatusCheck extends React.Component<Props, {}> {
 
   constructor(props: Props) {
     super(props)
-    this.state = {}
+    this.state = {
+      onboardingCompleted: false
+    }
   }
 
   render() {
-    if (!this.props.initialized) {
-      return <Initialize navigation={this.props.navigation} />
+    if (!this.state.onboardingCompleted) {
+      // Return onboarding component here
+      return (
+        <Loading
+          color={color.brandBlue}
+          text={'Waiting for node to start...'}
+        />
+      )
     } else if (this.props.nodeError) {
       return <FatalErrorView message={this.props.nodeError} />
     } else {
@@ -53,12 +64,16 @@ class StatusCheck extends React.Component<Props, {}> {
       )
     }
   }
+
+  _onboardingCompleted = () => {
+    this.setState({
+      onboardingCompleted: true
+    })
+  }
 }
 
 function mapStateToProps(state: RootState): StateProps {
   return {
-    initialized: initializationSelectors.initialized(state.initialization),
-    onboarded: state.initialization.onboarding.completed,
     nodeStarted: TextileEventsSelectors.started(state),
     nodeError: state.textile.nodeState.error
   }
