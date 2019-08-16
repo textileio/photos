@@ -48,7 +48,9 @@ class Account extends Component<Props> {
             {props.username}
           </Text>
         </View>
-        <DrawerItems {...props} />
+        <DrawerItems 
+          {...props} 
+        />
       </View>
     )
   }
