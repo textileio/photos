@@ -5460,10 +5460,9 @@ react-native-image-picker@^0.28.1:
   resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-0.28.1.tgz#1127460522e0c9741fc62f3d040271d298fb6a6e"
   integrity sha512-CW2dm+cjsdW2fjBW2WD/cSufNG0x0UpljwGHrjSzyB0TckoW+tjYv44UWtckCWxr1JtCg+QrYDO/MzlRyFcjwQ==
 
-react-native-keyboard-input@5.3.1:
+react-native-keyboard-input@textileio/react-native-keyboard-input:
   version "5.3.1"
-  resolved "https://registry.yarnpkg.com/react-native-keyboard-input/-/react-native-keyboard-input-5.3.1.tgz#e90f43e17c070535cb54cc0be66a247f177474fc"
-  integrity sha512-NdKgueDFetyh77CC8veXE9jgISxatKbWkOpe3wfyPjw9O0J/c7EI5CEjSp5/ICufkvY6oLVDsZrP6TngTxTrXw==
+  resolved "https://codeload.github.com/textileio/react-native-keyboard-input/tar.gz/f6f4cf56c04a9601cdb6b87b0cbc7d93e82b766f"
   dependencies:
     lodash "^4.17.4"
     react-native-keyboard-tracking-view "^5.5.0"
