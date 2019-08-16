@@ -82,7 +82,7 @@ class ShowRecoveryPhrase extends React.Component<StateProps, State> {
       <View style={CONTAINER}>
         <Image
           style={IMAGE}
-          source={require('../Containers/OnboardingScreen/statics/secure.png')}
+          source={require('../Containers/Onboarding/statics/secure.png')}
         />
         <Text style={TITLE}>Important!</Text>
         <Text style={SUBTITLE}>

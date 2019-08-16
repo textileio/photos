@@ -123,7 +123,7 @@ export default class ReferralCode extends React.Component<Props, State> {
         <View>
           <Image
             style={IMAGE}
-            source={require('../Containers/OnboardingScreen/statics/secure.png')}
+            source={require('../Containers/Onboarding/statics/secure.png')}
           />
           <Text style={TITLE}>Referral Code</Text>
           <Text style={SUBTITLE}>

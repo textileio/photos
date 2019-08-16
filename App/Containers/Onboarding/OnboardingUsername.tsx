@@ -127,10 +127,7 @@ class OnboardingUsername extends React.Component<Props, State> {
     return (
       <KeyboardAvoidingView style={CONTAINER} behavior={'padding'}>
         <View>
-          <Image
-            style={IMAGE}
-            source={require('../Containers/OnboardingScreen/statics/share.png')}
-          />
+          <Image style={IMAGE} source={require('./statics/share.png')} />
           <Text style={TITLE}>Choose a display name</Text>
           <Text style={SUBTITLE}>
             It will be shown when you share, comment, or like a photo.

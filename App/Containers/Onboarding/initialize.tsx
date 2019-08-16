@@ -155,7 +155,10 @@ class Initialize extends Component<Props, State> {
           <View style={{ flex: 1 }} />
           <View>
             <Text style={TITLE}>Welcome to Textile!</Text>
-            <Image style={IMAGE} source={require('../Images/Icon_100.png')} />
+            <Image
+              style={IMAGE}
+              source={require('../../Images/Icon_100.png')}
+            />
             <Text style={SUBTITLE}>
               With Textile, you can securely share photos and messages with the
               people you care about while maintaining ownership of your data.

@@ -108,10 +108,7 @@ class MailListSignupScreen extends React.Component<Props, State> {
     return (
       <KeyboardAvoidingView style={CONTAINER} behavior={'padding'}>
         <View>
-          <Image
-            style={IMAGE}
-            source={require('../Containers/OnboardingScreen/statics/share.png')}
-          />
+          <Image style={IMAGE} source={require('./statics/share.png')} />
           <Text style={TITLE}>Keep in touch!</Text>
           <Text style={SUBTITLE}>
             If you&apos;d like to receive periodic updates and information from
