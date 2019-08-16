@@ -6,12 +6,15 @@ import { NavigationScreenProps } from 'react-navigation'
 
 import { RootAction, RootState } from '../../Redux/Types'
 
+import Initialize from './initialize'
 import InitializeNew from './initialize-new'
+import InitializeExisting from './initialize-existing'
 import OnboardingUsername from './OnboardingUsername'
 import AvatarOnboarding from './AvatarOnboarding'
 import MailListSignupScreen from './MailListSignupScreen'
 import ChooseCafe from './ChooseCafe'
 import { color, spacing } from '../../styles'
+import { setCurrentPage } from '../../features/initialization/actions'
 
 // Styles
 
@@ -74,14 +77,58 @@ interface DispatchProps {}
 type Props = StateProps & DispatchProps & NavigationScreenProps
 
 interface State {
-  pagesCompleted: boolean[]
+  completedPages: boolean[]
+  currentPage: number
 }
 
+const Pages = [
+  {
+    page: Initialize,
+    props: {}
+  }
+]
+
 class Onboarding extends React.Component<Props, State> {
+  pages: JSX.Element[]
+
   constructor(props: Props) {
     super(props)
     this.state = {
-      pagesCompleted: []
+      completedPages: new Array<boolean>(Pages.length).fill(false),
+      currentPage: 0
+    }
+    this.pages = Pages.map((pageData, index) => {
+      const completed = () => {
+        const completedPages = this.state.completedPages.slice()
+        completedPages[index] = true
+        this.setState({
+          completedPages
+        })
+      }
+      return (
+        <pageData.page key={index} completed={completed} {...pageData.props} />
+      )
+    })
+  }
+
+  componentDidUpdate() {
+    // The current page is the first page that isn't completed
+    let currentPage = 0
+    while (currentPage < this.state.completedPages.length) {
+      if (this.state.completedPages[currentPage]) {
+        currentPage++
+      } else {
+        break
+      }
+    }
+    if (currentPage === this.state.completedPages.length) {
+      // If all of the pages are completed, navigate away from onboarding
+      this.props.navigation.navigate('PrimaryNav')
+    } else if (currentPage !== this.state.currentPage) {
+      // Otherwise, set current page to be the first uncompleted page in the list
+      this.setState({
+        currentPage
+      })
     }
   }
 
@@ -89,8 +136,13 @@ class Onboarding extends React.Component<Props, State> {
     return (
       <SafeAreaView style={CONTAINER}>
         <View style={CONTAINER}>
-          <View style={[CONTAINER, { marginBottom: spacing._016 }]} />
-          <ProgressBar length={0} active={0} />
+          <View style={[CONTAINER, { marginBottom: spacing._016 }]}>
+            {this.pages[this.state.currentPage]}
+          </View>
+          <ProgressBar
+            length={this.pages.length}
+            active={this.state.currentPage}
+          />
         </View>
       </SafeAreaView>
     )

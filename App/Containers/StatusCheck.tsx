@@ -4,7 +4,6 @@ import { NavigationScreenProps } from 'react-navigation'
 
 import Loading from '../Components/Loading'
 import FatalErrorView from '../Components/FatalErrorView'
-import Initialize from '../screens/initialize'
 
 import { RootState } from '../Redux/Types'
 import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'

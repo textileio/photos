@@ -15,14 +15,14 @@ import {
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import Config from 'react-native-config'
-import { NavigationScreenProps } from 'react-navigation'
 import Modal from 'react-native-modal'
+import { wrapOnboarding } from './WrapOnboarding'
 
-import Button from '../Components/SmallButton'
-import WaitListSignupScreen from '../Components/WaitListSignupScreen'
+import Button from '../../Components/SmallButton'
+import WaitListSignupScreen from '../../Components/WaitListSignupScreen'
 
-import { RootState, RootAction } from '../Redux/Types'
-import { spacing, textStyle, fontFamily, color, size } from '../styles'
+import { RootState, RootAction } from '../../Redux/Types'
+import { spacing, textStyle, fontFamily, color, size } from '../../styles'
 
 const targetReferralCode = Config.RN_TEMPORARY_REFERRAL
 
@@ -117,7 +117,7 @@ interface StateProps {}
 
 interface DispatchProps {}
 
-type Props = StateProps & DispatchProps & OwnProps & NavigationScreenProps
+type Props = StateProps & DispatchProps & OwnProps
 
 interface State {
   valid: boolean
@@ -217,10 +217,9 @@ class Initialize extends Component<Props, State> {
     })
   }
 
-  onNewAccount = () => this.props.navigation.navigate('NewAccountOnboarding')
+  onNewAccount = () => {}
 
-  onExistingAccount = () =>
-    this.props.navigation.navigate('ExistingAccountOnboarding')
+  onExistingAccount = () => {}
 }
 
 function mapStateToProps(state: RootState): StateProps {
@@ -231,7 +230,11 @@ function mapDispatchToProps(dispatch: Dispatch<RootAction>): DispatchProps {
   return {}
 }
 
+function isInitializeScreenComplete(props: Props): boolean {
+  return false
+}
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Initialize)
+)(wrapOnboarding(Initialize, isInitializeScreenComplete))
