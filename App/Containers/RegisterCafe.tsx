@@ -179,7 +179,7 @@ function mapStateToProps(state: RootState): StateProps {
   const sessions = cafesSelectors.sessions(state.cafes)
   return {
     alreadyRegistered: sessions.map(session => session.id),
-    registeringCafes: cafesSelectors.regesteringCafes(state.cafes),
+    registeringCafes: cafesSelectors.registeringCafes(state.cafes),
     nodeOnline: TextileEventsSelectors.online(state)
   }
 }

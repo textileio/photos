@@ -8,7 +8,8 @@ import Loading from '../../Components/Loading'
 import { RootAction, RootState } from '../../Redux/Types'
 import {
   initializationActions,
-  initializationSelectors
+  initializationSelectors,
+  initializationModels
 } from '../../features/initialization'
 import { color, textStyle, spacing, size, fontFamily } from '../../styles'
 
@@ -53,8 +54,9 @@ const SUCCESS: TextStyle = {
 }
 
 interface StateProps {
+  initializationPath?: initializationModels.InitializationPath
   statusText: string
-  processing: boolean
+  initialized: boolean
   error?: string
 }
 
@@ -67,15 +69,6 @@ type Props = StateProps & DispatchProps
 class InitializeNew extends React.Component<Props> {
   componentDidMount() {
     this.props.initialize()
-  }
-
-  componentDidUpdate(prevProps: Props) {
-    if (this.props.processing !== prevProps.processing) {
-      // done initializing
-      setTimeout(() => {
-        // Call on successs
-      }, 2500)
-    }
   }
 
   static successComponent() {
@@ -110,7 +103,7 @@ class InitializeNew extends React.Component<Props> {
     let element: JSX.Element
     if (this.props.error) {
       element = this.errorComponent()
-    } else if (!this.props.processing) {
+    } else if (this.props.initialized) {
       element = InitializeNew.successComponent()
     } else {
       element = <Loading text={this.props.statusText} />
@@ -129,7 +122,8 @@ function mapStateToProps(state: RootState): StateProps {
     state.initialization
   )}...`
   return {
-    processing: !initializationSelectors.initialized(state.initialization),
+    initialized: initializationSelectors.initialized(state.initialization),
+    initializationPath: state.initialization.onboarding.initializationPath,
     statusText,
     error: state.initialization.instance.error
   }
@@ -142,7 +136,9 @@ function mapDispatchToProps(dispatch: Dispatch<RootAction>): DispatchProps {
 }
 
 function isInitializeNewAccountComplete(props: Props): boolean {
-  return false
+  // This screen is completed if the node is initialized or the user has
+  // chosen to pair an existing account instead of initialize a new account.
+  return props.initialized || props.initializationPath === 'existingAccount'
 }
 
 export default connect(

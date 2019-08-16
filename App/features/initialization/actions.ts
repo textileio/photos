@@ -32,3 +32,10 @@ export const chooseInitializationPath = createAction(
     return (path?: InitializationPath) => resolve({ path })
   }
 )
+
+export const completeChooseCafeScreen = createAction(
+  'initialization/COMPLETE_CHOOSE_CAFE_SCREEN',
+  resolve => {
+    return () => resolve()
+  }
+)

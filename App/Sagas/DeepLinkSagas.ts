@@ -37,7 +37,8 @@ export function* routeThreadInvite(url: string, hash: string) {
   if (!reduxStarted) {
     yield take(getType(StartupActions.startup))
   }
-  if (yield select(initializationSelectors.onboarded)) {
+  // TODO: Tie this code to the new onboarding flow
+  /* if (yield select(initializationSelectors.onboarded)) {
     NavigationService.navigate('ThreadInvite', { ...DeepLink.getParams(hash) })
   } else {
     // simply store the pending invite information to act on after onboarding success
@@ -48,7 +49,7 @@ export function* routeThreadInvite(url: string, hash: string) {
         ? code
         : undefined
     yield put(AuthActions.onboardWithInviteRequest(url, hash, referral))
-  }
+  }*/
 }
 
 export function* routeDeepLink(

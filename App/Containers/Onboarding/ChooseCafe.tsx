@@ -8,6 +8,7 @@ import { RootState, RootAction } from '../../Redux/Types'
 import { TextileEventsSelectors } from '../../Redux/TextileEventsRedux'
 import { Cafe } from '../../features/cafes/models'
 import { cafesActions, cafesSelectors } from '../../features/cafes'
+import { initializationActions } from '../../features/initialization'
 
 import CafesList from '../../Components/CafesList'
 import Button from '../../Components/LargeButton'
@@ -40,11 +41,13 @@ const SUBMIT_BUTTON: ViewStyle = {
 
 interface StateProps {
   registeringCafes: Cafe[]
+  screenCompleted: boolean
   nodeOnline: boolean
 }
 
 interface DispatchProps {
   register: (peerId: string, token: string) => void
+  complete: () => void
 }
 
 type Props = StateProps & DispatchProps
@@ -141,7 +144,7 @@ class ChooseCafe extends Component<Props, State> {
           },
           {
             text: 'Continue',
-            onPress: () => {}
+            onPress: this.props.complete
           }
         ]
       )
@@ -173,26 +176,31 @@ class ChooseCafe extends Component<Props, State> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   return {
-    registeringCafes: cafesSelectors.regesteringCafes(state.cafes),
+    registeringCafes: cafesSelectors.registeringCafes(state.cafes),
+    screenCompleted: state.initialization.onboarding.chooseCafeScreenCompleted,
     nodeOnline: TextileEventsSelectors.online(state)
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
+  const complete = () =>
+    dispatch(initializationActions.completeChooseCafeScreen())
   return {
+    complete,
     register: (peerId: string, token: string) =>
       dispatch(
         cafesActions.registerCafe.request({
           peerId,
           token,
-          success: () => {}
+          success: complete
         })
       )
   }
 }
 
 function isChooseCafeComplete(props: Props): boolean {
-  return false
+  // This screen is completed if it is marked as completed in the redux state
+  return props.screenCompleted
 }
 
 export default connect(

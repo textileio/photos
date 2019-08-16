@@ -60,6 +60,7 @@ interface OwnProps {
 
 interface StateProps {
   processing: boolean
+  username?: string
   buttonText: string
 }
 
@@ -157,13 +158,15 @@ class OnboardingUsername extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: RootState): StateProps => ({
-  processing: state.account.profile.processing,
-  buttonText:
+const mapStateToProps = (state: RootState): StateProps => {
+  const username =
     state.account.profile.value && state.account.profile.value.name
-      ? 'Success!'
-      : 'Save'
-})
+  return {
+    processing: state.account.profile.processing,
+    username,
+    buttonText: username ? 'Success!' : 'Save'
+  }
+}
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
   submitUsername: (username: string) =>
@@ -171,7 +174,12 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
 })
 
 function isChooseUsernameComplete(props: Props): boolean {
-  return false
+  // This screen is complete once the user has chosen a username
+  if (props.username) {
+    return props.username !== ''
+  } else {
+    return false
+  }
 }
 
 export default connect(

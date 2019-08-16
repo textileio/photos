@@ -7,10 +7,12 @@ import FatalErrorView from '../Components/FatalErrorView'
 
 import { RootState } from '../Redux/Types'
 import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
+import { initializationSelectors } from '../features/initialization'
 import { color } from '../styles'
 
 interface StateProps {
   nodeStarted: boolean
+  initialized: boolean
   nodeError?: string
 }
 
@@ -23,8 +25,10 @@ type Props = StateProps & NavigationScreenProps<{}>
 class StatusCheck extends React.Component<Props> {
   // This is called on every re-render, whether it is from
   // a change in the props or from a call to local setState
+  // Navigate to onboarding once the node has started or if the node
+  // hasn't been initialized yet.
   static getDerivedStateFromProps(props: Props) {
-    if (!props.nodeError && props.nodeStarted) {
+    if ((!props.nodeError && props.nodeStarted) || !props.initialized) {
       props.navigation.navigate('Onboarding')
     }
     // tslint:disable-next-line no-null-keyword
@@ -48,6 +52,7 @@ class StatusCheck extends React.Component<Props> {
 function mapStateToProps(state: RootState): StateProps {
   return {
     nodeStarted: TextileEventsSelectors.started(state),
+    initialized: initializationSelectors.initialized(state.initialization),
     nodeError: state.textile.nodeState.error
   }
 }

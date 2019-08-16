@@ -8,7 +8,7 @@ export function makeCafeSessionForPeerId(peerId: string) {
   return (state: CafesState) => state.cafeSessions.sessions[peerId]
 }
 
-export function regesteringCafes(state: CafesState) {
+export function registeringCafes(state: CafesState) {
   return Object.keys(state.cafes)
     .map(peerId => state.cafes[peerId])
     .filter(cafe => cafe.state === 'registering')

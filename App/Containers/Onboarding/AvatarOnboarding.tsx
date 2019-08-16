@@ -8,7 +8,8 @@ import {
 import { wrapOnboarding } from './WrapOnboarding'
 
 function isSetAvatarComplete(props: Props): boolean {
-  return false
+  // This screen is complete once the user has an avatar
+  return props.accountHasAvatar
 }
 
 export default connect(

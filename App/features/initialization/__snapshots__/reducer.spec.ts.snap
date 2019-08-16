@@ -5,6 +5,8 @@ Object {
   "instance": Object {
     "state": "uninitialized",
   },
-  "onboarding": Object {},
+  "onboarding": Object {
+    "chooseCafeScreenCompleted": false,
+  },
 }
 `;
