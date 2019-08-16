@@ -8,4 +8,4 @@ export type InitializationStatus =
   | 'creatingAccount'
   | 'initialized'
 
-export type OnboardingPath = 'default' | 'newAccount' | 'existingAccount'
+export type InitializationPath = 'newAccount' | 'existingAccount'

@@ -1,9 +1,5 @@
 import { InitializationState } from './reducer'
 
-export function onboarded(state: InitializationState) {
-  return state.onboarding.completed
-}
-
 export function initialized(state: InitializationState) {
   return state.instance.state === 'initialized'
 }

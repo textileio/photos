@@ -38,10 +38,6 @@ const SUBMIT_BUTTON: ViewStyle = {
   alignSelf: 'center'
 }
 
-interface OwnProps {
-  onSuccess: () => void
-}
-
 interface StateProps {
   registeringCafes: Cafe[]
   nodeOnline: boolean
@@ -51,7 +47,7 @@ interface DispatchProps {
   register: (peerId: string, token: string) => void
 }
 
-type Props = OwnProps & StateProps & DispatchProps
+type Props = StateProps & DispatchProps
 
 interface State {
   selected?: {
@@ -145,7 +141,7 @@ class ChooseCafe extends Component<Props, State> {
           },
           {
             text: 'Continue',
-            onPress: () => this.props.onSuccess()
+            onPress: () => {}
           }
         ]
       )
@@ -182,17 +178,14 @@ const mapStateToProps = (state: RootState): StateProps => {
   }
 }
 
-const mapDispatchToProps = (
-  dispatch: Dispatch<RootAction>,
-  ownProps: OwnProps
-): DispatchProps => {
+const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   return {
     register: (peerId: string, token: string) =>
       dispatch(
         cafesActions.registerCafe.request({
           peerId,
           token,
-          success: ownProps.onSuccess
+          success: () => {}
         })
       )
   }

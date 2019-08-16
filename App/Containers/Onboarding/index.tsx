@@ -14,7 +14,6 @@ import AvatarOnboarding from './AvatarOnboarding'
 import MailListSignupScreen from './MailListSignupScreen'
 import ChooseCafe from './ChooseCafe'
 import { color, spacing } from '../../styles'
-import { setCurrentPage } from '../../features/initialization/actions'
 
 // Styles
 
@@ -82,10 +81,13 @@ interface State {
 }
 
 const Pages = [
-  {
-    page: Initialize,
-    props: {}
-  }
+  Initialize,
+  InitializeExisting,
+  InitializeNew,
+  OnboardingUsername,
+  AvatarOnboarding,
+  ChooseCafe,
+  MailListSignupScreen
 ]
 
 class Onboarding extends React.Component<Props, State> {
@@ -97,7 +99,7 @@ class Onboarding extends React.Component<Props, State> {
       completedPages: new Array<boolean>(Pages.length).fill(false),
       currentPage: 0
     }
-    this.pages = Pages.map((pageData, index) => {
+    this.pages = Pages.map((Page, index) => {
       const completed = () => {
         const completedPages = this.state.completedPages.slice()
         completedPages[index] = true
@@ -105,9 +107,10 @@ class Onboarding extends React.Component<Props, State> {
           completedPages
         })
       }
-      return (
-        <pageData.page key={index} completed={completed} {...pageData.props} />
-      )
+      return React.createElement(Page, {
+        key: index,
+        completed
+      })
     })
   }
 

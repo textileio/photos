@@ -1,5 +1,5 @@
 import { createAction } from 'typesafe-actions'
-import { OnboardingPath, InitializationStatus } from './models'
+import { InitializationStatus, InitializationPath } from './models'
 
 export const initializeNewAccount = createAction(
   'initialization/INITIALIZE_CREATING_NEW_WALLET_AND_ACCOUNT'
@@ -26,22 +26,9 @@ export const failedToInitializeNode = createAction(
   }
 )
 
-export const chooseOnboardingPath = createAction(
-  'initialization/CHOOSE_ONBOARDING_PATH',
+export const chooseInitializationPath = createAction(
+  'initialization/CHOOSE_INITIALIZATION_PATH',
   resolve => {
-    return (path: OnboardingPath) => resolve({ path })
+    return (path?: InitializationPath) => resolve({ path })
   }
-)
-
-export const setCurrentPage = createAction(
-  'initialization/SET_CURRENT_PAGE_ONBOARDING',
-  resolve => {
-    return (page: number) => resolve({ page })
-  }
-)
-
-export const nextPage = createAction('initialization/NEXT_PAGE_ONBOARDING')
-
-export const onboardingSuccess = createAction(
-  'initialization/COMPLETE_ONBOARDING'
 )

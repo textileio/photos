@@ -216,10 +216,11 @@ export default function*() {
     ),
 
     // DeepLinks
-    takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),
-    takeEvery(
+    takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink)
+    /* INVITE AFTER ONBOARDING
+      takeEvery(
       getType(initializationActions.onboardingSuccess),
       inviteAfterOnboard
-    )
+    )*/
   ])
 }

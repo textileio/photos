@@ -5,10 +5,6 @@ Object {
   "instance": Object {
     "state": "uninitialized",
   },
-  "onboarding": Object {
-    "completed": false,
-    "currentPage": 0,
-    "path": "default",
-  },
+  "onboarding": Object {},
 }
 `;

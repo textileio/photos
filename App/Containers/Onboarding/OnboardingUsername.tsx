@@ -56,7 +56,6 @@ const BUTTON: ViewStyle = {
 
 interface OwnProps {
   suggestion?: string
-  onSuccess?: () => void
 }
 
 interface StateProps {
@@ -101,9 +100,7 @@ class OnboardingUsername extends React.Component<Props, State> {
       })
     }, 1000)
 
-    if (this.props.onSuccess) {
-      setTimeout(this.props.onSuccess, 1000)
-    }
+    // Call on success
   }
 
   componentDidMount = () => {

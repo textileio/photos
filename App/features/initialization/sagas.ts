@@ -91,7 +91,6 @@ function* initializeTextileWithAccountSeed(
       )
     }
     yield put(actions.updateInitializationStatus('initialized'))
-    yield put(actions.chooseOnboardingPath('existingAccount'))
     yield call(Textile.launch, AppConfig.textileRepoPath, verbose)
   } catch (error) {
     yield put(actions.failedToInitializeNode(error))

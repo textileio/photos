@@ -71,9 +71,7 @@ const HIT_SLOP: Insets = {
   right: spacing._016
 }
 
-interface Props {
-  onSuccess?: () => void
-}
+interface Props {}
 
 interface State {
   valid: boolean
@@ -138,7 +136,7 @@ class MailListSignupScreen extends React.Component<Props, State> {
             onPress={this.submit}
             style={BUTTON}
           />
-          <TouchableOpacity onPress={this.props.onSuccess} hitSlop={HIT_SLOP}>
+          <TouchableOpacity onPress={() => {}} hitSlop={HIT_SLOP}>
             <Text style={LINK}>No thanks</Text>
           </TouchableOpacity>
           <Toast
@@ -171,10 +169,7 @@ class MailListSignupScreen extends React.Component<Props, State> {
         const validStatus = response.status >= 200 && response.status < 300
         if (validStatus) {
           this.setState({ buttonText: 'Success!', valid: false })
-          // Set a timer and navigate
-          if (this.props.onSuccess) {
-            setTimeout(this.props.onSuccess, 1000)
-          }
+          // Call on success function
         } else {
           const error =
             responseText.length > 0 ? responseText : `${response.status}`

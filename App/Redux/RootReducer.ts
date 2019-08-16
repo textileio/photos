@@ -374,12 +374,7 @@ const migrations: MigrationManifest = {
     return {
       ...state,
       account: restAccount,
-      preferences: restPreferences,
-      initialization: {
-        onboarding: {
-          completed: onboarded
-        }
-      }
+      preferences: restPreferences
     }
   }
 }

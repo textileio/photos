@@ -22,6 +22,11 @@ import Button from '../../Components/SmallButton'
 import WaitListSignupScreen from '../../Components/WaitListSignupScreen'
 
 import { RootState, RootAction } from '../../Redux/Types'
+import {
+  initializationSelectors,
+  initializationActions,
+  initializationModels
+} from '../../features/initialization'
 import { spacing, textStyle, fontFamily, color, size } from '../../styles'
 
 const targetReferralCode = Config.RN_TEMPORARY_REFERRAL
@@ -113,9 +118,16 @@ interface OwnProps {
   referralCode?: string
 }
 
-interface StateProps {}
+interface StateProps {
+  isInitialized: boolean
+  initializationPathChosen: boolean
+}
 
-interface DispatchProps {}
+interface DispatchProps {
+  chooseInitializationPath: (
+    path: initializationModels.InitializationPath
+  ) => void
+}
 
 type Props = StateProps & DispatchProps & OwnProps
 
@@ -217,21 +229,32 @@ class Initialize extends Component<Props, State> {
     })
   }
 
-  onNewAccount = () => {}
+  onNewAccount = () => {
+    this.props.chooseInitializationPath('newAccount')
+  }
 
-  onExistingAccount = () => {}
+  onExistingAccount = () => {
+    this.props.chooseInitializationPath('existingAccount')
+  }
 }
 
 function mapStateToProps(state: RootState): StateProps {
-  return {}
+  return {
+    isInitialized: initializationSelectors.initialized(state.initialization),
+    initializationPathChosen:
+      state.initialization.onboarding.initializationPath !== undefined
+  }
 }
 
 function mapDispatchToProps(dispatch: Dispatch<RootAction>): DispatchProps {
-  return {}
+  return {
+    chooseInitializationPath: (path: initializationModels.InitializationPath) =>
+      dispatch(initializationActions.chooseInitializationPath(path))
+  }
 }
 
 function isInitializeScreenComplete(props: Props): boolean {
-  return false
+  return props.isInitialized || props.initializationPathChosen
 }
 
 export default connect(

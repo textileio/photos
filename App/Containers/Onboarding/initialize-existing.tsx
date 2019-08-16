@@ -83,10 +83,6 @@ const BUTTON_TEXT: TextStyle = {
   color: color.screen_primary
 }
 
-interface OwnProps {
-  onSuccess?: () => void
-}
-
 interface StateProps {
   statusText: string
   processing: boolean
@@ -103,7 +99,7 @@ interface State {
   valid: boolean
 }
 
-type Props = OwnProps & StateProps & DispatchProps
+type Props = StateProps & DispatchProps
 
 class InitializeExisting extends React.Component<Props, State> {
   static successComponent() {
@@ -131,9 +127,7 @@ class InitializeExisting extends React.Component<Props, State> {
     if (this.props.initialized !== prevProps.initialized) {
       // done initializing
       setTimeout(() => {
-        if (this.props.onSuccess) {
-          this.props.onSuccess()
-        }
+        // Call on success
       }, 2500)
     }
   }

@@ -19,8 +19,8 @@ import { SharedImage } from '../group/add-photo/models'
 function* onNodeStarted() {
   while (
     yield take([
-      getType(TextileEventsActions.nodeStarted),
-      getType(initializationActions.onboardingSuccess)
+      getType(TextileEventsActions.nodeStarted)
+      // Take onboarding success
     ])
   ) {
     yield call(logNewEvent, 'nodeStarted', 'refresh account data')

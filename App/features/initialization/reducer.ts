@@ -1,15 +1,12 @@
 import { combineReducers } from 'redux'
 import { ActionType, getType } from 'typesafe-actions'
 
-import { InitializationStatus, OnboardingPath } from './models'
+import { InitializationStatus, InitializationPath } from './models'
 import * as actions from './actions'
 
-// When the path changes, currentPage should be reset to 0
 export interface InitializationState {
   readonly onboarding: {
-    readonly completed: boolean
-    readonly path: OnboardingPath
-    readonly currentPage: number
+    readonly initializationPath?: InitializationPath
   }
   readonly instance: {
     readonly state: InitializationStatus
@@ -20,38 +17,12 @@ export interface InitializationState {
 export type InitializationAction = ActionType<typeof actions>
 
 export default combineReducers<InitializationState, InitializationAction>({
-  onboarding: (
-    state = {
-      completed: false,
-      path: 'default',
-      currentPage: 0
-    },
-    action
-  ) => {
+  onboarding: (state = {}, action) => {
     switch (action.type) {
-      case getType(actions.chooseOnboardingPath): {
+      case getType(actions.chooseInitializationPath): {
         return {
           ...state,
-          path: action.payload.path,
-          currentPage: 0
-        }
-      }
-      case getType(actions.nextPage): {
-        return {
-          ...state,
-          currentPage: state.currentPage + 1
-        }
-      }
-      case getType(actions.setCurrentPage): {
-        return {
-          ...state,
-          currentPage: action.payload.page
-        }
-      }
-      case getType(actions.onboardingSuccess): {
-        return {
-          ...state,
-          completed: true
+          initializationPath: action.payload.path
         }
       }
       default:

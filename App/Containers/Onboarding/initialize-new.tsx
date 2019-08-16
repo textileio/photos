@@ -52,10 +52,6 @@ const SUCCESS: TextStyle = {
   color: color.grey_4
 }
 
-interface OwnProps {
-  onSuccess?: () => void
-}
-
 interface StateProps {
   statusText: string
   processing: boolean
@@ -66,7 +62,7 @@ interface DispatchProps {
   initialize: () => void
 }
 
-type Props = OwnProps & StateProps & DispatchProps
+type Props = StateProps & DispatchProps
 
 class InitializeNew extends React.Component<Props> {
   componentDidMount() {
@@ -77,9 +73,7 @@ class InitializeNew extends React.Component<Props> {
     if (this.props.processing !== prevProps.processing) {
       // done initializing
       setTimeout(() => {
-        if (this.props.onSuccess) {
-          this.props.onSuccess()
-        }
+        // Call on successs
       }, 2500)
     }
   }
