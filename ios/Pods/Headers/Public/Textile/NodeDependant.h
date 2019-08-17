@@ -1,1 +1,1 @@
-../../../Textile/Textile/Classes/NodeDependant.h
+../../../Textile/Textile/Classes/Public/NodeDependant.h

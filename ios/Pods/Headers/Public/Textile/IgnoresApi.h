@@ -1,1 +1,1 @@
-../../../Textile/Textile/Classes/IgnoresApi.h
+../../../Textile/Textile/Classes/Public/IgnoresApi.h

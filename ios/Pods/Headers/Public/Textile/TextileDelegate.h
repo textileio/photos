@@ -1,1 +1,1 @@
-../../../Textile/Textile/Classes/TextileDelegate.h
+../../../Textile/Textile/Classes/Public/TextileDelegate.h

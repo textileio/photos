@@ -306,3 +306,29 @@ export async function displayInviteAlert(message: string) {
   await displayInvitePromise(message)
   return true
 }
+
+export function displayLeavePromise(): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    Alert.alert(
+      'Leave thread?',
+      'This cannot be undone.',
+      [
+        {
+          text: 'Confirm',
+          onPress: resolve
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel',
+          onPress: reject
+        }
+      ],
+      { cancelable: false }
+    )
+  })
+}
+
+export async function displayLeaveAlert() {
+  await displayLeavePromise()
+  return true
+}

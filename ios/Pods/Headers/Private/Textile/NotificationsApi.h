@@ -1,1 +1,1 @@
-../../../Textile/Textile/Classes/NotificationsApi.h
+../../../Textile/Textile/Classes/Public/NotificationsApi.h

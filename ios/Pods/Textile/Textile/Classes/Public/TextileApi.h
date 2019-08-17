@@ -208,9 +208,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * Reset the local Textile node instance so it can be re-initialized
- * @param error A reference to an error pointer that will be set in the case of an error
  */
-- (void)destroy:(NSError **)error;
+- (void)destroy;
 
 @end
 

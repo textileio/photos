@@ -1,1 +1,1 @@
-../../../Textile/Textile/Classes/CommentsApi.h
+../../../Textile/Textile/Classes/Public/CommentsApi.h

@@ -1,1 +1,1 @@
-../../../Textile/Textile/Classes/ContactsApi.h
+../../../Textile/Textile/Classes/Public/ContactsApi.h
