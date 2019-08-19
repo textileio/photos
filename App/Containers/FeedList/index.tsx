@@ -15,22 +15,23 @@ import {
 } from 'react-navigation'
 import Buttons from 'react-navigation-header-buttons'
 
+import Alerts from './Alerts'
 import Avatar from '../../Components/Avatar'
 import FeedItem from '../../SB/components/FeedItem'
 import { TextileHeaderButtons } from '../../Components/HeaderButtons'
 
 import PreferencesActions from '../../Redux/PreferencesRedux'
 import TextileEventsActions from '../../Redux/TextileEventsRedux'
-import NotificationsActions, {
-  NotificationsSelectors
-} from '../../Redux/NotificationsRedux'
+
+import * as selectors from '../../features/updates/selectors'
+import * as actions from '../../features/updates/actions'
+
 import { RootAction, RootState } from '../../Redux/Types'
 
-import { Notification } from '../../Models/Notifications'
+import { Notification, LocalAlert } from '../../features/updates/models'
 
 import styles from './statics/styles'
 import onboardingStyles from '../Styles/OnboardingStyle'
-import AlertRow from '../../SB/components/AlertRow'
 
 interface NavProps {
   openDrawer: () => void
@@ -151,9 +152,6 @@ class Notifications extends React.Component<Props, State> {
     this.props.navigation.openDrawer()
   }
 
-  registerCafe = () => {
-    this.props.navigation.navigate('RegisterCafe')
-  }
   _renderItem = ({ item }: ListRenderItemInfo<Notification>) => {
     return <FeedItem notification={item} onClick={this._onClick} />
   }
@@ -178,12 +176,18 @@ class Notifications extends React.Component<Props, State> {
     )
   }
 
-  _renderAlert() {
-    if (!this.props.alert) {
+  registerCafe = () => {
+    this.props.navigation.navigate('RegisterCafe')
+  }
+
+  _renderAlerts() {
+    if (!this.props.alerts.length) {
       return
     }
-
-    return <AlertRow message={this.props.alert} onClick={this.registerCafe} />
+    return <Alerts
+      alerts={this.props.alerts}
+      registerCafe={this.registerCafe}
+    />
   }
   _renderItems() {
     return (
@@ -195,7 +199,7 @@ class Notifications extends React.Component<Props, State> {
           refreshing={false}
           onRefresh={this.props.refreshMessages}
           initialNumToRender={20}
-          ListHeaderComponent={this._renderAlert()}
+          ListHeaderComponent={this._renderAlerts()}
         />
       </View>
     )
@@ -208,7 +212,7 @@ class Notifications extends React.Component<Props, State> {
     const showNotifications =
       this.state.focusRefreshInProgress ||
       this.props.notifications.length > 0 ||
-      this.props.alert
+      this.props.alerts.length > 0
     return (
       <View style={styles.container}>
         {!showNotifications && this._renderOnboarding()}
@@ -219,24 +223,22 @@ class Notifications extends React.Component<Props, State> {
 }
 
 interface StateProps {
-  alert?: string
+  alerts: LocalAlert[]
   notifications: Notification[]
   refreshing: boolean
   showOnboarding: boolean
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
-  const notifications = NotificationsSelectors.latestAndUnreadFirst(state)
+  const notifications = selectors.latestAndUnreadFirst(state.updates)
   const showOnboarding = state.preferences.tourScreens.feed === true
-  const refreshing = state.notifications.refreshing
+  const refreshing = state.updates.notifications.refreshing
 
-  const alert =
-    Object.keys(state.cafes.cafes).length > 0
-      ? undefined
-      : 'Improve app performance by choosing an account cafe now.'
+  const alerts = selectors.getAlerts(state.updates)
 
+  
   return {
-    alert,
+    alerts,
     notifications,
     refreshing,
     showOnboarding
@@ -252,15 +254,13 @@ interface DispatchProps {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
-  refreshNotifications: () =>
-    dispatch(NotificationsActions.refreshNotificationsRequest()),
-  readAllNotifications: () =>
-    dispatch(NotificationsActions.readAllNotificationsRequest()),
+  refreshNotifications: () => dispatch(actions.refreshNotificationsRequest()),
+  readAllNotifications: () => dispatch(actions.readAllNotificationsRequest()),
   refreshMessages: () => {
     dispatch(TextileEventsActions.refreshMessagesRequest())
   },
   clickNotification: notification =>
-    dispatch(NotificationsActions.notificationSuccess(notification)),
+    dispatch(actions.notificationSuccess(notification)),
   completeTourScreen: () => {
     dispatch(PreferencesActions.completeTourSuccess('feed'))
   }

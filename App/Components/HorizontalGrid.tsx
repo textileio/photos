@@ -12,7 +12,6 @@ import Toast from 'react-native-easy-toast'
 import { color } from '../styles'
 import styles from './Styles/PhotoGridStyles'
 import TextileImage from './TextileImage'
-import { SharingPhoto } from '../Redux/UIRedux'
 
 export interface GalleryPhoto {
   block: string
@@ -60,7 +59,7 @@ class HorizontalGrid extends React.Component<ScreenProps, State> {
     const callback = () => {
       this.props.selectPhoto(photo.block)
     }
-    const rows =  this.props.photoPairs.length < this.wrapCount ? 1 : 2
+    const rows = this.props.photoPairs.length < this.wrapCount ? 1 : 2
     const width = (this.state.componentHeight - 1) / rows - 2
     const height = width
     return (
@@ -93,7 +92,6 @@ class HorizontalGrid extends React.Component<ScreenProps, State> {
         {this.renderCell(item)}
       </View>
     )
-
   }
   renderDouble = (row: ListRenderItemInfo<GalleryDoubles>) => {
     const { item } = row
@@ -200,11 +198,6 @@ class HorizontalGrid extends React.Component<ScreenProps, State> {
     return (
       <View style={{ ...styles.container }} onLayout={this.onLayout}>
         {this.renderFlatList()}
-        {!this.props.photoPairs.length &&
-          <View style={styles.emptyListStyle}>
-            <Text style={styles.noPhotos}>{'no images'}</Text>
-          </View>
-        }
       </View>
     )
   }

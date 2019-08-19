@@ -2,7 +2,7 @@ import Textile, {
   Notification as SdkNotification,
   INotification
 } from '@textile/react-native-sdk'
-import { Notification } from '../Models/Notifications'
+import { Notification } from '../features/updates/models'
 import RNPushNotification from 'react-native-push-notification'
 import { Alert } from 'react-native'
 

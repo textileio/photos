@@ -3,8 +3,8 @@ import { PushNotificationIOS, Platform } from 'react-native'
 import RNPushNotification from 'react-native-push-notification'
 
 import { RootState } from '../../Redux/Types'
-import NotificationsActions from '../../Redux/NotificationsRedux'
-import { Notification } from '../../Models/Notifications'
+import * as actions from '../../features/updates/actions'
+import { Notification } from '../../features/updates/models'
 
 export interface UserInfo {
   notification: Notification
@@ -34,13 +34,13 @@ export default class NotificationEventHandler {
     if (notification.userInteraction) {
       if (notification.userInfo && notification.userInfo.notification) {
         this.store.dispatch(
-          NotificationsActions.notificationSuccess(
+          actions.notificationSuccess(
             notification.userInfo.notification
           )
         )
       } else {
         this.store.dispatch(
-          NotificationsActions.notificationEngagement(notification)
+          actions.notificationEngagement(notification)
         )
       }
     }

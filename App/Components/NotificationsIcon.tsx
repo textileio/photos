@@ -1,12 +1,8 @@
 import React from 'react'
-import { Dispatch } from 'redux'
-import { NavigationScreenProps } from 'react-navigation'
 import { connect } from 'react-redux'
-import { FlatList, View, Text, TouchableOpacity } from 'react-native'
-
 import Icon from '@textile/react-native-icon'
-
-import { RootAction, RootState } from '../Redux/Types'
+import { RootState } from '../Redux/Types'
+import { inboxStatus } from '../features/updates/selectors'
 
 interface ScreenProps {
   size: number
@@ -16,32 +12,26 @@ interface ScreenProps {
   alertName?: string
 }
 
-class NotificationsIcon extends React.Component<
-  ScreenProps & StateProps
-> {
-
+class NotificationsIcon extends React.Component<ScreenProps & StateProps> {
   render() {
-    const color = this.props.alert ? this.props.alertColor : this.props.color
-    const name = this.props.alert ? (this.props.alertName || 'bell-alert') : (this.props.name || 'bell')
-    return (
-      <Icon name={name} size={this.props.size} color={color} />
-    )
+    const color = this.props.status ? this.props.alertColor : this.props.color
+    const name = this.props.status
+      ? this.props.alertName || 'bell-alert'
+      : this.props.name || 'bell'
+    return <Icon name={name} size={this.props.size} color={color} />
   }
 }
 
 interface StateProps {
-  alert: boolean
+  status: boolean
 }
 
 function mapStateToProps(state: RootState): StateProps {
-  const alert =
-    Object.keys(state.cafes.cafes).length > 0
-
+  const status = inboxStatus(state.updates)
   return {
-    alert
+    status
   }
 }
-
 
 export default connect(
   mapStateToProps,

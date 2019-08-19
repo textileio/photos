@@ -74,3 +74,7 @@ export type Notification =
   | FilesAddedNotification
   | CommentAddedNotification
   | LikeAddedNotification
+
+export type LocalAlert = {
+  type: string
+}

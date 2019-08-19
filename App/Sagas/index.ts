@@ -9,13 +9,11 @@ import {
 } from 'redux-saga/effects'
 import { PersistedState } from 'redux-persist'
 import { getType } from 'typesafe-actions'
-import Firebase from 'react-native-firebase'
 
 /* ------------- Types ------------- */
 
 import StartupActions from '../Redux/StartupRedux'
 import PreferencesActions from '../Redux/PreferencesRedux'
-import NotificationsActions from '../Redux/NotificationsRedux'
 import UIActions from '../Redux/UIRedux'
 import GroupsActions from '../Redux/GroupsRedux'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
@@ -26,6 +24,7 @@ import ThreadsActions from '../Redux/ThreadsRedux'
 
 import { accountSaga } from '../features/account'
 import { contactsSaga } from '../features/contacts'
+import { updatesSaga } from '../features/updates'
 import { groupSaga, groupActions } from '../features/group'
 import { cafesSaga } from '../features/cafes'
 
@@ -40,15 +39,6 @@ import {
 } from './ImageSharingSagas'
 
 import { inviteAfterOnboard, routeDeepLink } from './DeepLinkSagas'
-
-import {
-  handleNewNotification,
-  handleEngagement,
-  notificationView,
-  refreshNotifications,
-  reviewThreadInvite,
-  readAllNotifications
-} from './NotificationsSagas'
 
 import {
   refreshThreads,
@@ -107,6 +97,7 @@ export default function*() {
   yield all([
     call(accountSaga),
     call(contactsSaga),
+    call(updatesSaga),
     call(groupSaga),
     call(cafesSaga),
 
@@ -182,33 +173,6 @@ export default function*() {
     takeEvery(getType(UIActions.initShareRequest), initShareRequest),
     takeEvery(getType(UIActions.sharePhotoRequest), handleSharePhotoRequest),
     takeEvery(getType(UIActions.cancelSharingPhoto), handleCancel),
-
-    // Notifications
-    takeEvery(
-      getType(NotificationsActions.newNotificationRequest),
-      handleNewNotification
-    ),
-    takeEvery(
-      getType(NotificationsActions.notificationEngagement),
-      handleEngagement
-    ),
-    takeEvery(
-      getType(NotificationsActions.notificationSuccess),
-      notificationView
-    ),
-    takeEvery(
-      getType(NotificationsActions.refreshNotificationsRequest),
-      refreshNotifications
-    ),
-    takeEvery(
-      getType(NotificationsActions.reviewNotificationThreadInvite),
-      reviewThreadInvite
-    ),
-    takeEvery(
-      getType(NotificationsActions.readAllNotificationsRequest),
-      readAllNotifications
-    ),
-
     // DeepLinks
     takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),
     takeEvery(getType(PreferencesActions.onboardingSuccess), inviteAfterOnboard)

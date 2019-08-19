@@ -1,28 +1,31 @@
 import { Platform, AppState } from 'react-native'
 import { delay } from 'redux-saga'
-import { call, put, select } from 'redux-saga/effects'
-import { ActionType } from 'typesafe-actions'
+import { call, put, takeEvery, all, select } from 'redux-saga/effects'
+import { ActionType, getType } from 'typesafe-actions'
 
 import Textile, {
   Notification,
   INotificationList
 } from '@textile/react-native-sdk'
-import NavigationService from '../Services/NavigationService'
+import NavigationService from '../../Services/NavigationService'
 
-import { groupActions } from '../features/group'
-import ThreadsActions from '../Redux/ThreadsRedux'
-import GroupsActions, { ThreadData } from '../Redux/GroupsRedux'
-import { threadDataByThreadId, allThreadIds } from '../Redux/GroupsSelectors'
-import PhotoViewingActions from '../Redux/PhotoViewingRedux'
-import { PreferencesSelectors, ServiceType } from '../Redux/PreferencesRedux'
-import NotificationsActions, {
-  NotificationsSelectors
-} from '../Redux/NotificationsRedux'
+import { cafesActions } from '../cafes'
+import * as cafeSelectors from '../cafes/selectors'
+import { groupActions } from '../group'
+import ThreadsActions from '../../Redux/ThreadsRedux'
+import { ThreadData } from '../../Redux/GroupsRedux'
+import { threadDataByThreadId, allThreadIds } from '../../Redux/GroupsSelectors'
+import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
+import { PreferencesSelectors, ServiceType } from '../../Redux/PreferencesRedux'
+
+import * as actions from './actions'
+import * as selectors from './selectors'
 import TextileEventsActions, {
   TextileEventsSelectors
-} from '../Redux/TextileEventsRedux'
-import * as NotificationsServices from '../Services/Notifications'
-import { logNewEvent } from './DeviceLogs'
+} from '../../Redux/TextileEventsRedux'
+import * as NotificationsServices from '../../Services/Notifications'
+import { logNewEvent } from '../../Sagas/DeviceLogs'
+import { RootState } from '../../Redux/Types';
 
 export function* waitUntilOnline(ms: number) {
   let ttw = ms
@@ -40,7 +43,7 @@ export function* enable() {
 }
 
 export function* readAllNotifications(
-  action: ActionType<typeof NotificationsActions.readAllNotificationsRequest>
+  action: ActionType<typeof actions.readAllNotificationsRequest>
 ) {
   try {
     yield call(Textile.notifications.readAll)
@@ -55,7 +58,7 @@ export function* readAllNotifications(
 }
 
 export function* handleNewNotification(
-  action: ActionType<typeof NotificationsActions.newNotificationRequest>
+  action: ActionType<typeof actions.newNotificationRequest>
 ) {
   yield call(logNewEvent, 'Notifications', 'new request')
   try {
@@ -94,7 +97,7 @@ export function* handleNewNotification(
 }
 
 export function* handleEngagement(
-  action: ActionType<typeof NotificationsActions.notificationEngagement>
+  action: ActionType<typeof actions.notificationEngagement>
 ) {
   // Deals with the Engagement response from clicking a native notification
   const data: any = action.payload.engagement.data
@@ -103,7 +106,7 @@ export function* handleEngagement(
       return
     }
     yield call(delay, 350)
-    yield put(NotificationsActions.notificationSuccess(data.notification))
+    yield put(actions.notificationSuccess(data.notification))
   } catch (error) {
     // Nothing to do
   }
@@ -126,7 +129,7 @@ function* requestAndNavigateTo(threadId: string, photoBlock?: string) {
 }
 
 export function* notificationView(
-  action: ActionType<typeof NotificationsActions.notificationSuccess>
+  action: ActionType<typeof actions.notificationSuccess>
 ) {
   // Handles a view request for in App notification clicking or Engagement notification clicking
   // Avoids duplicating the below logic about where to send people for each notification type
@@ -171,26 +174,24 @@ export function* notificationView(
       }
       case Notification.Type.INVITE_RECEIVED: {
         yield* waitUntilOnline(1000)
-        yield put(
-          NotificationsActions.reviewNotificationThreadInvite(notification)
-        )
+        yield put(actions.reviewNotificationThreadInvite(notification))
         break
       }
     }
   } catch (error) {
-    yield put(NotificationsActions.notificationFailure(notification))
+    yield put(actions.notificationFailure(notification))
   }
 }
 
 export function* refreshNotifications() {
   try {
-    const busy = yield select(NotificationsSelectors.refreshing)
+    const busy = yield select(selectors.refreshing)
     // skip multi-request back to back
     if (busy) {
       return
     }
     yield* waitUntilOnline(1000)
-    yield put(NotificationsActions.refreshNotificationsStart())
+    yield put(actions.refreshNotificationsStart())
     const notificationResponse: INotificationList = yield call(
       Textile.notifications.list,
       '',
@@ -211,7 +212,7 @@ export function* refreshNotifications() {
           return appThreadIds.indexOf(threadId) > -1
         }
       })
-    yield put(NotificationsActions.refreshNotificationsSuccess(typedNotifs))
+    yield put(actions.refreshNotificationsSuccess(typedNotifs))
   } catch (error) {
     yield put(
       TextileEventsActions.newErrorMessage(
@@ -219,12 +220,12 @@ export function* refreshNotifications() {
         error.message
       )
     )
-    yield put(NotificationsActions.refreshNotificationsFailure())
+    yield put(actions.refreshNotificationsFailure())
   }
 }
 
 export function* reviewThreadInvite(
-  action: ActionType<typeof NotificationsActions.reviewNotificationThreadInvite>
+  action: ActionType<typeof actions.reviewNotificationThreadInvite>
 ) {
   const { notification } = action.payload
   try {
@@ -243,4 +244,40 @@ export function* reviewThreadInvite(
   } catch (error) {
     // Ignore invite
   }
+}
+
+
+export function * updateCafeAlert(
+) {
+  const cafes = yield select((state: RootState) =>
+    cafeSelectors.registeredCafes(state.cafes)
+  )
+  if ( cafes.length === 0 ) {
+    yield put(actions.insertNoStorageAlert('no-storage-bot'))
+  }
+  else if ( cafes.length > 0 ) {
+    yield put(actions.removeNoStorageAlert('no-storage-bot'))
+  }
+}
+
+export default function*() {
+  yield all([
+    takeEvery(getType(cafesActions.getCafeSessions.success), updateCafeAlert),
+    takeEvery(getType(actions.newNotificationRequest), handleNewNotification),
+    takeEvery(getType(actions.newNotificationRequest), handleNewNotification),
+    takeEvery(getType(actions.notificationEngagement), handleEngagement),
+    takeEvery(getType(actions.notificationSuccess), notificationView),
+    takeEvery(
+      getType(actions.refreshNotificationsRequest),
+      refreshNotifications
+    ),
+    takeEvery(
+      getType(actions.reviewNotificationThreadInvite),
+      reviewThreadInvite
+    ),
+    takeEvery(
+      getType(actions.readAllNotificationsRequest),
+      readAllNotifications
+    )
+  ])
 }

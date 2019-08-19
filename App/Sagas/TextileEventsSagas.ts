@@ -18,11 +18,9 @@ import { accountActions } from '../features/account'
 import TextileEventsActions, {
   TextileEventsAction
 } from '../Redux/TextileEventsRedux'
-import NotificationActions, {
-  NotificationsAction
-} from '../Redux/NotificationsRedux'
 import GroupsActions, { GroupsAction } from '../Redux/GroupsRedux'
 import { contactsActions, ContactsAction } from '../features/contacts'
+import { updatesActions, UpdatesAction } from '../features/updates'
 import DeviceLogsActions, { DeviceLogsAction } from '../Redux/DeviceLogsRedux'
 import { groupActions, GroupAction } from '../features/group'
 import AppConfig from '../Config/app-config'
@@ -42,7 +40,7 @@ function nodeEvents() {
     | GroupsAction
     | ContactsAction
     | DeviceLogsAction
-    | NotificationsAction
+    | UpdatesAction
     | TextileEventsAction
   >(emitter => {
     const subscriptions: EventSubscription[] = []
@@ -109,7 +107,7 @@ function nodeEvents() {
     subscriptions.push(
       Textile.events.addNotificationReceivedListener(notification => {
         emitter(
-          NotificationActions.newNotificationRequest(
+          updatesActions.newNotificationRequest(
             toTypedNotification(notification)
           )
         )

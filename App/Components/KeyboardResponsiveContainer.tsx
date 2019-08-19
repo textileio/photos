@@ -110,9 +110,7 @@ export default class KeyboardResponsiveContainer extends React.Component<
   render() {
     const { style } = this.props
     if (this.props.ios === false && Platform.OS === 'ios') {
-      return (
-        <View style={style}>{this.props.children}</View>
-      )
+      return <View style={style}>{this.props.children}</View>
     }
     return (
       <View style={{ flex: 1 }}>

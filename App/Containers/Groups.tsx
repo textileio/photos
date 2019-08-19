@@ -29,11 +29,14 @@ import GroupCard from '../Components/GroupCard'
 import CreateThreadModal from '../Components/CreateThreadModal'
 import ProcessingThread from '../Components/ProcessingThread'
 import styles from './Styles/GroupsStyles'
+import { color } from '../styles'
+import * as selectors from '../features/updates/selectors'
 
 interface StateProps {
   groups: ReadonlyArray<GroupRows>
   showNotificationsPrompt: boolean
-  itemCount: number
+  itemCount: number,
+  inboxStatus: boolean
 }
 
 interface DispatchProps {
@@ -46,6 +49,7 @@ interface DispatchProps {
 interface NavProps {
   openDrawer: () => void
   openThreadModal: () => void
+  inboxStatus: boolean
 }
 type Props = StateProps & DispatchProps & NavigationScreenProps<NavProps>
 
@@ -57,15 +61,40 @@ class Groups extends React.PureComponent<Props, State> {
   static navigationOptions = ({
     navigation
   }: NavigationScreenProps<NavProps>) => {
+    const inboxStatus = navigation.getParam('inboxStatus')
     const openDrawer = navigation.getParam('openDrawer')
     const openThreadModal = navigation.getParam('openThreadModal')
+
+    const dimension = 8
+    const renderAlert = () => {
+      if (!inboxStatus) {
+        return
+      }
+      return (
+        <View
+          style={{
+            width: dimension,
+            height: dimension,
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            backgroundColor: color.severe_4,
+            borderRadius: dimension/2
+          }}>
+        </View>
+      )
+    }
+
     const headerLeft = (
       <TextileHeaderButtons left={true}>
         <Item
           title="Account"
           onPress={openDrawer}
           ButtonElement={
-            <Avatar style={{ width: 24, height: 24 }} self={true} />
+            <View>
+              <Avatar style={{ width: 24, height: 24 }} self={true} />
+              {renderAlert()}
+            </View>
           }
           buttonWrapperStyle={{ margin: 11 }}
         />
@@ -162,7 +191,8 @@ class Groups extends React.PureComponent<Props, State> {
   componentDidMount() {
     this.props.navigation.setParams({
       openDrawer: this.openDrawer,
-      openThreadModal: this.openThreadModal
+      openThreadModal: this.openThreadModal,
+      inboxStatus: this.props.inboxStatus
     })
   }
 
@@ -174,6 +204,11 @@ class Groups extends React.PureComponent<Props, State> {
     ) {
       // ensure that it only gets called once by using the first update of the state or a new group add
       this.notificationPrompt()
+    }
+    if (this.props.inboxStatus !== prevProps.inboxStatus) {
+      this.props.navigation.setParams({
+        inboxStatus: this.props.inboxStatus
+      })
     }
   }
 
@@ -265,10 +300,12 @@ function mapStateToProps(state: RootState): StateProps {
   }))
   const groups: ReadonlyArray<GroupRows> = [...invites, ...nestedThreads]
 
+  const inboxStatus = selectors.inboxStatus(state.updates)
   return {
     groups,
     showNotificationsPrompt,
-    itemCount
+    itemCount,
+    inboxStatus
   }
 }
 

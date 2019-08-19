@@ -18,14 +18,14 @@ import { groupActions } from '../features/group'
 import { IFiles } from '@textile/react-native-sdk'
 import { getSharedPhotos, SharedPhoto } from '../Redux/PhotoViewingSelectors'
 import HorizontalGrid, { GalleryDoubles } from './HorizontalGrid'
-import { groupItems } from '../features/group/selectors';
+import { groupItems } from '../features/group/selectors'
 
 interface ScreenProps {
   threadId: string
 }
 interface StateProps {
   items: SharedPhoto[]
-  shares: number,
+  shares: number
   sharingImage?: SharedImage
   sharingFiles?: IFiles
   photoPairs: GalleryDoubles[]
@@ -218,17 +218,18 @@ const mapStateToProps = (
   state: RootState,
   ownProps: ScreenProps
 ): StateProps => {
-
   const { threadId } = ownProps
 
   /**
    * Photo processing is significantly decoupled, as a temporary measure
-   * until this all comes right from the camera roll thread, i use 
+   * until this all comes right from the camera roll thread, i use
    * shares here to dete4ct newly available photos and update the keyboard
    * gallery (which can't read right from redux state)
-   */ 
-  const shares = groupItems(state.group, threadId)
-                  .filter((g) => g.type === 'addingPhoto').length
+   */
+
+  const shares = groupItems(state.group, threadId).filter(
+    g => g.type === 'addingPhoto'
+  ).length
 
   const items = getSharedPhotos(state, 'date')
   let sharingImage

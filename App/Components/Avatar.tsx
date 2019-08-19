@@ -19,6 +19,7 @@ interface OwnProps {
   icon?: string
   target?: string
   style?: ImageStyle
+  alert?: boolean
 }
 
 interface StateProps {

@@ -6,7 +6,7 @@ import Icon from '@textile/react-native-icon'
 import Avatar from '../Components/Avatar'
 import { RootState } from '../Redux/Types'
 import { textStyle, color } from '../styles'
-import { NAVIGATOR_LABEL_STYLE } from '../Navigation/AppNavigation/Modal/Primary/Drawer';
+import { NAVIGATOR_LABEL_STYLE } from '../Navigation/AppNavigation/Modal/Primary/Drawer'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
@@ -48,9 +48,7 @@ class Account extends Component<Props> {
             {props.username}
           </Text>
         </View>
-        <DrawerItems 
-          {...props} 
-        />
+        <DrawerItems {...props} />
       </View>
     )
   }
