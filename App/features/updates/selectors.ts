@@ -24,25 +24,27 @@ export const latestAndUnreadFirst = (state: UpdatesState): Notification[] => {
 
 /**
  * Returns 'true' if there are any unread messages or alerts
- * @param state 
+ * @param state
  */
 export const inboxStatus = (state: UpdatesState): boolean => {
   if (state.alerts.results.length > 0) {
     return true
-  } 
-  if (state.notifications.results.find((row) => !row.read)) {
+  }
+  if (state.notifications.results.find(row => !row.read)) {
     return true
   }
   return false
 }
 
 /**
- * 
+ *
  * Returns an alert by string id or undefined
  * @param type string identifier of an alert type
  */
-export const getAlert = (type: string) => (state: UpdatesState): LocalAlert | undefined => {
-  return state.alerts.results.find((alert) => alert.type === type)
+export const getAlert = (type: string) => (
+  state: UpdatesState
+): LocalAlert | undefined => {
+  return state.alerts.results.find(alert => alert.type === type)
 }
 export const getAlerts = (state: UpdatesState) => {
   return [...state.alerts.results].sort(

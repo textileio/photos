@@ -34,14 +34,10 @@ export default class NotificationEventHandler {
     if (notification.userInteraction) {
       if (notification.userInfo && notification.userInfo.notification) {
         this.store.dispatch(
-          actions.notificationSuccess(
-            notification.userInfo.notification
-          )
+          actions.notificationSuccess(notification.userInfo.notification)
         )
       } else {
-        this.store.dispatch(
-          actions.notificationEngagement(notification)
-        )
+        this.store.dispatch(actions.notificationEngagement(notification))
       }
     }
     if (notification.finish && Platform.OS === 'ios') {

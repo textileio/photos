@@ -30,9 +30,9 @@ export default class Alerts extends React.Component<ScreenProps, State> {
   toggle = (type: string) => {
     return () => {
       if (this.state.selected === type) {
-        this.setState({selected: undefined})
+        this.setState({ selected: undefined })
       } else {
-        this.setState({selected: type})
+        this.setState({ selected: type })
       }
     }
   }
@@ -46,17 +46,27 @@ export default class Alerts extends React.Component<ScreenProps, State> {
     image: string,
     linkCallback: () => void
   ) => {
-
     const selected = this.state.selected === type
-    const description = selected ? long : short 
+    const description = selected ? long : short
 
-    const more = limits.map((limit) => {
-      return (<Text style={{...textStyle.body_s, color: color.grey_3, paddingVertical: 4}} >{limit}</Text>)
+    const more = limits.map((limit, key) => {
+      return (
+        <Text
+          key={key}
+          style={{
+            ...textStyle.body_s,
+            color: color.grey_3,
+            paddingVertical: 4
+          }}
+        >
+          {limit}
+        </Text>
+      )
     })
 
     const toggle = selected ? 'Bots cannot:' : 'Learn more'
     return (
-      <TouchableOpacity 
+      <TouchableOpacity
         activeOpacity={0.9}
         style={{
           flex: 1,
@@ -65,43 +75,72 @@ export default class Alerts extends React.Component<ScreenProps, State> {
         }}
         onPress={linkCallback}
       >
-        <View style={{
-          flex: 1,
-          paddingHorizontal: size._016
-        }}>
-          <Text style={{...textStyle.body_s, color: color.action_3}} >{linkText.toUpperCase()}</Text>
-          <Text style={{...textStyle.header_m, marginVertical: 6}} >{title}</Text>
-          <Text style={{...textStyle.body_m, textAlign: 'justify', color: color.grey_2}} >{description}</Text>
-          <TouchableOpacity
-            onPress={this.toggle(type)}
+        <View
+          style={{
+            flex: 1,
+            paddingHorizontal: size._016
+          }}
+        >
+          <Text style={{ ...textStyle.body_s, color: color.action_3 }}>
+            {linkText.toUpperCase()}
+          </Text>
+          <Text style={{ ...textStyle.header_m, marginVertical: 6 }}>
+            {title}
+          </Text>
+          <Text
+            style={{
+              ...textStyle.body_m,
+              textAlign: 'justify',
+              color: color.grey_2
+            }}
           >
-            <Text style={{...textStyle.body_s, paddingTop: 10, paddingRight: 30, color: color.grey_2}} >{toggle}</Text>
-          </TouchableOpacity>
-          {selected &&
-            <View
-              style={{paddingTop: 10}}
+            {description}
+          </Text>
+          <TouchableOpacity onPress={this.toggle(type)}>
+            <Text
+              style={{
+                ...textStyle.body_s,
+                paddingTop: 10,
+                paddingRight: 30,
+                color: color.grey_2
+              }}
             >
+              {toggle}
+            </Text>
+          </TouchableOpacity>
+          {selected && (
+            <View style={{ paddingTop: 10 }}>
               {more}
-              <Text style={{...textStyle.body_s, paddingTop: 10, color: color.grey_2}} >Choose one now</Text>
+              <Text
+                style={{
+                  ...textStyle.body_s,
+                  paddingTop: 10,
+                  color: color.grey_2
+                }}
+              >
+                Choose one now
+              </Text>
             </View>
-          }
+          )}
         </View>
-        <View style={{
-          flex: 1,
-          flexDirection: 'row',
-          alignSelf: 'stretch',
-          padding: size._016,
-        }}>
-          <Image 
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            alignSelf: 'stretch',
+            padding: size._016
+          }}
+        >
+          <Image
             style={{
               flex: 1,
               borderRadius: 2,
               borderColor: color.grey_3,
               borderWidth: StyleSheet.hairlineWidth
             }}
-            resizeMode='cover'
+            resizeMode="cover"
             // @ts-ignore
-            source={alertImages[image]} 
+            source={alertImages[image]}
           />
         </View>
       </TouchableOpacity>

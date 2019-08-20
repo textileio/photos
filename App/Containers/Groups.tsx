@@ -34,7 +34,7 @@ import AvatarWithAlert from '../Components/AvatarWithAlert'
 interface StateProps {
   groups: ReadonlyArray<GroupRows>
   showNotificationsPrompt: boolean
-  itemCount: number,
+  itemCount: number
   inboxStatus: boolean
 }
 

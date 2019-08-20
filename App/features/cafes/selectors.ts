@@ -14,7 +14,6 @@ export function registeringCafes(state: CafesState) {
     .filter(cafe => cafe.state === 'registering')
 }
 
-
 export function registeredCafes(state: CafesState) {
   return Object.keys(state.cafes)
     .map(peerId => state.cafes[peerId])

@@ -1,9 +1,7 @@
 import React from 'react'
-import {
-  View
-} from 'react-native'
+import { View } from 'react-native'
 import Avatar, { AvatarProps } from './Avatar'
-import { color } from '../styles';
+import { color } from '../styles'
 
 export interface AvatarAlertProps extends AvatarProps {
   active?: boolean
@@ -25,17 +23,15 @@ export default class AvatarWithAlert extends React.Component<AvatarAlertProps> {
           top: 0,
           right: 0,
           backgroundColor: color.severe_4,
-          borderRadius: dimension/2
-        }}>
-      </View>
+          borderRadius: dimension / 2
+        }}
+      />
     )
   }
-  render () {
+  render() {
     return (
       <View>
-        <Avatar
-          {...this.props}
-        />
+        <Avatar {...this.props} />
         {this.renderAlert()}
       </View>
     )

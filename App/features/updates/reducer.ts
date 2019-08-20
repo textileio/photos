@@ -49,9 +49,9 @@ export default combineReducers<UpdatesState, UpdatesAction>({
   },
   alerts: (state = { results: [] }, action) => {
     switch (action.type) {
-      case getType(actions.insertNoStorageAlert):{
-          const { type } = action.payload
-        if (state.results.find((alert) => alert.type === type)) {
+      case getType(actions.insertNoStorageAlert): {
+        const { type } = action.payload
+        if (state.results.find(alert => alert.type === type)) {
           return state
         } else {
           return {
@@ -65,9 +65,12 @@ export default combineReducers<UpdatesState, UpdatesAction>({
           }
         }
       }
-      case getType(actions.removeNoStorageAlert):
-        const results = state.results.filter((result) => result.type !== action.payload.type)
-        return {...state, results}
+      case getType(actions.removeNoStorageAlert): {
+        const results = state.results.filter(result => {
+          return result.type !== action.payload.type
+        })
+        return { ...state, results }
+      }
       default:
         return state
     }

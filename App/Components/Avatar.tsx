@@ -238,7 +238,10 @@ class Avatar extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: RootState, ownProps: AvatarProps): StateProps => {
+const mapStateToProps = (
+  state: RootState,
+  ownProps: AvatarProps
+): StateProps => {
   let target = ownProps.target
 
   const profile = state.account.profile.value

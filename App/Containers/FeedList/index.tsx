@@ -196,10 +196,9 @@ class Notifications extends React.Component<Props, State> {
     if (!this.props.alerts.length) {
       return
     }
-    return <Alerts
-      alerts={this.props.alerts}
-      registerCafe={this.registerCafe}
-    />
+    return (
+      <Alerts alerts={this.props.alerts} registerCafe={this.registerCafe} />
+    )
   }
   _renderItems() {
     return (
@@ -250,7 +249,7 @@ const mapStateToProps = (state: RootState): StateProps => {
   const alerts = selectors.getAlerts(state.updates)
 
   const inboxStatus = selectors.inboxStatus(state.updates)
-  
+
   return {
     alerts,
     notifications,
