@@ -2,6 +2,7 @@ import { combineReducers } from 'redux'
 import { ActionType, getType } from 'typesafe-actions'
 import * as actions from './actions'
 import { Notification, LocalAlert } from './models'
+import { Alert } from 'react-native'
 
 export interface UpdatesState {
   readonly notifications: {
@@ -50,7 +51,7 @@ export default combineReducers<UpdatesState, UpdatesAction>({
   alerts: (state = { results: [] }, action) => {
     switch (action.type) {
       case getType(actions.insertNoStorageAlert): {
-        const { type } = action.payload
+        const { type, weight } = action.payload
         if (state.results.find(alert => alert.type === type)) {
           return state
         } else {
@@ -59,7 +60,8 @@ export default combineReducers<UpdatesState, UpdatesAction>({
             results: [
               ...state.results,
               {
-                type
+                type,
+                weight
               }
             ]
           }

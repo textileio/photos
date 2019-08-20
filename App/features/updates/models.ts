@@ -75,7 +75,10 @@ export type Notification =
   | CommentAddedNotification
   | LikeAddedNotification
 
+export enum LocalAlertType {
+  NoStorageBot = 1
+}
 export type LocalAlert = {
-  type: string
+  type: LocalAlertType
   weight?: number
 }

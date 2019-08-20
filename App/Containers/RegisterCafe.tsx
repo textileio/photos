@@ -60,7 +60,6 @@ interface State {
 
 class RegisterCafe extends Component<Props, State> {
   static navigationOptions = ({ navigation }: NavigationScreenProps) => {
-    console.log(navigation)
     const backTo = navigation.getParam('backTo')
     const goBack = () => {
       if (backTo && backTo !== '') {
@@ -179,6 +178,11 @@ class RegisterCafe extends Component<Props, State> {
   }
 
   onSuccess = () => {
+    const backTo = this.props.navigation.getParam('backTo')
+    if (backTo && backTo !== '') {
+      this.props.navigation.navigate(backTo)
+      return
+    }
     this.props.navigation.goBack()
   }
 }
