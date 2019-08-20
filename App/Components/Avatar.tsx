@@ -14,7 +14,7 @@ import TextileImage from './TextileImage'
 import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
 import { color as colors } from '../styles'
 
-interface OwnProps {
+export interface AvatarProps {
   self?: boolean
   icon?: string
   target?: string
@@ -29,7 +29,7 @@ interface StateProps {
   online: boolean
 }
 
-type Props = OwnProps & StateProps & Partial<ImageProps>
+type Props = AvatarProps & StateProps & Partial<ImageProps>
 
 interface State {
   borderRadius: number
@@ -238,7 +238,7 @@ class Avatar extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
+const mapStateToProps = (state: RootState, ownProps: AvatarProps): StateProps => {
   let target = ownProps.target
 
   const profile = state.account.profile.value

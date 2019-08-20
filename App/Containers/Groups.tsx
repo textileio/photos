@@ -24,13 +24,12 @@ import PreferencesActions, {
 } from '../Redux/PreferencesRedux'
 
 import { Item, TextileHeaderButtons } from '../Components/HeaderButtons'
-import Avatar from '../Components/Avatar'
 import GroupCard from '../Components/GroupCard'
 import CreateThreadModal from '../Components/CreateThreadModal'
 import ProcessingThread from '../Components/ProcessingThread'
 import styles from './Styles/GroupsStyles'
-import { color } from '../styles'
 import * as selectors from '../features/updates/selectors'
+import AvatarWithAlert from '../Components/AvatarWithAlert'
 
 interface StateProps {
   groups: ReadonlyArray<GroupRows>
@@ -65,36 +64,17 @@ class Groups extends React.PureComponent<Props, State> {
     const openDrawer = navigation.getParam('openDrawer')
     const openThreadModal = navigation.getParam('openThreadModal')
 
-    const dimension = 8
-    const renderAlert = () => {
-      if (!inboxStatus) {
-        return
-      }
-      return (
-        <View
-          style={{
-            width: dimension,
-            height: dimension,
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            backgroundColor: color.severe_4,
-            borderRadius: dimension/2
-          }}>
-        </View>
-      )
-    }
-
     const headerLeft = (
       <TextileHeaderButtons left={true}>
         <Item
           title="Account"
           onPress={openDrawer}
           ButtonElement={
-            <View>
-              <Avatar style={{ width: 24, height: 24 }} self={true} />
-              {renderAlert()}
-            </View>
+            <AvatarWithAlert
+              style={{ width: 24, height: 24 }}
+              self={true}
+              active={inboxStatus}
+            />
           }
           buttonWrapperStyle={{ margin: 11 }}
         />

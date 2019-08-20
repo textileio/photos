@@ -16,7 +16,6 @@ import {
 import Buttons from 'react-navigation-header-buttons'
 
 import Alerts from './Alerts'
-import Avatar from '../../Components/Avatar'
 import FeedItem from '../../SB/components/FeedItem'
 import { TextileHeaderButtons } from '../../Components/HeaderButtons'
 
@@ -32,8 +31,10 @@ import { Notification, LocalAlert } from '../../features/updates/models'
 
 import styles from './statics/styles'
 import onboardingStyles from '../Styles/OnboardingStyle'
+import AvatarWithAlert from '../../Components/AvatarWithAlert'
 
 interface NavProps {
+  inboxStatus: boolean
   openDrawer: () => void
 }
 
@@ -50,7 +51,7 @@ class Notifications extends React.Component<Props, State> {
     navigation
   }: NavigationScreenProps<NavProps>) => {
     const openDrawer = navigation.getParam('openDrawer')
-
+    const inboxStatus = navigation.getParam('inboxStatus')
     const headerTitle = 'Notifications'
 
     const headerLeft = (
@@ -59,7 +60,11 @@ class Notifications extends React.Component<Props, State> {
           title="Account"
           onPress={openDrawer}
           ButtonElement={
-            <Avatar style={{ width: 24, height: 24 }} self={true} />
+            <AvatarWithAlert
+              style={{ width: 24, height: 24 }}
+              self={true}
+              active={inboxStatus}
+            />
           }
           buttonWrapperStyle={{ margin: 11 }}
         />
@@ -105,7 +110,8 @@ class Notifications extends React.Component<Props, State> {
     )
     const willBlur = this.props.navigation.addListener('willBlur', this._onBlur)
     this.props.navigation.setParams({
-      openDrawer: this.openDrawer
+      openDrawer: this.openDrawer,
+      inboxStatus: this.props.inboxStatus
     })
     this.setState({
       willFocus,
@@ -128,6 +134,12 @@ class Notifications extends React.Component<Props, State> {
     if (this.state.focusRefreshInProgress && !this.props.refreshing) {
       this.setState({
         focusRefreshInProgress: false
+      })
+    }
+
+    if (this.props.inboxStatus !== prevProps.inboxStatus) {
+      this.props.navigation.setParams({
+        inboxStatus: this.props.inboxStatus
       })
     }
   }
@@ -227,6 +239,7 @@ interface StateProps {
   notifications: Notification[]
   refreshing: boolean
   showOnboarding: boolean
+  inboxStatus: boolean
 }
 
 const mapStateToProps = (state: RootState): StateProps => {
@@ -236,12 +249,14 @@ const mapStateToProps = (state: RootState): StateProps => {
 
   const alerts = selectors.getAlerts(state.updates)
 
+  const inboxStatus = selectors.inboxStatus(state.updates)
   
   return {
     alerts,
     notifications,
     refreshing,
-    showOnboarding
+    showOnboarding,
+    inboxStatus
   }
 }
 

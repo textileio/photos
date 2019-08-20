@@ -45,5 +45,15 @@ export const getAlert = (type: string) => (state: UpdatesState): LocalAlert | un
   return state.alerts.results.find((alert) => alert.type === type)
 }
 export const getAlerts = (state: UpdatesState) => {
-  return [...state.alerts.results]
+  return [...state.alerts.results].sort(
+    (n1: LocalAlert, n2: LocalAlert): number => {
+      const first = n1.weight || 0
+      const second = n2.weight || 0
+      if (first >= second) {
+        return -1
+      } else {
+        return 1
+      }
+    }
+  )
 }

@@ -77,4 +77,5 @@ export type Notification =
 
 export type LocalAlert = {
   type: string
+  weight?: number
 }

@@ -91,7 +91,7 @@ export default class CafesList extends Component<Props> {
             onPress={this.props.onAddCustom}
             disabled={this.props.disabled}
           >
-            <ActionText text="ENTER CUSTOM CAFE" iconName="pencil-create" />
+            <ActionText text="ENTER CUSTOM BOT" iconName="pencil-create" />
           </TouchableOpacity>
         )
     }

@@ -26,7 +26,7 @@ class Cafes extends Component<Props> {
     )
     return {
       headerLeft,
-      headerTitle: 'Registered Cafes'
+      headerTitle: 'Registered Bots'
     }
   }
 
