@@ -310,7 +310,7 @@ export async function displayInviteAlert(message: string) {
 export function displayLeavePromise(): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     Alert.alert(
-      'Leave thread?',
+      'Leave group?',
       'This cannot be undone.',
       [
         {
