@@ -186,7 +186,7 @@ class ContactModal extends React.Component<Props, State> {
           },
           {
             key: 'cafes',
-            title: 'Cafes'
+            title: 'Bots'
           }
         ]
       }
@@ -224,10 +224,10 @@ class ContactModal extends React.Component<Props, State> {
     )
     const CafesScreen = (
       <ScrollView style={cafesList}>
-        <Text style={cafesHeader}>Registered With the Following Cafes:</Text>
+        <Text style={cafesHeader}>Registered With the Following Bots:</Text>
         {cafeObjects.map((cafe, i) => (
           <View key={i} style={cafeBox}>
-            <Text style={cafeTitle}>{cafe.address}</Text>
+            <Text style={cafeTitle}>Storage Bot: {cafe.address}</Text>
             {i !== cafeObjects.length - 1 && <View style={divider} />}
           </View>
         ))}

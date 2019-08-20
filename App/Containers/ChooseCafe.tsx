@@ -176,7 +176,7 @@ class ChooseCafe extends Component<Props, State> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   return {
-    registeringCafes: cafesSelectors.regesteringCafes(state.cafes),
+    registeringCafes: cafesSelectors.registeringCafes(state.cafes),
     nodeOnline: TextileEventsSelectors.online(state)
   }
 }

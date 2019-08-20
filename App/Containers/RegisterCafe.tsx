@@ -60,7 +60,15 @@ interface State {
 
 class RegisterCafe extends Component<Props, State> {
   static navigationOptions = ({ navigation }: NavigationScreenProps) => {
-    const goBack = () => navigation.goBack()
+    console.log(navigation)
+    const backTo = navigation.getParam('backTo')
+    const goBack = () => {
+      if (backTo && backTo !== '') {
+        navigation.navigate(backTo)
+        return
+      }
+      navigation.goBack()
+    }
     const headerLeft = (
       <TextileHeaderButtons left={true}>
         <Item title="Back" onPress={goBack} iconName="arrow-left" />
@@ -68,7 +76,7 @@ class RegisterCafe extends Component<Props, State> {
     )
     return {
       headerLeft,
-      headerTitle: 'Register Cafe'
+      headerTitle: 'Available Bots'
     }
   }
 
@@ -179,7 +187,7 @@ function mapStateToProps(state: RootState): StateProps {
   const sessions = cafesSelectors.sessions(state.cafes)
   return {
     alreadyRegistered: sessions.map(session => session.id),
-    registeringCafes: cafesSelectors.regesteringCafes(state.cafes),
+    registeringCafes: cafesSelectors.registeringCafes(state.cafes),
     nodeOnline: TextileEventsSelectors.online(state)
   }
 }

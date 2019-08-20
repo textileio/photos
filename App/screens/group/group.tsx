@@ -51,8 +51,7 @@ const momentSpec: moment.CalendarSpec = {
 
 const screenWidth = Dimensions.get('screen').width
 
-const contStyle =
-      Platform.OS === 'ios' ? { flex: 1, paddingBottom: 40 } : {}
+const contStyle = Platform.OS === 'ios' ? { flex: 1, paddingBottom: 40 } : {}
 
 interface StateProps {
   threadId: string
@@ -178,12 +177,8 @@ class Group extends React.PureComponent<Props, State> {
 
     // Block action sheet
     const blockActionSheetOptions = [
-      ...(canRemove
-        ? ['Remove']
-        : []),
-      ...(isCopyable
-        ? ['Copy']
-        : []),
+      ...(canRemove ? ['Remove'] : []),
+      ...(isCopyable ? ['Copy'] : []),
       'Cancel'
     ]
     const blockCancelButtonIndex = blockActionSheetOptions.indexOf('Cancel')
@@ -229,8 +224,9 @@ class Group extends React.PureComponent<Props, State> {
     const threadId = this.props.navigation.getParam('threadId')
 
     // The rn-keyboard module caused some issues with Android vs iOS, this fixes it
-    
-    
+
+    // The rn-keyboard module caused some issues with Android vs iOS, this fixes it
+
     return (
       <View style={{ flex: 1, flexGrow: 1 }}>
         <KeyboardResponsiveContainer style={contStyle} ios={false}>
@@ -373,7 +369,9 @@ class Group extends React.PureComponent<Props, State> {
             pinchWidth={pinchWidth}
             pinchHeight={pinchHeight}
             onLongPress={
-              canRemove ? this.configureBlockActionSheet(item.block, true, false) : undefined
+              canRemove
+                ? this.configureBlockActionSheet(item.block, true, false)
+                : undefined
             }
           />
         )
@@ -401,14 +399,12 @@ class Group extends React.PureComponent<Props, State> {
         const avatar = isSameUser ? undefined : user.avatar
         return (
           <TouchableWithoutFeedback
-            onLongPress={
-              this.configureBlockActionSheet(
-                item.block,
-                canRemove,
-                true,
-                item.value.body
-              )
-            }
+            onLongPress={this.configureBlockActionSheet(
+              item.block,
+              canRemove,
+              true,
+              item.value.body
+            )}
           >
             <View>
               <Message

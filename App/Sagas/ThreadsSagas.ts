@@ -17,7 +17,7 @@ import NavigationService from '../Services/NavigationService'
 import UIActions from '../Redux/UIRedux'
 import Config from 'react-native-config'
 import { logNewEvent } from './DeviceLogs'
-import { waitUntilOnline } from './NotificationsSagas'
+import { waitUntilOnline } from '../features/updates/sagas'
 
 function* joinInternalOnFork(notificationId: string, threadName?: string) {
   try {

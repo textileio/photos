@@ -105,7 +105,7 @@ export default class CafePeerIdModal extends Component<Props, State> {
       >
         <SafeAreaView style={ModalView}>
           <View style={Container}>
-            <Text style={Header}>Custom Cafe</Text>
+            <Text style={Header}>Custom Bot</Text>
             <View style={InputContainer}>
               <Input
                 style={InputStyle}
