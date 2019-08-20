@@ -1,5 +1,5 @@
 import { UpdatesState } from './reducer'
-import { Notification, LocalAlert } from './models'
+import { Notification, LocalAlert, LocalAlertType } from './models'
 
 export const refreshing = (state: UpdatesState): boolean =>
   state.notifications.refreshing
@@ -41,7 +41,7 @@ export const inboxStatus = (state: UpdatesState): boolean => {
  * Returns an alert by string id or undefined
  * @param type string identifier of an alert type
  */
-export const getAlert = (type: string) => (
+export const getAlert = (type: LocalAlertType) => (
   state: UpdatesState
 ): LocalAlert | undefined => {
   return state.alerts.results.find(alert => alert.type === type)

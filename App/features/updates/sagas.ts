@@ -26,7 +26,7 @@ import TextileEventsActions, {
 import * as NotificationsServices from '../../Services/Notifications'
 import { logNewEvent } from '../../Sagas/DeviceLogs'
 import { RootState } from '../../Redux/Types'
-import { LocalAlertType } from './models';
+import { LocalAlertType } from './models'
 
 export function* waitUntilOnline(ms: number) {
   let ttw = ms
@@ -252,7 +252,7 @@ export function* updateCafeAlert() {
     cafeSelectors.registeredCafes(state.cafes)
   )
   if (cafes.length === 0) {
-    yield put(actions.insertNoStorageAlert(LocalAlertType.NoStorageBot))
+    yield put(actions.insertNoStorageAlert(LocalAlertType.NoStorageBot, 5))
   } else if (cafes.length > 0) {
     yield put(actions.removeNoStorageAlert(LocalAlertType.NoStorageBot))
   }
