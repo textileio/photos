@@ -226,8 +226,7 @@ class Group extends React.PureComponent<Props, State> {
     // The rn-keyboard module caused some issues with Android vs iOS, this fixes it
 
     // The rn-keyboard module caused some issues with Android vs iOS, this fixes it
-    
-    
+
     return (
       <View style={{ flex: 1, flexGrow: 1 }}>
         <KeyboardResponsiveContainer style={contStyle} ios={false}>
