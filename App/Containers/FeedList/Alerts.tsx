@@ -42,6 +42,7 @@ export default class Alerts extends React.Component<ScreenProps, State> {
     title: string,
     short: string,
     long: string,
+    capabilities: string[],
     limits: string[],
     image: string,
     linkCallback: () => void
@@ -49,7 +50,7 @@ export default class Alerts extends React.Component<ScreenProps, State> {
     const selected = this.state.selected === type
     const description = selected ? long : short
 
-    const more = limits.map((limit, key) => {
+    const botLimits = limits.map((limit, key) => {
       return (
         <Text
           key={key}
@@ -59,12 +60,28 @@ export default class Alerts extends React.Component<ScreenProps, State> {
             paddingVertical: 4
           }}
         >
-          {limit}
+          - {limit}
         </Text>
       )
     })
 
-    const toggle = selected ? 'Bots cannot:' : 'Learn more'
+    const botCapabilities = capabilities.map((ability, key) => {
+      return (
+        <Text
+          key={key}
+          style={{
+            ...textStyle.body_s,
+            color: color.grey_3,
+            paddingVertical: 4
+          }}
+        >
+          - {ability}
+        </Text>
+      )
+    })
+
+    const toggle = selected ? 'Bots can:' : 'Read more'
+    const clickableText = ' >'
     return (
       <TouchableOpacity
         activeOpacity={0.9}
@@ -94,7 +111,13 @@ export default class Alerts extends React.Component<ScreenProps, State> {
               color: color.grey_2
             }}
           >
-            {description}
+            {description} 
+            <Text
+              style={{
+                color: color.brandBlue,
+                marginLeft: 6
+              }}
+            >{clickableText}</Text>
           </Text>
           <TouchableOpacity onPress={this.toggle(type)}>
             <Text
@@ -109,17 +132,23 @@ export default class Alerts extends React.Component<ScreenProps, State> {
             </Text>
           </TouchableOpacity>
           {selected && (
-            <View style={{ paddingTop: 10 }}>
-              {more}
+            <View>
+              <View style={{ paddingTop: 10 }}>
+                {botCapabilities}
+              </View>
               <Text
                 style={{
                   ...textStyle.body_s,
                   paddingTop: 10,
+                  paddingRight: 30,
                   color: color.grey_2
                 }}
               >
-                Choose one now
+                Bots cannot:
               </Text>
+              <View style={{ paddingTop: 10 }}>
+                {botLimits}
+              </View>
             </View>
           )}
         </View>
@@ -127,18 +156,20 @@ export default class Alerts extends React.Component<ScreenProps, State> {
           style={{
             flex: 1,
             flexDirection: 'row',
-            alignSelf: 'stretch',
+            alignContent: 'flex-start',
+            justifyContent: 'flex-start',
             padding: size._016
           }}
         >
           <Image
             style={{
-              flex: 1,
+              width: '100%',
+              aspectRatio: 3/2,
               borderRadius: 2,
               borderColor: color.grey_3,
               borderWidth: StyleSheet.hairlineWidth
             }}
-            resizeMode="cover"
+            resizeMode={'cover'}
             // @ts-ignore
             source={alertImages[image]}
           />
@@ -147,22 +178,29 @@ export default class Alerts extends React.Component<ScreenProps, State> {
     )
   }
   renderItem = ({ item }: ListRenderItemInfo<LocalAlert>) => {
-    if (item.type === 'no-storage-bot') {
-      return this.itemTemplate(
-        item.type,
-        'Upgrade',
-        'Enable Your Storage Bot',
-        'Storage bots backup encrypted photos and messages.',
-        'Storage bots backup encrypted versions of your groups to ensure you never lose your photos. They also deliver messages to you that you miss when your phone is offline.',
-        [
-          'See your photos',
-          'Read your messages',
-          'Decrypt your data',
-          'Share your data'
-        ],
-        '../../Images/v2/invite_a_bot.png',
-        this.props.registerCafe
-      )
+    switch (item.type){
+      case ('no-storage-bot'): {
+        return this.itemTemplate(
+          item.type,
+          'Required',
+          'Enable Your Storage Bot',
+          'Storage bots backup encrypted photos and messages',
+          'Storage bots backup encrypted versions of your groups to ensure you never lose your photos. They also deliver messages to you that you miss when your phone is offline',
+          [
+            'Remotely store your backups',
+            'Help sync your devices',
+            'Deliver your missed messages',
+          ],
+          [
+            'See your photos',
+            'Read your messages',
+            'Decrypt your data',
+            'Share your data'
+          ],
+          '../../Images/v2/invite_a_bot.png',
+          this.props.registerCafe
+        )
+      }
     }
   }
   render() {
