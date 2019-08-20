@@ -22,6 +22,27 @@ const VIEW_ALL: TextStyle = {
   marginTop: spacing._008
 }
 
+const MARGIN_BAR: ViewStyle = {
+  width: 4,
+  marginTop: 6,
+  marginLeft: 2,
+  marginRight: 8,
+  borderRadius: 3
+}
+
+// Uses text in order to nicely match the line-height when 1 comment.
+const MARGIN_BAR_FILL: TextStyle = {
+  ...textStyle.body_m,
+  lineHeight: 10,
+  flex: 1,
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  overflow: 'visible',
+  paddingTop: spacing._008,
+  backgroundColor: color.grey_5,
+  color: 'rgba(0,0,0,0)',
+}
+
 export interface CommentData {
   id: string
   username: string
@@ -60,6 +81,16 @@ const Comments = (props: Props) => {
     })
   return (
     <View style={[CONTAINER, props.commentsContainerStyle]}>
+      {props.comments.length > 0 &&
+        <View style={{flex: 1, flexDirection: 'row'}}>
+          <View style={MARGIN_BAR}>
+            <Text style={MARGIN_BAR_FILL}>0</Text>
+          </View>
+          <View style={{flex: 1, flexDirection: 'column'}}>
+            {comments}
+          </View>
+        </View>
+      }
       {displayCount < props.comments.length && (
         <TouchableOpacity onPress={props.onViewComments}>
           <Text style={VIEW_ALL}>{`See all ${
@@ -67,7 +98,6 @@ const Comments = (props: Props) => {
           } comments...`}</Text>
         </TouchableOpacity>
       )}
-      {comments}
     </View>
   )
 }
