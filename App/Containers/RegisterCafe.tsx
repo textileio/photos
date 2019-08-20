@@ -60,7 +60,15 @@ interface State {
 
 class RegisterCafe extends Component<Props, State> {
   static navigationOptions = ({ navigation }: NavigationScreenProps) => {
-    const goBack = () => navigation.goBack()
+    console.log(navigation)
+    const backTo = navigation.getParam('backTo')
+    const goBack = () => {
+      if (backTo && backTo !== '') {
+        navigation.navigate(backTo)
+        return
+      }
+      navigation.goBack()
+    }
     const headerLeft = (
       <TextileHeaderButtons left={true}>
         <Item title="Back" onPress={goBack} iconName="arrow-left" />

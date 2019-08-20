@@ -189,7 +189,7 @@ class Notifications extends React.Component<Props, State> {
   }
 
   registerCafe = () => {
-    this.props.navigation.navigate('RegisterCafe')
+    this.props.navigation.navigate('RegisterCafe', { backTo: 'Notifications' })
   }
 
   _renderAlerts() {

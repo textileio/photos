@@ -40,7 +40,7 @@ const MARGIN_BAR_FILL: TextStyle = {
   overflow: 'visible',
   paddingTop: spacing._008,
   backgroundColor: color.grey_5,
-  color: 'rgba(0,0,0,0)',
+  color: 'rgba(0,0,0,0)'
 }
 
 export interface CommentData {
@@ -81,16 +81,14 @@ const Comments = (props: Props) => {
     })
   return (
     <View style={[CONTAINER, props.commentsContainerStyle]}>
-      {props.comments.length > 0 &&
-        <View style={{flex: 1, flexDirection: 'row'}}>
+      {props.comments.length > 0 && (
+        <View style={{ flex: 1, flexDirection: 'row' }}>
           <View style={MARGIN_BAR}>
             <Text style={MARGIN_BAR_FILL}>0</Text>
           </View>
-          <View style={{flex: 1, flexDirection: 'column'}}>
-            {comments}
-          </View>
+          <View style={{ flex: 1, flexDirection: 'column' }}>{comments}</View>
         </View>
-      }
+      )}
       {displayCount < props.comments.length && (
         <TouchableOpacity onPress={props.onViewComments}>
           <Text style={VIEW_ALL}>{`See all ${

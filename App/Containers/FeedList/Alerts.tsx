@@ -111,13 +111,15 @@ export default class Alerts extends React.Component<ScreenProps, State> {
               color: color.grey_2
             }}
           >
-            {description} 
+            {description}
             <Text
               style={{
                 color: color.brandBlue,
                 marginLeft: 6
               }}
-            >{clickableText}</Text>
+            >
+              {clickableText}
+            </Text>
           </Text>
           <TouchableOpacity onPress={this.toggle(type)}>
             <Text
@@ -133,9 +135,7 @@ export default class Alerts extends React.Component<ScreenProps, State> {
           </TouchableOpacity>
           {selected && (
             <View>
-              <View style={{ paddingTop: 10 }}>
-                {botCapabilities}
-              </View>
+              <View style={{ paddingTop: 10 }}>{botCapabilities}</View>
               <Text
                 style={{
                   ...textStyle.body_s,
@@ -146,9 +146,7 @@ export default class Alerts extends React.Component<ScreenProps, State> {
               >
                 Bots cannot:
               </Text>
-              <View style={{ paddingTop: 10 }}>
-                {botLimits}
-              </View>
+              <View style={{ paddingTop: 10 }}>{botLimits}</View>
             </View>
           )}
         </View>
@@ -164,7 +162,7 @@ export default class Alerts extends React.Component<ScreenProps, State> {
           <Image
             style={{
               width: '100%',
-              aspectRatio: 3/2,
+              aspectRatio: 3 / 2,
               borderRadius: 2,
               borderColor: color.grey_3,
               borderWidth: StyleSheet.hairlineWidth
@@ -178,8 +176,8 @@ export default class Alerts extends React.Component<ScreenProps, State> {
     )
   }
   renderItem = ({ item }: ListRenderItemInfo<LocalAlert>) => {
-    switch (item.type){
-      case ('no-storage-bot'): {
+    switch (item.type) {
+      case 'no-storage-bot': {
         return this.itemTemplate(
           item.type,
           'Required',
@@ -189,7 +187,7 @@ export default class Alerts extends React.Component<ScreenProps, State> {
           [
             'Remotely store your backups',
             'Help sync your devices',
-            'Deliver your missed messages',
+            'Deliver your missed messages'
           ],
           [
             'See your photos',
