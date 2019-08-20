@@ -249,7 +249,7 @@ const mapStateToProps = (state: RootState): StateProps => {
   const alerts = selectors.getAlerts(state.updates)
 
   const inboxStatus = selectors.inboxStatus(state.updates)
-  
+
   return {
     alerts,
     notifications,
