@@ -8,7 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity
 } from 'react-native'
-import { LocalAlert } from '../../features/updates/models'
+import { LocalAlert, LocalAlertType } from '../../features/updates/models'
 import { color, size, textStyle } from '../../styles'
 
 const alertImages = {
@@ -20,14 +20,14 @@ interface ScreenProps {
 }
 
 interface State {
-  selected?: string
+  selected?: LocalAlertType
 }
 
 export default class Alerts extends React.Component<ScreenProps, State> {
   state: State = {}
   _keyExtractor = (item: LocalAlert, index: number) => index.toString()
 
-  toggle = (type: string) => {
+  toggle = (type: LocalAlertType) => {
     return () => {
       if (this.state.selected === type) {
         this.setState({ selected: undefined })
@@ -37,7 +37,7 @@ export default class Alerts extends React.Component<ScreenProps, State> {
     }
   }
   itemTemplate = (
-    type: string,
+    type: LocalAlertType,
     linkText: string,
     title: string,
     short: string,
@@ -177,7 +177,7 @@ export default class Alerts extends React.Component<ScreenProps, State> {
   }
   renderItem = ({ item }: ListRenderItemInfo<LocalAlert>) => {
     switch (item.type) {
-      case 'no-storage-bot': {
+      case LocalAlertType.NoStorageBot: {
         return this.itemTemplate(
           item.type,
           'Required',

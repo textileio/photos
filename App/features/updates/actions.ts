@@ -1,5 +1,5 @@
 import { createAction, createAsyncAction } from 'typesafe-actions'
-import { Notification, InviteReceivedNotification } from './models'
+import { Notification, InviteReceivedNotification, LocalAlertType } from './models'
 import { PushNotification } from '../../Services/EventHandlers/NotificationEventHandler'
 
 export const getUpdatesRequest = createAction('updates/GET_UPDATES_REQUEST')
@@ -71,13 +71,13 @@ export const reviewNotificationThreadInvite = createAction(
 export const insertNoStorageAlert = createAction(
   'INSERT_NO_STORAGE_ALERT',
   resolve => {
-    return (type: string) => resolve({ type })
+    return (type: LocalAlertType) => resolve({ type })
   }
 )
 
 export const removeNoStorageAlert = createAction(
   'REMOVE_NO_STORAGE_ALERT',
   resolve => {
-    return (type: string) => resolve({ type })
+    return (type: LocalAlertType) => resolve({ type })
   }
 )
