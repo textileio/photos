@@ -39,10 +39,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)refreshSession:(NSString *)peerId completion:(void (^)(CafeSession * _Nullable, NSError * _Nonnull))completion;
 
 /**
- * Triggers the async process of checking for messages from all registered cafes
- * @param error A reference to an error pointer that will be set in the case of an error
+ * Check messages from all registered cafes
+ * @param completion A block that will get called with an error
  */
-- (void)checkMessages:(NSError **)error;
+- (void)checkMessages:(void (^)(NSError * _Nonnull))completion;
 
 /**
  * Fetches the CafeSession object for a previously registered Textile Cafe node

@@ -44,16 +44,19 @@ interface OwnProps {
 interface StateProps {
   registeringCafes: Cafe[]
   nodeOnline: boolean
+  cafes: Cafe[]
 }
 
 interface DispatchProps {
-  register: (peerId: string, token: string) => void
+  refreshKnownCafes: () => void
+  register: (url: string, peerId: string, token: string) => void
 }
 
 type Props = OwnProps & StateProps & DispatchProps
 
 interface State {
   selected?: {
+    url: string
     peerId: string
     token: string
   }
@@ -67,8 +70,11 @@ class ChooseCafe extends Component<Props, State> {
       peerIdModalIsVisible: false
     }
   }
+  componentWillMount() {
+    this.props.refreshKnownCafes()
+  }
 
-  onSelect = (peerId: string, token: string) => () => {
+  onSelect = (url: string, peerId: string, token: string) => () => {
     // If already selected, deselect it
     this.setState(prevState => {
       const alreadySelected = prevState.selected
@@ -78,6 +84,7 @@ class ChooseCafe extends Component<Props, State> {
         selected: alreadySelected
           ? undefined
           : {
+              url,
               peerId,
               token
             }
@@ -109,6 +116,7 @@ class ChooseCafe extends Component<Props, State> {
         )}
         {this.props.nodeOnline && (
           <CafesList
+            cafes={this.props.cafes}
             disabled={registering}
             selected={peerId}
             onSelect={this.onSelect}
@@ -149,20 +157,21 @@ class ChooseCafe extends Component<Props, State> {
         ]
       )
     } else {
-      const { peerId, token } = this.state.selected
-      this.props.register(peerId, token)
+      const { url, peerId, token } = this.state.selected
+      this.props.register(url, peerId, token)
     }
   }
 
-  registerByPeerId = (peerId: string, token: string) => {
+  registerByPeerId = (url: string, peerId: string, token: string) => {
     this.setState({
       selected: {
+        url,
         peerId,
         token
       },
       peerIdModalIsVisible: false
     })
-    this.props.register(peerId, token)
+    this.props.register(url, peerId, token)
   }
 
   togglePeerIdModal = () => {
@@ -177,7 +186,8 @@ class ChooseCafe extends Component<Props, State> {
 const mapStateToProps = (state: RootState): StateProps => {
   return {
     registeringCafes: cafesSelectors.registeringCafes(state.cafes),
-    nodeOnline: TextileEventsSelectors.online(state)
+    nodeOnline: TextileEventsSelectors.online(state),
+    cafes: cafesSelectors.knownCafes(state.cafes)
   }
 }
 
@@ -186,9 +196,11 @@ const mapDispatchToProps = (
   ownProps: OwnProps
 ): DispatchProps => {
   return {
-    register: (peerId: string, token: string) =>
+    refreshKnownCafes: () => dispatch(cafesActions.getKnownCafes.request()),
+    register: (url: string, peerId: string, token: string) =>
       dispatch(
         cafesActions.registerCafe.request({
+          url,
           peerId,
           token,
           success: ownProps.onSuccess

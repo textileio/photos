@@ -135,7 +135,7 @@ name is the string value of a pb.MobileEvent_Type)
 - (NSData* _Nullable)cafeRequests:(long)limit error:(NSError* _Nullable* _Nullable)error;
 - (NSData* _Nullable)cafeSession:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
 - (NSData* _Nullable)cafeSessions:(NSError* _Nullable* _Nullable)error;
-- (BOOL)checkCafeMessages:(NSError* _Nullable* _Nullable)error;
+- (void)checkCafeMessages:(id<MobileCallback> _Nullable)cb;
 - (BOOL)completeCafeRequest:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
 - (NSData* _Nullable)contact:(NSString* _Nullable)address error:(NSError* _Nullable* _Nullable)error;
 - (NSData* _Nullable)contactThreads:(NSString* _Nullable)address error:(NSError* _Nullable* _Nullable)error;
@@ -216,6 +216,7 @@ name is the string value of a pb.MobileEvent_Type)
  */
 - (BOOL)setName:(NSString* _Nullable)username error:(NSError* _Nullable* _Nullable)error;
 - (void)shareFiles:(NSString* _Nullable)data threadId:(NSString* _Nullable)threadId caption:(NSString* _Nullable)caption cb:(id<MobileProtoCallback> _Nullable)cb;
+- (NSData* _Nullable)sign:(NSData* _Nullable)input error:(NSError* _Nullable* _Nullable)error;
 /**
  * SnapshotThreads calls core SnapshotThreads
  */
@@ -246,6 +247,7 @@ name is the string value of a pb.MobileEvent_Type)
  */
 - (NSData* _Nullable)threads:(NSError* _Nullable* _Nullable)error;
 - (BOOL)updateCafeRequestProgress:(NSString* _Nullable)id_ transferred:(int64_t)transferred total:(int64_t)total error:(NSError* _Nullable* _Nullable)error;
+- (BOOL)verify:(NSData* _Nullable)input sig:(NSData* _Nullable)sig error:(NSError* _Nullable* _Nullable)error;
 /**
  * Version returns common Version
  */

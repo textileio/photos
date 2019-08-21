@@ -1,18 +1,24 @@
 import { all, takeEvery, put, call, select, take } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
-import Textile, {
-  ICafeSessionList,
-  ICafeSession
-} from '@textile/react-native-sdk'
+import Textile, { ICafeSessionList } from '@textile/react-native-sdk'
+import Config from 'react-native-config'
+import { Buffer } from 'buffer'
 
 import { RootState } from '../../Redux/Types'
 import PreferencesActions from '../../Redux/PreferencesRedux'
 import * as actions from './actions'
-import { sessions, makeCafeForPeerId } from './selectors'
-import { Cafe, Cafes } from './models'
+import { makeCafeForPeerId, knownCafesMap } from './selectors'
+import { Cafe, CafeAPI } from './models'
 import TextileEventsActions from '../../Redux/TextileEventsRedux'
-import { cafesMap } from '../../Models/cafes'
 import { logNewEvent } from '../../Sagas/DeviceLogs'
+
+const cafesBase64 = Config.RN_TEXTILE_CAFES_JSON
+const cafesString = new Buffer(cafesBase64, 'base64').toString()
+const localCafes: Array<{
+  name: string
+  peerId: string
+  token: string
+}> = JSON.parse(cafesString)
 
 function* onNodeStarted() {
   while (
@@ -32,9 +38,9 @@ function* onNodeStarted() {
 function* registerCafe(
   action: ActionType<typeof actions.registerCafe.request>
 ) {
-  const { peerId, token, success } = action.payload
+  const { url, peerId, token, success } = action.payload
   try {
-    yield call(Textile.cafes.register, peerId, token)
+    yield call(Textile.cafes.register, url, token)
     yield put(actions.registerCafe.success(peerId))
     yield put(actions.getCafeSessions.request())
     if (success) {
@@ -48,7 +54,7 @@ function* registerCafe(
 function* deregisterCafe(
   action: ActionType<typeof actions.deregisterCafe.request>
 ) {
-  const { peerId, success } = action.payload
+  const { url, peerId, success } = action.payload
   try {
     yield call(Textile.cafes.deregister, peerId)
     yield put(actions.deregisterCafe.success(peerId))
@@ -77,9 +83,9 @@ function* getCafeSessions() {
 function* refreshCafeSession(
   action: ActionType<typeof actions.refreshCafeSession.request>
 ) {
-  const { peerId } = action.payload
+  const { url, peerId } = action.payload
   try {
-    const session = yield call(Textile.cafes.refreshSession, peerId)
+    const session = yield call(Textile.cafes.refreshSession, url)
     if (session) {
       yield put(actions.refreshCafeSession.success({ session }))
     } else {
@@ -92,7 +98,7 @@ function* refreshCafeSession(
       try {
         let token: string | undefined
         // try to get the cafe token from static cafes bundled with the app
-        const cafe = cafesMap[peerId]
+        const cafe = yield select(knownCafesMap, peerId)
         if (cafe) {
           token = cafe.token
         } else {
@@ -105,7 +111,7 @@ function* refreshCafeSession(
         if (!token) {
           throw new Error('need to re-register cafe, but have no cafe token')
         }
-        yield call(Textile.cafes.register, peerId, token)
+        yield call(Textile.cafes.register, url, token)
       } catch (error) {
         yield put(actions.refreshCafeSession.failure({ peerId, error }))
       }
@@ -124,7 +130,10 @@ function* refreshExpiredSessions() {
         const exp = Textile.util.timestampToDate(session.exp)
         if (exp <= now) {
           yield put(
-            actions.refreshCafeSession.request({ peerId: session.cafe.peer })
+            actions.refreshCafeSession.request({
+              url: session.cafe.url,
+              peerId: session.cafe.peer
+            })
           )
         }
       }
@@ -143,15 +152,22 @@ function* migrateUSW() {
       const list: ICafeSessionList = yield call(Textile.cafes.sessions)
       const peerIDs = list.items.map(session => session.cafe.peer)
 
-      if (peerIDs.indexOf(usw) > -1) {
+      const old = list.items.find(session => session.cafe.peer === usw)
+      if (old) {
         // Use the existing route to deregister the usw cafe
-        yield put(actions.deregisterCafe.request({ peerId: usw }))
+        yield put(
+          actions.deregisterCafe.request({ url: old.cafe.url, peerId: usw })
+        )
         // Only replace it if there wasn't an existing secondary
         if (peerIDs.length < 2) {
-          const cafe = cafesMap[repl]
+          const cafe = yield select(knownCafesMap, repl)
           if (cafe) {
             yield put(
-              actions.registerCafe.request({ peerId: repl, token: cafe.token })
+              actions.registerCafe.request({
+                url: old.cafe.url,
+                peerId: repl,
+                token: cafe.token
+              })
             )
           }
         }
@@ -162,9 +178,85 @@ function* migrateUSW() {
   }
 }
 
+function* fetchRes(url: string) {
+  return yield fetch(url, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    }
+  })
+}
+
+// Since there isn't a single gateway for non-production cafes, I just combine 2 queries
+// We could easily hardcode it, but this should help flag any API changes before they become issues.
+function* cafeListAPI() {
+  switch (Config.RN_URL_SCHEME) {
+    case 'textile-dev':
+    case 'textile-beta': {
+      const result = []
+      try {
+        const url = 'https://us-west-dev.textile.cafe'
+        const res = yield call(fetchRes, url)
+        const json: CafeAPI = yield call([res, 'json'])
+        result.push(json)
+      } catch (error) {}
+      try {
+        const urlBeta = 'https://us-west-beta.textile.cafe'
+        const resBeta = yield call(fetchRes, urlBeta)
+        const jsonBeta: CafeAPI = yield call([resBeta, 'json'])
+        result.push(jsonBeta)
+      } catch (error) {}
+      return result
+    }
+    default: {
+      // This result comes back as {primary: cafe, secondary: cafe}, but we're ignoring those keys for now
+      const url = 'https://gateway.textile.cafe/cafes'
+      const json: { [key: string]: CafeAPI } = yield call(fetchRes, url)
+      const remap: CafeAPI[] = Object.keys(json).map(key => json[key])
+      return remap
+    }
+  }
+}
+
+// Uses the gateway api to list known cafes
+function* refreshKnownCafes() {
+  try {
+    const result = yield call(cafeListAPI)
+    // Map the cafes into registerable (have url, have known token in local config)
+    const cafes: Cafe[] = result
+      .map((option: CafeAPI) => {
+        const peerId = option.peer ? (option.peer as string) : ''
+        // Uses the list from local config to find any known tokens
+        const local = localCafes.find(cafe => cafe.peerId === peerId)
+        const token = local ? local.token : undefined
+        return {
+          token,
+          url: option.url ? (option.url as string) : '',
+          peerId,
+          name: option.name,
+          description: option.description,
+          state: 'available' as
+            | 'registering'
+            | 'registered'
+            | 'deregistering'
+            | 'available'
+        }
+      })
+      // filter out cafes that aren't registerable
+      .filter((cafe: Cafe) => cafe.url !== '' || !cafe.token)
+
+    // Update our list of available cafes
+    yield put(actions.getKnownCafes.success({ list: cafes }))
+  } catch (error) {
+    yield put(actions.getKnownCafes.failure(error))
+  }
+}
+
 export default function*() {
   yield all([
     call(onNodeStarted),
+    takeEvery(getType(actions.getKnownCafes.request), refreshKnownCafes),
     takeEvery(getType(actions.registerCafe.request), registerCafe),
     takeEvery(getType(actions.deregisterCafe.request), deregisterCafe),
     call(getCafeSessions),

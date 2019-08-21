@@ -1,15 +1,16 @@
 import React, { Component } from 'react'
 import { FlatList, TouchableOpacity } from 'react-native'
 
-import { Cafe, cafes } from '../Models/cafes'
 import ListItem from './ListItem'
 import RowSeparator from './RowSeparator'
 import ActionText from './action-text'
 import { size } from '../styles'
+import { Cafe } from '../features/cafes/models'
 
 interface Props {
+  cafes: Cafe[]
   selected?: string
-  onSelect: (peerId: string, token: string) => () => void
+  onSelect: (url: string, peerId: string, token: string) => () => void
   alreadyRegistered?: ReadonlyArray<string>
   ListHeaderComponent?: JSX.Element
   disabled?: boolean
@@ -31,7 +32,7 @@ export default class CafesList extends Component<Props> {
   render() {
     // Filter cafes as not to include those the user is already registered with
     // not used during onboarding
-    const filteredCafes: CafeItem[] = cafes
+    const filteredCafes: CafeItem[] = this.props.cafes
       .filter(cafe => {
         if (this.props.alreadyRegistered) {
           if (this.props.alreadyRegistered.indexOf(cafe.peerId) !== -1) {
@@ -73,17 +74,36 @@ export default class CafesList extends Component<Props> {
 
   _renderItem = ({ item }: { item: Item }) => {
     switch (item.type) {
-      case 'cafe':
+      case 'cafe': {
+        if (!item.cafe.token) {
+          return
+        }
+        const re = /\-/gi // eslint-disable-line
+        const title = item.cafe.name
+          ? item.cafe.name
+          : (item.cafe.url
+              .split('//')
+              .reverse()[0]
+              .split('.')[0]
+              .replace(re, ' ') as string)
+        const description = item.cafe.description
+          ? item.cafe.description
+          : 'Maintained by Textile'
         return (
           <ListItem
-            title={item.cafe.name}
-            subtitle={item.cafe.peerId}
+            title={`storage bot: ${title}`}
+            subtitle={description}
             selecting={true}
             selected={item.cafe.peerId === this.props.selected}
-            onSelect={this.props.onSelect(item.cafe.peerId, item.cafe.token)}
+            onSelect={this.props.onSelect(
+              item.cafe.url,
+              item.cafe.peerId,
+              item.cafe.token
+            )}
             disabled={this.props.disabled}
           />
         )
+      }
       case 'addCustom':
         return (
           <TouchableOpacity

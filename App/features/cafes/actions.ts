@@ -1,5 +1,6 @@
 import { createAsyncAction } from 'typesafe-actions'
 import { ICafeSession } from '@textile/react-native-sdk'
+import { Cafe } from './models'
 
 // Registering with a new cafe requires the cafe URL and string
 // With the new SDK, the URL needs to be changed to the peer id
@@ -9,6 +10,7 @@ export const registerCafe = createAsyncAction(
   'cafes/REGISTER_CAFE_ERROR'
 )<
   {
+    url: string
     peerId: string
     token: string
     success?: () => void
@@ -27,6 +29,7 @@ export const deregisterCafe = createAsyncAction(
   'cafes/DEREGISTER_CAFE_ERROR'
 )<
   {
+    url: string
     peerId: string
     success?: () => void
   },
@@ -48,7 +51,24 @@ export const refreshCafeSession = createAsyncAction(
   'account/REFRESH_CAFE_SESSION_SUCCESS',
   'account/REFRESH_CAFE_SESSION_FAILURE'
 )<
-  { peerId: string },
+  {
+    url: string
+    peerId: string
+  },
   { session: ICafeSession },
   { peerId: string; error: any }
+>()
+
+export const getKnownCafes = createAsyncAction(
+  'cafes/KNOWN_CAFE_REQUEST',
+  'cafes/KNOWN_CAFE_SUCCESS',
+  'cafes/KNOWN_CAFE_ERROR'
+)<
+  void,
+  {
+    list: Cafe[]
+  },
+  {
+    error: any
+  }
 >()
