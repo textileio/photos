@@ -1,6 +1,9 @@
 import { all, takeEvery, put, call, select, take } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
-import Textile, { ICafeSessionList } from '@textile/react-native-sdk'
+import Textile, {
+  ICafeSessionList,
+  IFilesList
+} from '@textile/react-native-sdk'
 import Config from 'react-native-config'
 import { Buffer } from 'buffer'
 
@@ -11,6 +14,7 @@ import { makeCafeForPeerId, knownCafesMap } from './selectors'
 import { Cafe, CafeAPI } from './models'
 import TextileEventsActions from '../../Redux/TextileEventsRedux'
 import { logNewEvent } from '../../Sagas/DeviceLogs'
+import { Alert } from 'react-native'
 
 const cafesBase64 = Config.RN_TEXTILE_CAFES_JSON
 const cafesString = new Buffer(cafesBase64, 'base64').toString()
@@ -35,11 +39,61 @@ function* onNodeStarted() {
   }
 }
 
+export function showPrompt(title: string, description: string): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    Alert.alert(
+      title,
+      description,
+      [
+        {
+          text: 'Continue',
+          onPress: resolve
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel',
+          onPress: reject
+        }
+      ],
+      { cancelable: false }
+    )
+  })
+}
+
+/**
+ * If users join cafes late in their use of the app, they could be hit by a bit upload
+ * job all at once. This just let's them in on the risk.
+ */
+function* confirmCafeChanges(title: string, description: string) {
+  try {
+    const existingFiles: IFilesList = yield call(Textile.files.list, '', '', 15)
+    if (existingFiles.items.length < 0) {
+      // don't bug early users
+      return true
+    }
+    yield call(showPrompt, title, description)
+    return true
+  } catch (error) {
+    return false
+  }
+}
+
 function* registerCafe(
   action: ActionType<typeof actions.registerCafe.request>
 ) {
   const { url, peerId, token, success } = action.payload
   try {
+    const confirmed = yield call(
+      confirmCafeChanges,
+      'Connect',
+      'It looks like you already have some photos. The first time you invite this bot, it will upload encrypted copies of your existing groups so you can recover them later. The upload happens faster, with good WiFi or cell connection.'
+    )
+    if (!confirmed) {
+      yield put(
+        actions.registerCafe.failure({ peerId, error: {}, cancelled: true })
+      )
+      return
+    }
     yield call(Textile.cafes.register, url, token)
     yield put(actions.registerCafe.success(peerId))
     yield put(actions.getCafeSessions.request())
@@ -56,6 +110,18 @@ function* deregisterCafe(
 ) {
   const { url, peerId, success } = action.payload
   try {
+    const confirmed = yield call(
+      confirmCafeChanges,
+      'Disconnect',
+      "It looks like you already have some photos. If you remove this bot your remote backups will be lost. To recreate them, you'll need to upload all your local photos again in the future"
+    )
+    if (!confirmed) {
+      yield put(
+        actions.deregisterCafe.failure({ peerId, error: {}, cancelled: true })
+      )
+      return
+    }
+
     yield call(Textile.cafes.deregister, peerId)
     yield put(actions.deregisterCafe.success(peerId))
     yield put(actions.getCafeSessions.request())
@@ -98,7 +164,10 @@ function* refreshCafeSession(
       try {
         let token: string | undefined
         // try to get the cafe token from static cafes bundled with the app
-        const cafe = yield select(knownCafesMap, peerId)
+        const cafes = yield select((state: RootState) =>
+          knownCafesMap(state.cafes)
+        )
+        const cafe = cafes[peerId]
         if (cafe) {
           token = cafe.token
         } else {
@@ -160,7 +229,11 @@ function* migrateUSW() {
         )
         // Only replace it if there wasn't an existing secondary
         if (peerIDs.length < 2) {
-          const cafe = yield select(knownCafesMap, repl)
+          const cafes = yield select((state: RootState) =>
+            knownCafesMap(state.cafes)
+          )
+          const cafe = cafes[repl]
+
           if (cafe) {
             yield put(
               actions.registerCafe.request({

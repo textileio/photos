@@ -19,6 +19,7 @@ export const registerCafe = createAsyncAction(
   {
     peerId: string
     error: any
+    cancelled?: boolean
   }
 >()
 
@@ -37,6 +38,7 @@ export const deregisterCafe = createAsyncAction(
   {
     peerId: string
     error: any
+    cancelled?: boolean
   }
 >()
 

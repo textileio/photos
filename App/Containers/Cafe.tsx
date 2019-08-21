@@ -182,15 +182,17 @@ class Cafe extends Component<Props> {
           </Text>
         )}
         <View style={ButtonsContainer}>
+          {this.props.verboseUi && (
+            <Button
+              text="Refresh"
+              onPress={this.props.refresh}
+              style={RefreshButton}
+              processing={refreshButtonDisabled}
+              disabled={refreshButtonDisabled}
+            />
+          )}
           <Button
-            text="Refresh"
-            onPress={this.props.refresh}
-            style={RefreshButton}
-            processing={refreshButtonDisabled}
-            disabled={refreshButtonDisabled}
-          />
-          <Button
-            text="Deregister"
+            text="Disconnect"
             onPress={this.deregister}
             style={DeregisterButton}
             processing={deregisterButtonDisabled}

@@ -86,7 +86,17 @@ const reducer = combineReducers<CafesState, CafesAction>({
         return { ...state, [peerId]: { ...state[peerId], state: 'registered' } }
       }
       case getType(actions.registerCafe.failure): {
-        const { peerId, error } = action.payload
+        const { peerId, error, cancelled } = action.payload
+        // Marks the cafe as available if registration was cancelled
+        if (cancelled) {
+          return {
+            ...state,
+            [peerId]: {
+              ...state[peerId],
+              state: 'available'
+            }
+          }
+        }
         const errorMessage =
           (error.message as string) || (error as string) || 'unknown error'
         return {
@@ -109,7 +119,17 @@ const reducer = combineReducers<CafesState, CafesAction>({
         return newState
       }
       case getType(actions.deregisterCafe.failure): {
-        const { peerId, error } = action.payload
+        const { peerId, error, cancelled } = action.payload
+        // Marks the cafe as registered if deregistration was cancelled
+        if (cancelled) {
+          return {
+            ...state,
+            [peerId]: {
+              ...state[peerId],
+              state: 'registered'
+            }
+          }
+        }
         const errorMessage =
           (error.message as string) || (error as string) || 'unknown'
         return {

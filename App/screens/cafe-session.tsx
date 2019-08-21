@@ -134,6 +134,7 @@ function mapDispatchToProps(
       if (ownProps.cafeSession) {
         dispatch(
           cafesActions.refreshCafeSession.request({
+            url: ownProps.cafeSession.cafe.url,
             peerId: ownProps.cafeSession.cafe.peer
           })
         )
