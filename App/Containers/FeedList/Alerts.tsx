@@ -91,17 +91,13 @@ class Alerts extends React.Component<Props, State> {
   }
   renderAlertTitle = (text: string) => {
     return (
-      <Text style={{ ...textStyle.header_m, marginVertical: 6 }}>
-        {text}
-      </Text>
+      <Text style={{ ...textStyle.header_m, marginVertical: 6 }}>{text}</Text>
     )
   }
   renderAlertDescription = (text: string) => {
     const clickableText = ' >'
     return (
-      <Text
-        style={ALERT_BLURB}
-      >
+      <Text style={ALERT_BLURB}>
         {text}
         <Text
           style={{
@@ -171,9 +167,7 @@ class Alerts extends React.Component<Props, State> {
         style={ALERT_CONTAINER}
         onPress={this.touchAlert(type)}
       >
-        <View
-          style={ALERT_CONTENT}
-        >
+        <View style={ALERT_CONTENT}>
           {this.renderAlertCategory(linkText)}
           {this.renderAlertTitle(title)}
           {this.renderAlertDescription(description)}
@@ -211,7 +205,6 @@ class Alerts extends React.Component<Props, State> {
     )
   }
 
-
   upgradeTemplate = (
     type: LocalAlertType,
     linkText: string,
@@ -219,16 +212,13 @@ class Alerts extends React.Component<Props, State> {
     short: string,
     image: string
   ) => {
-
     return (
       <TouchableOpacity
         activeOpacity={0.9}
         style={ALERT_CONTAINER}
         onPress={this.touchAlert(type)}
       >
-        <View
-          style={ALERT_CONTENT}
-        >
+        <View style={ALERT_CONTENT}>
           {this.renderAlertCategory(linkText)}
           {this.renderAlertTitle(title)}
           {this.renderAlertDescription(short)}
@@ -237,11 +227,11 @@ class Alerts extends React.Component<Props, State> {
       </TouchableOpacity>
     )
   }
-  renderItem = ({ item }: ListRenderItemInfo<LocalAlert>) => {
-    switch (item.type) {
+  renderAlert = (alert: LocalAlert) => {
+    switch (alert.type) {
       case LocalAlertType.NoStorageBot: {
         return this.botTemplate(
-          item.type,
+          alert.type,
           'Required',
           'Enable Your Storage Bot',
           'Storage bots backup encrypted photos and messages',
@@ -262,7 +252,7 @@ class Alerts extends React.Component<Props, State> {
       }
       case LocalAlertType.UpgradeNeeded: {
         return this.upgradeTemplate(
-          item.type,
+          alert.type,
           'Important',
           'Upgrade Textile Photos',
           'Uh oh! Your app is out of date. Upgrade now to enjoy the latest and greatest version of Textile Photos',
@@ -272,19 +262,16 @@ class Alerts extends React.Component<Props, State> {
     }
   }
   render() {
-    return (
-      <FlatList
-        data={this.props.alerts}
-        keyExtractor={this._keyExtractor}
-        renderItem={this.renderItem}
-        refreshing={false}
-      />
-    )
+    if (this.props.alerts.length < 1) {
+      return
+    }
+    return this.renderAlert(this.props.alerts[0])
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
-  routeAlertEngagement: (type: LocalAlertType) => dispatch(updatesActions.routeAlertEngagement(type))
+  routeAlertEngagement: (type: LocalAlertType) =>
+    dispatch(updatesActions.routeAlertEngagement(type))
 })
 
 export default connect(

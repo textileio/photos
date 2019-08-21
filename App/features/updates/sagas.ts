@@ -1,6 +1,14 @@
 import { Platform, AppState, NativeModules, Linking } from 'react-native'
 import { delay } from 'redux-saga'
-import { call, put, take, takeEvery, takeLatest, all, select } from 'redux-saga/effects'
+import {
+  call,
+  put,
+  take,
+  takeEvery,
+  takeLatest,
+  all,
+  select
+} from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 
 import Textile, {
@@ -254,14 +262,18 @@ export function* routeAlertEngagement() {
       getType(actions.routeAlertEngagement)
     )
     const { type } = action.payload
-    switch(type) {
+    switch (type) {
       case LocalAlertType.NoStorageBot: {
-        yield call(NavigationService.navigate, 'RegisterCafe',  { backTo: 'Notifications' })
+        yield call(NavigationService.navigate, 'RegisterCafe', {
+          backTo: 'Notifications'
+        })
         return
       }
       case LocalAlertType.UpgradeNeeded: {
         yield put(actions.removeAlert(LocalAlertType.UpgradeNeeded))
-        Linking.openURL('https://itunes.apple.com/us/app/textile-photos/id1366428460')
+        Linking.openURL(
+          'https://itunes.apple.com/us/app/textile-photos/id1366428460'
+        )
         return
       }
     }
@@ -285,24 +297,36 @@ export function* updateReleasesAlert() {
     return
   }
   // Compares a semver, returns True of a < b
-  function outOfDate (a: string, b: string) {
-    let i;
-    let regExStrip0 = /(\.0+)+$/
-    let segmentsA = a.replace('v', '').replace(regExStrip0, '').split('.')
-    let segmentsB = b.replace('v', '').replace(regExStrip0, '').split('.')
-    let l = Math.min(segmentsA.length, segmentsB.length)
+  function outOfDate(a: string, b: string) {
+    let i
+    const regExStrip0 = /(\.0+)+$/
+    const segmentsA = a
+      .replace('v', '')
+      .replace(regExStrip0, '')
+      .split('.')
+    const segmentsB = b
+      .replace('v', '')
+      .replace(regExStrip0, '')
+      .split('.')
+    const l = Math.min(segmentsA.length, segmentsB.length)
     for (i = 0; i < l; i++) {
-        if (parseInt(segmentsA[i], 10) < parseInt(segmentsB[i], 10)) {
-          return true
-        }
+      if (parseInt(segmentsA[i], 10) < parseInt(segmentsB[i], 10)) {
+        return true
+      }
     }
-    return segmentsA.length < segmentsB.length;
+    return segmentsA.length < segmentsB.length
   }
   // Attempt to check latest releasae in the user's region
   const locale = NativeModules.SettingsManager.settings.AppleLocale // "fr_FR"
-  const iso = locale.split('_').reverse()[0].toLowerCase()
+  const iso = locale
+    .split('_')
+    .reverse()[0]
+    .toLowerCase()
   const country = iso && iso.length === 2 ? `&country=${iso}` : ''
-  const query = yield call(fetch, `https://itunes.apple.com/lookup?id=1366428460${country}`)
+  const query = yield call(
+    fetch,
+    `https://itunes.apple.com/lookup?id=1366428460${country}`
+  )
   const result = yield call([query, query.json])
   // Continue only if data returned
   if (result.results && result.results.length > 0) {
@@ -318,10 +342,7 @@ export function* updateReleasesAlert() {
 }
 
 export function* refreshAlerts() {
-  yield all([
-    updateReleasesAlert(),
-    updateCafeAlert()
-  ])
+  yield all([updateReleasesAlert(), updateCafeAlert()])
 }
 
 export default function*() {

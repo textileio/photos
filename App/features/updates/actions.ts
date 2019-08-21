@@ -79,16 +79,10 @@ export const routeAlertEngagement = createAction(
   }
 )
 
-export const insertAlert = createAction(
-  'INSERT_ALERT',
-  resolve => {
-    return (type: LocalAlertType, weight?: number) => resolve({ type, weight })
-  }
-)
+export const insertAlert = createAction('INSERT_ALERT', resolve => {
+  return (type: LocalAlertType, weight?: number) => resolve({ type, weight })
+})
 
-export const removeAlert = createAction(
-  'REMOVE_ALERT',
-  resolve => {
-    return (type: LocalAlertType) => resolve({ type })
-  }
-)
+export const removeAlert = createAction('REMOVE_ALERT', resolve => {
+  return (type: LocalAlertType) => resolve({ type })
+})
