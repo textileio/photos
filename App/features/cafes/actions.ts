@@ -30,7 +30,6 @@ export const deregisterCafe = createAsyncAction(
   'cafes/DEREGISTER_CAFE_ERROR'
 )<
   {
-    url: string
     peerId: string
     success?: () => void
   },
@@ -54,7 +53,6 @@ export const refreshCafeSession = createAsyncAction(
   'account/REFRESH_CAFE_SESSION_FAILURE'
 )<
   {
-    url: string
     peerId: string
   },
   { session: ICafeSession },

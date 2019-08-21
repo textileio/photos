@@ -108,7 +108,7 @@ function* registerCafe(
 function* deregisterCafe(
   action: ActionType<typeof actions.deregisterCafe.request>
 ) {
-  const { url, peerId, success } = action.payload
+  const { peerId, success } = action.payload
   try {
     const confirmed = yield call(
       confirmCafeChanges,
@@ -149,9 +149,9 @@ function* getCafeSessions() {
 function* refreshCafeSession(
   action: ActionType<typeof actions.refreshCafeSession.request>
 ) {
-  const { url, peerId } = action.payload
+  const { peerId } = action.payload
   try {
-    const session = yield call(Textile.cafes.refreshSession, url)
+    const session = yield call(Textile.cafes.refreshSession, peerId)
     if (session) {
       yield put(actions.refreshCafeSession.success({ session }))
     } else {
@@ -180,7 +180,7 @@ function* refreshCafeSession(
         if (!token) {
           throw new Error('need to re-register cafe, but have no cafe token')
         }
-        yield call(Textile.cafes.register, url, token)
+        yield call(Textile.cafes.register, cafe.url, token)
       } catch (error) {
         yield put(actions.refreshCafeSession.failure({ peerId, error }))
       }
@@ -200,7 +200,6 @@ function* refreshExpiredSessions() {
         if (exp <= now) {
           yield put(
             actions.refreshCafeSession.request({
-              url: session.cafe.url,
               peerId: session.cafe.peer
             })
           )
@@ -224,9 +223,7 @@ function* migrateUSW() {
       const old = list.items.find(session => session.cafe.peer === usw)
       if (old) {
         // Use the existing route to deregister the usw cafe
-        yield put(
-          actions.deregisterCafe.request({ url: old.cafe.url, peerId: usw })
-        )
+        yield put(actions.deregisterCafe.request({ peerId: usw }))
         // Only replace it if there wasn't an existing secondary
         if (peerIDs.length < 2) {
           const cafes = yield select((state: RootState) =>
