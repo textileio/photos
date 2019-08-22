@@ -11,11 +11,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   ViewStyle,
-  TextStyle
+  TextStyle,
+  Linking
 } from 'react-native'
 import { updatesActions } from '../../features/updates'
 import { LocalAlert, LocalAlertType } from '../../features/updates/models'
 import { color, size, textStyle } from '../../styles'
+import { NavigationScreenProps } from 'react-navigation'
 
 const alertImages = {
   '../../Images/v2/invite_a_bot.png': require('../../Images/v2/invite_a_bot.png'),
@@ -44,10 +46,10 @@ interface ScreenProps {
 }
 
 interface DispatchProps {
-  routeAlertEngagement: (type: LocalAlertType) => void
+  removeAlert: (type: LocalAlertType) => void
 }
 
-type Props = ScreenProps & DispatchProps
+type Props = ScreenProps & DispatchProps & NavigationScreenProps
 
 interface State {
   selected?: LocalAlertType
@@ -137,9 +139,23 @@ class Alerts extends React.Component<Props, State> {
     )
   }
 
-  touchAlert = (type: LocalAlertType) => {
-    return () => {
-      this.props.routeAlertEngagement(type)
+
+
+  routeAlertEngagement = (type: LocalAlertType) => {
+    switch (type) {
+      case LocalAlertType.NoStorageBot: {
+        return () => {
+          this.props.navigation.navigate('RegisterCafe', {backTo: 'Notifications'})
+        }
+      }
+      case LocalAlertType.UpgradeNeeded: {
+        return () => {
+          this.props.removeAlert(LocalAlertType.UpgradeNeeded)
+          Linking.openURL(
+            'https://itunes.apple.com/us/app/textile-photos/id1366428460'
+          )
+        }
+      }
     }
   }
 
@@ -165,7 +181,7 @@ class Alerts extends React.Component<Props, State> {
       <TouchableOpacity
         activeOpacity={0.9}
         style={ALERT_CONTAINER}
-        onPress={this.touchAlert(type)}
+        onPress={this.routeAlertEngagement(type)}
       >
         <View style={ALERT_CONTENT}>
           {this.renderAlertCategory(linkText)}
@@ -216,7 +232,7 @@ class Alerts extends React.Component<Props, State> {
       <TouchableOpacity
         activeOpacity={0.9}
         style={ALERT_CONTAINER}
-        onPress={this.touchAlert(type)}
+        onPress={this.routeAlertEngagement(type)}
       >
         <View style={ALERT_CONTENT}>
           {this.renderAlertCategory(linkText)}
@@ -270,8 +286,8 @@ class Alerts extends React.Component<Props, State> {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
-  routeAlertEngagement: (type: LocalAlertType) =>
-    dispatch(updatesActions.routeAlertEngagement(type))
+  removeAlert: (type: LocalAlertType) =>
+    dispatch(updatesActions.removeAlert(type))
 })
 
 export default connect(
