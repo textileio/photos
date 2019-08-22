@@ -78,7 +78,6 @@ export default class CafesList extends Component<Props> {
         if (!item.cafe.token) {
           return
         }
-        console.log(item)
         const re = /\-/gi // eslint-disable-line
         const title = item.cafe.name
           ? item.cafe.name

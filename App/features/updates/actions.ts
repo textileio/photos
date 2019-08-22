@@ -72,16 +72,17 @@ export const reviewNotificationThreadInvite = createAction(
   }
 )
 
-export const insertNoStorageAlert = createAction(
-  'INSERT_NO_STORAGE_ALERT',
-  resolve => {
-    return (type: LocalAlertType, weight?: number) => resolve({ type, weight })
-  }
-)
-
-export const removeNoStorageAlert = createAction(
-  'REMOVE_NO_STORAGE_ALERT',
+export const routeAlertEngagement = createAction(
+  'ROUTE_ALERT_ENGAGEMENT',
   resolve => {
     return (type: LocalAlertType) => resolve({ type })
   }
 )
+
+export const insertAlert = createAction('INSERT_ALERT', resolve => {
+  return (type: LocalAlertType, weight?: number) => resolve({ type, weight })
+})
+
+export const removeAlert = createAction('REMOVE_ALERT', resolve => {
+  return (type: LocalAlertType) => resolve({ type })
+})

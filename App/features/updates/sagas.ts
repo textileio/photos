@@ -1,6 +1,14 @@
-import { Platform, AppState } from 'react-native'
+import { Platform, AppState, NativeModules, Linking } from 'react-native'
 import { delay } from 'redux-saga'
-import { call, put, takeEvery, all, select } from 'redux-saga/effects'
+import {
+  call,
+  put,
+  take,
+  takeEvery,
+  takeLatest,
+  all,
+  select
+} from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 
 import Textile, {
@@ -27,6 +35,7 @@ import * as NotificationsServices from '../../Services/Notifications'
 import { logNewEvent } from '../../Sagas/DeviceLogs'
 import { RootState } from '../../Redux/Types'
 import { LocalAlertType } from './models'
+import VersionNumber from 'react-native-version-number'
 
 export function* waitUntilOnline(ms: number) {
   let ttw = ms
@@ -249,21 +258,99 @@ export function* reviewThreadInvite(
   }
 }
 
+export function* routeAlertEngagement() {
+  while (true) {
+    const action: ActionType<typeof actions.routeAlertEngagement> = yield take(
+      getType(actions.routeAlertEngagement)
+    )
+    const { type } = action.payload
+    switch (type) {
+      case LocalAlertType.NoStorageBot: {
+        yield call(NavigationService.navigate, 'RegisterCafe', {
+          backTo: 'Notifications'
+        })
+        return
+      }
+      case LocalAlertType.UpgradeNeeded: {
+        yield put(actions.removeAlert(LocalAlertType.UpgradeNeeded))
+        Linking.openURL(
+          'https://itunes.apple.com/us/app/textile-photos/id1366428460'
+        )
+        return
+      }
+    }
+  }
+}
+
 export function* updateCafeAlert() {
   const cafes = yield select((state: RootState) =>
     cafeSelectors.registeredCafes(state.cafes)
   )
-  if (cafes.length === 0) {
-    yield put(actions.insertNoStorageAlert(LocalAlertType.NoStorageBot, 5))
-  } else if (cafes.length > 0) {
-    yield put(actions.removeNoStorageAlert(LocalAlertType.NoStorageBot))
+  if (cafes.length > 0) {
+    yield put(actions.removeAlert(LocalAlertType.NoStorageBot))
+  } else {
+    yield put(actions.insertAlert(LocalAlertType.NoStorageBot, 5))
   }
+}
+
+export function* updateReleasesAlert() {
+  // Only supported on iOS right now
+  if (Platform.OS !== 'ios') {
+    return
+  }
+  // Compares a semver, returns True of a < b
+  function outOfDate(a: string, b: string) {
+    let i
+    const regExStrip0 = /(\.0+)+$/
+    const segmentsA = a
+      .replace('v', '')
+      .replace(regExStrip0, '')
+      .split('.')
+    const segmentsB = b
+      .replace('v', '')
+      .replace(regExStrip0, '')
+      .split('.')
+    const l = Math.min(segmentsA.length, segmentsB.length)
+    for (i = 0; i < l; i++) {
+      if (parseInt(segmentsA[i], 10) < parseInt(segmentsB[i], 10)) {
+        return true
+      }
+    }
+    return segmentsA.length < segmentsB.length
+  }
+  // Attempt to check latest releasae in the user's region
+  const locale = NativeModules.SettingsManager.settings.AppleLocale // "fr_FR"
+  const iso = locale
+    .split('_')
+    .reverse()[0]
+    .toLowerCase()
+  const country = iso && iso.length === 2 ? `&country=${iso}` : ''
+  const query = yield call(
+    fetch,
+    `https://itunes.apple.com/lookup?id=1366428460${country}`
+  )
+  const result = yield call([query, query.json])
+  // Continue only if data returned
+  if (result.results && result.results.length > 0) {
+    const version = yield call(Textile.version)
+    const needUpgrade = outOfDate(version, result.results[0].version)
+    // Check app store version against local API version
+    if (needUpgrade) {
+      yield put(actions.insertAlert(LocalAlertType.UpgradeNeeded, 1))
+      return
+    }
+  }
+  yield put(actions.removeAlert(LocalAlertType.UpgradeNeeded))
+}
+
+export function* refreshAlerts() {
+  yield all([updateReleasesAlert(), updateCafeAlert()])
 }
 
 export default function*() {
   yield all([
-    takeEvery(getType(cafesActions.getCafeSessions.success), updateCafeAlert),
-    takeEvery(getType(actions.newNotificationRequest), handleNewNotification),
+    routeAlertEngagement(),
+    takeEvery(getType(cafesActions.getCafeSessions.success), refreshAlerts),
     takeEvery(getType(actions.newNotificationRequest), handleNewNotification),
     takeEvery(getType(actions.notificationEngagement), handleEngagement),
     takeEvery(getType(actions.notificationSuccess), notificationView),
