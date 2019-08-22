@@ -72,13 +72,6 @@ export const reviewNotificationThreadInvite = createAction(
   }
 )
 
-export const routeAlertEngagement = createAction(
-  'ROUTE_ALERT_ENGAGEMENT',
-  resolve => {
-    return (type: LocalAlertType) => resolve({ type })
-  }
-)
-
 export const insertAlert = createAction('INSERT_ALERT', resolve => {
   return (type: LocalAlertType, weight?: number) => resolve({ type, weight })
 })

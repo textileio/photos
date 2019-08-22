@@ -192,7 +192,12 @@ class Notifications extends React.Component<Props, State> {
     if (!this.props.alerts.length) {
       return
     }
-    return <Alerts alerts={this.props.alerts} />
+    return (
+      <Alerts
+        alerts={this.props.alerts}
+        navigate={this.props.navigation.navigate}
+      />
+    )
   }
   _renderItems() {
     return (
