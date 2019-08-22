@@ -125,7 +125,6 @@ class OnboardingScreen extends React.Component<Props, State> {
         referralCode={this.props.referralCode}
         onSuccess={this.nextPage}
       />,
-      <ChooseCafe key="cafe" onSuccess={this.nextPage} />,
       <OnboardingUsername key="username" onSuccess={this.nextPage} />,
       <SetAvatar key="avatar" onSuccess={this.nextPage} />,
       <MailListSignupScreen key="mail" onSuccess={this.nextPage} />,
