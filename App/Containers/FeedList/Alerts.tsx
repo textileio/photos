@@ -5,9 +5,7 @@ import { RootAction } from '../../Redux/Types'
 import {
   View,
   Text,
-  FlatList,
   Image,
-  ListRenderItemInfo,
   StyleSheet,
   TouchableOpacity,
   ViewStyle,
@@ -17,7 +15,6 @@ import {
 import { updatesActions } from '../../features/updates'
 import { LocalAlert, LocalAlertType } from '../../features/updates/models'
 import { color, size, textStyle } from '../../styles'
-import { NavigationScreenProps } from 'react-navigation'
 
 const alertImages = {
   '../../Images/v2/invite_a_bot.png': require('../../Images/v2/invite_a_bot.png'),
@@ -43,13 +40,15 @@ const ALERT_BLURB: TextStyle = {
 
 interface ScreenProps {
   alerts: LocalAlert[]
+  // @ts-ignore
+  navigate: any
 }
 
 interface DispatchProps {
   removeAlert: (type: LocalAlertType) => void
 }
 
-type Props = ScreenProps & DispatchProps & NavigationScreenProps
+type Props = ScreenProps & DispatchProps
 
 interface State {
   selected?: LocalAlertType
@@ -139,13 +138,13 @@ class Alerts extends React.Component<Props, State> {
     )
   }
 
-
-
   routeAlertEngagement = (type: LocalAlertType) => {
     switch (type) {
       case LocalAlertType.NoStorageBot: {
         return () => {
-          this.props.navigation.navigate('RegisterCafe', {backTo: 'Notifications'})
+          this.props.navigate('RegisterCafe', {
+            backTo: 'Notifications'
+          })
         }
       }
       case LocalAlertType.UpgradeNeeded: {

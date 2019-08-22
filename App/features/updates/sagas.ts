@@ -288,8 +288,8 @@ export function* updateReleasesAlert() {
       .split('.')
     const l = Math.min(segmentsA.length, segmentsB.length)
     for (i = 0; i < l; i++) {
-      let semA = parseInt(segmentsA[i], 10)
-      let semB = parseInt(segmentsB[i], 10)
+      const semA = parseInt(segmentsA[i], 10)
+      const semB = parseInt(segmentsB[i], 10)
       if (semA === semB) {
         continue
       } else {
