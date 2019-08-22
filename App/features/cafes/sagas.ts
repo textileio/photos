@@ -4,25 +4,15 @@ import Textile, {
   ICafeSessionList,
   IFilesList
 } from '@textile/react-native-sdk'
-import Config from 'react-native-config'
-import { Buffer } from 'buffer'
 
 import { RootState } from '../../Redux/Types'
 import PreferencesActions from '../../Redux/PreferencesRedux'
 import * as actions from './actions'
 import { makeCafeForPeerId, knownCafesMap } from './selectors'
-import { Cafe, CafeAPI } from './models'
+import { Cafe, cafes } from './models'
 import TextileEventsActions from '../../Redux/TextileEventsRedux'
 import { logNewEvent } from '../../Sagas/DeviceLogs'
 import { Alert } from 'react-native'
-
-const cafesBase64 = Config.RN_TEXTILE_CAFES_JSON
-const cafesString = new Buffer(cafesBase64, 'base64').toString()
-const localCafes: Array<{
-  name: string
-  peerId: string
-  token: string
-}> = JSON.parse(cafesString)
 
 function* onNodeStarted() {
   while (
@@ -67,7 +57,7 @@ export function showPrompt(title: string, description: string): Promise<void> {
 function* confirmCafeChanges(title: string, description: string) {
   try {
     const existingFiles: IFilesList = yield call(Textile.files.list, '', '', 15)
-    if (existingFiles.items.length < 0) {
+    if (existingFiles.items.length < 10) {
       // don't bug early users
       return true
     }
@@ -258,66 +248,21 @@ function* fetchRes(url: string) {
   })
 }
 
-// Since there isn't a single gateway for non-production cafes, I just combine 2 queries
-// We could easily hardcode it, but this should help flag any API changes before they become issues.
-function* cafeListAPI() {
-  switch (Config.RN_URL_SCHEME) {
-    case 'textile-dev':
-    case 'textile-beta': {
-      const result = []
-      try {
-        const url = 'https://us-west-dev.textile.cafe'
-        const res = yield call(fetchRes, url)
-        const json: CafeAPI = yield call([res, 'json'])
-        result.push(json)
-      } catch (error) {}
-      try {
-        const urlBeta = 'https://us-west-beta.textile.cafe'
-        const resBeta = yield call(fetchRes, urlBeta)
-        const jsonBeta: CafeAPI = yield call([resBeta, 'json'])
-        result.push(jsonBeta)
-      } catch (error) {}
-      return result
-    }
-    default: {
-      // This result comes back as {primary: cafe, secondary: cafe}, but we're ignoring those keys for now
-      const url = 'https://gateway.textile.cafe/cafes'
-      const json: { [key: string]: CafeAPI } = yield call(fetchRes, url)
-      const remap: CafeAPI[] = Object.keys(json).map(key => json[key])
-      return remap
-    }
-  }
-}
-
 // Uses the gateway api to list known cafes
 function* refreshKnownCafes() {
   try {
-    const result = yield call(cafeListAPI)
-    // Map the cafes into registerable (have url, have known token in local config)
-    const cafes: Cafe[] = result
-      .map((option: CafeAPI) => {
-        const peerId = option.peer ? (option.peer as string) : ''
-        // Uses the list from local config to find any known tokens
-        const local = localCafes.find(cafe => cafe.peerId === peerId)
-        const token = local ? local.token : undefined
-        return {
-          token,
-          url: option.url ? (option.url as string) : '',
-          peerId,
-          name: option.name,
-          description: option.description,
-          state: 'available' as
-            | 'registering'
-            | 'registered'
-            | 'deregistering'
-            | 'available'
-        }
-      })
-      // filter out cafes that aren't registerable
-      .filter((cafe: Cafe) => cafe.url !== '' || !cafe.token)
-
+    const list: Cafe[] = cafes.map(cafe => {
+      return {
+        ...cafe,
+        state: 'available' as
+          | 'registering'
+          | 'registered'
+          | 'deregistering'
+          | 'available'
+      }
+    })
     // Update our list of available cafes
-    yield put(actions.getKnownCafes.success({ list: cafes }))
+    yield put(actions.getKnownCafes.success({ list }))
   } catch (error) {
     yield put(actions.getKnownCafes.failure(error))
   }

@@ -78,6 +78,7 @@ export default class CafesList extends Component<Props> {
         if (!item.cafe.token) {
           return
         }
+        console.log(item)
         const re = /\-/gi // eslint-disable-line
         const title = item.cafe.name
           ? item.cafe.name
@@ -86,12 +87,10 @@ export default class CafesList extends Component<Props> {
               .reverse()[0]
               .split('.')[0]
               .replace(re, ' ') as string)
-        const description = item.cafe.description
-          ? item.cafe.description
-          : 'Maintained by Textile'
+        const description = 'Maintained by Textile'
         return (
           <ListItem
-            title={`storage bot: ${title}`}
+            title={`Storage Bot: ${title}`}
             subtitle={description}
             selecting={true}
             selected={item.cafe.peerId === this.props.selected}

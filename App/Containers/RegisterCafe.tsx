@@ -20,7 +20,7 @@ import CafesList from '../Components/CafesList'
 import CafePeerIdModal from '../Components/CafePeerIdModal'
 import Loading from '../Components/Loading'
 
-import { size, spacing, color } from '../styles'
+import { size, spacing, color, fontSize } from '../styles'
 
 const Container: ViewStyle = {
   flex: 1
@@ -32,7 +32,7 @@ const ListContainer: ViewStyle = {
 
 const Buttons: ViewStyle = {
   width: '100%',
-  flexDirection: 'row',
+  flexDirection: 'column',
   justifyContent: 'flex-end',
   alignItems: 'center',
   padding: spacing._024
@@ -127,14 +127,48 @@ class RegisterCafe extends Component<Props, State> {
             />
           )}
         </View>
+
+        {error && (
+          <View
+            style={{
+              backgroundColor: color.severe_6,
+              padding: 12,
+              margin: size._024,
+              borderRadius: 8,
+              height: 'auto'
+            }}
+          >
+            <Text style={{ color: color.grey_2 }}>{error}</Text>
+          </View>
+        )}
+
         <View style={Buttons}>
-          {error && <Text>{error}</Text>}
-          <TouchableOpacity disabled={buttonDisabled} onPress={this.register}>
-            <Icon
-              name="arrow-right"
-              size={size._032}
-              color={buttonDisabled ? color.grey_4 : color.grey_3}
-            />
+          <TouchableOpacity
+            disabled={buttonDisabled}
+            onPress={this.register}
+            style={{
+              alignSelf: 'flex-end',
+              alignContent: 'flex-end',
+              justifyContent: 'flex-end'
+            }}
+          >
+            {!error && (
+              <Icon
+                name="arrow-right"
+                size={size._032}
+                color={buttonDisabled ? color.grey_4 : color.grey_3}
+              />
+            )}
+            {error && (
+              <Text
+                style={{
+                  fontSize: fontSize._20,
+                  color: buttonDisabled ? color.grey_4 : color.grey_2
+                }}
+              >
+                Retry
+              </Text>
+            )}
           </TouchableOpacity>
         </View>
         <CafePeerIdModal

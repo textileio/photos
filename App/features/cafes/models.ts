@@ -1,10 +1,11 @@
 import { ICafeSession } from '@textile/react-native-sdk'
+import Config from 'react-native-config'
+import { Buffer } from 'buffer'
 
 export interface Cafe {
   readonly url: string
   readonly peerId: string
-  readonly name?: string // future enhancement
-  readonly description?: string // future enhancement
+  readonly name?: string // added by local Config but not node
   readonly token?: string // this is optional because we may not have tokens for previously registered custom cafes
   readonly error?: string
   readonly state: 'registering' | 'registered' | 'deregistering' | 'available'
@@ -24,13 +25,11 @@ export interface CafeSessionsData {
   readonly [peerId: string]: CafeSessionData
 }
 
-export interface CafeAPI {
-  name?: string
-  description?: string
-  url?: string
-  peer?: string
-  address?: string
-  api?: string
-  protocol?: string
-  node?: string
-}
+const cafesBase64 = Config.RN_TEXTILE_CAFES_JSON
+const cafesString = new Buffer(cafesBase64, 'base64').toString()
+export const cafes: Array<{
+  url: string
+  name: string
+  peerId: string
+  token: string
+}> = JSON.parse(cafesString)
