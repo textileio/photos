@@ -39,9 +39,21 @@ class Cafes extends Component<Props> {
 
   keyExtractor = (cafeSession: ICafeSession) => cafeSession.id
 
-  renderRow = ({ item }: ListRenderItemInfo<ICafeSession>) => (
-    <ListItem title={item.cafe.url} onPress={this.showCafeSession(item)} />
-  )
+  renderRow = ({ item }: ListRenderItemInfo<ICafeSession>) => {
+    const re = /\-/gi // eslint-disable-line
+    const title = (item.cafe.url as string)
+      .split('//')
+      .reverse()[0]
+      .split('.')[0]
+      .replace(re, ' ') as string
+    return (
+      <ListItem
+        title={title}
+        subtitle={'Storage Bot'}
+        onPress={this.showCafeSession(item)}
+      />
+    )
+  }
 
   render() {
     return (

@@ -12,7 +12,6 @@ import {
 } from 'react-native'
 import Toast from 'react-native-easy-toast'
 import Config from 'react-native-config'
-import { Buffer } from 'buffer'
 
 import Input from '../SB/components/Input'
 import Button from '../Components/LargeButton'

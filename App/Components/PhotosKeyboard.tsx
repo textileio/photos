@@ -126,11 +126,11 @@ class PhotosKeyboard extends React.PureComponent<Props, State> {
   submit = (message?: string) => {
     if (this.props.sharingImage || this.props.sharingFiles) {
       this.props.sharePhoto(this.props.threadId, message)
+      this.keyboardDismiss()
     } else if (message !== undefined) {
       // Just a normal message
       this.props.sendMessage(message)
     }
-    this.keyboardDismiss()
   }
   keyboardAccessoryViewContent = () => {
     return (

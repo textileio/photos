@@ -1,4 +1,4 @@
-import { getHeight, getPage } from '../PhotoUtils'
+import { getHeight } from '../PhotoUtils'
 
 describe('photo utils', () => {
   describe('getHeight', () => {

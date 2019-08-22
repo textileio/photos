@@ -61,10 +61,16 @@ class Cafes extends Component<Props> {
   }
 
   _renderItem = ({ item }: { item: ICafeSession }) => {
+    const re = /\-/gi // eslint-disable-line
+    const title = item.cafe.url
+      .split('//')
+      .reverse()[0]
+      .split('.')[0]
+      .replace(re, ' ') as string
     return (
       <ListItem
-        title={item.cafe.url}
-        subtitle={item.cafe.peer}
+        title={`storage bot: ${title}`}
+        subtitle={item.cafe.url}
         showDisclosure={true}
         onPress={this.onCafePress(item)}
       />

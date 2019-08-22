@@ -1,5 +1,5 @@
 import actions, { reducer } from '../ThreadsRedux'
-import Textile, { IExternalInvite } from '@textile/react-native-sdk'
+import { IExternalInvite } from '@textile/react-native-sdk'
 
 const id: string = 'id' as any
 const name: string = 'myThread' as any

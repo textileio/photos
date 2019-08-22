@@ -14,6 +14,7 @@
 @class CoreAddFileConfig;
 @class CoreBlockDownloads;
 @class CoreBlockOutbox;
+@class CoreCafeError;
 @class CoreCafeInbox;
 @class CoreCafeOutbox;
 @class CoreCafeRequestSettings;
@@ -91,6 +92,18 @@
  * Flush processes pending messages
  */
 - (void)flush;
+@end
+
+/**
+ * CafeError represents a cafe request error
+ */
+@interface CoreCafeError : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) _Nonnull id _ref;
+
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
+- (nonnull instancetype)init;
+@property (nonatomic) NSString* _Nonnull error;
 @end
 
 /**
@@ -250,6 +263,8 @@
 @property (nonatomic) NSString* _Nonnull pinCode;
 @property (nonatomic) NSString* _Nonnull repoPath;
 @property (nonatomic) id<CoreCafeOutboxHandler> _Nullable cafeOutboxHandler;
+// skipped field RunConfig.CheckMessages with unsupported type: func() error
+
 @property (nonatomic) BOOL debug;
 @end
 
@@ -290,6 +305,8 @@
 
 // skipped method Textile.AddOrUpdateThread with unsupported parameter or return types
 
+// skipped method Textile.AddPeer with unsupported parameter or return types
+
 // skipped method Textile.AddSchema with unsupported parameter or return types
 
 // skipped method Textile.AddThread with unsupported parameter or return types
@@ -312,6 +329,7 @@
 - (NSString* _Nonnull)cafeApiAddr;
 // skipped method Textile.CafeInfo with unsupported parameter or return types
 
+- (BOOL)cafeRequestThreadsContent:(NSString* _Nullable)cafe error:(NSError* _Nullable* _Nullable)error;
 // skipped method Textile.CafeSession with unsupported parameter or return types
 
 // skipped method Textile.CafeSessions with unsupported parameter or return types
@@ -387,6 +405,10 @@ and stores (unless `store` is false) a bcrypt hashed version for later compariso
  * IgnoreInviteViaNotification uses an invite notification to ignore an invite to a thread
  */
 - (BOOL)ignoreInviteViaNotification:(NSString* _Nullable)id_ error:(NSError* _Nullable* _Nullable)error;
+/**
+ * Inbox returns the cafe inbox
+ */
+- (CoreCafeInbox* _Nullable)inbox;
 // skipped method Textile.InviteView with unsupported parameter or return types
 
 // skipped method Textile.Invites with unsupported parameter or return types
@@ -435,6 +457,10 @@ and stores (unless `store` is false) a bcrypt hashed version for later compariso
  * Publish sends 'data' to 'topic'
  */
 - (BOOL)publish:(NSData* _Nullable)payload topic:(NSString* _Nullable)topic error:(NSError* _Nullable* _Nullable)error;
+/**
+ * PublishPeer publishes this peer's info to the cafe network
+ */
+- (BOOL)publishPeer:(NSError* _Nullable* _Nullable)error;
 /**
  * ReadAllNotifications marks all notification as read
  */
@@ -525,6 +551,10 @@ Note: Only thread initiators can update the thread's name
 // skipped method Textile.UpdateCh with unsupported parameter or return types
 
 /**
+ * UpdatePeerInboxes sets own peer inboxes from the current cafe sessions
+ */
+- (BOOL)updatePeerInboxes:(NSError* _Nullable* _Nullable)error;
+/**
  * ValidateCafeToken checks whether a supplied base58 encoded token matches the locally-stored
 bcrypt hashed equivalent
  */
@@ -574,6 +604,8 @@ bcrypt hashed equivalent
 // skipped method Thread.AddLike with unsupported parameter or return types
 
 // skipped method Thread.AddMessage with unsupported parameter or return types
+
+// skipped method Thread.Annouce with unsupported parameter or return types
 
 /**
  * Decrypt data with thread secret key

@@ -20,7 +20,7 @@ import CafesList from '../Components/CafesList'
 import CafePeerIdModal from '../Components/CafePeerIdModal'
 import Loading from '../Components/Loading'
 
-import { size, spacing, color } from '../styles'
+import { size, spacing, color, fontSize } from '../styles'
 
 const Container: ViewStyle = {
   flex: 1
@@ -32,7 +32,7 @@ const ListContainer: ViewStyle = {
 
 const Buttons: ViewStyle = {
   width: '100%',
-  flexDirection: 'row',
+  flexDirection: 'column',
   justifyContent: 'flex-end',
   alignItems: 'center',
   padding: spacing._024
@@ -42,16 +42,24 @@ interface StateProps {
   alreadyRegistered: ReadonlyArray<string>
   registeringCafes: Cafe[]
   nodeOnline: boolean
+  cafes: Cafe[]
 }
 
 interface DispatchProps {
-  register: (peerId: string, token: string, success: () => void) => void
+  refreshKnownCafes: () => void
+  register: (
+    url: string,
+    peerId: string,
+    token: string,
+    success: () => void
+  ) => void
 }
 
 type Props = StateProps & DispatchProps & NavigationScreenProps
 
 interface State {
   selected?: {
+    url: string
     peerId: string
     token: string
   }
@@ -85,6 +93,9 @@ class RegisterCafe extends Component<Props, State> {
       peerIdModalIsVisible: false
     }
   }
+  componentWillMount() {
+    this.props.refreshKnownCafes()
+  }
 
   render() {
     const { peerId } = this.state.selected
@@ -107,6 +118,7 @@ class RegisterCafe extends Component<Props, State> {
           )}
           {this.props.nodeOnline && (
             <CafesList
+              cafes={this.props.cafes}
               disabled={registering}
               selected={peerId}
               onSelect={this.onSelect}
@@ -115,14 +127,48 @@ class RegisterCafe extends Component<Props, State> {
             />
           )}
         </View>
+
+        {error && (
+          <View
+            style={{
+              backgroundColor: color.severe_6,
+              padding: 12,
+              margin: size._024,
+              borderRadius: 8,
+              height: 'auto'
+            }}
+          >
+            <Text style={{ color: color.grey_2 }}>{error}</Text>
+          </View>
+        )}
+
         <View style={Buttons}>
-          {error && <Text>{error}</Text>}
-          <TouchableOpacity disabled={buttonDisabled} onPress={this.register}>
-            <Icon
-              name="arrow-right"
-              size={size._032}
-              color={buttonDisabled ? color.grey_4 : color.grey_3}
-            />
+          <TouchableOpacity
+            disabled={buttonDisabled}
+            onPress={this.register}
+            style={{
+              alignSelf: 'flex-end',
+              alignContent: 'flex-end',
+              justifyContent: 'flex-end'
+            }}
+          >
+            {!error && (
+              <Icon
+                name="arrow-right"
+                size={size._032}
+                color={buttonDisabled ? color.grey_4 : color.grey_3}
+              />
+            )}
+            {error && (
+              <Text
+                style={{
+                  fontSize: fontSize._20,
+                  color: buttonDisabled ? color.grey_4 : color.grey_2
+                }}
+              >
+                Retry
+              </Text>
+            )}
           </TouchableOpacity>
         </View>
         <CafePeerIdModal
@@ -134,7 +180,7 @@ class RegisterCafe extends Component<Props, State> {
     )
   }
 
-  onSelect = (peerId: string, token: string) => () => {
+  onSelect = (url: string, peerId: string, token: string) => () => {
     // If already selected, deselect it
     this.setState(prevState => {
       const alreadySelected = prevState.selected
@@ -144,6 +190,7 @@ class RegisterCafe extends Component<Props, State> {
         selected: alreadySelected
           ? undefined
           : {
+              url,
               peerId,
               token
             }
@@ -153,20 +200,21 @@ class RegisterCafe extends Component<Props, State> {
 
   register = () => {
     if (this.state.selected) {
-      const { peerId, token } = this.state.selected
-      this.props.register(peerId, token, this.onSuccess)
+      const { url, peerId, token } = this.state.selected
+      this.props.register(url, peerId, token, this.onSuccess)
     }
   }
 
-  registerByPeerId = (peerId: string, token: string) => {
+  registerByPeerId = (url: string, peerId: string, token: string) => {
     this.setState({
       selected: {
+        url,
         peerId,
         token
       },
       peerIdModalIsVisible: false
     })
-    this.props.register(peerId, token, this.onSuccess)
+    this.props.register(url, peerId, token, this.onSuccess)
   }
 
   togglePeerIdModal = () => {
@@ -189,18 +237,27 @@ class RegisterCafe extends Component<Props, State> {
 
 function mapStateToProps(state: RootState): StateProps {
   const sessions = cafesSelectors.sessions(state.cafes)
+  const cafes = cafesSelectors.knownCafes(state.cafes)
   return {
     alreadyRegistered: sessions.map(session => session.id),
     registeringCafes: cafesSelectors.registeringCafes(state.cafes),
-    nodeOnline: TextileEventsSelectors.online(state)
+    nodeOnline: TextileEventsSelectors.online(state),
+    cafes
   }
 }
 
 function mapDispatchToProps(dispatch: Dispatch<RootAction>): DispatchProps {
   return {
-    register: (peerId: string, token: string, success: () => void) =>
+    refreshKnownCafes: () => dispatch(cafesActions.getKnownCafes.request()),
+    register: (
+      url: string,
+      peerId: string,
+      token: string,
+      success: () => void
+    ) =>
       dispatch(
         cafesActions.registerCafe.request({
+          url,
           peerId,
           token,
           success

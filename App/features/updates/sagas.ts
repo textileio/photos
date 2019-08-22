@@ -195,7 +195,9 @@ export function* notificationView(
 
 export function* refreshNotifications() {
   try {
-    const busy = yield select(selectors.refreshing)
+    const busy: boolean = yield select((state: RootState) =>
+      selectors.refreshing(state.updates)
+    )
     // skip multi-request back to back
     if (busy) {
       return
