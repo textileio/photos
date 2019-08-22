@@ -1,5 +1,11 @@
 import React from 'react'
-import { View, Text, TouchableOpacity, ViewStyle } from 'react-native'
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ViewStyle,
+  TextStyle
+} from 'react-native'
 import Icon from '@textile/react-native-icon'
 
 import Checkbox from '../Components/Checkbox'
@@ -17,6 +23,7 @@ interface Props {
   onPress?: () => void
   onSelect?: () => void
   disabled?: boolean
+  titleStyle?: TextStyle
 }
 
 class ListItem extends React.PureComponent<Props> {
@@ -91,7 +98,13 @@ class ListItem extends React.PureComponent<Props> {
               marginRight: rightItems.length > 0 ? spacing._012 : 0
             }}
           >
-            <Text style={{ ...textStyle.body_l, color: color.grey_2 }}>
+            <Text
+              style={{
+                ...textStyle.body_l,
+                color: color.grey_2,
+                ...this.props.titleStyle
+              }}
+            >
               {this.props.title}
             </Text>
             {this.props.subtitle && (

@@ -2,17 +2,17 @@ import { all, takeEvery, put, call, select, take } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import Textile, {
   ICafeSessionList,
-  ICafeSession
+  IFilesList
 } from '@textile/react-native-sdk'
 
 import { RootState } from '../../Redux/Types'
 import PreferencesActions from '../../Redux/PreferencesRedux'
 import * as actions from './actions'
-import { sessions, makeCafeForPeerId } from './selectors'
-import { Cafe, Cafes } from './models'
+import { makeCafeForPeerId, knownCafesMap } from './selectors'
+import { Cafe, cafes } from './models'
 import TextileEventsActions from '../../Redux/TextileEventsRedux'
-import { cafesMap } from '../../Models/cafes'
 import { logNewEvent } from '../../Sagas/DeviceLogs'
+import { Alert } from 'react-native'
 
 function* onNodeStarted() {
   while (
@@ -29,12 +29,62 @@ function* onNodeStarted() {
   }
 }
 
+export function showPrompt(title: string, description: string): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    Alert.alert(
+      title,
+      description,
+      [
+        {
+          text: 'Continue',
+          onPress: resolve
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel',
+          onPress: reject
+        }
+      ],
+      { cancelable: false }
+    )
+  })
+}
+
+/**
+ * If users join cafes late in their use of the app, they could be hit by a bit upload
+ * job all at once. This just let's them in on the risk.
+ */
+function* confirmCafeChanges(title: string, description: string) {
+  try {
+    const existingFiles: IFilesList = yield call(Textile.files.list, '', '', 15)
+    if (existingFiles.items.length < 10) {
+      // don't bug early users
+      return true
+    }
+    yield call(showPrompt, title, description)
+    return true
+  } catch (error) {
+    return false
+  }
+}
+
 function* registerCafe(
   action: ActionType<typeof actions.registerCafe.request>
 ) {
-  const { peerId, token, success } = action.payload
+  const { url, peerId, token, success } = action.payload
   try {
-    yield call(Textile.cafes.register, peerId, token)
+    const confirmed = yield call(
+      confirmCafeChanges,
+      'Connect',
+      'It looks like you already have some photos. The first time you invite this bot, it will upload encrypted copies of your existing groups so you can recover them later. The upload happens faster, with good WiFi or cell connection.'
+    )
+    if (!confirmed) {
+      yield put(
+        actions.registerCafe.failure({ peerId, error: {}, cancelled: true })
+      )
+      return
+    }
+    yield call(Textile.cafes.register, url, token)
     yield put(actions.registerCafe.success(peerId))
     yield put(actions.getCafeSessions.request())
     if (success) {
@@ -50,6 +100,18 @@ function* deregisterCafe(
 ) {
   const { peerId, success } = action.payload
   try {
+    const confirmed = yield call(
+      confirmCafeChanges,
+      'Disconnect',
+      "It looks like you already have some photos. If you remove this bot your remote backups will be lost. To recreate them, you'll need to upload all your local photos again in the future"
+    )
+    if (!confirmed) {
+      yield put(
+        actions.deregisterCafe.failure({ peerId, error: {}, cancelled: true })
+      )
+      return
+    }
+
     yield call(Textile.cafes.deregister, peerId)
     yield put(actions.deregisterCafe.success(peerId))
     yield put(actions.getCafeSessions.request())
@@ -92,7 +154,10 @@ function* refreshCafeSession(
       try {
         let token: string | undefined
         // try to get the cafe token from static cafes bundled with the app
-        const cafe = cafesMap[peerId]
+        const cafes = yield select((state: RootState) =>
+          knownCafesMap(state.cafes)
+        )
+        const cafe = cafes[peerId]
         if (cafe) {
           token = cafe.token
         } else {
@@ -105,7 +170,7 @@ function* refreshCafeSession(
         if (!token) {
           throw new Error('need to re-register cafe, but have no cafe token')
         }
-        yield call(Textile.cafes.register, peerId, token)
+        yield call(Textile.cafes.register, cafe.url, token)
       } catch (error) {
         yield put(actions.refreshCafeSession.failure({ peerId, error }))
       }
@@ -124,7 +189,9 @@ function* refreshExpiredSessions() {
         const exp = Textile.util.timestampToDate(session.exp)
         if (exp <= now) {
           yield put(
-            actions.refreshCafeSession.request({ peerId: session.cafe.peer })
+            actions.refreshCafeSession.request({
+              peerId: session.cafe.peer
+            })
           )
         }
       }
@@ -143,15 +210,24 @@ function* migrateUSW() {
       const list: ICafeSessionList = yield call(Textile.cafes.sessions)
       const peerIDs = list.items.map(session => session.cafe.peer)
 
-      if (peerIDs.indexOf(usw) > -1) {
+      const old = list.items.find(session => session.cafe.peer === usw)
+      if (old) {
         // Use the existing route to deregister the usw cafe
         yield put(actions.deregisterCafe.request({ peerId: usw }))
         // Only replace it if there wasn't an existing secondary
         if (peerIDs.length < 2) {
-          const cafe = cafesMap[repl]
+          const cafes = yield select((state: RootState) =>
+            knownCafesMap(state.cafes)
+          )
+          const cafe = cafes[repl]
+
           if (cafe) {
             yield put(
-              actions.registerCafe.request({ peerId: repl, token: cafe.token })
+              actions.registerCafe.request({
+                url: old.cafe.url,
+                peerId: repl,
+                token: cafe.token
+              })
             )
           }
         }
@@ -162,9 +238,40 @@ function* migrateUSW() {
   }
 }
 
+function* fetchRes(url: string) {
+  return yield fetch(url, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    }
+  })
+}
+
+// Uses the gateway api to list known cafes
+function* refreshKnownCafes() {
+  try {
+    const list: Cafe[] = cafes.map(cafe => {
+      return {
+        ...cafe,
+        state: 'available' as
+          | 'registering'
+          | 'registered'
+          | 'deregistering'
+          | 'available'
+      }
+    })
+    // Update our list of available cafes
+    yield put(actions.getKnownCafes.success({ list }))
+  } catch (error) {
+    yield put(actions.getKnownCafes.failure(error))
+  }
+}
+
 export default function*() {
   yield all([
     call(onNodeStarted),
+    takeEvery(getType(actions.getKnownCafes.request), refreshKnownCafes),
     takeEvery(getType(actions.registerCafe.request), registerCafe),
     takeEvery(getType(actions.deregisterCafe.request), deregisterCafe),
     call(getCafeSessions),
