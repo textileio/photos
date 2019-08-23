@@ -6,10 +6,12 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "../NativeModules/Multipeer.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
 @property (nonatomic, copy, nullable) void (^backgroundCompletionHandler)(void);
+@property (nonatomic, strong) Multipeer *multipeer;
 
 @end

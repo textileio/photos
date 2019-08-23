@@ -56,7 +56,6 @@ import {
   presentShareInterface,
   acceptExternalInvite,
   addInternalInvites,
-  pendingInvitesTask,
   acceptInvite
 } from './ThreadsSagas'
 

@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302C01ABCB91800DB3ED1 /* libRCTImage.a */; };
@@ -57,8 +58,10 @@
 		9AD324080E8D65A8A290706E /* libPods-Textile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B03499D3EE3462164902AA9 /* libPods-Textile.a */; };
 		A20C83BA22FE6E9E003F8B0B /* libRCTCustomInputController.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A20C838522FE6E33003F8B0B /* libRCTCustomInputController.a */; };
 		A20C83BB22FE6EA8003F8B0B /* libKeyboardTrackingView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A20C83B922FE6E51003F8B0B /* libKeyboardTrackingView.a */; };
+		A24D4C4F230F7052005BCA78 /* Multipeer.m in Sources */ = {isa = PBXBuildFile; fileRef = A24D4C4E230F7052005BCA78 /* Multipeer.m */; };
 		A2588A0F21F3F7A1007A1B62 /* TextileImageViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A2588A0B21F3F7A0007A1B62 /* TextileImageViewManager.m */; };
 		A2588A1021F3F7A1007A1B62 /* TextileImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = A2588A0C21F3F7A0007A1B62 /* TextileImageView.m */; };
+		A2D5B21D230F9A15004E8A59 /* PeerBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = A2D5B21C230F9A15004E8A59 /* PeerBrowser.m */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 /* End PBXBuildFile section */
 
@@ -517,10 +520,14 @@
 		9B03499D3EE3462164902AA9 /* libPods-Textile.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Textile.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A20C837722FE6E32003F8B0B /* RCTCustomInputController.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCustomInputController.xcodeproj; path = "../node_modules/react-native-keyboard-input/lib/ios/RCTCustomInputController.xcodeproj"; sourceTree = "<group>"; };
 		A20C83B422FE6E51003F8B0B /* KeyboardTrackingView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = KeyboardTrackingView.xcodeproj; path = "../node_modules/react-native-keyboard-tracking-view/lib/KeyboardTrackingView.xcodeproj"; sourceTree = "<group>"; };
+		A24D4C4E230F7052005BCA78 /* Multipeer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Multipeer.m; sourceTree = "<group>"; };
+		A24D4C87230F708D005BCA78 /* Multipeer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Multipeer.h; sourceTree = "<group>"; };
 		A2588A0B21F3F7A0007A1B62 /* TextileImageViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileImageViewManager.m; sourceTree = "<group>"; };
 		A2588A0C21F3F7A0007A1B62 /* TextileImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextileImageView.m; sourceTree = "<group>"; };
 		A2588A0D21F3F7A0007A1B62 /* TextileImageViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileImageViewManager.h; sourceTree = "<group>"; };
 		A2588A0E21F3F7A0007A1B62 /* TextileImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextileImageView.h; sourceTree = "<group>"; };
+		A2D5B21C230F9A15004E8A59 /* PeerBrowser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PeerBrowser.m; sourceTree = "<group>"; };
+		A2D5B255230F9A26004E8A59 /* PeerBrowser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PeerBrowser.h; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -899,6 +906,10 @@
 			children = (
 				93D7697D2208C6FE00EEB573 /* MessageComposer.h */,
 				93D7697E2208C6FE00EEB573 /* MessageComposer.m */,
+				A24D4C4E230F7052005BCA78 /* Multipeer.m */,
+				A24D4C87230F708D005BCA78 /* Multipeer.h */,
+				A2D5B21C230F9A15004E8A59 /* PeerBrowser.m */,
+				A2D5B255230F9A26004E8A59 /* PeerBrowser.h */,
 			);
 			path = NativeModules;
 			sourceTree = "<group>";
@@ -1609,9 +1620,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2D5B21D230F9A15004E8A59 /* PeerBrowser.m in Sources */,
 				A2588A0F21F3F7A1007A1B62 /* TextileImageViewManager.m in Sources */,
 				93D7697F2208C6FE00EEB573 /* MessageComposer.m in Sources */,
 				A2588A1021F3F7A1007A1B62 /* TextileImageView.m in Sources */,
+				A24D4C4F230F7052005BCA78 /* Multipeer.m in Sources */,
 				93C00487216B132E007786A5 /* RNBackgroundFetch+AppDelegate.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
@@ -1660,9 +1673,7 @@
 				INFOPLIST_FILE = TextileTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -1690,9 +1701,7 @@
 				INFOPLIST_FILE = TextileTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",

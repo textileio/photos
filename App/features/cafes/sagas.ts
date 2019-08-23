@@ -2,7 +2,8 @@ import { all, takeEvery, put, call, select, take } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import Textile, {
   ICafeSessionList,
-  IFilesList
+  IFilesList,
+  IContact
 } from '@textile/react-native-sdk'
 
 import { RootState } from '../../Redux/Types'
@@ -12,7 +13,33 @@ import { makeCafeForPeerId, knownCafesMap } from './selectors'
 import { Cafe, cafes } from './models'
 import TextileEventsActions from '../../Redux/TextileEventsRedux'
 import { logNewEvent } from '../../Sagas/DeviceLogs'
-import { Alert } from 'react-native'
+import { Alert, NativeModules } from 'react-native'
+import { accountSelectors } from '../account';
+
+const { Multipeer } = NativeModules
+
+export async function init(name: string, address: string, avatar: string): Promise<void> {
+  await Multipeer.init(name, address, avatar)
+  await Multipeer.advertiseOn()
+  return await Multipeer.scan()
+}
+
+function *testMultipeer() {
+  console.log('Multipeer power')
+  console.log(Multipeer)
+  const name = yield select((state: RootState) =>
+    accountSelectors.getUsername(state.account)
+  )
+  const address = yield select((state: RootState) =>
+    accountSelectors.getAddress(state.account)
+  )
+  const profile: IContact = yield select((state: RootState) =>
+    accountSelectors.getProfile(state.account)
+  )
+  console.log(name, address, profile.avatar)
+  yield call(init, name, address, profile.avatar)
+  console.log('Multipeer success')
+}
 
 function* onNodeStarted() {
   while (
@@ -22,6 +49,9 @@ function* onNodeStarted() {
     ])
   ) {
     try {
+      yield call(testMultipeer)
+
+
       yield put(actions.getCafeSessions.request())
     } catch (error) {
       // nothing to do here for now

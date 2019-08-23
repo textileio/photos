@@ -24,6 +24,8 @@
   [FIRApp configure];
   [Fabric with:@[[Crashlytics class]]];
 
+  self.multipeer = [[Multipeer alloc] init];
+
   NSURL *jsCodeLocation;
 
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
