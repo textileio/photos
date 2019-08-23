@@ -77,7 +77,8 @@ export type Notification =
 
 export enum LocalAlertType {
   NoStorageBot = 1,
-  UpgradeNeeded = 2
+  UpgradeNeeded = 2,
+  NoContacts = 3
 }
 export type LocalAlert = {
   type: LocalAlertType

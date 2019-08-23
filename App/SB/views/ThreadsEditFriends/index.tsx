@@ -219,7 +219,9 @@ interface DispatchProps {
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
   invite: (threadId: string, threadName: string, target?: string) => {
-    dispatch(ThreadsActions.addExternalInviteRequest(threadId, threadName, target))
+    dispatch(
+      ThreadsActions.addExternalInviteRequest(threadId, threadName, target)
+    )
   },
   threadQRCodeRequest: (threadId: string, threadName: string) => {
     dispatch(ThreadsActions.threadQRCodeRequest(threadId, threadName))

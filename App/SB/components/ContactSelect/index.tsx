@@ -18,8 +18,8 @@ import ContactSelectCard, { ContactLinkCard } from './ContactSelectCard'
 import styles from './statics/styles'
 import { IContact } from '@textile/react-native-sdk'
 import Icon from '@textile/react-native-icon'
-import { color, size, fontSize } from '../../../styles';
-import ListItem from '../../../Components/ListItem';
+import { color, size, fontSize } from '../../../styles'
+import ListItem from '../../../Components/ListItem'
 
 function getSubTitle(
   contacts: IncludedContact[],
@@ -145,45 +145,63 @@ export class ContactSelectComponent extends React.Component<
   renderHeader = () => {
     const nearby = Platform.OS === 'ios'
     const columns = nearby ? 4 : 3
-    const borderBottom = this.props.contacts.length === 0 ? {} : {borderBottomWidth: 1, borderColor: '#ECEDEE'}
-    const HEADER_ROW: ViewStyle = {flexDirection: 'row', paddingVertical: size._024, ...borderBottom}
-    const HEADER_OPTION: ViewStyle = {flex: 1/columns, flexDirection: 'column', alignItems: 'center', alignContent: 'center', justifyContent: 'flex-start'}
-    const HEADER_OPTION_LABEL: TextStyle = {textAlign: 'center', fontSize: fontSize._12, color: color.action_4, paddingTop: 12}
+    const borderBottom =
+      this.props.contacts.length === 0
+        ? {}
+        : { borderBottomWidth: 1, borderColor: '#ECEDEE' }
+    const HEADER_ROW: ViewStyle = {
+      flexDirection: 'row',
+      paddingVertical: size._024,
+      ...borderBottom
+    }
+    const HEADER_OPTION: ViewStyle = {
+      flex: 1 / columns,
+      flexDirection: 'column',
+      alignItems: 'center',
+      alignContent: 'center',
+      justifyContent: 'flex-start'
+    }
+    const HEADER_OPTION_LABEL: TextStyle = {
+      textAlign: 'center',
+      fontSize: fontSize._12,
+      color: color.action_4,
+      paddingTop: 12
+    }
     const ICON_COLOR = color.action_4
     return (
       <View style={HEADER_ROW}>
-        {nearby && 
-          <TouchableOpacity style={HEADER_OPTION} activeOpacity={0.85} onPress={this.props.findNearby}>
-            <Icon
-              name={'wi-fi_16'}
-              size={26}
-              color={ICON_COLOR}
-            />
+        {nearby && (
+          <TouchableOpacity
+            style={HEADER_OPTION}
+            activeOpacity={0.85}
+            onPress={this.props.findNearby}
+          >
+            <Icon name={'wi-fi_16'} size={26} color={ICON_COLOR} />
             <Text style={HEADER_OPTION_LABEL}>Nearby</Text>
           </TouchableOpacity>
-        }
-        <TouchableOpacity style={HEADER_OPTION} activeOpacity={0.85} onPress={this.props.getPublicLink}>
-          <Icon
-            name={'share-arrow'}
-            size={26}
-            color={ICON_COLOR}
-          />
+        )}
+        <TouchableOpacity
+          style={HEADER_OPTION}
+          activeOpacity={0.85}
+          onPress={this.props.getPublicLink}
+        >
+          <Icon name={'share-arrow'} size={26} color={ICON_COLOR} />
           <Text style={HEADER_OPTION_LABEL}>Share Link</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={HEADER_OPTION} activeOpacity={0.85} onPress={this.props.displayQRCode}>
-          <Icon
-            name={'scan'}
-            size={26}
-            color={ICON_COLOR}
-          />
+        <TouchableOpacity
+          style={HEADER_OPTION}
+          activeOpacity={0.85}
+          onPress={this.props.displayQRCode}
+        >
+          <Icon name={'scan'} size={26} color={ICON_COLOR} />
           <Text style={HEADER_OPTION_LABEL}>Display QR</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={HEADER_OPTION} activeOpacity={0.85} onPress={this.props.copyToClipboard}>
-          <Icon
-            name={'clipboard-plus'}
-            size={26}
-            color={ICON_COLOR}
-          />
+        <TouchableOpacity
+          style={HEADER_OPTION}
+          activeOpacity={0.85}
+          onPress={this.props.copyToClipboard}
+        >
+          <Icon name={'clipboard-plus'} size={26} color={ICON_COLOR} />
           <Text style={HEADER_OPTION_LABEL}>Copy Link</Text>
         </TouchableOpacity>
       </View>

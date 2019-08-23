@@ -72,7 +72,11 @@ class ListItem extends React.PureComponent<Props> {
 
     if (this.props.invert) {
       rightItems = [...checkbox]
-      leftItems = [...(this.props.rightItems || []), ...disclosureIcon, ...leftItem]
+      leftItems = [
+        ...(this.props.rightItems || []),
+        ...disclosureIcon,
+        ...leftItem
+      ]
     } else {
       leftItems = [...checkbox, ...leftItem]
       rightItems = [...(this.props.rightItems || []), ...disclosureIcon]

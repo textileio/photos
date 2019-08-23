@@ -18,7 +18,8 @@ import { color, size, textStyle } from '../../styles'
 
 const alertImages = {
   '../../Images/v2/invite_a_bot.png': require('../../Images/v2/invite_a_bot.png'),
-  '../../Images/v2/upgrade_alert.png': require('../../Images/v2/upgrade_alert.png')
+  '../../Images/v2/upgrade_alert.png': require('../../Images/v2/upgrade_alert.png'),
+  '../../Images/v2/add_contacts.png': require('../../Images/v2/add_contacts.png')
 }
 
 const ALERT_CONTAINER: ViewStyle = {
@@ -140,6 +141,11 @@ class Alerts extends React.Component<Props, State> {
 
   routeAlertEngagement = (type: LocalAlertType) => {
     switch (type) {
+      case LocalAlertType.NoContacts: {
+        return () => {
+          this.props.navigate('Contacts')
+        }
+      }
       case LocalAlertType.NoStorageBot: {
         return () => {
           this.props.navigate('RegisterCafe', {
@@ -242,6 +248,29 @@ class Alerts extends React.Component<Props, State> {
       </TouchableOpacity>
     )
   }
+
+  noContactsTemplate = (
+    type: LocalAlertType,
+    linkText: string,
+    title: string,
+    short: string,
+    image: string
+  ) => {
+    return (
+      <TouchableOpacity
+        activeOpacity={0.9}
+        style={ALERT_CONTAINER}
+        onPress={this.routeAlertEngagement(type)}
+      >
+        <View style={ALERT_CONTENT}>
+          {this.renderAlertCategory(linkText)}
+          {this.renderAlertTitle(title)}
+          {this.renderAlertDescription(short)}
+        </View>
+        {this.renderAlertImage(image)}
+      </TouchableOpacity>
+    )
+  }
   renderAlert = (alert: LocalAlert) => {
     switch (alert.type) {
       case LocalAlertType.NoStorageBot: {
@@ -272,6 +301,15 @@ class Alerts extends React.Component<Props, State> {
           'Upgrade Textile Photos',
           'Uh oh! Your app is out of date. Upgrade now to enjoy the latest and greatest version of Textile Photos',
           '../../Images/v2/upgrade_alert.png'
+        )
+      }
+      case LocalAlertType.NoContacts: {
+        return this.upgradeTemplate(
+          alert.type,
+          'Connect',
+          'Invite Some Friends',
+          'Privately sharing your photos and messages is easy, invite a friend or two to join you',
+          '../../Images/v2/add_contacts.png'
         )
       }
     }
