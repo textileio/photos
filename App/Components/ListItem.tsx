@@ -24,6 +24,7 @@ interface Props {
   onSelect?: () => void
   disabled?: boolean
   titleStyle?: TextStyle
+  invert?: boolean
 }
 
 class ListItem extends React.PureComponent<Props> {
@@ -52,7 +53,6 @@ class ListItem extends React.PureComponent<Props> {
         ]
       : []
     const leftItem = this.props.leftItem ? [this.props.leftItem] : []
-    const leftItems = [...checkbox, ...leftItem]
 
     const showDisclosure =
       (this.props.showDisclosure || false) && !(this.props.selecting || false)
@@ -66,7 +66,17 @@ class ListItem extends React.PureComponent<Props> {
           />
         ]
       : []
-    const rightItems = [...(this.props.rightItems || []), ...disclosureIcon]
+
+    let leftItems = []
+    let rightItems = []
+
+    if (this.props.invert) {
+      rightItems = [...checkbox]
+      leftItems = [...(this.props.rightItems || []), ...disclosureIcon, ...leftItem]
+    } else {
+      leftItems = [...checkbox, ...leftItem]
+      rightItems = [...(this.props.rightItems || []), ...disclosureIcon]
+    }
 
     return (
       <TouchableOpacity

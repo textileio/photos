@@ -31,7 +31,10 @@ const META: ViewStyle = {
 }
 
 const USERNAME: TextStyle = {
-  ...textStyle.body_m_bold
+  ...textStyle.body_m_bold,
+  maxWidth: '75%',
+  overflow: 'hidden',
+  flexWrap: 'nowrap'
 }
 
 const MESSAGE: TextStyle = {
@@ -59,7 +62,7 @@ const Join = (props: Props) => {
       <Avatar style={AVATAR} target={props.avatar} />
       <View style={CONTENT}>
         <View style={META}>
-          <Text style={USERNAME}>
+          <Text numberOfLines={1} style={USERNAME}>
             {props.username} <Text style={MESSAGE}>{props.message}</Text>
           </Text>
           <Text style={TIME}>{props.time.toUpperCase()}</Text>

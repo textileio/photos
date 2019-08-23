@@ -5,7 +5,11 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
-  ListRenderItemInfo
+  ListRenderItemInfo,
+  ViewStyle,
+  TextStyle,
+  Platform,
+  ImageStyle
 } from 'react-native'
 import Avatar from '../../../Components/Avatar'
 
@@ -13,6 +17,9 @@ import ContactSelectCard, { ContactLinkCard } from './ContactSelectCard'
 
 import styles from './statics/styles'
 import { IContact } from '@textile/react-native-sdk'
+import Icon from '@textile/react-native-icon'
+import { color, size, fontSize } from '../../../styles';
+import ListItem from '../../../Components/ListItem';
 
 function getSubTitle(
   contacts: IncludedContact[],
@@ -33,6 +40,8 @@ export interface IncludedContact extends IContact {
 }
 
 interface ContactSelectComponentProps {
+  findNearby: () => void
+  copyToClipboard: () => void
   getPublicLink: () => void
   displayQRCode: () => void
   select: (item: IncludedContact, included: boolean) => void
@@ -49,6 +58,8 @@ interface ContactSelectProps extends ContactSelectComponentProps {
 // puts a placeholder row in contacts for adding external invite link
 const ContactSelect = (props: ContactSelectProps) => {
   const {
+    findNearby,
+    copyToClipboard,
     getPublicLink,
     displayQRCode,
     contacts,
@@ -115,9 +126,11 @@ const ContactSelect = (props: ContactSelectProps) => {
       <View style={styles.body}>
         <View style={styles.searchBoxPlaceholder} />
         <ContactSelectComponent
+          findNearby={findNearby}
           contacts={contacts}
           selected={selected}
           select={select}
+          copyToClipboard={copyToClipboard}
           getPublicLink={getPublicLink}
           displayQRCode={displayQRCode}
         />
@@ -130,26 +143,64 @@ export class ContactSelectComponent extends React.Component<
   ContactSelectComponentProps
 > {
   renderHeader = () => {
+    const nearby = Platform.OS === 'ios'
+    const columns = nearby ? 4 : 3
+    const borderBottom = this.props.contacts.length === 0 ? {} : {borderBottomWidth: 1, borderColor: '#ECEDEE'}
+    const HEADER_ROW: ViewStyle = {flexDirection: 'row', paddingVertical: size._024, ...borderBottom}
+    const HEADER_OPTION: ViewStyle = {flex: 1/columns, flexDirection: 'column', alignItems: 'center', alignContent: 'center', justifyContent: 'flex-start'}
+    const HEADER_OPTION_LABEL: TextStyle = {textAlign: 'center', fontSize: fontSize._12, color: color.action_4, paddingTop: 12}
+    const ICON_COLOR = color.action_4
     return (
-      <Fragment>
-        <ContactLinkCard
-          icon={'external-link'}
-          text={'Share invite by link'}
-          select={this.props.getPublicLink}
-        />
-        <ContactLinkCard
-          icon={'qr-code'}
-          text={'Display QR code invite'}
-          select={this.props.displayQRCode}
-        />
-      </Fragment>
+      <View style={HEADER_ROW}>
+        {nearby && 
+          <TouchableOpacity style={HEADER_OPTION} activeOpacity={0.85} onPress={this.props.findNearby}>
+            <Icon
+              name={'wi-fi_16'}
+              size={26}
+              color={ICON_COLOR}
+            />
+            <Text style={HEADER_OPTION_LABEL}>Nearby</Text>
+          </TouchableOpacity>
+        }
+        <TouchableOpacity style={HEADER_OPTION} activeOpacity={0.85} onPress={this.props.getPublicLink}>
+          <Icon
+            name={'share-arrow'}
+            size={26}
+            color={ICON_COLOR}
+          />
+          <Text style={HEADER_OPTION_LABEL}>Share Link</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={HEADER_OPTION} activeOpacity={0.85} onPress={this.props.displayQRCode}>
+          <Icon
+            name={'scan'}
+            size={26}
+            color={ICON_COLOR}
+          />
+          <Text style={HEADER_OPTION_LABEL}>Display QR</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={HEADER_OPTION} activeOpacity={0.85} onPress={this.props.copyToClipboard}>
+          <Icon
+            name={'clipboard-plus'}
+            size={26}
+            color={ICON_COLOR}
+          />
+          <Text style={HEADER_OPTION_LABEL}>Copy Link</Text>
+        </TouchableOpacity>
+      </View>
     )
   }
 
   renderFooter = () => {
+    const BUFFER: ViewStyle = {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: 11,
+      width: '100%',
+      minHeight: 120
+    }
     // Provides a quick fix until this layout is replaces.
     // Without it the bottom two rows are sometimes not selectable.
-    return <View style={{ ...styles.contactItem, minHeight: 120 }} />
+    return <View style={BUFFER} />
   }
 
   renderRow = (contact: ListRenderItemInfo<IncludedContact>) => {
@@ -165,6 +216,29 @@ export class ContactSelectComponent extends React.Component<
     )
   }
 
+  renderContact = (row: ListRenderItemInfo<IncludedContact>) => {
+    const { item } = row
+    const selectState =
+      Boolean(this.props.selected[item.address]) || item.included
+    const AVATAR_STYLE: ImageStyle = {
+      width: 50,
+      height: 50,
+      backgroundColor: color.grey_5
+    }
+    return (
+      <ListItem
+        title={item.name || item.address.substring(0, 10)}
+        leftItem={<Avatar style={AVATAR_STYLE} target={item.avatar} />}
+        showDisclosure={true}
+        selecting={true}
+        selected={selectState}
+        // onPress={this.onPressTextile(contact)}
+        onSelect={() => this.props.select(item, item.included)}
+        invert={true}
+      />
+    )
+  }
+
   keyExtractor = (item: IncludedContact) => item.address
   render() {
     return (
@@ -174,7 +248,7 @@ export class ContactSelectComponent extends React.Component<
         extraData={this.props.selected}
         ListHeaderComponent={this.renderHeader()}
         ListFooterComponent={this.renderFooter()}
-        renderItem={this.renderRow}
+        renderItem={this.renderContact}
       />
     )
   }

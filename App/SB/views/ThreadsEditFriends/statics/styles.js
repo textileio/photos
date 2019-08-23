@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { bentonSansBold } from '../../../util/fonts'
+import { color } from '../../../../styles';
 
 export default StyleSheet.create({
   container: {
@@ -12,13 +13,14 @@ export default StyleSheet.create({
     paddingHorizontal: 16
   },
   toast: {
-    backgroundColor: '#8e8e93'
+    backgroundColor: color.action_6
   },
   toastText: {
-    color: 'white',
+    color: color.grey_7,
     textAlign: 'center',
     fontSize: 18,
-    padding: 24
+    paddingHorizontal: 12,
+    paddingVertical: 2
   },
   buttons: {
     height: '15%',

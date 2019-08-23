@@ -34,12 +34,26 @@ class Component extends React.Component<Props> {
     showQrCode: false
   }
 
-  _getPublicLink() {
+  getPublicLink = () => {
     // Generate a link dialog
     this.props.invite(this.props.threadId, this.props.threadName)
   }
 
-  _displayThreadQRCode() {
+  findNearby = () => {
+    // @ts-ignore
+    this.refs.toast.show('Please enable Airdrop', 1600)
+    // Generate a link dialog
+    this.props.invite(this.props.threadId, this.props.threadName)
+  }
+
+  copyToClipboard = () => {
+    // Copy link to clipboard
+    this.props.invite(this.props.threadId, this.props.threadName, 'clipboard')
+    // @ts-ignore
+    this.refs.toast.show('Success', 1200)
+  }
+
+  displayThreadQRCode = () => {
     // Generate a link dialog
     this.props.threadQRCodeRequest(this.props.threadId, this.props.threadName)
     this.setState({ showQrCode: true })
@@ -103,12 +117,11 @@ class Component extends React.Component<Props> {
       <View style={styles.container}>
         <View style={{ flex: 1, zIndex: 10 }}>
           <ContactSelect
-            /* tslint:disable-next-line jsx-no-bind */
-            displayQRCode={this._displayThreadQRCode.bind(this)}
-            /* tslint:disable-next-line jsx-no-bind */
-            getPublicLink={this._getPublicLink.bind(this)}
+            findNearby={this.findNearby}
+            copyToClipboard={this.copyToClipboard}
+            displayQRCode={this.displayThreadQRCode}
+            getPublicLink={this.getPublicLink}
             contacts={this.props.contacts}
-            /* tslint:disable-next-line jsx-no-bind */
             select={this._select.bind(this)}
             selected={this.state.selected}
             topFive={this.props.topFive}
@@ -199,14 +212,14 @@ const mapStateToProps = (
 }
 
 interface DispatchProps {
-  invite: (threadId: string, threadName: string) => void
+  invite: (threadId: string, threadName: string, target?: string) => void
   threadQRCodeRequest: (threadId: string, threadName: string) => void
   addInternalInvites: (threadId: string, inviteePks: string[]) => void
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
-  invite: (threadId: string, threadName: string) => {
-    dispatch(ThreadsActions.addExternalInviteRequest(threadId, threadName))
+  invite: (threadId: string, threadName: string, target?: string) => {
+    dispatch(ThreadsActions.addExternalInviteRequest(threadId, threadName, target))
   },
   threadQRCodeRequest: (threadId: string, threadName: string) => {
     dispatch(ThreadsActions.threadQRCodeRequest(threadId, threadName))
