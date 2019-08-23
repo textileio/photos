@@ -5,14 +5,19 @@ const actions = {
   addExternalInviteRequest: createAction(
     'ADD_EXTERNAL_INVITE_REQUEST',
     resolve => {
-      return (id: string, name: string, target?: string) => resolve({ id, name, target })
+      return (id: string, name: string, target?: string) =>
+        resolve({ id, name, target })
     }
   ),
   addExternalInviteSuccess: createAction(
     'ADD_EXTERNAL_INVITE_SUCCESS',
     resolve => {
-      return (id: string, name: string, invite: IExternalInvite, target?: string) =>
-        resolve({ id, name, invite, target })
+      return (
+        id: string,
+        name: string,
+        invite: IExternalInvite,
+        target?: string
+      ) => resolve({ id, name, invite, target })
     }
   ),
   addExternalInviteError: createAction('ADD_EXTERNAL_INVITE_ERROR', resolve => {

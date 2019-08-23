@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { bentonSansBold } from '../../../util/fonts'
-import { color } from '../../../../styles';
+import { color } from '../../../../styles'
 
 export default StyleSheet.create({
   container: {

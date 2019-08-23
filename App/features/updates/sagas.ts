@@ -36,6 +36,7 @@ import { logNewEvent } from '../../Sagas/DeviceLogs'
 import { RootState } from '../../Redux/Types'
 import { LocalAlertType } from './models'
 import VersionNumber from 'react-native-version-number'
+import { contactsActions, contactsSelectors } from '../contacts'
 
 export function* waitUntilOnline(ms: number) {
   let ttw = ms
@@ -258,6 +259,11 @@ export function* reviewThreadInvite(
   }
 }
 
+/**
+ * Checks if the user has a storage bot added to their account. If none
+ * then it creates a LocalAlert.
+ * Run each time the app starts up and finishes checking cafe sessions.
+ */
 export function* updateCafeAlert() {
   const cafes = yield select((state: RootState) =>
     cafeSelectors.registeredCafes(state.cafes)
@@ -269,6 +275,11 @@ export function* updateCafeAlert() {
   }
 }
 
+/**
+ * Checks what the latest release is via URL. If the release is newer
+ * than the current install, it will create a LocalAlert for the user.
+ * Run each time the app starts up and finishes checking cafe sessions.
+ */
 export function* updateReleasesAlert() {
   // Only supported on iOS right now
   if (Platform.OS !== 'ios') {
@@ -317,7 +328,7 @@ export function* updateReleasesAlert() {
       const needUpgrade = outOfDate(version, result.results[0].version)
       // Check app store version against local API version
       if (needUpgrade) {
-        yield put(actions.insertAlert(LocalAlertType.UpgradeNeeded, 1))
+        yield put(actions.insertAlert(LocalAlertType.UpgradeNeeded, 3))
         return
       } else {
         yield put(actions.removeAlert(LocalAlertType.UpgradeNeeded))
@@ -329,8 +340,44 @@ export function* updateReleasesAlert() {
   }
 }
 
+/**
+ * Checks if the user has any contacts. If none, then it will create
+ * a LocalAlert for the user.
+ * Run each time interface updates the contact list.
+ */
+export function* updateContactsAlert(
+  action: ActionType<typeof contactsActions.getContactsSuccess>
+) {
+  const { contacts } = action.payload
+  if (contacts.length > 0) {
+    yield put(actions.removeAlert(LocalAlertType.NoContacts))
+  } else {
+    yield put(actions.insertAlert(LocalAlertType.NoContacts, 2))
+  }
+}
+
+function* watchForContactUpdates() {
+  const contacts = yield select((state: RootState) => state.contacts.contacts)
+  const threads = yield select((state: RootState) => state.groups.threads)
+  if (contacts.length > 0 || threads.length > 0) {
+    // Don't bother showing it if the user is already creating threads.
+    // This is in case they plan to use the app without contacts.
+    yield put(actions.removeAlert(LocalAlertType.NoContacts))
+  } else {
+    yield put(actions.insertAlert(LocalAlertType.NoContacts, 2))
+    yield takeLatest(
+      getType(contactsActions.getContactsSuccess),
+      updateContactsAlert
+    )
+  }
+}
+
 export function* refreshAlerts() {
-  yield all([updateReleasesAlert(), updateCafeAlert()])
+  yield all([
+    updateReleasesAlert(),
+    updateCafeAlert(),
+    watchForContactUpdates()
+  ])
 }
 
 export default function*() {
