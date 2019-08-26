@@ -358,8 +358,7 @@ class Group extends React.PureComponent<Props, State> {
             displayError={this.showToastWithMessage}
             photoWidth={screenWidth}
             hasLiked={hasLiked}
-            numberLikes={likes.length}
-            numberComments={comments.length}
+            likes={likes}
             onLike={this.onLike(block)}
             onComment={this.onComment(block)}
             comments={commentsData}

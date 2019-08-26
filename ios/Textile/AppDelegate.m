@@ -25,6 +25,7 @@
   [Fabric with:@[[Crashlytics class]]];
 
   self.multipeer = [[Multipeer alloc] init];
+  self.nearby = [[Nearby alloc] init];
 
   NSURL *jsCodeLocation;
 

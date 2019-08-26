@@ -7,11 +7,13 @@
 
 #import <UIKit/UIKit.h>
 #import "../NativeModules/Multipeer.h"
+#import "../NativeModules/Nearby.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
 @property (nonatomic, copy, nullable) void (^backgroundCompletionHandler)(void);
 @property (nonatomic, strong) Multipeer *multipeer;
+@property (nonatomic, strong) Nearby *nearby;
 
 @end

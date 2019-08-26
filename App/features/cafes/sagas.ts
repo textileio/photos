@@ -13,20 +13,29 @@ import { makeCafeForPeerId, knownCafesMap } from './selectors'
 import { Cafe, cafes } from './models'
 import TextileEventsActions from '../../Redux/TextileEventsRedux'
 import { logNewEvent } from '../../Sagas/DeviceLogs'
-import { Alert, NativeModules } from 'react-native'
-import { accountSelectors } from '../account';
+import { Alert, NativeModules, Platform } from 'react-native'
+import { accountSelectors } from '../account'
 
-const { Multipeer } = NativeModules
+// https://bitfactor.fi/en/blog/2016/12/28/ios-vs-android-bluetooth-le-overview/
+const { Nearby } = NativeModules
+// const { CoreBluetooth } = NativeModules
 
 export async function init(name: string, address: string, avatar: string): Promise<void> {
-  await Multipeer.init(name, address, avatar)
-  await Multipeer.advertiseOn()
-  return await Multipeer.scan()
+  console.log('Multipeer power')
+  console.log(Nearby)
+  if (Platform.OS !== 'ios') {
+    const answer = await Nearby.init(name, address, avatar)
+    console.log('Multipeer answer', answer)
+  } else {
+    const answer = await Nearby.init(name, address, avatar)
+    console.log('Multipeer Nearby', answer)
+    await Nearby.scan()
+    // await Nearby.advertise()
+  }
+  return
 }
 
 function *testMultipeer() {
-  console.log('Multipeer power')
-  console.log(Multipeer)
   const name = yield select((state: RootState) =>
     accountSelectors.getUsername(state.account)
   )

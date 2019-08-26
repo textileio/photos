@@ -18,6 +18,7 @@ public class TextilePackage implements ReactPackage {
         // https://facebook.github.io/react-native/docs/native-modules-android.html#register-the-module
         List<NativeModule> modules = new ArrayList<>();
 
+        modules.add(new Nearby(reactContext));
         modules.add(new FS(reactContext));
         modules.add(new MessageComposer(reactContext));
 

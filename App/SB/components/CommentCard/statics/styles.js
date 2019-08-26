@@ -54,7 +54,7 @@ export default StyleSheet.create({
   },
   commentText: {
     ...textStyle.body_m,
-    lineHeight: 16,
+    lineHeight: 22,
     flexWrap: 'wrap',
     flex: 1
   },

@@ -10,6 +10,8 @@ import {
 import Icon from '@textile/react-native-icon'
 
 import { color, spacing, textStyle } from '../styles'
+import { CommentData } from './comments';
+import { ILike } from '@textile/js-types';
 
 const ICONS: ViewStyle = {
   flexDirection: 'row'
@@ -26,23 +28,25 @@ const TEXT: TextStyle = {
 }
 
 export interface Props {
+  likes: ReadonlyArray<ILike>
+  comments: ReadonlyArray<CommentData>
   likesAndCommentsContainerStyle?: ViewStyle
   hasLiked: boolean
-  numberLikes: number
-  numberComments: number
   onLike: () => void
   onComment: () => void
 }
 
 const LikeAndComment = (props: Props) => {
   const {
+    likes,
+    comments,
     likesAndCommentsContainerStyle,
     hasLiked,
-    numberLikes,
-    numberComments,
     onLike,
     onComment
   } = props
+  const numberLikes = likes.length
+  const numberComments = comments.length
   const likesWord = numberLikes === 0 || numberLikes > 1 ? 'likes' : 'like'
   const commentsWord =
     numberComments === 0 || numberComments > 1 ? 'comments' : 'comment'
