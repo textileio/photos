@@ -13,5 +13,5 @@
     "skipLibCheck": true,
     "target": "esnext"
   },
-  "include": ["App/**/*"]
+  "include": ["App/**/*", "typings/**/*"]
 }
