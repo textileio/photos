@@ -169,6 +169,7 @@ class Initialize extends Component<Props, State> {
               placeholder={'Referral Code...'}
               placeholderTextColor={color.grey_4}
               keyboardType="default"
+              returnKeyType="done"
               autoCapitalize="none"
               autoCorrect={false}
               style={TEXT_INPUT}
