@@ -17,12 +17,11 @@ import Textile, { ILogLevel, LogLevel } from '@textile/react-native-sdk'
 
 import { cameraPermissionsTrigger } from '../Services/CameraRoll'
 import NavigationService from '../Services/NavigationService'
-import * as NotificationsSagas from './NotificationsSagas'
+import * as UpdatesSagas from '../features/updates/sagas'
 import PreferencesActions, {
   PreferencesSelectors
 } from '../Redux/PreferencesRedux'
 import UIActions from '../Redux/UIRedux'
-import GroupsActions from '../Redux/GroupsRedux'
 import { ActionType } from 'typesafe-actions'
 import PhotoViewingActions from '../Redux/PhotoViewingRedux'
 import { logNewEvent } from './DeviceLogs'
@@ -110,7 +109,7 @@ export function* updateServices(
     currentStatus = !service ? false : service.status
   }
   if (name === 'notifications' && currentStatus === true) {
-    yield call(NotificationsSagas.enable)
+    yield call(UpdatesSagas.enable)
   }
 }
 

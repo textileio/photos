@@ -5,11 +5,11 @@ import RootReducer from './RootReducer'
 import { AccountAction } from '../features/account'
 import { AuthAction } from './AuthRedux'
 import { ContactsAction } from '../features/contacts'
+import { UpdatesAction } from '../features/updates'
 import { DeviceLogsAction } from './DeviceLogsRedux'
 import { GroupsAction } from './GroupsRedux'
 import { PhotoViewingAction } from './PhotoViewingRedux'
 import { PreferencesAction } from './PreferencesRedux'
-import { NotificationsAction } from './NotificationsRedux'
 import { ThreadsAction } from './ThreadsRedux'
 import { TriggersAction } from './TriggersRedux'
 import { UIAction } from './UIRedux'
@@ -24,11 +24,11 @@ export type RootAction =
   | AccountAction
   | AuthAction
   | ContactsAction
+  | UpdatesAction
   | DeviceLogsAction
   | GroupsAction
   | PhotoViewingAction
   | PreferencesAction
-  | NotificationsAction
   | ThreadsAction
   | TriggersAction
   | UIAction

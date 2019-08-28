@@ -187,7 +187,7 @@ class UserProfile extends React.PureComponent<Props> {
             <Text style={styles.listText}>Notifications</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.listItem} onPress={this._cafes}>
-            <Text style={styles.listText}>Cafes</Text>
+            <Text style={styles.listText}>Bots</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.listItem} onPress={this._accountSeed}>
             <Text style={styles.listText}>Account Seed</Text>

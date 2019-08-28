@@ -2,7 +2,7 @@ import Textile, {
   Notification as SdkNotification,
   INotification
 } from '@textile/react-native-sdk'
-import { Notification } from '../Models/Notifications'
+import { Notification } from '../features/updates/models'
 import RNPushNotification from 'react-native-push-notification'
 import { Alert } from 'react-native'
 
@@ -310,7 +310,7 @@ export async function displayInviteAlert(message: string) {
 export function displayLeavePromise(): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     Alert.alert(
-      'Leave thread?',
+      'Leave group?',
       'This cannot be undone.',
       [
         {

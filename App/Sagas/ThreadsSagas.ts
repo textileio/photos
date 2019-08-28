@@ -1,4 +1,4 @@
-import { Share } from 'react-native'
+import { Share, Clipboard } from 'react-native'
 import { delay } from 'redux-saga'
 import { call, put, select, fork } from 'redux-saga/effects'
 import ThreadsActions from '../Redux/ThreadsRedux'
@@ -17,7 +17,7 @@ import NavigationService from '../Services/NavigationService'
 import UIActions from '../Redux/UIRedux'
 import Config from 'react-native-config'
 import { logNewEvent } from './DeviceLogs'
-import { waitUntilOnline } from './NotificationsSagas'
+import { waitUntilOnline } from '../features/updates/sagas'
 
 function* joinInternalOnFork(notificationId: string, threadName?: string) {
   try {
@@ -51,10 +51,10 @@ function* joinOnFork(inviteId: string, key: string) {
 export function* addExternalInvite(
   action: ActionType<typeof ThreadsActions.addExternalInviteRequest>
 ) {
-  const { id, name } = action.payload
+  const { id, name, target } = action.payload
   try {
     const invite: IExternalInvite = yield call(Textile.invites.addExternal, id)
-    yield put(ThreadsActions.addExternalInviteSuccess(id, name, invite))
+    yield put(ThreadsActions.addExternalInviteSuccess(id, name, invite, target))
   } catch (error) {
     yield put(ThreadsActions.addExternalInviteError(id, error))
   }
@@ -77,8 +77,12 @@ export function* displayThreadQRCode(
 export function* presentShareInterface(
   action: ActionType<typeof ThreadsActions.addExternalInviteSuccess>
 ) {
-  const { invite, name } = action.payload
+  const { invite, name, target } = action.payload
   const link = DeepLink.createInviteLink(invite, name)
+  if (target && target === 'clipboard') {
+    yield call(Clipboard.setString, link)
+    return
+  }
   yield call(Share.share, {
     title: 'Join my thread on Textile!',
     message: link

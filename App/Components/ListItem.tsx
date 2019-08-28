@@ -1,5 +1,11 @@
 import React from 'react'
-import { View, Text, TouchableOpacity, ViewStyle } from 'react-native'
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ViewStyle,
+  TextStyle
+} from 'react-native'
 import Icon from '@textile/react-native-icon'
 
 import Checkbox from '../Components/Checkbox'
@@ -17,6 +23,8 @@ interface Props {
   onPress?: () => void
   onSelect?: () => void
   disabled?: boolean
+  titleStyle?: TextStyle
+  invert?: boolean
 }
 
 class ListItem extends React.PureComponent<Props> {
@@ -45,7 +53,6 @@ class ListItem extends React.PureComponent<Props> {
         ]
       : []
     const leftItem = this.props.leftItem ? [this.props.leftItem] : []
-    const leftItems = [...checkbox, ...leftItem]
 
     const showDisclosure =
       (this.props.showDisclosure || false) && !(this.props.selecting || false)
@@ -59,7 +66,21 @@ class ListItem extends React.PureComponent<Props> {
           />
         ]
       : []
-    const rightItems = [...(this.props.rightItems || []), ...disclosureIcon]
+
+    let leftItems = []
+    let rightItems = []
+
+    if (this.props.invert) {
+      rightItems = [...checkbox]
+      leftItems = [
+        ...(this.props.rightItems || []),
+        ...disclosureIcon,
+        ...leftItem
+      ]
+    } else {
+      leftItems = [...checkbox, ...leftItem]
+      rightItems = [...(this.props.rightItems || []), ...disclosureIcon]
+    }
 
     return (
       <TouchableOpacity
@@ -91,7 +112,13 @@ class ListItem extends React.PureComponent<Props> {
               marginRight: rightItems.length > 0 ? spacing._012 : 0
             }}
           >
-            <Text style={{ ...textStyle.body_l, color: color.grey_2 }}>
+            <Text
+              style={{
+                ...textStyle.body_l,
+                color: color.grey_2,
+                ...this.props.titleStyle
+              }}
+            >
               {this.props.title}
             </Text>
             {this.props.subtitle && (

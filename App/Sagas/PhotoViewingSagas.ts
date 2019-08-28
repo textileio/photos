@@ -25,7 +25,7 @@ import Textile, {
 } from '@textile/react-native-sdk'
 import NavigationService from '../Services/NavigationService'
 import { shareWalletImage } from './ImageSharingSagas'
-import { displayLeaveAlert } from '../Services/Notifications';
+import { displayLeaveAlert } from '../Services/Notifications'
 
 export function* monitorNewThreadActions() {
   while (true) {

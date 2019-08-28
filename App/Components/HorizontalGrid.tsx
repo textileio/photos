@@ -1,7 +1,6 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import {
   View,
-  Text,
   FlatList,
   TouchableOpacity,
   ListRenderItemInfo,
@@ -12,7 +11,6 @@ import Toast from 'react-native-easy-toast'
 import { color } from '../styles'
 import styles from './Styles/PhotoGridStyles'
 import TextileImage from './TextileImage'
-import { SharingPhoto } from '../Redux/UIRedux'
 
 export interface GalleryPhoto {
   block: string
@@ -199,11 +197,6 @@ class HorizontalGrid extends React.Component<ScreenProps, State> {
     return (
       <View style={{ ...styles.container }} onLayout={this.onLayout}>
         {this.renderFlatList()}
-        {!this.props.photoPairs.length && (
-          <View style={styles.emptyListStyle}>
-            <Text style={styles.noPhotos}>{'no images'}</Text>
-          </View>
-        )}
       </View>
     )
   }

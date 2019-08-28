@@ -10,10 +10,10 @@ import {
 import { accountReducer } from '../features/account'
 import { reducer as authReducer } from './AuthRedux'
 import { contactsReducer } from '../features/contacts'
+import { updatesReducer } from '../features/updates'
 import { reducer as groupsReducer } from './GroupsRedux'
 import { reducer as preferencesReducer } from './PreferencesRedux'
 import { reducer as photoViewingReducer } from './PhotoViewingRedux'
-import { reducer as notificationsReducer } from './NotificationsRedux'
 import { reducer as threadsReducer } from './ThreadsRedux'
 import { reducer as uiReducer } from './UIRedux'
 import { reducer as startupReducer } from './StartupRedux'
@@ -397,10 +397,10 @@ const persistConfig: PersistConfig = {
 const rootReducer = combineReducers({
   auth: authReducer,
   contacts: contactsReducer,
+  updates: updatesReducer,
   groups: groupsReducer,
   preferences: preferencesReducer,
   photoViewing: photoViewingReducer,
-  notifications: notificationsReducer,
   threads: threadsReducer,
   ui: uiReducer,
   startup: startupReducer,

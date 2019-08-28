@@ -96,6 +96,7 @@ const Error: TextStyle = {
 interface StateProps {
   cafe?: CafeModel
   session?: CafeSessionData
+  verboseUi?: boolean
 }
 
 interface DispatchProps {
@@ -120,7 +121,7 @@ class Cafe extends Component<Props> {
       </TextileHeaderButtons>
     )
     return {
-      headerTitle: 'Cafe Details',
+      headerTitle: 'Bot Details',
       headerLeft
     }
   }
@@ -155,7 +156,7 @@ class Cafe extends Component<Props> {
       <SafeAreaView style={Container}>
         <Text style={URL}>{url}</Text>
         <Text style={PeerId}>{peer}</Text>
-        <Text style={ServicesHeader}>Services</Text>
+        <Text style={ServicesHeader}>Capabilities</Text>
         <FlatList
           data={services}
           keyExtractor={(item: string) => item}
@@ -175,21 +176,23 @@ class Cafe extends Component<Props> {
             Cafe session error: {this.props.session.error}
           </Text>
         )}
-        {expirationDate !== '' && (
+        {this.props.verboseUi && expirationDate !== '' && (
           <Text style={ExpirationDate}>
             Your session expires on {expirationDate}
           </Text>
         )}
         <View style={ButtonsContainer}>
+          {this.props.verboseUi && (
+            <Button
+              text="Refresh"
+              onPress={this.props.refresh}
+              style={RefreshButton}
+              processing={refreshButtonDisabled}
+              disabled={refreshButtonDisabled}
+            />
+          )}
           <Button
-            text="Refresh"
-            onPress={this.props.refresh}
-            style={RefreshButton}
-            processing={refreshButtonDisabled}
-            disabled={refreshButtonDisabled}
-          />
-          <Button
-            text="Deregister"
+            text="Disconnect"
             onPress={this.deregister}
             style={DeregisterButton}
             processing={deregisterButtonDisabled}
@@ -213,9 +216,11 @@ const mapStateToProps = (
   const peer = ownProps.navigation.getParam('peerId')
   const cafe = cafesSelectors.makeCafeForPeerId(peer)(state.cafes)
   const session = cafesSelectors.makeCafeSessionForPeerId(peer)(state.cafes)
+  const verboseUi = state.preferences.verboseUi
   return {
     cafe,
-    session
+    session,
+    verboseUi
   }
 }
 

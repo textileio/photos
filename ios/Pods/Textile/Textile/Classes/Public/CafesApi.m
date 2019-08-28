@@ -39,8 +39,11 @@
   [self.node refreshCafeSession:peerId cb:cb];
 }
 
-- (void)checkMessages:(NSError * _Nullable __autoreleasing *)error {
-  [self.node checkCafeMessages:error];
+- (void)checkMessages:(void (^)(NSError * _Nonnull))completion {
+  Callback *cb = [[Callback alloc] initWithCompletion:^(NSError *error) {
+    completion(error);
+  }];
+  [self.node checkCafeMessages:cb];
 }
 
 - (CafeSession *)session:(NSString *)peerId error:(NSError * _Nullable __autoreleasing *)error {

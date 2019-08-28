@@ -13,6 +13,10 @@ export interface CafesState {
     readonly processing: boolean
     readonly error?: string
   }
+  readonly knownCafes?: {
+    readonly list: Cafe[]
+    readonly error?: string
+  }
 }
 
 export type CafesAction = ActionType<typeof actions>
@@ -25,16 +29,41 @@ const persistConfig: PersistConfig = {
 }
 
 const reducer = combineReducers<CafesState, CafesAction>({
+  knownCafes: (state = { list: [] }, action) => {
+    switch (action.type) {
+      // Update our list of registered cafes with cafes that are actually registered to
+      // catch cafe data for cafes that were registered before we added this redux state
+      case getType(actions.getKnownCafes.success): {
+        const { list } = action.payload
+        return {
+          list,
+          error: undefined
+        }
+      }
+      case getType(actions.getKnownCafes.failure): {
+        const { error } = action.payload
+        const errorMessage =
+          (error.message as string) || (error as string) || 'unknown error'
+        return {
+          list: state.list,
+          error: errorMessage
+        }
+      }
+      default:
+        return state
+    }
+  },
   cafes: (state = {}, action) => {
     switch (action.type) {
-      // Update our list of registered cafes with cafes that are actuall registered to
+      // Update our list of registered cafes with cafes that are actually registered to
       // catch cafe data for cafes that were registered before we added this redux state
       case getType(actions.getCafeSessions.success): {
         const { sessions } = action.payload
         const cafes = sessions.reduce((cafes, session) => {
-          const { peer } = session.cafe
+          const { url, peer } = session.cafe
           const updated: Cafe = {
             ...cafes[peer],
+            url,
             peerId: peer,
             state: 'registered'
           }
@@ -46,10 +75,10 @@ const reducer = combineReducers<CafesState, CafesAction>({
         return cafes
       }
       case getType(actions.registerCafe.request): {
-        const { peerId, token } = action.payload
+        const { url, peerId, token } = action.payload
         return {
           ...state,
-          [peerId]: { peerId, token, state: 'registering' }
+          [peerId]: { url, peerId, token, state: 'registering' }
         }
       }
       case getType(actions.registerCafe.success): {
@@ -57,7 +86,17 @@ const reducer = combineReducers<CafesState, CafesAction>({
         return { ...state, [peerId]: { ...state[peerId], state: 'registered' } }
       }
       case getType(actions.registerCafe.failure): {
-        const { peerId, error } = action.payload
+        const { peerId, error, cancelled } = action.payload
+        // Marks the cafe as available if registration was cancelled
+        if (cancelled) {
+          return {
+            ...state,
+            [peerId]: {
+              ...state[peerId],
+              state: 'available'
+            }
+          }
+        }
         const errorMessage =
           (error.message as string) || (error as string) || 'unknown error'
         return {
@@ -80,7 +119,17 @@ const reducer = combineReducers<CafesState, CafesAction>({
         return newState
       }
       case getType(actions.deregisterCafe.failure): {
-        const { peerId, error } = action.payload
+        const { peerId, error, cancelled } = action.payload
+        // Marks the cafe as registered if deregistration was cancelled
+        if (cancelled) {
+          return {
+            ...state,
+            [peerId]: {
+              ...state[peerId],
+              state: 'registered'
+            }
+          }
+        }
         const errorMessage =
           (error.message as string) || (error as string) || 'unknown'
         return {

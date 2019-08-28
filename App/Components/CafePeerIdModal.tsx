@@ -71,13 +71,14 @@ const DisabledButton: TextStyle = {
 
 interface OwnProps {
   isVisible: boolean
-  complete: (peerId: string, token: string) => void
+  complete: (url: string, peerId: string, token: string) => void
   close: () => void
 }
 
 type Props = OwnProps
 
 interface State {
+  url: string
   peerId: string
   token: string
 }
@@ -86,6 +87,7 @@ export default class CafePeerIdModal extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
+      url: '',
       peerId: '',
       token: ''
     }
@@ -94,6 +96,9 @@ export default class CafePeerIdModal extends Component<Props, State> {
   render() {
     const peerIdInputIsBlank = this.state.peerId === ''
     const tokenInputIsBlank = this.state.token === ''
+    const urlInputIsBlank = this.state.url === ''
+    // TODO: This modal floats with a weird gap at the top, added a quickfix of maxHeight to make
+    // it look 'on purpose'. Better fix needed
     return (
       <Modal
         isVisible={this.props.isVisible}
@@ -101,11 +106,11 @@ export default class CafePeerIdModal extends Component<Props, State> {
         animationOut={'fadeOutDown'}
         avoidKeyboard={true}
         backdropOpacity={0.5}
-        style={{ margin: 0, padding: 0 }}
+        style={{ margin: 0, padding: 0, maxHeight: 600 }}
       >
         <SafeAreaView style={ModalView}>
           <View style={Container}>
-            <Text style={Header}>Custom Cafe</Text>
+            <Text style={Header}>Custom Bot</Text>
             <View style={InputContainer}>
               <Input
                 style={InputStyle}
@@ -122,20 +127,37 @@ export default class CafePeerIdModal extends Component<Props, State> {
                 onChangeText={this.handleNewToken}
               />
             </View>
+            <View style={InputContainer}>
+              <Input
+                style={InputStyle}
+                value={this.state.url}
+                label={urlInputIsBlank ? 'URL...' : ''}
+                onChangeText={this.handleNewUrl}
+              />
+            </View>
             <View style={Buttons}>
               <TouchableOpacity onPress={this.props.close}>
                 <Text style={CancelButton}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                disabled={peerIdInputIsBlank || tokenInputIsBlank}
+                disabled={
+                  peerIdInputIsBlank || tokenInputIsBlank || urlInputIsBlank
+                }
                 onPress={() =>
-                  this.props.complete(this.state.peerId, this.state.token)
+                  this.props.complete(
+                    this.state.url,
+                    this.state.peerId,
+                    this.state.token
+                  )
                 }
               >
                 <Text
                   style={[
                     SubmitButton,
-                    peerIdInputIsBlank && tokenInputIsBlank && DisabledButton
+                    (peerIdInputIsBlank ||
+                      tokenInputIsBlank ||
+                      urlInputIsBlank) &&
+                      DisabledButton
                   ]}
                 >
                   Submit
@@ -157,6 +179,12 @@ export default class CafePeerIdModal extends Component<Props, State> {
   handleNewToken = (token: string) => {
     this.setState({
       token
+    })
+  }
+
+  handleNewUrl = (url: string) => {
+    this.setState({
+      url
     })
   }
 }

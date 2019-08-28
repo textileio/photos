@@ -7,7 +7,7 @@ import TextileImage from '../../../Components/TextileImage'
 
 import styles from './statics/styles'
 import { color } from '../../../styles'
-import { Notification } from '../../../Models/Notifications'
+import { Notification } from '../../../features/updates/models'
 
 interface FeedItemProps {
   notification: Notification

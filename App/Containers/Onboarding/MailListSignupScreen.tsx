@@ -10,7 +10,6 @@ import {
   TouchableOpacity,
   Insets
 } from 'react-native'
-import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import Toast from 'react-native-easy-toast'
 import Config from 'react-native-config'

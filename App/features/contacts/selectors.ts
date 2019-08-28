@@ -89,7 +89,7 @@ export const searchResults = (state: ContactsState) => {
           const sames = arr.filter(
             (el, ind) => el.address === current.address && ind > index
           )
-          return sames.length === 1
+          return sames.length === 0
         })
         .map(result => {
           const selector = makeIsKnown(result.address)

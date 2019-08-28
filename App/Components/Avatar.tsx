@@ -14,11 +14,12 @@ import TextileImage from './TextileImage'
 import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
 import { color as colors } from '../styles'
 
-interface OwnProps {
+export interface AvatarProps {
   self?: boolean
   icon?: string
   target?: string
   style?: ImageStyle
+  alert?: boolean
 }
 
 interface StateProps {
@@ -28,7 +29,7 @@ interface StateProps {
   online: boolean
 }
 
-type Props = OwnProps & StateProps & Partial<ImageProps>
+type Props = AvatarProps & StateProps & Partial<ImageProps>
 
 interface State {
   borderRadius: number
@@ -209,35 +210,55 @@ class Avatar extends React.Component<Props, State> {
             uri: `${
               Config.RN_TEXTILE_GATEWAY_URL
             }/ipfs/${target}/0/small/content`,
-            cache: 'reload'
+            cache: 'force-cache'
           }}
           resizeMode={'cover'}
           onLoad={this.onHTTPLoad}
         >
-          {shouldShowIPFS && (
-            <TextileImage
-              style={{
-                minHeight: height,
-                minWidth: width,
-                alignSelf: 'center',
-                backgroundColor: 'transparent'
-              }}
-              target={`${target}/0/${resolution}/content`}
-              ipfs={true}
-              index={0}
-              forMinWidth={widthNumber}
-              resizeMode={'cover'}
-              onLayout={this.onImageLayout}
-              onError={this.onIPFSError}
-            />
-          )}
+          <ImageBackground
+            style={{
+              minHeight: height,
+              minWidth: width,
+              alignSelf: 'center',
+              backgroundColor: 'transparent'
+            }}
+            source={{
+              uri: `${
+                Config.RN_TEXTILE_GATEWAY_URL
+              }/ipfs/${target}/0/small/content`,
+              cache: 'reload'
+            }}
+            resizeMode={'cover'}
+            onLoad={this.onHTTPLoad}
+          >
+            {shouldShowIPFS && (
+              <TextileImage
+                style={{
+                  minHeight: height,
+                  minWidth: width,
+                  alignSelf: 'center',
+                  backgroundColor: 'transparent'
+                }}
+                target={`${target}/0/${resolution}/content`}
+                ipfs={true}
+                index={0}
+                forMinWidth={widthNumber}
+                resizeMode={'cover'}
+                onLayout={this.onImageLayout}
+                onError={this.onIPFSError}
+              />
+            )}
+          </ImageBackground>
         </ImageBackground>
       </View>
     )
   }
 }
 
-const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
+const mapStateToProps = (
+  state: RootState,
+  ownProps: AvatarProps
+): StateProps => {
   let target = ownProps.target
 
   const profile = state.account.profile.value
