@@ -220,10 +220,7 @@ class Avatar extends React.Component<Props, State> {
               minHeight: height,
               minWidth: width,
               alignSelf: 'center',
-              backgroundColor:
-                this.props.style && this.props.style.backgroundColor
-                  ? this.props.style.backgroundColor
-                  : 'transparent'
+              backgroundColor: 'transparent'
             }}
             source={{
               uri: `${
