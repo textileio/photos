@@ -19,6 +19,7 @@ import {
 } from 'react-navigation'
 import Icon from '@textile/react-native-icon'
 
+import { OnboardingChildProps } from './Onboarding/onboarding-container'
 import Button from '../Components/LargeButton'
 import { RootAction, RootState } from '../Redux/Types'
 import { accountActions } from '../features/account'
@@ -92,7 +93,6 @@ interface NavigationParams {
 }
 
 interface OwnProps {
-  onSuccess?: () => void
   navigation?: NavigationScreenProp<
     NavigationRoute<NavigationParams>,
     NavigationParams
@@ -113,9 +113,9 @@ interface DispatchProps {
   cancel: () => void
 }
 
-export type Props = OwnProps & StateProps & DispatchProps
+type Props = OwnProps & StateProps & DispatchProps & OnboardingChildProps
 
-export class SetAvatar extends React.Component<Props> {
+class SetAvatar extends React.Component<Props> {
   static navigationOptions = ({ navigation }: NavigationScreenProps) => {
     const params = navigation.state.params || {}
     return {
@@ -160,8 +160,8 @@ export class SetAvatar extends React.Component<Props> {
     if (this.props.image) {
       this.props.submitAvatar(this.props.image)
     }
-    if (this.props.onSuccess) {
-      this.props.onSuccess()
+    if (this.props.onComplete) {
+      this.props.onComplete()
     }
     if (this.props.navigation) {
       const onSuccess = this.props.navigation.getParam('onSuccess')
@@ -232,7 +232,7 @@ export class SetAvatar extends React.Component<Props> {
   }
 }
 
-export const mapStateToProps = (state: RootState): StateProps => ({
+const mapStateToProps = (state: RootState): StateProps => ({
   buttonText: state.account.chosenProfilePhoto.image ? 'Save' : 'Choose Photo',
   displaySubButton: state.account.chosenProfilePhoto.image !== undefined,
   image: state.account.chosenProfilePhoto.image,
@@ -242,9 +242,7 @@ export const mapStateToProps = (state: RootState): StateProps => ({
     : false
 })
 
-export const mapDispatchToProps = (
-  dispatch: Dispatch<RootAction>
-): DispatchProps => ({
+const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
   displayPhotoChooser: () =>
     dispatch(accountActions.chooseProfilePhoto.request()),
   submitAvatar: (image: SharedImage) =>

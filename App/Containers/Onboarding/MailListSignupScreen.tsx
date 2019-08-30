@@ -13,8 +13,8 @@ import {
 import { connect } from 'react-redux'
 import Toast from 'react-native-easy-toast'
 import Config from 'react-native-config'
-import { wrapOnboarding } from './WrapOnboarding'
 
+import { OnboardingChildProps } from './onboarding-container'
 import Input from '../../SB/components/Input'
 import Button from '../../Components/LargeButton'
 import { color, textStyle, fontFamily, spacing } from '../../styles'
@@ -70,7 +70,7 @@ const HIT_SLOP: Insets = {
   right: spacing._016
 }
 
-interface Props {}
+type Props = OnboardingChildProps
 
 interface State {
   valid: boolean
@@ -80,7 +80,10 @@ interface State {
   buttonText: string
 }
 
-class MailListSignupScreen extends React.Component<Props, State> {
+export default class MailListSignupScreen extends React.Component<
+  Props,
+  State
+> {
   toast?: Toast
 
   constructor(props: Props) {
@@ -132,7 +135,7 @@ class MailListSignupScreen extends React.Component<Props, State> {
             onPress={this.submit}
             style={BUTTON}
           />
-          <TouchableOpacity onPress={() => {}} hitSlop={HIT_SLOP}>
+          <TouchableOpacity onPress={this.props.onComplete} hitSlop={HIT_SLOP}>
             <Text style={LINK}>No thanks</Text>
           </TouchableOpacity>
           <Toast
@@ -165,7 +168,10 @@ class MailListSignupScreen extends React.Component<Props, State> {
         const validStatus = response.status >= 200 && response.status < 300
         if (validStatus) {
           this.setState({ buttonText: 'Success!', valid: false })
-          // Call on success function
+          // Set a timer and navigate
+          if (this.props.onComplete) {
+            setTimeout(this.props.onComplete, 1000)
+          }
         } else {
           const error =
             responseText.length > 0 ? responseText : `${response.status}`
@@ -189,12 +195,3 @@ class MailListSignupScreen extends React.Component<Props, State> {
     }
   }
 }
-
-function isMailingListSignupScreenComplete(props: Props): boolean {
-  return false
-}
-
-export default connect(
-  undefined,
-  undefined
-)(wrapOnboarding(MailListSignupScreen, isMailingListSignupScreenComplete))

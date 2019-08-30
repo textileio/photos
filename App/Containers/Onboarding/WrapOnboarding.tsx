@@ -29,10 +29,14 @@ export const wrapOnboarding = <P extends object>(
   class ComponentWithComplete extends React.Component<
     P & WrappedOnboardingProps
   > {
+    isComplete = () => {
+      const { completed, ...props } = this.props
+      return isComplete(props as P)
+    }
     // Call isComplete, and if it evaluates to true call the callback
     checkIfCompleted = () => {
       const { completed, ...props } = this.props
-      if (isComplete(props as P)) {
+      if (this.isComplete()) {
         completed()
       }
     }

@@ -16,14 +16,13 @@ import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import Config from 'react-native-config'
 import Modal from 'react-native-modal'
-import { wrapOnboarding } from './WrapOnboarding'
+import { NavigationScreenProps } from 'react-navigation'
 
 import Button from '../../Components/SmallButton'
 import WaitListSignupScreen from '../../Components/WaitListSignupScreen'
 
 import { RootState, RootAction } from '../../Redux/Types'
 import {
-  initializationSelectors,
   initializationActions,
   initializationModels
 } from '../../features/initialization'
@@ -43,8 +42,6 @@ const CONTAINER: ViewStyle = {
   alignItems: 'stretch',
   backgroundColor: color.screen_primary
 }
-
-const INNER_CONTAINER: ViewStyle = {}
 
 const IMAGE: ImageStyle = {
   marginBottom: spacing._016,
@@ -118,18 +115,13 @@ interface OwnProps {
   referralCode?: string
 }
 
-interface StateProps {
-  isInitialized: boolean
-  initializationPathChosen: boolean
-}
-
 interface DispatchProps {
   chooseInitializationPath: (
     path: initializationModels.InitializationPath
   ) => void
 }
 
-type Props = StateProps & DispatchProps & OwnProps
+type Props = DispatchProps & OwnProps & NavigationScreenProps
 
 interface State {
   valid: boolean
@@ -235,18 +227,12 @@ class Initialize extends Component<Props, State> {
 
   onNewAccount = () => {
     this.props.chooseInitializationPath('newAccount')
+    this.props.navigation.navigate('OnboardingNew')
   }
 
   onExistingAccount = () => {
     this.props.chooseInitializationPath('existingAccount')
-  }
-}
-
-function mapStateToProps(state: RootState): StateProps {
-  return {
-    isInitialized: initializationSelectors.initialized(state.initialization),
-    initializationPathChosen:
-      state.initialization.onboarding.initializationPath !== undefined
+    this.props.navigation.navigate('OnboardingExisting')
   }
 }
 
@@ -257,11 +243,7 @@ function mapDispatchToProps(dispatch: Dispatch<RootAction>): DispatchProps {
   }
 }
 
-function isInitializeScreenComplete(props: Props): boolean {
-  return props.isInitialized || props.initializationPathChosen
-}
-
 export default connect(
-  mapStateToProps,
+  undefined,
   mapDispatchToProps
-)(wrapOnboarding(Initialize, isInitializeScreenComplete))
+)(Initialize)

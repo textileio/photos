@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { SafeAreaView, Text, ViewStyle, TextStyle, Alert } from 'react-native'
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import { wrapOnboarding } from './WrapOnboarding'
 
 import { RootState, RootAction } from '../../Redux/Types'
 import { TextileEventsSelectors } from '../../Redux/TextileEventsRedux'
@@ -41,7 +40,6 @@ const SUBMIT_BUTTON: ViewStyle = {
 
 interface StateProps {
   registeringCafes: Cafe[]
-  screenCompleted: boolean
   nodeOnline: boolean
   cafes: Cafe[]
 }
@@ -186,7 +184,6 @@ class ChooseCafe extends Component<Props, State> {
 const mapStateToProps = (state: RootState): StateProps => {
   return {
     registeringCafes: cafesSelectors.registeringCafes(state.cafes),
-    screenCompleted: state.initialization.onboarding.chooseCafeScreenCompleted,
     nodeOnline: TextileEventsSelectors.online(state),
     cafes: cafesSelectors.knownCafes(state.cafes)
   }
@@ -210,12 +207,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {
   }
 }
 
-function isChooseCafeComplete(props: Props): boolean {
-  // This screen is completed if it is marked as completed in the redux state
-  return props.screenCompleted
-}
-
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(wrapOnboarding(ChooseCafe, isChooseCafeComplete))
+)(ChooseCafe)

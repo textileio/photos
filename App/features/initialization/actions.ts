@@ -33,9 +33,6 @@ export const chooseInitializationPath = createAction(
   }
 )
 
-export const completeChooseCafeScreen = createAction(
-  'initialization/COMPLETE_CHOOSE_CAFE_SCREEN',
-  resolve => {
-    return () => resolve()
-  }
+export const onboardingSuccess = createAction(
+  'initialization/ONBOARDING_SUCCESS'
 )

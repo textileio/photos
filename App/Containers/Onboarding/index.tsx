@@ -4,7 +4,6 @@ import { NavigationScreenProps } from 'react-navigation'
 
 import ProgressBar from './OnboardingProgressBar'
 
-import Initialize from './initialize'
 import InitializeNew from './initialize-new'
 import InitializeExisting from './initialize-existing'
 import OnboardingUsername from './OnboardingUsername'
@@ -27,13 +26,19 @@ interface State {
 }
 
 const Pages = [
-  Initialize,
   InitializeExisting,
   InitializeNew,
   OnboardingUsername,
   AvatarOnboarding,
   ChooseCafe
 ]
+
+interface EnrichedChildren {
+  onChange(): void
+  selectedValue: string
+  name: string
+  children?: React.ReactNode
+}
 
 export default class Onboarding extends React.Component<Props, State> {
   pages: JSX.Element[]

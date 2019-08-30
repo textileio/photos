@@ -7,7 +7,7 @@ import * as actions from './actions'
 export interface InitializationState {
   readonly onboarding: {
     readonly initializationPath?: InitializationPath
-    readonly chooseCafeScreenCompleted: boolean
+    readonly completed: boolean
   }
   readonly instance: {
     readonly state: InitializationStatus
@@ -18,12 +18,7 @@ export interface InitializationState {
 export type InitializationAction = ActionType<typeof actions>
 
 export default combineReducers<InitializationState, InitializationAction>({
-  onboarding: (
-    state = {
-      chooseCafeScreenCompleted: false
-    },
-    action
-  ) => {
+  onboarding: (state = { completed: false }, action) => {
     switch (action.type) {
       case getType(actions.chooseInitializationPath): {
         return {
@@ -31,10 +26,10 @@ export default combineReducers<InitializationState, InitializationAction>({
           initializationPath: action.payload.path
         }
       }
-      case getType(actions.completeChooseCafeScreen): {
+      case getType(actions.onboardingSuccess): {
         return {
           ...state,
-          chooseCafeScreenCompleted: true
+          completed: true
         }
       }
       default:

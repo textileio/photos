@@ -21,8 +21,6 @@ import {
 } from '../../features/initialization'
 import { color, textStyle, spacing, size, fontFamily } from '../../styles'
 
-import { wrapOnboarding } from './WrapOnboarding'
-
 const CONTAINER: ViewStyle = {
   flex: 1,
   justifyContent: 'flex-start',
@@ -227,4 +225,4 @@ function isInitializeExistingAccountComplete(props: Props): boolean {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(wrapOnboarding(InitializeExisting, isInitializeExistingAccountComplete))
+)(InitializeExisting)

@@ -4,16 +4,14 @@ import { connect } from 'react-redux'
 import { Text, ViewStyle, TextStyle, View } from 'react-native'
 import Icon from '@textile/react-native-icon'
 
+import { OnboardingChildProps } from './onboarding-container'
 import Loading from '../../Components/Loading'
 import { RootAction, RootState } from '../../Redux/Types'
 import {
   initializationActions,
-  initializationSelectors,
-  initializationModels
+  initializationSelectors
 } from '../../features/initialization'
-import { color, textStyle, spacing, size, fontFamily } from '../../styles'
-
-import { wrapOnboarding } from './WrapOnboarding'
+import { color, textStyle, spacing, size } from '../../styles'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
@@ -54,21 +52,33 @@ const SUCCESS: TextStyle = {
 }
 
 interface StateProps {
-  initializationPath?: initializationModels.InitializationPath
   statusText: string
-  initialized: boolean
+  processing: boolean
   error?: string
 }
 
 interface DispatchProps {
   initialize: () => void
+  initializeSuccess: () => void
 }
 
-type Props = StateProps & DispatchProps
+type Props = StateProps & DispatchProps & OnboardingChildProps
 
 class InitializeNew extends React.Component<Props> {
   componentDidMount() {
     this.props.initialize()
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (this.props.processing !== prevProps.processing) {
+      // done initializing
+      this.props.initializeSuccess()
+      setTimeout(() => {
+        if (this.props.onComplete) {
+          this.props.onComplete()
+        }
+      }, 2500)
+    }
   }
 
   static successComponent() {
@@ -103,7 +113,7 @@ class InitializeNew extends React.Component<Props> {
     let element: JSX.Element
     if (this.props.error) {
       element = this.errorComponent()
-    } else if (this.props.initialized) {
+    } else if (!this.props.processing) {
       element = InitializeNew.successComponent()
     } else {
       element = <Loading text={this.props.statusText} />
@@ -122,8 +132,7 @@ function mapStateToProps(state: RootState): StateProps {
     state.initialization
   )}...`
   return {
-    initialized: initializationSelectors.initialized(state.initialization),
-    initializationPath: state.initialization.onboarding.initializationPath,
+    processing: !initializationSelectors.initialized(state.initialization),
     statusText,
     error: state.initialization.instance.error
   }
@@ -131,17 +140,13 @@ function mapStateToProps(state: RootState): StateProps {
 
 function mapDispatchToProps(dispatch: Dispatch<RootAction>): DispatchProps {
   return {
-    initialize: () => dispatch(initializationActions.initializeNewAccount())
+    initialize: () => dispatch(initializationActions.initializeNewAccount()),
+    initializeSuccess: () =>
+      dispatch(initializationActions.chooseInitializationPath('newAccount'))
   }
-}
-
-function isInitializeNewAccountComplete(props: Props): boolean {
-  // This screen is completed if the node is initialized or the user has
-  // chosen to pair an existing account instead of initialize a new account.
-  return props.initialized || props.initializationPath === 'existingAccount'
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(wrapOnboarding(InitializeNew, isInitializeNewAccountComplete))
+)(InitializeNew)

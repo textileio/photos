@@ -6,7 +6,7 @@ Object {
     "state": "uninitialized",
   },
   "onboarding": Object {
-    "chooseCafeScreenCompleted": false,
+    "completed": false,
   },
 }
 `;

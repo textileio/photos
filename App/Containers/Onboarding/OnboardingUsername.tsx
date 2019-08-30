@@ -10,12 +10,12 @@ import {
   TextStyle,
   View
 } from 'react-native'
-import { wrapOnboarding } from './WrapOnboarding'
 
 import Input from '../../SB/components/Input'
 import Button from '../../Components/LargeButton'
 import { RootAction, RootState } from '../../Redux/Types'
 import { accountActions } from '../../features/account'
+import { OnboardingChildProps } from './onboarding-container'
 import { color, textStyle, spacing, fontFamily } from '../../styles'
 
 const CONTAINER: ViewStyle = {
@@ -68,7 +68,7 @@ interface DispatchProps {
   submitUsername: (username: string) => void
 }
 
-type Props = OwnProps & StateProps & DispatchProps
+type Props = OwnProps & StateProps & DispatchProps & OnboardingChildProps
 
 interface State {
   valid: boolean
@@ -107,6 +107,16 @@ class OnboardingUsername extends React.Component<Props, State> {
   componentDidMount = () => {
     if (this.props.suggestion) {
       this.updateText(this.props.suggestion)
+    }
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (this.props.username !== prevProps.username) {
+      setTimeout(() => {
+        if (this.props.onComplete) {
+          this.props.onComplete()
+        }
+      }, 2500)
     }
   }
 
@@ -173,16 +183,7 @@ const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
     dispatch(accountActions.setUsernameRequest(username))
 })
 
-function isChooseUsernameComplete(props: Props): boolean {
-  // This screen is complete once the user has chosen a username
-  if (props.username) {
-    return props.username !== ''
-  } else {
-    return false
-  }
-}
-
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(wrapOnboarding(OnboardingUsername, isChooseUsernameComplete))
+)(OnboardingUsername)

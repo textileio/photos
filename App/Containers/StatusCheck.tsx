@@ -4,6 +4,7 @@ import { NavigationScreenProps } from 'react-navigation'
 
 import Loading from '../Components/Loading'
 import FatalErrorView from '../Components/FatalErrorView'
+import Initialize from './Onboarding/initialize'
 
 import { RootState } from '../Redux/Types'
 import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
@@ -11,8 +12,9 @@ import { initializationSelectors } from '../features/initialization'
 import { color } from '../styles'
 
 interface StateProps {
-  nodeStarted: boolean
   initialized: boolean
+  onboarded: boolean
+  nodeStarted: boolean
   nodeError?: string
 }
 
@@ -28,15 +30,22 @@ class StatusCheck extends React.Component<Props> {
   // Navigate to onboarding once the node has started or if the node
   // hasn't been initialized yet.
   static getDerivedStateFromProps(props: Props) {
-    if ((!props.nodeError && props.nodeStarted) || !props.initialized) {
-      props.navigation.navigate('Onboarding')
+    if (
+      !props.nodeError &&
+      props.initialized &&
+      props.nodeStarted &&
+      props.onboarded
+    ) {
+      props.navigation.navigate('PrimaryNav')
     }
     // tslint:disable-next-line no-null-keyword
     return null
   }
 
   render() {
-    if (this.props.nodeError) {
+    if (!this.props.initialized) {
+      return <Initialize navigation={this.props.navigation} />
+    } else if (this.props.nodeError) {
       return <FatalErrorView message={this.props.nodeError} />
     } else {
       return (
@@ -53,6 +62,7 @@ function mapStateToProps(state: RootState): StateProps {
   return {
     nodeStarted: TextileEventsSelectors.started(state),
     initialized: initializationSelectors.initialized(state.initialization),
+    onboarded: state.initialization.onboarding.completed,
     nodeError: state.textile.nodeState.error
   }
 }
