@@ -42,8 +42,11 @@ export function* routeThreadInvite(url: string, hash: string) {
   if (!reduxStarted) {
     yield take(getType(StartupActions.startup))
   }
-  // TODO: Tie this code to the new onboarding flow
-  /* if (yield select(initializationSelectors.onboarded)) {
+  if (
+    yield select((state: RootState) =>
+      initializationSelectors.onboarded(state.initialization)
+    )
+  ) {
     NavigationService.navigate('ThreadInvite', { ...DeepLink.getParams(hash) })
   } else {
     // simply store the pending invite information to act on after onboarding success
@@ -54,7 +57,7 @@ export function* routeThreadInvite(url: string, hash: string) {
         ? code
         : undefined
     yield put(AuthActions.onboardWithInviteRequest(url, hash, referral))
-  }*/
+  }
 }
 
 export function* routeCafeInvite(url: string, hash: string) {
@@ -62,37 +65,43 @@ export function* routeCafeInvite(url: string, hash: string) {
   if (!reduxStarted) {
     yield take(getType(StartupActions.startup))
   }
-  // if (yield select(PreferencesSelectors.onboarded)) {
-  const params = DeepLink.getParams(hash)
-  if (params.token && params.url && params.peerId) {
-    const cafes: Cafe[] = yield select((state: RootState) =>
-      cafesSelectors.registeredCafes(state.cafes)
+  if (
+    yield select((state: RootState) =>
+      initializationSelectors.onboarded(state.initialization)
     )
-    if (
-      cafes.find(cafe => cafe.peer === params.peerId || cafe.url === params.url)
-    ) {
-      // no registration needed, silent ignore
-      return
-    }
-    try {
-      yield call(NavigationService.navigate, 'Cafes')
-      yield call(
-        showPrompt,
-        'Storage Bot Invite',
-        'If you continue, you will send encrypted copies of your groups to this service. Be sure the bot is run by someone you trust. If you already have a lot of photos, consider joining when connected to WiFi.'
+  ) {
+    const params = DeepLink.getParams(hash)
+    if (params.token && params.url && params.peerId) {
+      const cafes: Cafe[] = yield select((state: RootState) =>
+        cafesSelectors.registeredCafes(state.cafes)
       )
-      yield put(
-        cafesActions.registerCafe.request({
-          url: params.url as string,
-          peerId: params.peerId as string,
-          token: params.token as string
-        })
-      )
-    } catch (err) {
-      // silent pass
+      if (
+        cafes.find(
+          cafe => cafe.peer === params.peerId || cafe.url === params.url
+        )
+      ) {
+        // no registration needed, silent ignore
+        return
+      }
+      try {
+        yield call(NavigationService.navigate, 'Cafes')
+        yield call(
+          showPrompt,
+          'Storage Bot Invite',
+          'If you continue, you will send encrypted copies of your groups to this service. Be sure the bot is run by someone you trust. If you already have a lot of photos, consider joining when connected to WiFi.'
+        )
+        yield put(
+          cafesActions.registerCafe.request({
+            url: params.url as string,
+            peerId: params.peerId as string,
+            token: params.token as string
+          })
+        )
+      } catch (err) {
+        // silent pass
+      }
     }
   }
-  // }
 }
 
 export function* routeDeepLink(
