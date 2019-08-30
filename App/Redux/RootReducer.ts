@@ -389,7 +389,7 @@ const migrations: MigrationManifest = {
 const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,
-  version: 23,
+  version: 24,
   whitelist: [
     'account',
     'preferences',
