@@ -105,13 +105,16 @@ class OnboardingUsername extends React.Component<Props, State> {
   }
 
   componentDidMount = () => {
+    if (this.props.username && this.props.onComplete) {
+      this.props.onComplete()
+    }
     if (this.props.suggestion) {
       this.updateText(this.props.suggestion)
     }
   }
 
-  componentDidUpdate(prevProps: Props) {
-    if (this.props.username !== prevProps.username) {
+  componentDidUpdate() {
+    if (this.props.username) {
       setTimeout(() => {
         if (this.props.onComplete) {
           this.props.onComplete()
@@ -170,7 +173,11 @@ class OnboardingUsername extends React.Component<Props, State> {
 
 const mapStateToProps = (state: RootState): StateProps => {
   const username =
-    state.account.profile.value && state.account.profile.value.name
+    state.account.profile.value &&
+    state.account.profile.value.name &&
+    state.account.profile.value.name.length > 0
+      ? state.account.profile.value.name
+      : undefined
   return {
     processing: state.account.profile.processing,
     username,
