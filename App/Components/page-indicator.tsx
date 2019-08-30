@@ -1,6 +1,6 @@
 import React from 'react'
-import { SafeAreaView, View, ViewStyle } from 'react-native'
-import { color, spacing } from '../../styles'
+import { View, ViewStyle } from 'react-native'
+import { color } from '../styles'
 
 const PROGRESS_BAR: ViewStyle = {
   width: '100%',
@@ -38,7 +38,7 @@ interface ProgressBarProps {
 }
 
 // List of dots displayed at the bottom of the screen as a progress bar
-export default function ProgressBar(props: ProgressBarProps) {
+export default function PageIndicator(props: ProgressBarProps) {
   return (
     <View style={PROGRESS_BAR}>
       {[...Array(props.length).keys()].map(i => {

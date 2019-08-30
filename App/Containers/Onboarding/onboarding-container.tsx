@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
 import { SafeAreaView, ViewStyle } from 'react-native'
 
-import ProgressBar from './OnboardingProgressBar'
+import PageIndicator from '../../Components/page-indicator'
 import { color } from '../../styles'
 import { RootAction } from '../../Redux/Types'
 import { initializationActions } from '../../features/initialization'
@@ -56,7 +56,7 @@ class OnboardingContainer extends Component<Props, State> {
     return (
       <SafeAreaView style={CONTAINER}>
         {augmentedChildren[this.state.currentPage]}
-        <ProgressBar length={count} active={this.state.currentPage} />
+        <PageIndicator length={count} active={this.state.currentPage} />
       </SafeAreaView>
     )
   }

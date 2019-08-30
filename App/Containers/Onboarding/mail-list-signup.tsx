@@ -80,10 +80,7 @@ interface State {
   buttonText: string
 }
 
-export default class MailListSignupScreen extends React.Component<
-  Props,
-  State
-> {
+export default class MailListSignup extends React.Component<Props, State> {
   toast?: Toast
 
   constructor(props: Props) {

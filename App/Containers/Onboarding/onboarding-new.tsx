@@ -2,15 +2,15 @@ import React from 'react'
 
 import OnboardingContainer from './onboarding-container'
 import InitializeNew from './initialize-new'
-import OnboardingUsername from './OnboardingUsername'
+import Username from './username'
 import SetAvatar from '../SetAvatar'
-import MailSignup from './MailListSignupScreen'
+import MailSignup from './mail-list-signup'
 
 export default function onboardingNew() {
   return (
     <OnboardingContainer>
       <InitializeNew />
-      <OnboardingUsername />
+      <Username />
       <SetAvatar />
       <MailSignup />
     </OnboardingContainer>
