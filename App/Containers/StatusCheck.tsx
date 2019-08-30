@@ -48,6 +48,11 @@ class StatusCheck extends React.Component<Props> {
     return null
   }
 
+  constructor(props: Props) {
+    super(props)
+    this.state = {}
+  }
+
   componentDidMount() {
     if (!this.props.onboarded && this.props.initializationPath) {
       if (this.props.initializationPath === 'newAccount') {

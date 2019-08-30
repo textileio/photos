@@ -61,7 +61,9 @@ class OnboardingContainer extends Component<Props, State> {
     )
   }
 
-  nextPage = () => this.setState({ currentPage: this.state.currentPage + 1 })
+  nextPage = () => {
+    this.setState({ currentPage: this.state.currentPage + 1 })
+  }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => {

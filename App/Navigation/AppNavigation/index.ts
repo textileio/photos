@@ -2,8 +2,8 @@ import { createAppContainer, createStackNavigator } from 'react-navigation'
 
 import SwitchNav from './Switch'
 import Settings from './Settings'
-import OnboardingNew from '../../Containers/Onboarding/onboarding-new'
-import OnboardingExisting from '../../Containers/Onboarding/onboarding-existing'
+import OnboardingNew from '../../screens/onboarding/onboarding-new'
+import OnboardingExisting from '../../screens/onboarding/onboarding-existing'
 
 const nav = createStackNavigator(
   {

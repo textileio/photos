@@ -19,7 +19,7 @@ import {
 } from 'react-navigation'
 import Icon from '@textile/react-native-icon'
 
-import { OnboardingChildProps } from './Onboarding/onboarding-container'
+import { OnboardingChildProps } from '../screens/onboarding/onboarding-container'
 import Button from '../Components/LargeButton'
 import { RootAction, RootState } from '../Redux/Types'
 import { accountActions } from '../features/account'

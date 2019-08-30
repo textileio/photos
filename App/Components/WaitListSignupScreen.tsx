@@ -113,7 +113,7 @@ export default class WaitListSignupScreen extends React.Component<
         <View>
           <Image
             style={IMAGE}
-            source={require('../Containers/Onboarding/statics/share.png')}
+            source={require('../screens/onboarding/statics/share.png')}
           />
           <Text style={TITLE}>Thanks for your interest!</Text>
           <Text style={SUBTITLE}>
