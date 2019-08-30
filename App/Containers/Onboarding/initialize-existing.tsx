@@ -11,15 +11,15 @@ import {
 } from 'react-native'
 import Icon from '@textile/react-native-icon'
 
+import { OnboardingChildProps } from './onboarding-container'
 import Button from '../../Components/SmallButton'
 import Loading from '../../Components/Loading'
 import { RootAction, RootState } from '../../Redux/Types'
 import {
   initializationActions,
-  initializationSelectors,
-  initializationModels
+  initializationSelectors
 } from '../../features/initialization'
-import { color, textStyle, spacing, size, fontFamily } from '../../styles'
+import { color, textStyle, spacing, size } from '../../styles'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
@@ -84,7 +84,6 @@ const BUTTON_TEXT: TextStyle = {
 
 interface StateProps {
   statusText: string
-  initializationPath?: initializationModels.InitializationPath
   processing: boolean
   initialized: boolean
   error?: string
@@ -99,7 +98,7 @@ interface State {
   valid: boolean
 }
 
-type Props = StateProps & DispatchProps
+type Props = StateProps & DispatchProps & OnboardingChildProps
 
 class InitializeExisting extends React.Component<Props, State> {
   static successComponent() {
@@ -120,6 +119,17 @@ class InitializeExisting extends React.Component<Props, State> {
     super(props)
     this.state = {
       valid: false
+    }
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (this.props.initialized !== prevProps.initialized) {
+      // done initializing
+      setTimeout(() => {
+        if (this.props.onComplete) {
+          this.props.onComplete()
+        }
+      }, 2000)
     }
   }
 
@@ -202,7 +212,6 @@ function mapStateToProps(state: RootState): StateProps {
   )}...`
   return {
     processing: initializationSelectors.processing(state.initialization),
-    initializationPath: state.initialization.onboarding.initializationPath,
     initialized: initializationSelectors.initialized(state.initialization),
     statusText,
     error: state.initialization.instance.error
@@ -214,12 +223,6 @@ function mapDispatchToProps(dispatch: Dispatch<RootAction>): DispatchProps {
     initialize: (seed: string) =>
       dispatch(initializationActions.initializeExistingAccount(seed))
   }
-}
-
-function isInitializeExistingAccountComplete(props: Props): boolean {
-  // This screen is completed if the node is initialized or the user has
-  // chosen to pair an existing ccount instead of initialize a new account.
-  return props.initialized || props.initializationPath === 'newAccount'
 }
 
 export default connect(

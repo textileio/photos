@@ -61,7 +61,7 @@ function* initializeTextileWithNewAccount(
       yield put(accountActions.setRecoveryPhrase(phrase))
     }
     yield put(actions.updateInitializationStatus('initialized'))
-    // yield call(NavService.navigate, 'StatusCheck')
+    yield put(actions.chooseInitializationPath('newAccount'))
     yield call(Textile.launch, AppConfig.textileRepoPath, verbose)
   } catch (error) {
     yield put(actions.failedToInitializeNode(error))
@@ -91,6 +91,7 @@ function* initializeTextileWithAccountSeed(
       )
     }
     yield put(actions.updateInitializationStatus('initialized'))
+    yield put(actions.chooseInitializationPath('existingAccount'))
     yield call(Textile.launch, AppConfig.textileRepoPath, verbose)
   } catch (error) {
     yield put(actions.failedToInitializeNode(error))

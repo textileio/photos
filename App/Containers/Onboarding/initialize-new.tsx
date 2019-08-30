@@ -53,13 +53,12 @@ const SUCCESS: TextStyle = {
 
 interface StateProps {
   statusText: string
-  processing: boolean
+  initialized: boolean
   error?: string
 }
 
 interface DispatchProps {
   initialize: () => void
-  initializeSuccess: () => void
 }
 
 type Props = StateProps & DispatchProps & OnboardingChildProps
@@ -70,14 +69,12 @@ class InitializeNew extends React.Component<Props> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (this.props.processing !== prevProps.processing) {
-      // done initializing
-      this.props.initializeSuccess()
+    if (this.props.initialized !== prevProps.initialized) {
       setTimeout(() => {
         if (this.props.onComplete) {
           this.props.onComplete()
         }
-      }, 2500)
+      }, 2000)
     }
   }
 
@@ -113,7 +110,7 @@ class InitializeNew extends React.Component<Props> {
     let element: JSX.Element
     if (this.props.error) {
       element = this.errorComponent()
-    } else if (!this.props.processing) {
+    } else if (this.props.initialized) {
       element = InitializeNew.successComponent()
     } else {
       element = <Loading text={this.props.statusText} />
@@ -132,7 +129,7 @@ function mapStateToProps(state: RootState): StateProps {
     state.initialization
   )}...`
   return {
-    processing: !initializationSelectors.initialized(state.initialization),
+    initialized: initializationSelectors.initialized(state.initialization),
     statusText,
     error: state.initialization.instance.error
   }
@@ -140,9 +137,7 @@ function mapStateToProps(state: RootState): StateProps {
 
 function mapDispatchToProps(dispatch: Dispatch<RootAction>): DispatchProps {
   return {
-    initialize: () => dispatch(initializationActions.initializeNewAccount()),
-    initializeSuccess: () =>
-      dispatch(initializationActions.chooseInitializationPath('newAccount'))
+    initialize: () => dispatch(initializationActions.initializeNewAccount())
   }
 }
 
