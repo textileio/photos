@@ -8,6 +8,7 @@ import Initialize from './Onboarding/initialize'
 
 import { RootState } from '../Redux/Types'
 import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
+import { AuthSelectors } from '../Redux/AuthRedux'
 import {
   initializationSelectors,
   initializationModels
@@ -15,6 +16,7 @@ import {
 import { color } from '../styles'
 
 interface StateProps {
+  referralCode?: string
   initialized: boolean
   onboarded: boolean
   initializationPath?: initializationModels.InitializationPath
@@ -58,7 +60,12 @@ class StatusCheck extends React.Component<Props> {
 
   render() {
     if (!this.props.initialized) {
-      return <Initialize navigation={this.props.navigation} />
+      return (
+        <Initialize
+          navigation={this.props.navigation}
+          referralCode={this.props.referralCode}
+        />
+      )
     } else if (this.props.nodeError) {
       return <FatalErrorView message={this.props.nodeError} />
     } else {
@@ -73,7 +80,9 @@ class StatusCheck extends React.Component<Props> {
 }
 
 function mapStateToProps(state: RootState): StateProps {
+  const invitation = AuthSelectors.invite(state)
   return {
+    referralCode: invitation ? invitation.referral : undefined,
     nodeStarted: TextileEventsSelectors.started(state),
     initialized: initializationSelectors.initialized(state.initialization),
     onboarded: state.initialization.onboarding.completed,

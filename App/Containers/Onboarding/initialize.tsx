@@ -132,6 +132,13 @@ class Initialize extends Component<Props, State> {
     }
   }
 
+  componentDidUpdate(prevProps: Props) {
+    const { referralCode } = this.props
+    if (referralCode && referralCode !== prevProps.referralCode) {
+      this.updateText(referralCode)
+    }
+  }
+
   render() {
     return (
       <SafeAreaView style={SAFE_AREA}>

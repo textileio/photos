@@ -7,7 +7,7 @@ import {
   TextStyle,
   View,
   TextInput,
-  TouchableOpacity
+  KeyboardAvoidingView
 } from 'react-native'
 import Icon from '@textile/react-native-icon'
 
@@ -180,7 +180,7 @@ class InitializeExisting extends React.Component<Props, State> {
       )
     }
     return (
-      <View style={CONTAINER}>
+      <KeyboardAvoidingView style={CONTAINER} behavior={'padding'}>
         <Text style={TITLE}>Sync Existing Account</Text>
         <View style={INNER_CONTAINER}>
           {element}
@@ -189,6 +189,11 @@ class InitializeExisting extends React.Component<Props, State> {
               <TextInput
                 style={TEXT_INPUT}
                 placeholder="Account seed..."
+                placeholderTextColor={color.grey_4}
+                keyboardType="default"
+                returnKeyType="done"
+                autoCapitalize="none"
+                autoCorrect={false}
                 onChangeText={this.updateText}
               />
               {/* <TouchableOpacity>
@@ -208,7 +213,7 @@ class InitializeExisting extends React.Component<Props, State> {
             />
           </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     )
   }
 }
