@@ -367,14 +367,21 @@ const migrations: MigrationManifest = {
     return rest
   },
   24: persistedState => {
-    // Move onboarded from preferences to initialization
     const state = persistedState as any
     const { onboarded, ...restPreferences } = state.preferences
     const { initialized, ...restAccount } = state.account
     return {
       ...state,
       account: restAccount,
-      preferences: restPreferences
+      preferences: restPreferences,
+      initialization: {
+        onboarding: {
+          completed: onboarded
+        },
+        instance: {
+          state: 'initialized'
+        }
+      }
     }
   }
 }
@@ -382,7 +389,7 @@ const migrations: MigrationManifest = {
 const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,
-  version: 23,
+  version: 24,
   whitelist: [
     'account',
     'preferences',
