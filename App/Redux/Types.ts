@@ -17,6 +17,7 @@ import { StartupAction } from './StartupRedux'
 import { TextileEventsAction } from './TextileEventsRedux'
 import { GroupAction } from '../features/group'
 import { CafesAction } from '../features/cafes'
+import { InitializationAction } from '../features/initialization'
 
 export type RootState = StateType<typeof RootReducer> & PersistPartial
 export type RootAction =
@@ -35,3 +36,4 @@ export type RootAction =
   | TextileEventsAction
   | GroupAction
   | CafesAction
+  | InitializationAction

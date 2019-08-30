@@ -16,7 +16,7 @@ function button(props: Props) {
   return (
     <Button
       text={text.toUpperCase()}
-      textStyle={{ ...ts.action_xs, ...textStyle }}
+      textStyle={{ ...ts.action_s, ...textStyle }}
       style={{
         ...style,
         paddingHorizontal: spacing._012,

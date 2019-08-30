@@ -5,6 +5,8 @@ import Textile, { IContact } from '@textile/react-native-sdk'
 import copyPhoto from '../../util/copy-photo'
 import * as actions from './actions'
 import { contactsActions } from '../../features/contacts'
+import PhotoViewingActions from '../../Redux/PhotoViewingRedux'
+import { initializationActions } from '../../features/initialization'
 import GroupsActions from '../../Redux/GroupsRedux'
 import PreferencesActions from '../../Redux/PreferencesRedux'
 import TextileEventsActions, {
@@ -17,8 +19,8 @@ import { SharedImage } from '../group/add-photo/models'
 function* onNodeStarted() {
   while (
     yield take([
-      getType(TextileEventsActions.nodeStarted),
-      getType(PreferencesActions.onboardingSuccess)
+      getType(TextileEventsActions.nodeStarted)
+      // Take onboarding success
     ])
   ) {
     yield call(logNewEvent, 'nodeStarted', 'refresh account data')

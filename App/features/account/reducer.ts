@@ -6,7 +6,6 @@ import { SharedImage } from '../group/add-photo/models'
 import * as actions from './actions'
 
 export interface AccountState {
-  readonly initialized: boolean // splitting 'Preferences.onboarded' to within sdk 'initialized' and app specific 'onboarded'
   readonly chosenProfilePhoto: {
     readonly image?: SharedImage
     readonly data?: string
@@ -38,9 +37,6 @@ export interface AccountState {
 export type AccountAction = ActionType<typeof actions>
 
 export default combineReducers<AccountState, AccountAction>({
-  initialized: (state = false, action) => {
-    return state
-  },
   chosenProfilePhoto: (state = {}, action) => {
     switch (action.type) {
       case getType(actions.chooseProfilePhoto.success):

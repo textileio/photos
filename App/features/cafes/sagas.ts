@@ -6,7 +6,6 @@ import Textile, {
 } from '@textile/react-native-sdk'
 
 import { RootState } from '../../Redux/Types'
-import PreferencesActions from '../../Redux/PreferencesRedux'
 import * as actions from './actions'
 import { makeCafeForPeerId, knownCafesMap } from './selectors'
 import { Cafe, cafes } from './models'
@@ -15,12 +14,7 @@ import { logNewEvent } from '../../Sagas/DeviceLogs'
 import { Alert } from 'react-native'
 
 function* onNodeStarted() {
-  while (
-    yield take([
-      getType(TextileEventsActions.nodeStarted),
-      getType(PreferencesActions.onboardingSuccess)
-    ])
-  ) {
+  while (yield take([getType(TextileEventsActions.nodeStarted)])) {
     try {
       yield put(actions.getCafeSessions.request())
     } catch (error) {

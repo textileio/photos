@@ -19,6 +19,7 @@ import {
 } from 'react-navigation'
 import Icon from '@textile/react-native-icon'
 
+import { OnboardingChildProps } from '../screens/onboarding/onboarding-container'
 import Button from '../Components/LargeButton'
 import { RootAction, RootState } from '../Redux/Types'
 import { accountActions } from '../features/account'
@@ -92,7 +93,6 @@ interface NavigationParams {
 }
 
 interface OwnProps {
-  onSuccess?: () => void
   navigation?: NavigationScreenProp<
     NavigationRoute<NavigationParams>,
     NavigationParams
@@ -113,7 +113,7 @@ interface DispatchProps {
   cancel: () => void
 }
 
-type Props = OwnProps & StateProps & DispatchProps
+type Props = OwnProps & StateProps & DispatchProps & OnboardingChildProps
 
 class SetAvatar extends React.Component<Props> {
   static navigationOptions = ({ navigation }: NavigationScreenProps) => {
@@ -160,8 +160,8 @@ class SetAvatar extends React.Component<Props> {
     if (this.props.image) {
       this.props.submitAvatar(this.props.image)
     }
-    if (this.props.onSuccess) {
-      this.props.onSuccess()
+    if (this.props.onComplete) {
+      this.props.onComplete()
     }
     if (this.props.navigation) {
       const onSuccess = this.props.navigation.getParam('onSuccess')

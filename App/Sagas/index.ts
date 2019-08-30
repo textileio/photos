@@ -27,6 +27,10 @@ import { contactsSaga } from '../features/contacts'
 import { updatesSaga } from '../features/updates'
 import { groupSaga, groupActions } from '../features/group'
 import { cafesSaga } from '../features/cafes'
+import {
+  initializationSaga,
+  initializationActions
+} from '../features/initialization'
 
 import { startup } from './StartupSagas'
 
@@ -103,6 +107,8 @@ export default function*() {
 
     call(startSagas),
 
+    call(initializationSaga), // Needs to go after startSagas so that textile event listeners are set up before textile is launched
+
     call(monitorNewThreadActions),
 
     // some sagas only receive an action
@@ -175,6 +181,9 @@ export default function*() {
     takeEvery(getType(UIActions.cancelSharingPhoto), handleCancel),
     // DeepLinks
     takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),
-    takeEvery(getType(PreferencesActions.onboardingSuccess), inviteAfterOnboard)
+    takeEvery(
+      getType(initializationActions.onboardingSuccess),
+      inviteAfterOnboard
+    )
   ])
 }

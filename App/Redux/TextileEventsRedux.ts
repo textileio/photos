@@ -8,9 +8,6 @@ export enum NodeState {
 }
 
 const actions = {
-  failedToInitializeNode: createAction('FAILED_TO_INITIALIZE_NODE', resolve => {
-    return (error: any) => resolve({ error })
-  }),
   nodeStarted: createAction('NODE_STARTED'),
   nodeStopped: createAction('NODE_STOPPED'),
   nodeOnline: createAction('NODE_ONLINE'),
@@ -61,12 +58,6 @@ export function reducer(
   action: TextileEventsAction
 ): TextileEventsState {
   switch (action.type) {
-    case getType(actions.failedToInitializeNode): {
-      const { error } = action.payload
-      const message =
-        (error.message as string) || (error as string) || 'unknown error'
-      return { ...state, nodeState: { ...state.nodeState, error: message } }
-    }
     case getType(actions.nodeStarted):
       return { ...state, nodeState: { state: NodeState.started } }
     case getType(actions.nodeStopped):

@@ -1,7 +1,6 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import {
   View,
-  Text,
   FlatList,
   TouchableOpacity,
   ListRenderItemInfo,

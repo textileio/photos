@@ -16,15 +16,14 @@ import { ActionType, getType } from 'typesafe-actions'
 import Config from 'react-native-config'
 import DeepLink from '../Services/DeepLink'
 import NavigationService from '../Services/NavigationService'
-import { PreferencesSelectors } from '../Redux/PreferencesRedux'
+import { initializationSelectors } from '../features/initialization'
 import AuthActions, { AuthSelectors } from '../Redux/AuthRedux'
 import StartupActions, { startupSelectors } from '../Redux/StartupRedux'
 import { logNewEvent } from './DeviceLogs'
-import { cafesActions, cafesSelectors } from '../features/cafes';
-import { NavigationActions } from 'react-navigation';
-import { Cafe } from '@textile/js-types';
-import { RootState } from '../Redux/Types';
-import { showPrompt } from '../features/cafes/sagas';
+import { cafesActions, cafesSelectors } from '../features/cafes'
+import { Cafe } from '@textile/js-types'
+import { RootState } from '../Redux/Types'
+import { showPrompt } from '../features/cafes/sagas'
 
 export function* inviteAfterOnboard() {
   const invite = yield select(AuthSelectors.invite)
@@ -42,7 +41,11 @@ export function* routeThreadInvite(url: string, hash: string) {
   if (!reduxStarted) {
     yield take(getType(StartupActions.startup))
   }
-  if (yield select(PreferencesSelectors.onboarded)) {
+  if (
+    yield select((state: RootState) =>
+      initializationSelectors.onboarded(state.initialization)
+    )
+  ) {
     NavigationService.navigate('ThreadInvite', { ...DeepLink.getParams(hash) })
   } else {
     // simply store the pending invite information to act on after onboarding success
@@ -56,25 +59,36 @@ export function* routeThreadInvite(url: string, hash: string) {
   }
 }
 
-
 export function* routeCafeInvite(url: string, hash: string) {
   const reduxStarted: boolean = yield select(startupSelectors.started)
   if (!reduxStarted) {
     yield take(getType(StartupActions.startup))
   }
-  if (yield select(PreferencesSelectors.onboarded)) {
+  if (
+    yield select((state: RootState) =>
+      initializationSelectors.onboarded(state.initialization)
+    )
+  ) {
     const params = DeepLink.getParams(hash)
     if (params.token && params.url && params.peerId) {
       const cafes: Cafe[] = yield select((state: RootState) =>
         cafesSelectors.registeredCafes(state.cafes)
       )
-      if (cafes.find((cafe) => cafe.peer === params.peerId || cafe.url === params.url)) {
+      if (
+        cafes.find(
+          cafe => cafe.peer === params.peerId || cafe.url === params.url
+        )
+      ) {
         // no registration needed, silent ignore
         return
       }
       try {
         yield call(NavigationService.navigate, 'Cafes')
-        yield call(showPrompt, 'Storage Bot Invite', 'If you continue, you will send encrypted copies of your groups to this service. Be sure the bot is run by someone you trust. If you already have a lot of photos, consider joining when connected to WiFi.')
+        yield call(
+          showPrompt,
+          'Storage Bot Invite',
+          'If you continue, you will send encrypted copies of your groups to this service. Be sure the bot is run by someone you trust. If you already have a lot of photos, consider joining when connected to WiFi.'
+        )
         yield put(
           cafesActions.registerCafe.request({
             url: params.url as string,
@@ -82,9 +96,9 @@ export function* routeCafeInvite(url: string, hash: string) {
             token: params.token as string
           })
         )
-      } catch(err) {
-        //silent pass
-      } 
+      } catch (err) {
+        // silent pass
+      }
     }
   }
 }

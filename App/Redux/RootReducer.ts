@@ -12,7 +12,7 @@ import { reducer as authReducer } from './AuthRedux'
 import { contactsReducer } from '../features/contacts'
 import { updatesReducer } from '../features/updates'
 import { reducer as groupsReducer } from './GroupsRedux'
-import { reducer as prefrencesReducer } from './PreferencesRedux'
+import { reducer as preferencesReducer } from './PreferencesRedux'
 import { reducer as photoViewingReducer } from './PhotoViewingRedux'
 import { reducer as threadsReducer } from './ThreadsRedux'
 import { reducer as uiReducer } from './UIRedux'
@@ -21,6 +21,7 @@ import { reducer as deviceLogsReducer } from './DeviceLogsRedux'
 import { reducer as textileEventsReducer } from './TextileEventsRedux'
 import { groupReducer } from '../features/group'
 import { cafesReducer } from '../features/cafes'
+import { initializationReducer } from '../features/initialization'
 
 const migrations: MigrationManifest = {
   0: persistedState => {
@@ -364,6 +365,17 @@ const migrations: MigrationManifest = {
     const state = persistedState as any
     const { fileSync, ...rest } = state
     return rest
+  },
+  24: persistedState => {
+    // Move onboarded from preferences to initialization
+    const state = persistedState as any
+    const { onboarded, ...restPreferences } = state.preferences
+    const { initialized, ...restAccount } = state.account
+    return {
+      ...state,
+      account: restAccount,
+      preferences: restPreferences
+    }
   }
 }
 
@@ -371,7 +383,13 @@ const persistConfig: PersistConfig = {
   key: 'primary',
   storage: AsyncStorage,
   version: 23,
-  whitelist: ['account', 'preferences', 'deviceLogs', 'groups'],
+  whitelist: [
+    'account',
+    'preferences',
+    'deviceLogs',
+    'initialization',
+    'groups'
+  ],
   migrate: createMigrate(migrations, { debug: false }),
   debug: false
 }
@@ -381,7 +399,7 @@ const rootReducer = combineReducers({
   contacts: contactsReducer,
   updates: updatesReducer,
   groups: groupsReducer,
-  preferences: prefrencesReducer,
+  preferences: preferencesReducer,
   photoViewing: photoViewingReducer,
   threads: threadsReducer,
   ui: uiReducer,
@@ -390,7 +408,8 @@ const rootReducer = combineReducers({
   account: accountReducer,
   textile: textileEventsReducer,
   group: groupReducer,
-  cafes: cafesReducer
+  cafes: cafesReducer,
+  initialization: initializationReducer
 })
 
 export default persistReducer(persistConfig, rootReducer)

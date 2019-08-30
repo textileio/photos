@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
 import {
+  View,
   Text,
   TouchableOpacity,
   ViewStyle,
   TextStyle,
   ActivityIndicator
 } from 'react-native'
-
-import RoundedCornersView from './RoundedCornersView'
 
 const BUTTON_TEXT: TextStyle = {
   fontFamily: 'Biotif-Regular',
@@ -19,7 +18,7 @@ const BUTTON_TEXT: TextStyle = {
 }
 
 const DISABLED: ViewStyle = {
-  backgroundColor: '#D8D8D8'
+  opacity: 0.2
 }
 
 interface Props {
@@ -31,15 +30,15 @@ interface Props {
   textStyle?: TextStyle
 }
 
-const button = (props: Props) => {
+function button(props: Props) {
   const { onPress, disabled, text, style, textStyle, processing } = props
 
   return (
     <TouchableOpacity disabled={disabled} onPress={onPress}>
-      <RoundedCornersView style={[style, disabled && DISABLED]}>
+      <View style={[style, disabled && DISABLED]}>
         {processing && <ActivityIndicator />}
         {!processing && <Text style={[BUTTON_TEXT, textStyle]}>{text}</Text>}
-      </RoundedCornersView>
+      </View>
     </TouchableOpacity>
   )
 }

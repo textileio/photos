@@ -4,7 +4,8 @@ import {
   Text,
   ActivityIndicator,
   ActivityIndicatorProps,
-  TextStyle
+  TextStyle,
+  ViewStyle
 } from 'react-native'
 
 import { color, textStyle, spacing } from '../styles'
@@ -17,14 +18,11 @@ const TEXT: TextStyle = {
 }
 
 interface Props extends ActivityIndicatorProps {
-  backgroundColor?: string
+  containerxStyle?: ViewStyle
   text?: string
 }
 
-const loading = (props: Props) => {
-  const backgroundColor = props.backgroundColor
-    ? props.backgroundColor
-    : color.screen_primary
+export default function loading(props: Props) {
   const indicatorProps: ActivityIndicatorProps = { size: 'large', ...props }
   return (
     <View
@@ -32,7 +30,8 @@ const loading = (props: Props) => {
         flex: 1,
         alignContent: 'center',
         justifyContent: 'center',
-        backgroundColor
+        backgroundColor: color.screen_primary,
+        ...props.containerxStyle
       }}
     >
       <ActivityIndicator {...indicatorProps} />
@@ -40,5 +39,3 @@ const loading = (props: Props) => {
     </View>
   )
 }
-
-export default loading

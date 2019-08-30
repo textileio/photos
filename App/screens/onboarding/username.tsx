@@ -11,11 +11,12 @@ import {
   View
 } from 'react-native'
 
-import Input from '../SB/components/Input'
-import Button from '../Components/LargeButton'
-import { RootAction, RootState } from '../Redux/Types'
-import { accountActions } from '../features/account'
-import { color, textStyle, spacing, fontFamily } from '../styles'
+import Input from '../../SB/components/Input'
+import Button from '../../Components/LargeButton'
+import { RootAction, RootState } from '../../Redux/Types'
+import { accountActions } from '../../features/account'
+import { OnboardingChildProps } from './onboarding-container'
+import { color, textStyle, spacing, fontFamily } from '../../styles'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
@@ -55,11 +56,11 @@ const BUTTON: ViewStyle = {
 
 interface OwnProps {
   suggestion?: string
-  onSuccess?: () => void
 }
 
 interface StateProps {
   processing: boolean
+  username?: string
   buttonText: string
 }
 
@@ -67,7 +68,7 @@ interface DispatchProps {
   submitUsername: (username: string) => void
 }
 
-type Props = OwnProps & StateProps & DispatchProps
+type Props = OwnProps & StateProps & DispatchProps & OnboardingChildProps
 
 interface State {
   valid: boolean
@@ -100,14 +101,25 @@ class OnboardingUsername extends React.Component<Props, State> {
       })
     }, 1000)
 
-    if (this.props.onSuccess) {
-      setTimeout(this.props.onSuccess, 1000)
-    }
+    // Call on success
   }
 
   componentDidMount = () => {
+    if (this.props.username && this.props.onComplete) {
+      this.props.onComplete()
+    }
     if (this.props.suggestion) {
       this.updateText(this.props.suggestion)
+    }
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (this.props.username && this.props.username !== prevProps.username) {
+      setTimeout(() => {
+        if (this.props.onComplete) {
+          this.props.onComplete()
+        }
+      }, 2500)
     }
   }
 
@@ -129,10 +141,7 @@ class OnboardingUsername extends React.Component<Props, State> {
     return (
       <KeyboardAvoidingView style={CONTAINER} behavior={'padding'}>
         <View>
-          <Image
-            style={IMAGE}
-            source={require('../Containers/OnboardingScreen/statics/share.png')}
-          />
+          <Image style={IMAGE} source={require('./statics/share.png')} />
           <Text style={TITLE}>Choose a display name</Text>
           <Text style={SUBTITLE}>
             It will be shown when you share, comment, or like a photo.
@@ -162,13 +171,19 @@ class OnboardingUsername extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: RootState): StateProps => ({
-  processing: state.account.profile.processing,
-  buttonText:
-    state.account.profile.value && state.account.profile.value.name
-      ? 'Success!'
-      : 'Save'
-})
+const mapStateToProps = (state: RootState): StateProps => {
+  const username =
+    state.account.profile.value &&
+    state.account.profile.value.name &&
+    state.account.profile.value.name.length > 0
+      ? state.account.profile.value.name
+      : undefined
+  return {
+    processing: state.account.profile.processing,
+    username,
+    buttonText: username ? 'Success!' : 'Save'
+  }
+}
 
 const mapDispatchToProps = (dispatch: Dispatch<RootAction>): DispatchProps => ({
   submitUsername: (username: string) =>

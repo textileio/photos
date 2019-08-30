@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`initialization initial state should match snapshot 1`] = `
+Object {
+  "instance": Object {
+    "state": "uninitialized",
+  },
+  "onboarding": Object {
+    "completed": false,
+  },
+}
+`;

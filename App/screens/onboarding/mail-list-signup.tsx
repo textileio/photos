@@ -10,13 +10,15 @@ import {
   TouchableOpacity,
   Insets
 } from 'react-native'
+import { connect } from 'react-redux'
 import Toast from 'react-native-easy-toast'
 import Config from 'react-native-config'
 
-import Input from '../SB/components/Input'
-import Button from '../Components/LargeButton'
-import { color, textStyle, fontFamily, spacing } from '../styles'
-import { emailValid } from '../Services/email'
+import { OnboardingChildProps } from './onboarding-container'
+import Input from '../../SB/components/Input'
+import Button from '../../Components/LargeButton'
+import { color, textStyle, fontFamily, spacing } from '../../styles'
+import { emailValid } from '../../Services/email'
 
 const CONTAINER: ViewStyle = {
   flex: 1,
@@ -68,9 +70,7 @@ const HIT_SLOP: Insets = {
   right: spacing._016
 }
 
-interface Props {
-  onSuccess?: () => void
-}
+type Props = OnboardingChildProps
 
 interface State {
   valid: boolean
@@ -80,10 +80,7 @@ interface State {
   buttonText: string
 }
 
-export default class MailListSignupScreen extends React.Component<
-  Props,
-  State
-> {
+export default class MailListSignup extends React.Component<Props, State> {
   toast?: Toast
 
   constructor(props: Props) {
@@ -110,10 +107,7 @@ export default class MailListSignupScreen extends React.Component<
     return (
       <KeyboardAvoidingView style={CONTAINER} behavior={'padding'}>
         <View>
-          <Image
-            style={IMAGE}
-            source={require('../Containers/OnboardingScreen/statics/share.png')}
-          />
+          <Image style={IMAGE} source={require('./statics/share.png')} />
           <Text style={TITLE}>Keep in touch!</Text>
           <Text style={SUBTITLE}>
             If you&apos;d like to receive periodic updates and information from
@@ -138,7 +132,7 @@ export default class MailListSignupScreen extends React.Component<
             onPress={this.submit}
             style={BUTTON}
           />
-          <TouchableOpacity onPress={this.props.onSuccess} hitSlop={HIT_SLOP}>
+          <TouchableOpacity onPress={this.props.onComplete} hitSlop={HIT_SLOP}>
             <Text style={LINK}>No thanks</Text>
           </TouchableOpacity>
           <Toast
@@ -172,8 +166,8 @@ export default class MailListSignupScreen extends React.Component<
         if (validStatus) {
           this.setState({ buttonText: 'Success!', valid: false })
           // Set a timer and navigate
-          if (this.props.onSuccess) {
-            setTimeout(this.props.onSuccess, 1000)
+          if (this.props.onComplete) {
+            setTimeout(this.props.onComplete, 1000)
           }
         } else {
           const error =

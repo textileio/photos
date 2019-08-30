@@ -1,6 +1,6 @@
 /* eslint camelcase: 0 */
 import { eventChannel } from 'redux-saga'
-import { all, call, put, take, select } from 'redux-saga/effects'
+import { all, takeEvery, call, put, take, select } from 'redux-saga/effects'
 import { ActionType, getType } from 'typesafe-actions'
 import RNPushNotification from 'react-native-push-notification'
 import Textile, {
@@ -14,7 +14,6 @@ import { logNewEvent } from './DeviceLogs'
 import { pendingInvitesTask, cameraRollThreadCreateTask } from './ThreadsSagas'
 import { PreferencesSelectors } from '../Redux/PreferencesRedux'
 import { RootAction } from '../Redux/Types'
-import { accountActions } from '../features/account'
 import TextileEventsActions, {
   TextileEventsAction
 } from '../Redux/TextileEventsRedux'
@@ -201,28 +200,6 @@ function* handleNodeEvents() {
   }
 }
 
-function* initializeTextile() {
-  try {
-    const initialized = yield call(
-      Textile.isInitialized,
-      AppConfig.textileRepoPath
-    )
-    const verbose = yield select(PreferencesSelectors.verboseUi)
-    if (!initialized) {
-      const phrase = yield call(
-        Textile.initializeCreatingNewWalletAndAccount,
-        AppConfig.textileRepoPath,
-        verbose,
-        true
-      )
-      yield put(accountActions.setRecoveryPhrase(phrase))
-    }
-    yield call(Textile.launch, AppConfig.textileRepoPath, verbose)
-  } catch (error) {
-    yield put(TextileEventsActions.failedToInitializeNode(error))
-  }
-}
-
 export function* refreshMessages() {
   while (true) {
     try {
@@ -388,7 +365,6 @@ export function* newError() {
 export function* startSagas() {
   yield all([
     call(handleNodeEvents),
-    call(initializeTextile),
     call(startNodeFinished),
     call(stopNodeAfterDelayStarting),
     call(stopNodeAfterDelayCancelled),

@@ -4,25 +4,45 @@ import { NavigationScreenProps } from 'react-navigation'
 
 import Loading from '../Components/Loading'
 import FatalErrorView from '../Components/FatalErrorView'
+import Initialize from '../screens/initialize'
 
 import { RootState } from '../Redux/Types'
 import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
+import { AuthSelectors } from '../Redux/AuthRedux'
+import {
+  initializationSelectors,
+  initializationModels
+} from '../features/initialization'
 import { color } from '../styles'
 
 interface StateProps {
+  referralCode?: string
+  initialized: boolean
   onboarded: boolean
+  initializationPath?: initializationModels.InitializationPath
   nodeStarted: boolean
   nodeError?: string
 }
 
 type Props = StateProps & NavigationScreenProps<{}>
 
-class StatusCheck extends React.Component<Props, {}> {
-  static getDerivedStateFromProps(props: Props, state: {}) {
-    if (!props.nodeError && props.nodeStarted && !props.onboarded) {
-      props.navigation.navigate('OnboardingNavigation')
-    } else if (!props.nodeError && props.nodeStarted) {
-      props.navigation.navigate('ModalNavigation')
+// This component serves two functions when the application starts
+// 1. It ensures that the Textile Node, if initialized, has started.
+// 2. It ensures that the user has completed onboarding.
+
+class StatusCheck extends React.Component<Props> {
+  // This is called on every re-render, whether it is from
+  // a change in the props or from a call to local setState
+  // Navigate to onboarding once the node has started or if the node
+  // hasn't been initialized yet.
+  static getDerivedStateFromProps(props: Props) {
+    if (
+      !props.nodeError &&
+      props.initialized &&
+      props.nodeStarted &&
+      props.onboarded
+    ) {
+      props.navigation.navigate('PrimaryNav')
     }
     // tslint:disable-next-line no-null-keyword
     return null
@@ -33,8 +53,25 @@ class StatusCheck extends React.Component<Props, {}> {
     this.state = {}
   }
 
+  componentDidMount() {
+    if (!this.props.onboarded && this.props.initializationPath) {
+      if (this.props.initializationPath === 'newAccount') {
+        this.props.navigation.navigate('OnboardingNew')
+      } else {
+        this.props.navigation.navigate('OnboardingExisting')
+      }
+    }
+  }
+
   render() {
-    if (this.props.nodeError) {
+    if (!this.props.initialized) {
+      return (
+        <Initialize
+          navigation={this.props.navigation}
+          referralCode={this.props.referralCode}
+        />
+      )
+    } else if (this.props.nodeError) {
       return <FatalErrorView message={this.props.nodeError} />
     } else {
       return (
@@ -47,10 +84,14 @@ class StatusCheck extends React.Component<Props, {}> {
   }
 }
 
-const mapStateToProps = (state: RootState): StateProps => {
+function mapStateToProps(state: RootState): StateProps {
+  const invitation = AuthSelectors.invite(state)
   return {
-    onboarded: state.preferences.onboarded,
+    referralCode: invitation ? invitation.referral : undefined,
     nodeStarted: TextileEventsSelectors.started(state),
+    initialized: initializationSelectors.initialized(state.initialization),
+    onboarded: state.initialization.onboarding.completed,
+    initializationPath: state.initialization.onboarding.initializationPath,
     nodeError: state.textile.nodeState.error
   }
 }

@@ -18,7 +18,7 @@ const ICON: ViewStyle = {
   paddingRight: spacing._008
 }
 
-const actionText = (props: Props) => {
+function actionText(props: Props) {
   return (
     <View style={CONTAINER}>
       {props.iconName && (
