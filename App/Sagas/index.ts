@@ -180,11 +180,10 @@ export default function*() {
     takeEvery(getType(UIActions.sharePhotoRequest), handleSharePhotoRequest),
     takeEvery(getType(UIActions.cancelSharingPhoto), handleCancel),
     // DeepLinks
-    takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink)
-    /* INVITE AFTER ONBOARDING
-      takeEvery(
+    takeEvery(getType(UIActions.routeDeepLinkRequest), routeDeepLink),
+    takeEvery(
       getType(initializationActions.onboardingSuccess),
       inviteAfterOnboard
-    )*/
+    )
   ])
 }
