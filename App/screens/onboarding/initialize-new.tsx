@@ -75,7 +75,10 @@ class InitializeNew extends React.Component<Props> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (this.props.initialized) {
+    if (
+      this.props.initialized &&
+      this.props.initialized !== prevProps.initialized
+    ) {
       setTimeout(() => {
         if (this.props.onComplete) {
           this.props.onComplete()

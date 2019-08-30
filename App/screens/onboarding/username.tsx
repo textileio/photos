@@ -113,8 +113,8 @@ class OnboardingUsername extends React.Component<Props, State> {
     }
   }
 
-  componentDidUpdate() {
-    if (this.props.username) {
+  componentDidUpdate(prevProps: Props) {
+    if (this.props.username && this.props.username !== prevProps.username) {
       setTimeout(() => {
         if (this.props.onComplete) {
           this.props.onComplete()
