@@ -8,12 +8,16 @@ import Initialize from './Onboarding/initialize'
 
 import { RootState } from '../Redux/Types'
 import { TextileEventsSelectors } from '../Redux/TextileEventsRedux'
-import { initializationSelectors } from '../features/initialization'
+import {
+  initializationSelectors,
+  initializationModels
+} from '../features/initialization'
 import { color } from '../styles'
 
 interface StateProps {
   initialized: boolean
   onboarded: boolean
+  initializationPath?: initializationModels.InitializationPath
   nodeStarted: boolean
   nodeError?: string
 }
@@ -42,6 +46,16 @@ class StatusCheck extends React.Component<Props> {
     return null
   }
 
+  componentDidMount() {
+    if (!this.props.onboarded && this.props.initializationPath) {
+      if (this.props.initializationPath === 'newAccount') {
+        this.props.navigation.navigate('OnboardingNew')
+      } else {
+        this.props.navigation.navigate('OnboardingExisting')
+      }
+    }
+  }
+
   render() {
     if (!this.props.initialized) {
       return <Initialize navigation={this.props.navigation} />
@@ -63,6 +77,7 @@ function mapStateToProps(state: RootState): StateProps {
     nodeStarted: TextileEventsSelectors.started(state),
     initialized: initializationSelectors.initialized(state.initialization),
     onboarded: state.initialization.onboarding.completed,
+    initializationPath: state.initialization.onboarding.initializationPath,
     nodeError: state.textile.nodeState.error
   }
 }

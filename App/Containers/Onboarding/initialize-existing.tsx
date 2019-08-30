@@ -122,9 +122,16 @@ class InitializeExisting extends React.Component<Props, State> {
     }
   }
 
+  componentDidMount() {
+    if (this.props.initialized) {
+      if (this.props.onComplete) {
+        this.props.onComplete()
+      }
+    }
+  }
+
   componentDidUpdate(prevProps: Props) {
-    if (this.props.initialized !== prevProps.initialized) {
-      // done initializing
+    if (this.props.initialized) {
       setTimeout(() => {
         if (this.props.onComplete) {
           this.props.onComplete()

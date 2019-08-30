@@ -65,11 +65,17 @@ type Props = StateProps & DispatchProps & OnboardingChildProps
 
 class InitializeNew extends React.Component<Props> {
   componentDidMount() {
-    this.props.initialize()
+    if (this.props.initialized) {
+      if (this.props.onComplete) {
+        this.props.onComplete()
+      }
+    } else {
+      this.props.initialize()
+    }
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (this.props.initialized !== prevProps.initialized) {
+    if (this.props.initialized) {
       setTimeout(() => {
         if (this.props.onComplete) {
           this.props.onComplete()

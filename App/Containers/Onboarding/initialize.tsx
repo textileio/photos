@@ -21,11 +21,7 @@ import { NavigationScreenProps } from 'react-navigation'
 import Button from '../../Components/SmallButton'
 import WaitListSignupScreen from '../../Components/WaitListSignupScreen'
 
-import { RootState, RootAction } from '../../Redux/Types'
-import {
-  initializationActions,
-  initializationModels
-} from '../../features/initialization'
+import { RootAction } from '../../Redux/Types'
 import { spacing, textStyle, fontFamily, color, size } from '../../styles'
 
 const targetReferralCode = Config.RN_TEMPORARY_REFERRAL
@@ -115,11 +111,7 @@ interface OwnProps {
   referralCode?: string
 }
 
-interface DispatchProps {
-  chooseInitializationPath: (
-    path: initializationModels.InitializationPath
-  ) => void
-}
+interface DispatchProps {}
 
 type Props = DispatchProps & OwnProps & NavigationScreenProps
 
@@ -226,21 +218,16 @@ class Initialize extends Component<Props, State> {
   }
 
   onNewAccount = () => {
-    this.props.chooseInitializationPath('newAccount')
     this.props.navigation.navigate('OnboardingNew')
   }
 
   onExistingAccount = () => {
-    this.props.chooseInitializationPath('existingAccount')
     this.props.navigation.navigate('OnboardingExisting')
   }
 }
 
 function mapDispatchToProps(dispatch: Dispatch<RootAction>): DispatchProps {
-  return {
-    chooseInitializationPath: (path: initializationModels.InitializationPath) =>
-      dispatch(initializationActions.chooseInitializationPath(path))
-  }
+  return {}
 }
 
 export default connect(
