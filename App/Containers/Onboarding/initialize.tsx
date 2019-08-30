@@ -179,7 +179,7 @@ class Initialize extends Component<Props, State> {
           <View style={{ flex: 1 }} />
           <View style={{ alignSelf: 'center' }}>
             <Button
-              text="Create New Account"
+              text="Get Started"
               disabled={!this.state.valid}
               onPress={this.onNewAccount}
               style={BUTTON}

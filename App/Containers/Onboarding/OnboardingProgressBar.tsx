@@ -3,7 +3,6 @@ import { SafeAreaView, View, ViewStyle } from 'react-native'
 import { color, spacing } from '../../styles'
 
 const PROGRESS_BAR: ViewStyle = {
-  height: 60,
   width: '100%',
   flexDirection: 'row',
   alignItems: 'center',

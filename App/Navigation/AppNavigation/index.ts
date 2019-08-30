@@ -9,8 +9,18 @@ const nav = createStackNavigator(
   {
     SwitchNav,
     Settings,
-    OnboardingNew,
-    OnboardingExisting
+    OnboardingNew: {
+      screen: OnboardingNew,
+      navigationOptions: {
+        gesturesEnabled: false
+      }
+    },
+    OnboardingExisting: {
+      screen: OnboardingExisting,
+      navigationOptions: {
+        gesturesEnabled: false
+      }
+    }
   },
   {
     initialRouteName: 'SwitchNav',

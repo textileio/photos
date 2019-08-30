@@ -59,7 +59,7 @@ const TEXT_INPUT: TextStyle = {
   color: color.grey_2,
   borderBottomColor: color.grey_4,
   borderBottomWidth: 1,
-  marginRight: spacing._016,
+  // marginRight: spacing._016,
   marginBottom: spacing._004
 }
 
@@ -184,9 +184,9 @@ class InitializeExisting extends React.Component<Props, State> {
                 placeholder="Account seed..."
                 onChangeText={this.updateText}
               />
-              <TouchableOpacity>
+              {/* <TouchableOpacity>
                 <Icon name="scan" size={24} color={color.grey_4} />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
             <Button
               style={BUTTON}
