@@ -8,9 +8,10 @@
 
 #import "TextileApi.h"
 #import "Messenger.h"
-#import "LifecycleManager.h"
 #import "RequestsHandler.h"
 #import "Callback.h"
+#import "TTELifecycleManager.h"
+#import "TTEAppStateLifecycleManager.h"
 
 NSString *const TEXTILE_BACKGROUND_SESSION_ID = @"textile";
 
@@ -36,11 +37,11 @@ NSString *const TEXTILE_BACKGROUND_SESSION_ID = @"textile";
 @property (nonatomic, strong) SchemasApi *schemas;
 @property (nonatomic, strong) ThreadsApi *threads;
 
-@property (nonatomic, strong) LifecycleManager *lifecycleManager;
 @property (nonatomic, strong) RequestsHandler *requestsHandler;
 
+@property (nonatomic, strong) id<TTELifecycleManager> lifecycleManager;
+
 + (BOOL)migrateRepo:(NSString *)repoPath error:(NSError **)error;
-+ (MobileMobile *)newTextile:(NSString *)repoPath debug:(BOOL)debug requestsHandler:(RequestsHandler *)requestsHandler messenger:(Messenger *)messenger error:(NSError **)error;
 
 @end
 
@@ -97,14 +98,24 @@ NSString *const TEXTILE_BACKGROUND_SESSION_ID = @"textile";
 }
 
 + (BOOL)launch:(NSString *)repoPath debug:(BOOL)debug error:(NSError * _Nullable __autoreleasing *)error {
-  RequestsHandler *requestsHandler = [[RequestsHandler alloc] init];
-  Messenger *messenger = [[Messenger alloc] init];
+  RequestsHandler *requestsHandler = [[RequestsHandler alloc] initWithTextile:Textile.instance];
+  Messenger *messenger = [[Messenger alloc] initWithTextile:Textile.instance];
+
   Textile.instance.requestsHandler = requestsHandler;
   Textile.instance.messenger = messenger;
-  MobileMobile *node = [Textile newTextile:repoPath debug:debug requestsHandler:requestsHandler messenger:messenger error:error];
+
+  MobileRunConfig *config = [[MobileRunConfig alloc] init];
+  config.repoPath = repoPath;
+  config.debug = debug;
+  config.cafeOutboxHandler = requestsHandler;
+
+  MobileMobile *node = MobileNewTextile(config, messenger, error);
   if (node) {
     Textile.instance.node = node;
     [Textile.instance createNodeDependants];
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [Textile.instance forLater];
+    });
     return YES;
   } else {
     return NO;
@@ -118,12 +129,6 @@ NSString *const TEXTILE_BACKGROUND_SESSION_ID = @"textile";
     instnace = [[self alloc] init];
   });
   return instnace;
-}
-
-- (void)setDelegate:(id<TextileDelegate>)delegate {
-  _delegate = delegate;
-  self.lifecycleManager.delegate = delegate;
-  self.messenger.delegate = delegate;
 }
 
 - (NSString *)version {
@@ -142,34 +147,40 @@ NSString *const TEXTILE_BACKGROUND_SESSION_ID = @"textile";
   return [[Summary alloc] initWithData:data error:error];
 }
 
+- (BOOL)start:(NSError *__autoreleasing  _Nullable *)error {
+  return [self.lifecycleManager start:error];
+}
+
+- (void)stopWithCompletion:(void (^)(BOOL, NSError * _Nullable))completion {
+  [self.lifecycleManager stopWithCompletion:completion];
+}
+
 - (void)destroy {
-  Callback *cb = [[Callback alloc] initWithCompletion:^(NSError *error) {
+  [self stopWithCompletion:^(BOOL success, NSError * _Nullable error) {
+    self.delegate = nil;
+    self.node = nil;
+    self.messenger = nil;
+    self.lifecycleManager = nil;
+    self.requestsHandler = nil;
+
+    self.account = nil;
+    self.cafes = nil;
+    self.comments = nil;
+    self.contacts = nil;
+    self.feed = nil;
+    self.files = nil;
+    self.flags = nil;
+    self.ignores = nil;
+    self.invites = nil;
+    self.ipfs = nil;
+    self.likes = nil;
+    self.logs = nil;
+    self.messages = nil;
+    self.notifications = nil;
+    self.profile = nil;
+    self.schemas = nil;
+    self.threads = nil;
   }];
-  [self.node stop:cb];
-  
-  self.delegate = nil;
-  self.node = nil;
-  self.messenger = nil;
-
-  self.account = nil;
-  self.cafes = nil;
-  self.comments = nil;
-  self.contacts = nil;
-  self.feed = nil;
-  self.files = nil;
-  self.flags = nil;
-  self.ignores = nil;
-  self.invites = nil;
-  self.ipfs = nil;
-  self.likes = nil;
-  self.logs = nil;
-  self.messages = nil;
-  self.notifications = nil;
-  self.profile = nil;
-  self.schemas = nil;
-  self.threads = nil;
-
-  self.lifecycleManager = nil;
 }
 
 #pragma mark Private
@@ -178,14 +189,6 @@ NSString *const TEXTILE_BACKGROUND_SESSION_ID = @"textile";
   MobileMigrateConfig *config = [[MobileMigrateConfig alloc] init];
   config.repoPath = repoPath;
   return MobileMigrateRepo(config, error);
-}
-
-+ (MobileMobile *)newTextile:(NSString *)repoPath debug:(BOOL)debug requestsHandler:(RequestsHandler *)requestsHandler messenger:(Messenger *)messenger error:(NSError *__autoreleasing *)error {
-  MobileRunConfig *config = [[MobileRunConfig alloc] init];
-  config.repoPath = repoPath;
-  config.debug = debug;
-  config.cafeOutboxHandler = requestsHandler;
-  return MobileNewTextile(config, messenger, error);
 }
 
 - (void)createNodeDependants {
@@ -206,11 +209,15 @@ NSString *const TEXTILE_BACKGROUND_SESSION_ID = @"textile";
   self.profile = [[ProfileApi alloc] initWithNode:self.node];
   self.schemas = [[SchemasApi alloc] initWithNode:self.node];
   self.threads = [[ThreadsApi alloc] initWithNode:self.node];
+}
 
-  self.lifecycleManager = [[LifecycleManager alloc] initWithNode:self.node];
-  self.lifecycleManager.delegate = self.delegate;
+- (void)forLater {
+  // depending on the context, we can change the the implementation that gets assigned here.
+  self.lifecycleManager = [[TTEAppStateLifecycleManager alloc] initWithTextile:self];
 
-  self.requestsHandler.node = self.node;
+  // start creates the NSURLSession, we want to be sure the client has had
+  // time to registe a delegate before the NSURLSession is created.
+  [self.requestsHandler start];
 }
 
 @end

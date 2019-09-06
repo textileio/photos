@@ -1,0 +1,1 @@
+../../../Textile/Textile/Classes/Services/TTEAppStateLifecycleManager.h

@@ -12,25 +12,38 @@
 #import <TextileCore/Message.pbobjc.h>
 #import "util.h"
 
+@interface Messenger ()
+
+@property (nonatomic, weak) Textile *textile;
+
+@end
+
 @implementation Messenger
+
+- (instancetype)initWithTextile:(Textile *)textile {
+  if (self = [super init]) {
+    self.textile = textile;
+  }
+  return self;
+}
 
 - (void)notify: (MobileEvent *)event {
   switch (event.type) {
     case MobileEventType_NodeStart: {
-      if ([self.delegate respondsToSelector:@selector(nodeStarted)]) {
-        [self.delegate nodeStarted];
+      if ([self.textile.delegate respondsToSelector:@selector(nodeStarted)]) {
+        [self.textile.delegate nodeStarted];
       }
       break;
     }
     case MobileEventType_NodeStop: {
-      if ([self.delegate respondsToSelector:@selector(nodeStopped)]) {
-        [self.delegate nodeStopped];
+      if ([self.textile.delegate respondsToSelector:@selector(nodeStopped)]) {
+        [self.textile.delegate nodeStopped];
       }
       break;
     }
     case MobileEventType_NodeOnline: {
-      if ([self.delegate respondsToSelector:@selector(nodeOnline)]) {
-        [self.delegate nodeOnline];
+      if ([self.textile.delegate respondsToSelector:@selector(nodeOnline)]) {
+        [self.textile.delegate nodeOnline];
       }
       break;
     }
@@ -42,23 +55,23 @@
       }
       switch (accountUpdate.type) {
         case AccountUpdate_Type_ThreadAdded:
-          if ([self.delegate respondsToSelector:@selector(threadAdded:)]) {
-            [self.delegate threadAdded:accountUpdate.id_p];
+          if ([self.textile.delegate respondsToSelector:@selector(threadAdded:)]) {
+            [self.textile.delegate threadAdded:accountUpdate.id_p];
           }
           break;
         case AccountUpdate_Type_ThreadRemoved:
-          if ([self.delegate respondsToSelector:@selector(threadRemoved:)]) {
-            [self.delegate threadRemoved:accountUpdate.id_p];
+          if ([self.textile.delegate respondsToSelector:@selector(threadRemoved:)]) {
+            [self.textile.delegate threadRemoved:accountUpdate.id_p];
           }
           break;
         case AccountUpdate_Type_AccountPeerAdded:
-          if ([self.delegate respondsToSelector:@selector(accountPeerAdded:)]) {
-            [self.delegate accountPeerAdded:accountUpdate.id_p];
+          if ([self.textile.delegate respondsToSelector:@selector(accountPeerAdded:)]) {
+            [self.textile.delegate accountPeerAdded:accountUpdate.id_p];
           }
           break;
         case AccountUpdate_Type_AccountPeerRemoved:
-          if ([self.delegate respondsToSelector:@selector(accountPeerRemoved:)]) {
-            [self.delegate accountPeerRemoved:accountUpdate.id_p];
+          if ([self.textile.delegate respondsToSelector:@selector(accountPeerRemoved:)]) {
+            [self.textile.delegate accountPeerRemoved:accountUpdate.id_p];
           }
           break;
         default:
@@ -70,16 +83,16 @@
       NSError *error;
       FeedItem *feedItem = [[FeedItem alloc] initWithData:event.data error:&error];
       FeedItemData *data = feedItemData(feedItem);
-      if (!error && data && [self.delegate respondsToSelector:@selector(threadUpdateReceived:data:)]) {
-        [self.delegate threadUpdateReceived:feedItem.thread data:data];
+      if (!error && data && [self.textile.delegate respondsToSelector:@selector(threadUpdateReceived:data:)]) {
+        [self.textile.delegate threadUpdateReceived:feedItem.thread data:data];
       }
       break;
     }
     case MobileEventType_Notification: {
       NSError *error;
       Notification *notification = [[Notification alloc] initWithData:event.data error:&error];
-      if (!error && [self.delegate respondsToSelector:@selector(notificationReceived:)]) {
-        [self.delegate notificationReceived:notification];
+      if (!error && [self.textile.delegate respondsToSelector:@selector(notificationReceived:)]) {
+        [self.textile.delegate notificationReceived:notification];
       }
       break;
     }
@@ -95,28 +108,28 @@
           if ([type isEqualToString:@"/Thread"]) {
             NSError *error;
             Thread *thread = [[Thread alloc] initWithData:queryEvent.data_p.value.value error:&error];
-            if (!error && [self.delegate respondsToSelector:@selector(clientThreadQueryResult:thread:)]) {
-              [self.delegate clientThreadQueryResult:queryEvent.id_p thread:thread];
+            if (!error && [self.textile.delegate respondsToSelector:@selector(clientThreadQueryResult:thread:)]) {
+              [self.textile.delegate clientThreadQueryResult:queryEvent.id_p thread:thread];
             }
           } else if ([type isEqualToString:@"/Contact"]) {
             NSError *error;
             Contact *contact = [[Contact alloc] initWithData:queryEvent.data_p.value.value error:&error];
-            if (!error && [self.delegate respondsToSelector:@selector(contactQueryResult:contact:)]) {
-              [self.delegate contactQueryResult:queryEvent.id_p contact:contact];
+            if (!error && [self.textile.delegate respondsToSelector:@selector(contactQueryResult:contact:)]) {
+              [self.textile.delegate contactQueryResult:queryEvent.id_p contact:contact];
             }
           }
           break;
         }
         case MobileQueryEvent_Type_Done:
-          if ([self.delegate respondsToSelector:@selector(queryDone:)]) {
-            [self.delegate queryDone:queryEvent.id_p];
+          if ([self.textile.delegate respondsToSelector:@selector(queryDone:)]) {
+            [self.textile.delegate queryDone:queryEvent.id_p];
           }
           break;
         case MobileQueryEvent_Type_Error:
-          if ([self.delegate respondsToSelector:@selector(queryError:error:)]) {
+          if ([self.textile.delegate respondsToSelector:@selector(queryError:error:)]) {
             Error *e = queryEvent.error;
             NSError *error = [NSError errorWithDomain:@"io.textile" code:e.code userInfo:@{ NSLocalizedDescriptionKey: e.message }];
-            [self.delegate queryError:queryEvent.id_p error:error];
+            [self.textile.delegate queryError:queryEvent.id_p error:error];
           }
           break;
         default:
@@ -130,8 +143,8 @@
       if (error) {
         return;
       }
-      if ([self.delegate respondsToSelector:@selector(syncUpdate:)]) {
-        [self.delegate syncUpdate:syncGroupStatus];
+      if ([self.textile.delegate respondsToSelector:@selector(syncUpdate:)]) {
+        [self.textile.delegate syncUpdate:syncGroupStatus];
       }
       break;
     }
@@ -141,8 +154,8 @@
       if (error) {
         return;
       }
-      if ([self.delegate respondsToSelector:@selector(syncComplete:)]) {
-        [self.delegate syncComplete:syncGroupStatus];
+      if ([self.textile.delegate respondsToSelector:@selector(syncComplete:)]) {
+        [self.textile.delegate syncComplete:syncGroupStatus];
       }
       break;
     }
@@ -152,8 +165,8 @@
       if (error) {
         return;
       }
-      if ([self.delegate respondsToSelector:@selector(syncFailed:)]) {
-        [self.delegate syncFailed:syncGroupStatus];
+      if ([self.textile.delegate respondsToSelector:@selector(syncFailed:)]) {
+        [self.textile.delegate syncFailed:syncGroupStatus];
       }
       break;
     }

@@ -11,7 +11,7 @@
   "dependencies": {
     "@textile/react-native-camera-roll": "1.1.6",
     "@textile/react-native-icon": "^1.0.0",
-    "@textile/react-native-sdk": "3.0.9",
+    "@textile/react-native-sdk": "3.0.10",
     "moment": "^2.22.2",
     "prop-types": "^15.6.2",
     "react": "16.6.3",

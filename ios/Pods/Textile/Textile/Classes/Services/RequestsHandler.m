@@ -4,6 +4,7 @@
 
 @interface RequestsHandler () <NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
 
+@property (nonatomic, weak) Textile *textile;
 @property (nonatomic, strong) NSURLSession *session;
 
 @end
@@ -15,46 +16,50 @@ const NSString *WAIT_SRC = @"RequestsHandler.flush";
 
 dispatch_queue_t flushQueue;
 
-- (instancetype)init {
+- (instancetype)initWithTextile:(Textile *)textile {
   if (self = [super init]) {
+    self.textile = textile;
+
     // This serial queue is used to process calls to flush so we only process one at a time
     flushQueue = dispatch_queue_create("io.textile.flushQueue", DISPATCH_QUEUE_SERIAL);
-
-    // Configure and create our NSURLSession used for uplaods
-    NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:TEXTILE_BACKGROUND_SESSION_ID];
-    config.networkServiceType = NSURLNetworkServiceTypeResponsiveData;
-    config.allowsCellularAccess = YES; // default
-    config.timeoutIntervalForRequest = 60; //default
-    config.timeoutIntervalForResource = 60 * 60 * 24; // 1 day
-    // config.waitsForConnectivity = YES; // defaults to YES for background sessions, not availiable until iOS 11 anyway
-    config.sessionSendsLaunchEvents = YES; // default
-    config.discretionary = NO; // default
-    config.shouldUseExtendedBackgroundIdleMode = YES; // not really sure about this
-    config.HTTPMaximumConnectionsPerHost = 10; // default 4 for ios
-    self.session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
   }
   return self;
+}
+
+- (void)start {
+  // Configure and create our NSURLSession used for uplaods
+  NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:TEXTILE_BACKGROUND_SESSION_ID];
+  config.networkServiceType = NSURLNetworkServiceTypeResponsiveData;
+  config.allowsCellularAccess = YES; // default
+  config.timeoutIntervalForRequest = 60; //default
+  config.timeoutIntervalForResource = 60 * 60 * 24; // 1 day
+  // config.waitsForConnectivity = YES; // defaults to YES for background sessions, not availiable until iOS 11 anyway
+  config.sessionSendsLaunchEvents = YES; // default
+  config.discretionary = NO; // default
+  config.shouldUseExtendedBackgroundIdleMode = YES; // not really sure about this
+  config.HTTPMaximumConnectionsPerHost = 10; // default 4 for ios
+  self.session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
 }
 
 - (void)flush {
   // We don't know what thread we're being called on here, so dispatch to our
   // serial queue to make sure only one call to flush can be processed at a time
-  [self.node waitAdd:1 src:WAIT_SRC];
+  [self.textile.node waitAdd:1 src:WAIT_SRC];
   dispatch_async(flushQueue, ^{
     [self processQueue];
-    [self.node waitDone:WAIT_SRC];
+    [self.textile.node waitDone:WAIT_SRC];
   });
 }
 
 - (void)processQueue {
-  NSLog(@"Flushing");
-
-  UIBackgroundTaskIdentifier taskId = [UIApplication.sharedApplication beginBackgroundTaskWithExpirationHandler:nil];
+  NSLog(@"Flushing cafe requests queue");
+  UIBackgroundTaskIdentifier taskId = [UIApplication.sharedApplication beginBackgroundTaskWithName:@"processQueue" expirationHandler:nil];
+  NSLog(@"Started background task %lu", (unsigned long)taskId);
 
   NSError *error;
-  NSData *cafeRequestsData = [self.node cafeRequests:BATCH_SIZE error:&error];
+  NSData *cafeRequestsData = [self.textile.node cafeRequests:BATCH_SIZE error:&error];
   if (error) {
-    NSLog(@"cafeRequests error: %@", error.localizedDescription);
+    NSLog(@"cafeRequests query error: %@", error.localizedDescription);
     return;
   }
 
@@ -70,19 +75,31 @@ dispatch_queue_t flushQueue;
   for (NSString *requestId in requestIds.valuesArray) {
 
     ProtoCallback *cb = [[ProtoCallback alloc] initWithCompletion:^(NSData * _Nonnull data, NSError * _Nonnull error) {
+      NSError *nodeStartError;
+      BOOL started = [self.textile start:&nodeStartError];
+      if (!started) {
+        NSLog(@"failed to assure node started for request %@: %@", requestId, nodeStartError.localizedDescription);
+        return;
+      }
       if (!data) {
-        NSLog(@"error writing request: %@", error.localizedDescription);
-        [self.node failCafeRequest:requestId reason:error.localizedDescription error:nil];
-        NSLog(@"Leaving");
+        NSLog(@"failed to write cafe request %@: %@", requestId, error.localizedDescription);
+        NSError *failRequestError;
+        BOOL success = [self.textile.node failCafeRequest:requestId reason:error.localizedDescription error:&failRequestError];
+        if (!success) {
+          NSLog(@"failed to fail cafe request %@: %@", requestId, failRequestError.localizedDescription);
+        }
         dispatch_group_leave(group);
         return;
       }
 
       CafeHTTPRequest *httpRequest = [[CafeHTTPRequest alloc] initWithData:data error:&error];
       if (!httpRequest) {
-        NSLog(@"error unmarshalling CafeHTTPRequest: %@", error.localizedDescription);
-        [self.node failCafeRequest:requestId reason:error.localizedDescription error:nil];
-        NSLog(@"Leaving");
+        NSLog(@"error unmarshalling CafeHTTPRequest %@: %@", requestId, error.localizedDescription);
+        NSError *failRequestError;
+        BOOL success = [self.textile.node failCafeRequest:requestId reason:error.localizedDescription error:&failRequestError];
+        if (!success) {
+          NSLog(@"failed to fail cafe request %@: %@", requestId, failRequestError.localizedDescription);
+        }
         dispatch_group_leave(group);
         return;
       }
@@ -111,31 +128,33 @@ dispatch_queue_t flushQueue;
       NSURLSessionUploadTask *task = [self.session uploadTaskWithRequest:request fromFile:fileUrl];
       [task setTaskDescription:requestId];
 
-      BOOL result = [self.node cafeRequestPending:requestId error:&error];
-      if (!result) {
-        NSLog(@"error marking as pending: %@", error.localizedDescription);
-        [self.node failCafeRequest:requestId reason:error.localizedDescription error:nil];
-        NSLog(@"Leaving");
+      NSError *markPendingError;
+      BOOL success = [self.textile.node cafeRequestPending:requestId error:&markPendingError];
+      if (!success) {
+        NSLog(@"error marking request %@ as pending: %@", requestId, markPendingError.localizedDescription);
+        NSError *failRequestError;
+        BOOL success = [self.textile.node failCafeRequest:requestId reason:markPendingError.localizedDescription error:&failRequestError];
+        if (!success) {
+          NSLog(@"failed to fail cafe request %@: %@", requestId, failRequestError.localizedDescription);
+        }
         dispatch_group_leave(group);
         return;
       }
 
       [task resume];
 
-      NSLog(@"Leaving");
       dispatch_group_leave(group);
     }];
 
-    NSLog(@"Entering");
     dispatch_group_enter(group);
 
-    [self.node writeCafeRequest:requestId cb:cb];
+    [self.textile.node writeCafeRequest:requestId cb:cb];
   }
 
   // Block here until all writeCafeRequest callbacks are complete
   dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 
-  NSLog(@"Dispatch group complete");
+  NSLog(@"Ending background task %lu", (unsigned long)taskId);
 
   [UIApplication.sharedApplication endBackgroundTask:taskId];
 }
@@ -175,7 +194,7 @@ dispatch_queue_t flushQueue;
  */
 - (void)URLSession:(NSURLSession *)session taskIsWaitingForConnectivity:(NSURLSessionTask *)task {
   // Could so something cool here to let the client know
-  NSLog(@"session taskIsWaitingForConnectivity");
+  NSLog(@"session task %@ taskIsWaitingForConnectivity", task.description);
 }
 
 /* Sent periodically to notify the delegate of upload progress.  This
@@ -185,8 +204,18 @@ dispatch_queue_t flushQueue;
    didSendBodyData:(int64_t)bytesSent
     totalBytesSent:(int64_t)totalBytesSent
 totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
-//  NSLog(@"session task didSendBodyData: %lld - %lld of %lld", bytesSent, totalBytesSent, totalBytesExpectedToSend);
-  [self.node updateCafeRequestProgress:task.taskDescription transferred:totalBytesSent total:totalBytesExpectedToSend error:nil];
+  NSError *error;
+  BOOL started = [self.textile start:&error];
+  if (!started) {
+    NSLog(@"failed to assure node started for request %@: %@", task.description, error.localizedDescription);
+    return;
+  }
+  NSLog(@"session task %@ didSendBodyData: %lld - %lld of %lld", task.description, bytesSent, totalBytesSent, totalBytesExpectedToSend);
+  BOOL success = [self.textile.node updateCafeRequestProgress:task.taskDescription transferred:totalBytesSent total:totalBytesExpectedToSend error:&error];
+  if (!success) {
+    NSLog(@"failed to updateCafeRequestProgress for request %@: %@", task.description, error.localizedDescription);
+    return;
+  }
 }
 
 /* Sent as the last message related to a specific task.  Error may be
@@ -194,23 +223,41 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend {
  */
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
 didCompleteWithError:(nullable NSError *)error {
-//  NSLog(@"session task didCompleteWithError: %@, %@, %@", task.originalRequest, task.response, error.localizedDescription);
+  NSLog(@"session task %@ didCompleteWithError: %@, %@, %@", task.description, task.originalRequest, task.response, error.localizedDescription);
+  NSError *nodeStartError;
+  BOOL started = [self.textile start:&nodeStartError];
+  if (!started) {
+    NSLog(@"failed to assure node started for request %@: %@", task.description, nodeStartError.localizedDescription);
+    return;
+  }
   NSHTTPURLResponse *response = (NSHTTPURLResponse *)task.response;
   if (error) {
-    [self.node failCafeRequest:task.taskDescription reason:error.localizedDescription error:nil];
+    NSError *failRequestError;
+    BOOL success = [self.textile.node failCafeRequest:task.taskDescription reason:error.localizedDescription error:&failRequestError];
+    if (!success) {
+      NSLog(@"failed to failCafeRequest for request %@: %@", task.description, failRequestError.localizedDescription);
+    }
   } else if (response.statusCode < 200 || response.statusCode > 299) {
     NSString *error = [NSString stringWithFormat:@"status code: %ld", (long)response.statusCode];
-    [self.node failCafeRequest:task.taskDescription reason:error error:nil];
+    NSError *failRequestError;
+    BOOL success = [self.textile.node failCafeRequest:task.taskDescription reason:error error:&failRequestError];
+    if (!success) {
+      NSLog(@"failed to failCafeRequest for request %@: %@", task.description, failRequestError.localizedDescription);
+    }
   } else {
-    [self.node completeCafeRequest:task.taskDescription error:nil];
-
-    // We can call flush again if there are no more pending tasks
-    [self.session getAllTasksWithCompletionHandler:^(NSArray<__kindof NSURLSessionTask *> * _Nonnull tasks) {
-      if ([tasks count] == 0) {
-        [self flush];
-      }
-    }];
+    NSError *completeRequestError;
+    BOOL success = [self.textile.node completeCafeRequest:task.taskDescription error:&completeRequestError];
+    if (!success) {
+      NSLog(@"failed to completeCafeRequest for request %@: %@", task.description, completeRequestError.localizedDescription);
+    }
   }
+
+  // We can call flush again if there are no more pending tasks
+  [self.session getAllTasksWithCompletionHandler:^(NSArray<__kindof NSURLSessionTask *> * _Nonnull tasks) {
+    if ([tasks count] == 0) {
+      [self flush];
+    }
+  }];
 }
 
 @end

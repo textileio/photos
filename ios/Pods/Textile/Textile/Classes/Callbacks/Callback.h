@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface Callback : NSObject<MobileCallback>
 
-- (instancetype)initWithCompletion:(void (^)(NSError*))completion;
+- (instancetype)initWithCompletion:(void (^)(NSError * _Nullable error))completion;
 
 @end
 
