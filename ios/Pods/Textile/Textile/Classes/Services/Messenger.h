@@ -8,13 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import <Mobile/Mobile.h>
-#import "TextileDelegate.h"
+#import "TextileApi.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface Messenger : NSObject<MobileMessenger>
 
-@property (nonatomic, weak, nullable) id<TextileDelegate> delegate;
+- (instancetype)initWithTextile:(Textile *)textile;
 
 @end
 
