@@ -221,8 +221,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * Reset the local Textile node instance so it can be re-initialized
+ * @param completion A block that gets called after the Textile instance is reset
  */
-- (void)destroy;
+- (void)destroyWithCompletion:(nullable void (^)(BOOL success, NSError * _Nullable error))completion;
 
 @end
 
