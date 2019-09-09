@@ -155,31 +155,36 @@ NSString *const TEXTILE_BACKGROUND_SESSION_ID = @"textile";
   [self.lifecycleManager stopWithCompletion:completion];
 }
 
-- (void)destroy {
+- (void)destroyWithCompletion:(void (^)(BOOL, NSError * _Nullable))completion {
   [self stopWithCompletion:^(BOOL success, NSError * _Nullable error) {
-    self.delegate = nil;
-    self.node = nil;
-    self.messenger = nil;
-    self.lifecycleManager = nil;
-    self.requestsHandler = nil;
+    if (success) {
+      self.delegate = nil;
+      self.node = nil;
+      self.messenger = nil;
+      self.lifecycleManager = nil;
+      self.requestsHandler = nil;
 
-    self.account = nil;
-    self.cafes = nil;
-    self.comments = nil;
-    self.contacts = nil;
-    self.feed = nil;
-    self.files = nil;
-    self.flags = nil;
-    self.ignores = nil;
-    self.invites = nil;
-    self.ipfs = nil;
-    self.likes = nil;
-    self.logs = nil;
-    self.messages = nil;
-    self.notifications = nil;
-    self.profile = nil;
-    self.schemas = nil;
-    self.threads = nil;
+      self.account = nil;
+      self.cafes = nil;
+      self.comments = nil;
+      self.contacts = nil;
+      self.feed = nil;
+      self.files = nil;
+      self.flags = nil;
+      self.ignores = nil;
+      self.invites = nil;
+      self.ipfs = nil;
+      self.likes = nil;
+      self.logs = nil;
+      self.messages = nil;
+      self.notifications = nil;
+      self.profile = nil;
+      self.schemas = nil;
+      self.threads = nil;
+    }
+    if (completion) {
+      completion(success, error);
+    }
   }];
 }
 
