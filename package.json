@@ -6,7 +6,8 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
     "tsc": "tsc -p . --noEmit",
-    "lint": "eslint --fix --ext .mjs,.js,.jsx,.ts,.tsx ."
+    "lint": "eslint --fix --ext .mjs,.js,.jsx,.ts,.tsx .",
+    "overlay-config": "./scripts/download-config.sh $PWD"
   },
   "dependencies": {
     "@textile/react-native-camera-roll": "1.1.6",

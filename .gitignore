@@ -153,9 +153,13 @@ sourcemap.js
 .jest/
 coverage/
 
+# Files provided by config-private repo
+# -----------------------------------------------
+
 # Firebase config
 GoogleService-Info.plist
 google-services.json
 
-# =====================================
-# Repository
+# Other general config files
+App/Config/env/*
+

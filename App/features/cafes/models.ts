@@ -1,6 +1,6 @@
 import { ICafeSession } from '@textile/react-native-sdk'
-import Config from 'react-native-config'
-import { Buffer } from 'buffer'
+
+import cafesJson from '../../Config/env/cafes.json'
 
 export interface Cafe {
   readonly url: string
@@ -25,11 +25,9 @@ export interface CafeSessionsData {
   readonly [peerId: string]: CafeSessionData
 }
 
-const cafesBase64 = Config.RN_TEXTILE_CAFES_JSON
-const cafesString = new Buffer(cafesBase64, 'base64').toString()
 export const cafes: Array<{
-  url: string
   name: string
+  url: string
   peerId: string
   token: string
-}> = JSON.parse(cafesString)
+}> = cafesJson
